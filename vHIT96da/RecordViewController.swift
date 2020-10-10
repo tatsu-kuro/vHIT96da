@@ -18,6 +18,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var videoDevice: AVCaptureDevice?
     var filePath:String?
     var timer:Timer?
+    var focusF:Float=0
     //
     //    var ww:CGFloat?
     //    var wh:CGFloat?
@@ -30,6 +31,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //    var recEnd=CFAbsoluteTimeGetCurrent()
 //    var recordButton: UIButton!
 //    var currTime:UILabel?
+    @IBOutlet weak var focusNear: UILabel!
+    
+    @IBOutlet weak var focusBar: UISlider!
+    @IBOutlet weak var focusFar: UILabel!
     @IBOutlet weak var currentTime: UILabel!
     
     @IBOutlet weak var fps240Button: UIButton!
@@ -202,6 +207,18 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         fps120Button.isHidden=true
         
         print("maxFps,fps2:",maxFps,fps_non_120_240)
+        
+        
+        setFocus(focus: focusF)
+//        setFlashlevel(level: 0.0)
+        focusBar.minimumValue = 0
+        focusBar.maximumValue = 1.0
+        focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
+        focusBar.value=0
+//        focusBar.backgroundColor=UIColor.white
+    }
+    @objc func onSliderValueChange(){
+        setFocus(focus:focusBar.value)
     }
     override func viewDidAppear(_ animated: Bool) {
         setButtons(type: true)
@@ -235,19 +252,19 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
         let ww=view.bounds.width
         let wh=damyBottom.frame.maxY// view.bounds.height
-        let bw=Int(ww/4)-8
+        let bw=(ww/4)-8
         //        let bd=Int(ww/5/4)
-        let bh:Int=60
-        let bpos=Int(wh)-bh/2-10
+        let bh:CGFloat=60
+        let bpos=wh-bh/2-10
 
-        currentTime.frame   = CGRect(x:0,   y: 0 ,width: Int(Double(bw)*1.5), height: bh/2)
-        currentTime.layer.position=CGPoint(x:Int(ww)/2,y:Int(wh)-Int(Double(bh)*2.5))
+        currentTime.frame   = CGRect(x:0,   y: 0 ,width: bw*1.5, height: bh/2)
+        currentTime.layer.position=CGPoint(x:ww/2,y:wh-bh*2.5)
         currentTime.isHidden=true
         currentTime.layer.masksToBounds = true
         currentTime.layer.cornerRadius = 5
         
-        setButtonProperty(button: fps240Button, bw: CGFloat(bw), bh: CGFloat(bh), cx:CGFloat(10+bw)/2 , cy: CGFloat(bpos-10-bh))
-        setButtonProperty(button: fps120Button, bw: CGFloat(bw), bh: CGFloat(bh), cx:CGFloat(10+bw)/2 , cy: CGFloat(bpos))
+        setButtonProperty(button: fps240Button, bw: bw, bh:bh, cx:(10+bw)/2 , cy: bpos-10-bh)
+        setButtonProperty(button: fps120Button, bw: bw, bh: bh, cx:(10+bw)/2 , cy:bpos)
 
         if fps_non_120_240==2{
                 self.fps120Button.backgroundColor = UIColor.darkGray
@@ -267,14 +284,27 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fps120Button.isHidden=false
         }
         //startButton
+
+        setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*7/4)
+        setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-20-bh*7/4)
+        focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
+        focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*7/4)
         startButton.frame=CGRect(x:0,y:0,width:bh*2,height:bh*2)
-        startButton.layer.position = CGPoint(x:Int(ww)/2,y:bpos-bh/3)
+        startButton.layer.position = CGPoint(x:ww/2,y:bpos-bh/3)
         stopButton.frame=CGRect(x:0,y:0,width:bh*2,height:bh*2)
-        stopButton.layer.position = CGPoint(x:Int(ww)/2,y:bpos-bh/3)
+        stopButton.layer.position = CGPoint(x:ww/2,y:bpos-bh/3)
         startButton.isHidden=false
         stopButton.isHidden=true
         stopButton.tintColor=UIColor.orange
-        setButtonProperty(button: exitBut, bw: CGFloat(bw), bh: CGFloat(bh), cx: CGFloat(Int(Int(ww)-10-bw/2)), cy:CGFloat(bpos))
+        setButtonProperty(button: exitBut, bw: bw, bh:bh, cx:ww-10-bw/2, cy:bpos)
+    }
+    func setLabelProperty(label:UILabel,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
+        label.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
+        label.layer.borderColor = UIColor.green.cgColor
+        label.layer.borderWidth = 1.0
+        label.layer.position=CGPoint(x:cx,y:cy)
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 5
     }
     func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
         button.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
@@ -370,7 +400,23 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             stopButton.tintColor=UIColor.red
         }
     }
-    
+    func setFocus(focus:Float) {//focus 0:最接近　0-1.0
+         if let device = videoDevice{
+            do {
+                try device.lockForConfiguration()
+                device.focusMode = .locked
+                device.setFocusModeLocked(lensPosition: focus, completionHandler: { _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                        device.unlockForConfiguration()
+                    })
+                })
+                device.unlockForConfiguration()
+            }
+            catch {
+                // just ignore
+            }
+        }
+    }
     func onClickRecordButton() {
               if self.fileOutput.isRecording {
                 // stop recording
@@ -390,7 +436,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 startButton.isHidden=true
                 stopButton.isHidden=false
                 currentTime.isHidden=false
-
+                focusBar.isHidden=true
+                focusFar.isHidden=true
+                focusNear.isHidden=true
                 exitBut.isHidden=true
                 fps240Button.isHidden=true
                 fps120Button.isHidden=true
