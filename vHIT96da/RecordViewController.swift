@@ -209,16 +209,25 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         print("maxFps,fps2:",maxFps,fps_non_120_240)
         
         
-        setFocus(focus: focusF)
+       
 //        setFlashlevel(level: 0.0)
         focusBar.minimumValue = 0
         focusBar.maximumValue = 1.0
         focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
-        focusBar.value=0
-//        focusBar.backgroundColor=UIColor.white
+        focusBar.value=getUserDefault(str: "focusLength", ret: 0)
+        setFocus(focus: focusBar.value)
+    }
+    func getUserDefault(str:String,ret:Float) -> Float{
+        if (UserDefaults.standard.object(forKey: str) != nil){
+            return UserDefaults.standard.float(forKey: str)
+        }else{//keyが設定してなければretをセット
+            UserDefaults.standard.set(ret, forKey: str)
+            return ret
+        }
     }
     @objc func onSliderValueChange(){
         setFocus(focus:focusBar.value)
+        UserDefaults.standard.set(focusBar.value, forKey: "focusLength")
     }
     override func viewDidAppear(_ animated: Bool) {
         setButtons(type: true)
