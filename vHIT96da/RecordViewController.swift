@@ -19,6 +19,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var filePath:String?
     var timer:Timer?
     var focusF:Float=0
+    var flashFlag:Bool=false
     //
     //    var ww:CGFloat?
     //    var wh:CGFloat?
@@ -31,6 +32,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //    var recEnd=CFAbsoluteTimeGetCurrent()
 //    var recordButton: UIButton!
 //    var currTime:UILabel?
+    @IBOutlet weak var LEDCircle: UIImageView!
+    
+    @IBOutlet weak var LEDButton:
+        UIButton!
+    
     @IBOutlet weak var focusNear: UILabel!
     
     @IBOutlet weak var focusBar: UISlider!
@@ -69,7 +75,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         self.view.layer.addSublayer(squareLayer)
     }
 
-    var tapF:Bool=false
+    var tapFlag:Bool=false
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
         let screenSize=cameraView.bounds.size
         let x0 = sender.location(in: self.view).x
@@ -98,11 +104,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 }
                 device.unlockForConfiguration()
                 
-                if tapF {
+                if tapFlag {
                     view.layer.sublayers?.removeLast()
                 }
                 drawSquare(x: x0, y: y0)
-                tapF=true;
+                tapFlag=true;
                 //                }
             }
             catch {
@@ -216,7 +222,69 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
         focusBar.value=getUserDefault(str: "focusLength", ret: 0)
         setFocus(focus: focusBar.value)
+        
+        flashFlag=false
+        let flashFlagTemp=getUserDefault(str: "flashFlag", ret: 0)
+        if flashFlagTemp==1{
+            LEDonoff(0)
+        }
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+        
     }
+    @IBAction func LEDonoff(_ sender: Any) {
+//        if recordingFlag==true{
+//            return
+//        }
+        if flashFlag==true{
+            setFlashlevel(level: 0)
+            flashFlag=false
+            LEDCircle.tintColor=UIColor.gray
+        }else{
+            //iPhone11:0.04 で適度な明るさ、これ以下にすると光らない
+            //SEでは明るすぎるが、これが最低の光量か？
+            //二つのLEDの個別の制御は出来なさそう。
+            setFlashlevel(level: 0.04)
+            flashFlag=true
+            LEDCircle.tintColor=UIColor.orange
+        }
+        if flashFlag==true{
+            UserDefaults.standard.set(1, forKey: "flashFlag")
+        }else{
+            UserDefaults.standard.set(0, forKey: "flashFlag")
+        }
+    }
+
+    func setFlashlevel(level:Float){
+        if let device = videoDevice{
+            do {
+                if device.hasTorch {
+                    do {
+                        // torch device lock on
+                        try device.lockForConfiguration()
+                        
+                        if (level > 0.0){
+                            do {
+                                try device.setTorchModeOn(level: level)
+                            } catch {
+                                print("error")
+                            }
+                            
+                        } else {
+                            // flash LED OFF
+                            // 注意しないといけないのは、0.0はエラーになるのでLEDをoffさせます。
+                            device.torchMode = AVCaptureDevice.TorchMode.off
+                        }
+                        // torch device unlock
+                        device.unlockForConfiguration()
+                        
+                    } catch {
+                        print("Torch could not be used")
+                    }
+                }
+            }
+        }
+    }
+    
     func getUserDefault(str:String,ret:Float) -> Float{
         if (UserDefaults.standard.object(forKey: str) != nil){
             return UserDefaults.standard.float(forKey: str)
@@ -293,7 +361,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fps120Button.isHidden=false
         }
         //startButton
-
+        LEDCircle.frame=CGRect(x:0,y:0,width:bw,height: bw)
+        LEDCircle.layer.position=CGPoint(x:ww-10-bw/2,y:bpos-40-bh*12/4)
+        setButtonProperty(button: LEDButton, bw: bw, bh: bh/2, cx: ww-10-bw/2, cy: bpos-30-bh*9/4)
         setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*7/4)
         setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-20-bh*7/4)
         focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
@@ -401,12 +471,17 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     
     var counter:Int=0
     @objc func update(tm: Timer) {
-        counter += 1
-        currentTime.text=String(format:"%02d",counter/60) + ":" + String(format: "%02d",counter%60)
-        if counter%2==0{
-            stopButton.tintColor=UIColor.orange
+        if recordedFlag==true{
+            counter += 1
+            currentTime.text=String(format:"%02d",counter/60) + ":" + String(format: "%02d",counter%60)
+            if counter%2==0{
+                stopButton.tintColor=UIColor.orange
+            }else{
+                stopButton.tintColor=UIColor.red
+            }
         }else{
-            stopButton.tintColor=UIColor.red
+            UserDefaults.standard.set(videoDevice?.lensPosition, forKey: "focusLength")
+            focusBar.value=videoDevice!.lensPosition
         }
     }
     func setFocus(focus:Float) {//focus 0:最接近　0-1.0
@@ -451,7 +526,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 exitBut.isHidden=true
                 fps240Button.isHidden=true
                 fps120Button.isHidden=true
-                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+//                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
                 UIApplication.shared.isIdleTimerDisabled = true//スリープしない
                 if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
                     AudioServicesCreateSystemSoundID(soundUrl, &soundIdstart)

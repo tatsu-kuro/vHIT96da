@@ -636,6 +636,22 @@
                                 <rect key="frame" x="148" y="730" width="118" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </slider>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUa-90-xLF">
+                                <rect key="frame" x="343" y="697" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="LED">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="LEDonoff:" destination="eZj-22-ehM" eventType="touchUpInside" id="dZd-xh-fwV"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="hJB-Fq-f8n">
+                                <rect key="frame" x="329" y="644" width="58" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hJU-5A-9nT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -651,6 +667,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="P43-38-M0S"/>
                     <connections>
+                        <outlet property="LEDButton" destination="wUa-90-xLF" id="GSd-J5-Bhy"/>
+                        <outlet property="LEDCircle" destination="hJB-Fq-f8n" id="s0m-1l-3k1"/>
                         <outlet property="cameraView" destination="9sR-p0-hC8" id="uLr-D8-lcZ"/>
                         <outlet property="currentTime" destination="6Oa-WH-xL2" id="Tds-3J-cr1"/>
                         <outlet property="damyBottom" destination="yPU-jJ-jUT" id="gXz-wg-3ki"/>
@@ -978,6 +996,7 @@
     <resources>
         <image name="chevron.left.circle" catalog="system" width="128" height="121"/>
         <image name="chevron.right.circle" catalog="system" width="128" height="121"/>
+        <image name="circle.fill" catalog="system" width="128" height="121"/>
         <image name="eye" width="212" height="212"/>
         <image name="face" width="212" height="212"/>
         <image name="gear" catalog="system" width="128" height="119"/>
