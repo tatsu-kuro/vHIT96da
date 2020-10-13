@@ -361,7 +361,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fps120Button.isHidden=false
         }
         //startButton
-        LEDCircle.frame=CGRect(x:0,y:0,width:bw,height: bw)
+        LEDCircle.frame=CGRect(x:0,y:0,width:bw,height: bh)
         LEDCircle.layer.position=CGPoint(x:ww-10-bw/2,y:bpos-40-bh*12/4)
         setButtonProperty(button: LEDButton, bw: bw, bh: bh/2, cx: ww-10-bw/2, cy: bpos-30-bh*9/4)
         setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*7/4)
@@ -471,7 +471,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     
     var counter:Int=0
     @objc func update(tm: Timer) {
-        if recordedFlag==true{
+        if fileOutput.isRecording{
             counter += 1
             currentTime.text=String(format:"%02d",counter/60) + ":" + String(format: "%02d",counter%60)
             if counter%2==0{
