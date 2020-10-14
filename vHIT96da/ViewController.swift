@@ -12,7 +12,7 @@ import AssetsLibrary
 import Photos
 import MessageUI
 import CoreLocation
-
+import CoreTelephony
 extension UIImage {
     
     func resize(size _size: CGSize) -> UIImage? {
@@ -524,13 +524,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            sn=Int(Float(sn)*fps/240)
             sn=Int(Double(sn)*1.004)//適当に入れてみたiPhone11
         }
+        
+//        let udid = UIDevice.current.identifierForVendor?.uuidString
+//        print("udid",udid as Any)
+        print(UIDevice.current.model)
+        if UIDevice.current.model == "iPod touch"{
+            sn -= 30//ipod touchではこれで良さそう
+        }
         if gyroFiltered.count>10{
             for i in sn..<gyroFiltered.count{
+                if i>=0{
 //                if i+sn<gyroFiltered.count{
                     gyroMoved.append(gyroFiltered[i])
 //                }else{
 //                    gyroMoved.append(0)
 //                }
+                }else{
+                    gyroMoved.append(0)
+                }
             }
 
 //            for i in 0..<gyroFiltered.count{
