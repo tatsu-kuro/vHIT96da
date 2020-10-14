@@ -512,17 +512,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func moveGyroData(){//gyroDeltaとstartFrameをずらして
         gyroMoved.removeAll()
         var sn=startFrame
-        if getFPS(videoPath: vidPath[vidCurrent])<200{
+        //120,240とのズレを修正してみたが、焼け石に水
+        let fps=getFPS(videoPath: vidPath[vidCurrent])
+        if fps<200{
             sn=startFrame*2
+            print("sn-newsn:",sn,Int(Float(sn)*fps/120))
+//            sn=Int(Float(sn)*fps/120)
+            sn=Int(Double(sn)*1.006)//適当に入れてみたiPhone11
+        }else{
+            print("sn-newsn:",sn,Int(Float(sn)*fps/240))
+//            sn=Int(Float(sn)*fps/240)
+            sn=Int(Double(sn)*1.004)//適当に入れてみたiPhone11
         }
         if gyroFiltered.count>10{
-            for i in 0..<gyroFiltered.count{
-                if i+sn<gyroFiltered.count{
-                    gyroMoved.append(gyroFiltered[i+sn])
-                }else{
-                    gyroMoved.append(0)
-                }
+            for i in sn..<gyroFiltered.count{
+//                if i+sn<gyroFiltered.count{
+                    gyroMoved.append(gyroFiltered[i])
+//                }else{
+//                    gyroMoved.append(0)
+//                }
             }
+
+//            for i in 0..<gyroFiltered.count{
+//                if i+sn<gyroFiltered.count{
+//                    gyroMoved.append(gyroFiltered[i+sn])
+//                }else{
+//                    gyroMoved.append(0)
+//                }
+//            }
         }
     }
     
@@ -555,6 +572,46 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        print("eyeborder:",eyeBorder,faceF)
         startTimer()//resizerectのチェックの時はここをコメントアウト*********************
         //       let fileURL = URL(fileURLWithPath: vidPath[vidCurrent])
+
+         let fileURL = getfileURL(path: vidPath[vidCurrent])
+         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+         let avAsset = AVURLAsset(url: fileURL, options: options)
+         calcDate = videoDate.text!
+        var fpsIs120:Bool=false
+        if getFPS(videoPath: vidPath[vidCurrent])<200.0{
+            fpsIs120=true
+        }
+         var reader: AVAssetReader! = nil
+         do {
+             reader = try AVAssetReader(asset: avAsset)
+         } catch {
+             #if DEBUG
+             print("could not initialize reader.")
+             #endif
+             return
+         }
+          guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
+             #if DEBUG
+             print("could not retrieve the video track.")
+             #endif
+             return
+         }
+
+         let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+         let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
+         
+         reader.add(readerOutput)
+         let frameRate = videoTrack.nominalFrameRate
+         //let startframe=startPoints[vhitVideocurrent]
+         let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
+        let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
+         //print("time",timeRange)
+         reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
+         reader.startReading()
+   
+//        let fpsIs120=false
+        
+ /*
         let fileURL = getfileURL(path: vidPath[vidCurrent])
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: fileURL, options: options)
@@ -593,6 +650,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //print("time",timeRange)
         reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
         reader.startReading()
+ */
         //startPoints[vhitVideocurrent] startframe 1sec=240
         // UnsafeとMutableはまあ調べてもらうとして、eX, eY等は<Int32>が一つ格納されている場所へのポインタとして宣言される。
         let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
@@ -2415,8 +2473,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let curTime=Controller.seekBarValue
                 let fps=getFPS(videoPath: vidPath[vidCurrent])// Controller.currentFPS
                 print("seek,fps:",Controller.seekBarValue,fps)
-//                startFrame=Int(round(curTime*fps))//四捨五入したもの
-                startFrame=Int(curTime*fps)//四捨五入してない、こちらが近そう
+                startFrame=Int(round(curTime*fps))//四捨五入したもの
+//                startFrame=Int(curTime*fps)//四捨五入してない、こちらが近そう
 
 //                print("round",Int(round(curTime*fps)),Int(curTime*fps),curTime*fps)
                 slowImage.image=getframeImage(frameNumber: startFrame)
