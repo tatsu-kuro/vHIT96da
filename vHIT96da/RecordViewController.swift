@@ -82,7 +82,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let y0 = sender.location(in: self.view).y
         print("tap:",x0,y0,screenSize.height)
         
-        if y0>screenSize.height*5/6{
+        if y0>screenSize.height*3/5{
             return
         }
         let x = y0/screenSize.height
