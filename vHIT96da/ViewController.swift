@@ -2180,7 +2180,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        setButtons_first()
         setButtons(mode: true)
         stopButton.isHidden = true
-        camera_alert()
+//        camera_alert()
         setArrays()
         vidCurrent=vidPath.count-1//ない場合は -1
         showCurrent()
