@@ -29,9 +29,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app uses camera to take movies.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app uses micriophone to take movies.</string>
+	<string>This app takes movies of eye movement and saves them in app's data area.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app save the movies there</string>
 	<key>UILaunchStoryboardName</key>
