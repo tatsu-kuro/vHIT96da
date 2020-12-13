@@ -100,6 +100,8 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         loadPhotos()
         setButtons()
         exitButton.layer.cornerRadius = 5
+        exitButton.layer.borderWidth = 2
+        exitButton.layer.borderColor = UIColor.black.cgColor
     }
   /*
      let formatter = DateFormatter()

@@ -945,7 +945,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
 //        print(videoFps.frame,wakuY)
         wakuS_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
-        wakuS_image.layer.borderColor = UIColor.green.cgColor
+        wakuS_image.layer.borderColor = UIColor.black.cgColor
         wakuS_image.layer.borderWidth = 1.0
         wakuS_image.backgroundColor = UIColor.clear
         wakuS_image.layer.cornerRadius = 3
@@ -2229,7 +2229,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
         button.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
-        button.layer.borderColor = UIColor.green.cgColor
+        button.layer.borderColor = UIColor.black.cgColor
         button.layer.borderWidth = 1.0
         button.layer.position=CGPoint(x:cx,y:cy)
         button.layer.cornerRadius = 5

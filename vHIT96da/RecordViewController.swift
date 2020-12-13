@@ -208,18 +208,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
             print("生まれて初めての時だけ、通るところのはず")//ここでmaxFpsを設定
         }
-//        setButtons(type: true)
-        startButton.isHidden=true
-        stopButton.isHidden=true
-        currentTime.isHidden=true
-        
-        fps240Button.isHidden=true
-        fps120Button.isHidden=true
-        
+        hideButtons(type: true)
+        setButtons(type: true)
+//        stopButton.isHidden=true
+        startButton.isHidden=false
         print("maxFps,fps2:",maxFps,fps_non_120_240)
-        
-        
-       
 //        setFlashlevel(level: 0.0)
         LEDBar.minimumValue = 0
         LEDBar.maximumValue = 0.1
@@ -311,6 +304,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
     }
     override func viewDidAppear(_ animated: Bool) {
+        hideButtons(type: false)
         setButtons(type: true)
     }
     @IBAction func onClick120fps(_ sender: Any) {
@@ -336,10 +330,22 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
         }
     }
-    
+    func hideButtons(type:Bool){
+        startButton.isHidden=type
+        stopButton.isHidden=type
+        currentTime.isHidden=type
+        fps240Button.isHidden=type
+        fps120Button.isHidden=type
+        LEDBar.isHidden=type
+        LEDLow.isHidden=type
+        LEDHigh.isHidden=type
+        focusBar.isHidden=type
+        focusFar.isHidden=type
+        focusNear.isHidden=type
+        exitBut.isHidden=type
+    }
     func setButtons(type:Bool){
         // recording button
-        
         let ww=view.bounds.width
         let wh=damyBottom.frame.maxY// view.bounds.height
         let bw=(ww/4)-8
@@ -397,7 +403,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func setLabelProperty(label:UILabel,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
         label.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
-        label.layer.borderColor = UIColor.green.cgColor
+        label.layer.borderColor = UIColor.black.cgColor
         label.layer.borderWidth = 1.0
         label.layer.position=CGPoint(x:cx,y:cy)
         label.layer.masksToBounds = true
@@ -405,7 +411,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
         button.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
-        button.layer.borderColor = UIColor.green.cgColor
+        button.layer.borderColor = UIColor.black.cgColor
         button.layer.borderWidth = 1.0
         button.layer.position=CGPoint(x:cx,y:cy)
         button.layer.cornerRadius = 5
@@ -535,18 +541,20 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //                performSegue(withIdentifier: "fromRecordToMain", sender: self)
             } else {
                 //start recording
-                startButton.isHidden=true
+                setMotion()
+                hideButtons(type: true)
+//                startButton.isHidden=true
                 stopButton.isHidden=false
                 currentTime.isHidden=false
-                LEDBar.isHidden=true
-                LEDLow.isHidden=true
-                LEDHigh.isHidden=true
-                focusBar.isHidden=true
-                focusFar.isHidden=true
-                focusNear.isHidden=true
-                exitBut.isHidden=true
-                fps240Button.isHidden=true
-                fps120Button.isHidden=true
+//                LEDBar.isHidden=true
+//                LEDLow.isHidden=true
+//                LEDHigh.isHidden=true
+//                focusBar.isHidden=true
+//                focusFar.isHidden=true
+//                focusNear.isHidden=true
+//                exitBut.isHidden=true
+//                fps240Button.isHidden=true
+//                fps120Button.isHidden=true
 //                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
                 UIApplication.shared.isIdleTimerDisabled = true//スリープしない
                 if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
@@ -562,7 +570,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 filePath = "vHIT96da\(formatter.string(from: Date())).MOV"
                 let filefullPath="\(documentsDirectory)/" + filePath!
                 let fileURL = NSURL(fileURLWithPath: filefullPath)
-                setMotion()//作動中ならそのまま戻る
+ //               setMotion()//作動中ならそのまま戻る
                 print("録画開始 : \(filePath!)")
                 fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
             }

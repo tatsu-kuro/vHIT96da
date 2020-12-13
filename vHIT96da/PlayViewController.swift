@@ -95,8 +95,9 @@ class PlayViewController: UIViewController {
         seekBar.frame = CGRect(x: 10, y: wh-bh*2-10, width: ww - 20, height: bh)
         seekBar.minimumValue = 0
         seekBar.layer.cornerRadius = 5
-        seekBar.backgroundColor = UIColor.white
-        seekBar.thumbTintColor = UIColor.black
+        seekBar.backgroundColor = UIColor.clear
+        seekBar.thumbTintColor = UIColor.systemOrange
+        seekBar.tintColor = UIColor.systemOrange
         duration=Float(CMTimeGetSeconds(avAsset.duration))
         seekBar.maximumValue = duration//Float(CMTimeGetSeconds(avAsset.duration))
         //        print(seekBar.maximumValue)
@@ -124,7 +125,7 @@ class PlayViewController: UIViewController {
         backButton.layer.cornerRadius = 5.0
         backButton.backgroundColor = UIColor.darkGray
         backButton.setTitle("<", for: UIControl.State.normal)
-        backButton.layer.borderColor = UIColor.green.cgColor
+        backButton.layer.borderColor = UIColor.black.cgColor
         backButton.layer.borderWidth = 1.0
         backButton.addTarget(self, action: #selector(onBackButtonTapped), for: UIControl.Event.touchUpInside)
         view.addSubview(backButton)
@@ -134,7 +135,7 @@ class PlayViewController: UIViewController {
         startButton.layer.cornerRadius = 5.0
         startButton.backgroundColor = UIColor.darkGray
         startButton.setTitle("Play", for: UIControl.State.normal)
-        startButton.layer.borderColor = UIColor.green.cgColor
+        startButton.layer.borderColor = UIColor.black.cgColor
         startButton.layer.borderWidth = 1.0
 
         startButton.addTarget(self, action: #selector(onStartButtonTapped), for: UIControl.Event.touchUpInside)
@@ -146,7 +147,7 @@ class PlayViewController: UIViewController {
         nextButton.layer.cornerRadius = 5.0
         nextButton.backgroundColor = UIColor.darkGray
         nextButton.setTitle(">", for: UIControl.State.normal)
-        nextButton.layer.borderColor = UIColor.green.cgColor
+        nextButton.layer.borderColor = UIColor.black.cgColor
         nextButton.layer.borderWidth = 1.0
         nextButton.addTarget(self, action: #selector(onNextButtonTapped), for: UIControl.Event.touchUpInside)
           view.addSubview(nextButton)
@@ -159,7 +160,7 @@ class PlayViewController: UIViewController {
 //        exitButton!.textAlignment = .center
         exitButton.setTitle("Exit", for:UIControl.State.normal)
         exitButton.isEnabled=true
-        exitButton.layer.borderColor = UIColor.green.cgColor
+        exitButton.layer.borderColor = UIColor.black.cgColor
         exitButton.layer.borderWidth = 1.0
         exitButton.addTarget(self, action: #selector(onExitButtonTapped), for: UIControl.Event.touchUpInside)
         view.addSubview(exitButton)
@@ -177,8 +178,11 @@ class PlayViewController: UIViewController {
         currTime?.backgroundColor = UIColor.white
         currTime?.layer.masksToBounds = true
         currTime?.layer.cornerRadius = 5
+        currTime?.layer.borderWidth = 1
+        currTime?.layer.borderColor = UIColor.black.cgColor
         currTime?.textColor = UIColor.black
         currTime?.textAlignment = .center
+        currTime?.font=UIFont.monospacedDigitSystemFont(ofSize: 25, weight: .medium)
         currTime!.text = String(format:"%.2f/%.2f",0.0,duration)
         view.addSubview(currTime!)
         //        duraTime = UILabel(frame:CGRect(x:10,y:wh-150,width:70,height:25))
