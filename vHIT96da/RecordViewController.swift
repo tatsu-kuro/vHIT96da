@@ -543,18 +543,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 //start recording
                 setMotion()
                 hideButtons(type: true)
-//                startButton.isHidden=true
                 stopButton.isHidden=false
                 currentTime.isHidden=false
-//                LEDBar.isHidden=true
-//                LEDLow.isHidden=true
-//                LEDHigh.isHidden=true
-//                focusBar.isHidden=true
-//                focusFar.isHidden=true
-//                focusNear.isHidden=true
-//                exitBut.isHidden=true
-//                fps240Button.isHidden=true
-//                fps120Button.isHidden=true
+
 //                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
                 UIApplication.shared.isIdleTimerDisabled = true//スリープしない
                 if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
