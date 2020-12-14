@@ -18,25 +18,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var videoDevice: AVCaptureDevice?
     var filePath:String?
     var timer:Timer?
-//    var focusF:Float=0
-//    var flashFlag:Bool=false
-    //
-    //    var ww:CGFloat?
-    //    var wh:CGFloat?
+    var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     var fpsMax:Int?
     var fps_non_120_240:Int=2
     var maxFps:Double=240
     var fileOutput = AVCaptureMovieFileOutput()
     var gyro = Array<Double>()
     var recStart = CFAbsoluteTimeGetCurrent()
-//    var recEnd=CFAbsoluteTimeGetCurrent()
-//    var recordButton: UIButton!
-//    var currTime:UILabel?
-//    @IBOutlet weak var LEDCircle: UIImageView!
-//
-//    @IBOutlet weak var LEDButton:
-//        UIButton!
-    
+
     @IBOutlet weak var focusNear: UILabel!
     
     @IBOutlet weak var focusBar: UISlider!
@@ -234,26 +223,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
         
     }
-//    @IBAction func LEDonoff(_ sender: Any) {
-//
-//        if flashFlag==true{
-//            setFlashlevel(level: 0)
-//            flashFlag=false
-//            LEDCircle.tintColor=UIColor.gray
-//        }else{
-//            //iPhone11:0.04 で適度な明るさ、これ以下にすると光らない
-//            //SEでは明るすぎるが、これが最低の光量か？
-//            //二つのLEDの個別の制御は出来なさそう。
-//            setFlashlevel(level: 0.04)
-//            flashFlag=true
-//            LEDCircle.tintColor=UIColor.orange
-//        }
-//        if flashFlag==true{
-//            UserDefaults.standard.set(1, forKey: "flashFlag")
-//        }else{
-//            UserDefaults.standard.set(0, forKey: "flashFlag")
-//        }
-//    }
 
     func setFlashlevel(level:Float){
         if let device = videoDevice{
@@ -525,48 +494,78 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
-    func onClickRecordButton() {
-              if self.fileOutput.isRecording {
-                // stop recording
-//                if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
-//                    AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
-//                    AudioServicesPlaySystemSound(soundIdstop)
-//                }
-                print("ストップボタンを押した。")
-                fileOutput.stopRecording()
-//                recordedFlag=true
-//                if timer?.isValid == true {
-//                    timer!.invalidate()
-//                }
-//                performSegue(withIdentifier: "fromRecordToMain", sender: self)
-            } else {
-                //start recording
-                setMotion()
-                hideButtons(type: true)
-                stopButton.isHidden=false
-                currentTime.isHidden=false
-
-//                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-                UIApplication.shared.isIdleTimerDisabled = true//スリープしない
-                if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
-                    AudioServicesCreateSystemSoundID(soundUrl, &soundIdstart)
-                    AudioServicesPlaySystemSound(soundIdstart)
+    func albumCheck(){//ここでもチェックしないとダメのよう
+        if albumExists(albumTitle: "iCapNYS")==false{
+            createNewAlbum(albumTitle: "iCapNYS") { (isSuccess) in
+                if isSuccess{
+                    print("iCapNYS_album can be made,")
+                } else{
+                    print("iCapNYS_album can't be made.")
                 }
-                
-                let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-                let documentsDirectory = paths[0] as String
-                // 現在時刻をファイル名に付与することでファイル重複を防ぐ : "myvideo-20190101125900.mp4" な形式になる
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
-                filePath = "vHIT96da\(formatter.string(from: Date())).MOV"
-                let filefullPath="\(documentsDirectory)/" + filePath!
-                let fileURL = NSURL(fileURLWithPath: filefullPath)
- //               setMotion()//作動中ならそのまま戻る
-                print("録画開始 : \(filePath!)")
-                fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
+            }
+        }else{
+            print("iCapNYS_album exist already.")
+        }
+    }
+    func onClickRecordButton() {
+        albumCheck()
+        if self.fileOutput.isRecording {
+            // stop recording
+            print("ストップボタンを押した。")
+            fileOutput.stopRecording()
+        } else {
+            //start recording
+            setMotion()
+            hideButtons(type: true)
+            stopButton.isHidden=false
+            currentTime.isHidden=false
+            UIApplication.shared.isIdleTimerDisabled = true//スリープしない
+            if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
+                AudioServicesCreateSystemSoundID(soundUrl, &soundIdstart)
+                AudioServicesPlaySystemSound(soundIdstart)
+            }
+            
+            let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+            let documentsDirectory = paths[0] as String
+            // 現在時刻をファイル名に付与することでファイル重複を防ぐ : "myvideo-20190101125900.mp4" な形式になる
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
+            filePath = "vHIT96da\(formatter.string(from: Date())).MOV"
+            let filefullPath="\(documentsDirectory)/" + filePath!
+            let fileURL = NSURL(fileURLWithPath: filefullPath)
+            //               setMotion()//作動中ならそのまま戻る
+            print("録画開始 : \(filePath!)")
+            fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
+        }
+    }
+    // アルバムが既にあるか確認し、iCapNYSAlbumに代入
+    func albumExists(albumTitle: String) -> Bool {
+        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
+        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
+        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
+            PHAssetCollectionSubtype.albumRegular, options: nil)
+        for i in 0 ..< albums.count {
+            let album = albums.object(at: i)
+            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
+                vHIT96daAlbum = album
+                return true
             }
         }
-
+        return false
+    }
+    
+    //何も返していないが、ここで見つけたor作成したalbumを返したい。そうすればグローバル変数にアクセスせずに済む
+    func createNewAlbum(albumTitle: String, callback: @escaping (Bool) -> Void) {
+        if self.albumExists(albumTitle: albumTitle) {
+            callback(true)
+        } else {
+            PHPhotoLibrary.shared().performChanges({
+                let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
+            }) { (isSuccess, error) in
+                callback(isSuccess)
+            }
+        }
+    }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
             AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
