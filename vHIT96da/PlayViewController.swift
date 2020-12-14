@@ -116,7 +116,7 @@ class PlayViewController: UIViewController {
             let value = Float(self.seekBar.maximumValue - self.seekBar.minimumValue) * Float(time) / Float(self.duration) + Float(self.seekBar.minimumValue)
             self.seekBar.value = value
             self.seekBarValue=value
-            self.currTime!.text = String(format:"%.2f/%.2f",value,self.duration)
+            self.currTime!.text = String(format:"%.1f/%.1f",value,self.duration)
             //            self.currTime!.text = String(format:"%.2f",value)
         })
         let bw=(ww-100)/4
@@ -182,8 +182,8 @@ class PlayViewController: UIViewController {
         currTime?.layer.borderColor = UIColor.black.cgColor
         currTime?.textColor = UIColor.black
         currTime?.textAlignment = .center
-        currTime?.font=UIFont.monospacedDigitSystemFont(ofSize: 25, weight: .medium)
-        currTime!.text = String(format:"%.2f/%.2f",0.0,duration)
+        currTime?.font=UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .medium)
+        currTime!.text = String(format:"%.1f/%.1f",0.0,duration)
         view.addSubview(currTime!)
         //        duraTime = UILabel(frame:CGRect(x:10,y:wh-150,width:70,height:25))
         //        duraTime?.backgroundColor = UIColor.white
@@ -219,7 +219,7 @@ class PlayViewController: UIViewController {
             seekBarValue=duration-0.1
          }
          let newTime = CMTime(seconds: Double(seekBarValue), preferredTimescale: 600)
-         currTime!.text = String(format:"%.2f/%.2f",seekBarValue,duration)
+         currTime!.text = String(format:"%.1f/%.1f",seekBarValue,duration)
          videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     @objc func onBackButtonTapped(){
@@ -234,7 +234,7 @@ class PlayViewController: UIViewController {
             seekBarValue=0
         }
         let newTime = CMTime(seconds: Double(seekBarValue), preferredTimescale: 600)
-        currTime!.text = String(format:"%.2f/%.2f",seekBarValue,duration)
+        currTime!.text = String(format:"%.1f/%.1f",seekBarValue,duration)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     @objc func onStartButtonTapped(){
@@ -262,7 +262,7 @@ class PlayViewController: UIViewController {
         currentCMTime=newTime
         seekBarValue=seekBar.value
 //        print(seekBarValue)
-         currTime!.text = String(format:"%.2f/%.2f",seekBarValue,duration)
+         currTime!.text = String(format:"%.1f/%.1f",seekBarValue,duration)
 //        currTime!.text = String(format:"%.2f",seekBarValue)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
