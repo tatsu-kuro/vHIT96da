@@ -495,16 +495,16 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     func albumCheck(){//ここでもチェックしないとダメのよう
-        if albumExists(albumTitle: "iCapNYS")==false{
-            createNewAlbum(albumTitle: "iCapNYS") { (isSuccess) in
+        if albumExists(albumTitle: "vHIT_VOG")==false{
+            createNewAlbum(albumTitle: "vHIT_VOG") { (isSuccess) in
                 if isSuccess{
-                    print("iCapNYS_album can be made,")
+                    print("vHIT_VOG_album can be made,")
                 } else{
-                    print("iCapNYS_album can't be made.")
+                    print("vHIT_VOG_album can't be made.")
                 }
             }
         }else{
-            print("iCapNYS_album exist already.")
+            print("vHIT_VOG_album exist already.")
         }
     }
     func onClickRecordButton() {
@@ -577,6 +577,28 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         recordedFlag=true
         if timer?.isValid == true {
             timer!.invalidate()
+        }
+        
+        PHPhotoLibrary.shared().performChanges({
+            //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
+            let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
+            let albumChangeRequest = PHAssetCollectionChangeRequest(for: (self.vHIT96daAlbum)!)
+            let placeHolder = assetRequest.placeholderForCreatedAsset
+            albumChangeRequest?.addAssets([placeHolder!] as NSArray)
+            //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
+            print("file add to album")
+        }) { (isSuccess, error) in
+            if isSuccess {
+                // 保存した画像にアクセスする為のimageIDを返却
+                //completionBlock(imageID)
+                print("success")
+            } else {
+                //failureBlock(error)
+                print("fail")
+//                print(error)
+
+            }
+//            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
         }
         performSegue(withIdentifier: "fromRecordToMain", sender: self)
     }
