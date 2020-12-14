@@ -18,27 +18,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var defaultButton: UIButton!
     
     @IBOutlet weak var damyTop: UILabel!
-    //@IBAction func onBut(_ sender: UIButton) {
-//        if okpMode==0{
-//
-//        }
-//        oknButton.image=UIImage(named:"circle")
-    //}
-//    @IBAction func offbut(_ sender: UIButton) {
-//        if okpMode==0{
-//            okpMode=1
-//        }else{
-//            okpMode=0
-//        }
-//        setTexts()
-//    }
+ 
     var okpMode:Int = 0
-//    var facedispF:Int?
+
     var faceF:Int?
     var widthRange:Int = 0
     var waveWidth:Int = 0
     var eyeBorder:Int = 0
-//    var gyroDelta:Int = 0
+
     var ratio1:Int = 0
     var ratio2:Int = 0
     var isVHIT:Bool?
@@ -47,24 +34,17 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var paraText2: UILabel!
     @IBOutlet weak var paraText3: UILabel!
     @IBOutlet weak var paraText4: UILabel!
-//    @IBOutlet weak var paraText5: UILabel!
+
     @IBOutlet weak var paraText6: UILabel!
     @IBOutlet weak var vhitpng: UIImageView!
     @IBOutlet weak var keyDown: UIButton!
     @IBOutlet weak var widthRangeinput: UITextField!
     @IBOutlet weak var waveWidthinput: UITextField!
     @IBOutlet weak var eyeBinput: UITextField!
-//    @IBOutlet weak var gyroDinput: UITextField!
+
     @IBOutlet weak var ratio1input: UITextField!
     @IBOutlet weak var ratio2input: UITextField!
     
-//    @IBAction func markdispButton(_ sender: UISwitch) {
-//        if sender.isOn{
-//            facedispF=1
-//        }else{
-//            facedispF=0
-//        }
-//    }
     @IBAction func faceFchan(_ sender: UISwitch) {
         if sender.isOn{
             faceF=1
