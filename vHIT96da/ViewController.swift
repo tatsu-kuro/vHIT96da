@@ -42,6 +42,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vidPath = Array<String>()
     var vidDate = Array<String>()
     var vidDura = Array<String>()
+    var videoArrayCount:Int = 0
+    var videosDate = Array<String>()
+    var videosURL = Array<URL>()
+    var albumExist:Bool=false
+
     var vidCurrent:Int=0
     var vogImage:UIImage?
     let videoPathtext:String="videoPath.txt"
@@ -1650,9 +1655,79 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
-    
-    func getUserDefaults(){
+    //アルバムの一覧取得
+    var gettingAlbumF:Bool=true
+    func getAlbumList(){//最後のvideoを取得するまで待つ
+        gettingAlbumF = true
+        getAlbumList_sub()
+        while gettingAlbumF == true{
+            sleep(UInt32(0.1))
+        }
+    }
+    func getAlbumList_sub(){
+        //     let imgManager = PHImageManager.default()
+        let requestOptions = PHImageRequestOptions()
+        videosURL.removeAll()
+        videosDate.removeAll()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = false
+        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
+        // "iCapNYS"という名前のアルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
         
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+//        print("asset:",assetCollections.count)
+        //アルバムが存在しない事もある？
+        if (assetCollections.count > 0) {
+            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+            let assetCollection = assetCollections.object(at:0)
+            // creationDate降順でアルバム内のアセットをフェッチ
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+//            videoAssets = assets
+//            print("assets:",assets.count)
+            albumExist=true
+            if assets.count == 0{
+                gettingAlbumF=false
+                albumExist=false
+            }
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            for i in 0..<assets.count{
+                let asset=assets[i]
+                let date_sub = asset.creationDate
+                let date = formatter.string(from: date_sub!)
+                let duration = String(format:"%.1fs",asset.duration)
+ 
+                let options=PHVideoRequestOptions()
+                options.version = .original
+                PHImageManager.default().requestAVAsset(forVideo:asset,
+                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
+                    
+                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
+                        videosURL.append(urlAsset.url)
+//                        print(urlAsset.url)
+                        videosDate.append(date + "(" + duration + ")")
+//                        print(videoDate.last as Any)
+                        if i == assets.count - 1{
+                            gettingAlbumF=false
+                        }
+                    }else{//on icloud
+                        if i == assets.count - 1{
+                            gettingAlbumF=false
+                        }
+                    }
+                }
+            }
+        }else{
+            albumExist=false
+            gettingAlbumF=false
+        }
+    }
+    func getUserDefaults(){
         widthRange = getUserDefault(str: "widthRange", ret: 30)
         waveWidth = getUserDefault(str: "waveWidth", ret: 80)
         eyeBorder = getUserDefault(str: "eyeBorder", ret: 10)
@@ -2191,7 +2266,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         self.setNeedsStatusBarAppearanceUpdate()
 //        prefersHomeIndicatorAutoHidden
 //        dispWakuImages()
-        
+        getAlbumList()
+        videoArrayCount = videosURL.count
+        print(videosURL.count)
+        for i in 0..<videosURL.count {
+            print(videosURL[i])
+            print(videosDate[i])
+        }
     }
     func setButtons_first(){
         let ww=view.bounds.width
