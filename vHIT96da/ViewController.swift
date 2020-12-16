@@ -40,7 +40,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogCurpoint:Int = 0
     var vidImg = Array<UIImage>()
     var vidPath = Array<String>()
-    var vidDate = Array<String>()
+//    var vidDate = Array<String>()
 //    var vidDura = Array<String>()
     //以下はalbum関連
     var albumExist:Bool=false
@@ -1676,7 +1676,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var str = path.components(separatedBy: ",")
         str.sort()//descend? ascend ?
         vidPath.removeAll()
-        vidDate.removeAll()
+//        vidDate.removeAll()
         //        vidDuraorg.removeAll()
 //        vidDura.removeAll()
         vidImg.removeAll()
@@ -1725,7 +1725,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let str1=path.components(separatedBy: "vHIT96da")
         let str2=str1[1].components(separatedBy: ".MOV")
         let str3=str2[0] + " (\(vidPath.count-1))"
-        vidDate.append(str3)
+//        vidDate.append(str3)
 //        print("date",path,str3)
     }
 //    func getDura(path:String)->Double{//最新のビデオのデータを得る.recordから飛んでくる。
