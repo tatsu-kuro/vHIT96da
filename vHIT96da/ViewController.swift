@@ -38,7 +38,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vhitVideos:Int = 0
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
-    var vidImg = Array<UIImage>()
+//    var vidImg = Array<UIImage>()
     var vidPath = Array<String>()
 //    var vidDate = Array<String>()
 //    var vidDura = Array<String>()
@@ -1679,7 +1679,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        vidDate.removeAll()
         //        vidDuraorg.removeAll()
 //        vidDura.removeAll()
-        vidImg.removeAll()
+//        vidImg.removeAll()
         if str[0]==""{//"*.MOV"でstr.countは１,"*.MOV,*.MOV"で2
             return//""と何も無くてもstr.countは1   !!!!!
         }
@@ -1714,7 +1714,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let asset = AVURLAsset(url: fileURL, options: options)
         vidPath.append(path)
 //        appendingFlag=true
-        vidImg.append(getThumbnailFrom(path: vidpath))
+//        vidImg.append(getThumbnailFrom(path: vidpath))
 //        while appendingFlag == true{
 //            sleep(UInt32(0.1))
 //        }
