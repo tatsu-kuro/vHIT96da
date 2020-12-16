@@ -218,17 +218,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         showBoxies(f: boxF)
     }
-    var videoCurrent:Int=0
-    func showNext(){
-        videoCurrent += 1
-        if videoCurrent>videoArrayCount-1{
-            videoCurrent=0
-        }
-        slowImage.image=videosImg[videoCurrent]
-    }
+    
     @IBAction func backVideo(_ sender: Any) {
-        showNext()
-        return
+  
         if vHITlineView?.isHidden == false{
             return
         }
@@ -241,6 +233,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vidCurrent = vidPath.count-1
         }
         show1()
+    }
+    func showVideo1(){
+        slowImage.image=videosImg[videoCurrent]
+        videoDate.text=videosDate[videoCurrent] + "(" + (videoCurrent+1).description + ")"
+        let roundFps:Int = Int(round(getFPS(url: videosURL[videoCurrent])))
+        videoFps.text=videosDura[videoCurrent] + "/" + String(format: "%dfps",roundFps)
+
+    }
+    var videoCurrent:Int=0
+    func showNext(){
+        videoCurrent += 1
+        if videoCurrent>videoArrayCount-1{
+            videoCurrent=0
+        }
+        showVideo1()
+//        slowImage.image=videosImg[videoCurrent]
+//        print("number:",videoCurrent,videoArrayCount,getFPS(url: videosURL[videoCurrent]))
+        
     }
     func showTexts(){
         let str=vidDura[vidCurrent]
@@ -271,6 +281,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showTexts()
     }
     @IBAction func nextVideo(_ sender: Any) {
+        showNext()
+        return
+        
+        
         if vHITlineView?.isHidden == false{
             return
         }
@@ -1632,6 +1646,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        let durSec=CMTimeGetSeconds(asset.duration)
 //        return durSec
 //    }
+    func getFPS(url:URL) -> Float{
+        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        let avAsset = AVURLAsset(url: url, options: options)
+        return avAsset.tracks.first!.nominalFrameRate
+    }
     func getFPS(videoPath:String)->Float{
         let fileURL = getfileURL(path: videoPath)
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
@@ -1702,7 +1721,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let assetCollection = assetCollections.object(at:0)
             // creationDate降順でアルバム内のアセットをフェッチ
             let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
 //            videoAssets = assets
 //            print("assets:",assets.count)
@@ -1727,7 +1746,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     if let urlAsset = asset as? AVURLAsset{//not on iCloud
                         videosURL.append(urlAsset.url)
 //                        print(urlAsset.url)
-                        videosDate.append(date + "(" + duration + ")")
+                        videosDate.append(date)// + "(" + duration + ")")
+                        videosDura.append(duration)
                         videosImg.append(getThumb(url: urlAsset.url))
 //                        print(videoDate.last as Any)
                         if i == assets.count - 1{
@@ -2306,6 +2326,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        camera_alert()
         getAlbumList()
         videoArrayCount = videosURL.count
+        videoCurrent=videoArrayCount-1
         setArrays()
         vidCurrent=vidPath.count-1//ない場合は -1
         showCurrent()
@@ -2684,6 +2705,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 saveGyro(path:Controller.filePath!)// str[0])//videoと同じ名前で保存
                 dispWakuImages()
                 startFrame=0
+                getAlbumList()
+                videoArrayCount=videosDura.count
+                videoCurrent=videoArrayCount-1
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
             //            UserDefaults.standard.set(fps_non_120_240,forKey:"fps_non_120_240")
