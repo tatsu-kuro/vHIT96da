@@ -1584,18 +1584,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return vidpath
     }
     
-    var appendingFlag:Bool = false
+//    var appendingFlag:Bool = false
     func appendAll(doc:String,path:String){//for で回すのでdocumentsdirはgetgetしておる
         let vidpath = doc + "/" + path
         let fileURL = URL(fileURLWithPath: vidpath)
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let asset = AVURLAsset(url: fileURL, options: options)
         vidPath.append(path)
-        appendingFlag=true
-        vidImg.append(getThumbnailFrom(path: vidpath)!)// vidPath.last!)!)
-        while appendingFlag == true{
-            sleep(UInt32(0.1))
-        }
+//        appendingFlag=true
+        vidImg.append(getThumbnailFrom(path: vidpath))
+//        while appendingFlag == true{
+//            sleep(UInt32(0.1))
+//        }
         let sec10 = Int(10*asset.duration.seconds)
         let temp = "\(sec10/10)" + "." + "\(sec10%10)" + "s"
         vidDura.append(temp)
@@ -2187,8 +2187,38 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            videoFps.text = "\(freeCounter)"
         }
     }
-    
-    func getThumbnailFrom(path: String) -> UIImage? {
+    var gettingThumbFlag:Bool=false
+    func getThumb(url:URL) -> UIImage{//getするまで待って帰る
+        gettingThumbFlag=true
+        let img=getThumb_sub(url:url)
+        while gettingThumbFlag==true{
+            sleep(UInt32(0.1))
+        }
+        return img!
+    }
+    func getThumb_sub(url: URL) -> UIImage? {
+        do {
+            let asset = AVURLAsset(url: url as URL , options: nil)
+            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            imgGenerator.appliesPreferredTrackTransform = true
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+            let thumbnail = UIImage(cgImage: cgImage)
+            gettingThumbFlag=false
+            return thumbnail
+        } catch let error {
+            print("*** Error generating thumbnail: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    func getThumbnailFrom(path:String) -> UIImage{//getするまで待って帰る
+        gettingThumbFlag=true
+        let img=getThumbnailFrom_sub(path: path)
+        while gettingThumbFlag==true{
+            sleep(UInt32(0.1))
+        }
+        return img!
+    }
+    func getThumbnailFrom_sub(path: String) -> UIImage? {
         let url = NSURL(fileURLWithPath: path)
         if path==""{
             return nil
@@ -2199,7 +2229,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             imgGenerator.appliesPreferredTrackTransform = true
             let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
             let thumbnail = UIImage(cgImage: cgImage)
-            appendingFlag=false
+            gettingThumbFlag=false
             return thumbnail
         } catch let error {
             print("*** Error generating thumbnail: \(error.localizedDescription)")
@@ -2276,7 +2306,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func setButtons_first(){
         let ww=view.bounds.width
-        let wh=view.bounds.height
+//        let wh=view.bounds.height
         var bw=(ww-30)/4//vhit,camera,vogのボタンの幅
         let distance:CGFloat=4//最下段のボタンとボタンの距離
         let bottomY=damyBottom.frame.minY

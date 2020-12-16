@@ -261,6 +261,8 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
             print("send")
         case .failed:
             print("fail")
+        @unknown default:
+            print("unknown error")
         }
         self.dismiss(animated: true, completion: nil)
     }
