@@ -41,7 +41,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vidImg = Array<UIImage>()
     var vidPath = Array<String>()
     var vidDate = Array<String>()
-    var vidDura = Array<String>()
+//    var vidDura = Array<String>()
     //以下はalbum関連
     var albumExist:Bool=false
     var videosArrayCount:Int = 0
@@ -1302,7 +1302,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         // パスの初期化
         let drawPath = UIBezierPath()
-        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,vidDura[vidCurrent],timercnt+1)
+        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,videosDura[videosCurrent],timercnt+1)
         //print(timetxt)
         timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
@@ -1333,7 +1333,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let drawPath = UIBezierPath()
         
         if timeflag==true{
-            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,vidDura[vidCurrent],timercnt+1)
+            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,videosDura[videosCurrent],timercnt+1)
             //print(timetxt)
             timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
                 NSAttributedString.Key.foregroundColor : UIColor.black,
@@ -1678,7 +1678,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vidPath.removeAll()
         vidDate.removeAll()
         //        vidDuraorg.removeAll()
-        vidDura.removeAll()
+//        vidDura.removeAll()
         vidImg.removeAll()
         if str[0]==""{//"*.MOV"でstr.countは１,"*.MOV,*.MOV"で2
             return//""と何も無くてもstr.countは1   !!!!!
@@ -1720,7 +1720,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        }
         let sec10 = Int(10*asset.duration.seconds)
         let temp = "\(sec10/10)" + "." + "\(sec10%10)" + "s"
-        vidDura.append(temp)
+//        vidDura.append(temp)
         //        vidDuraorg.append(temp)
         let str1=path.components(separatedBy: "vHIT96da")
         let str2=str1[1].components(separatedBy: ".MOV")
@@ -2016,7 +2016,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawPath1.stroke()
         }
         drawPath2.stroke()
-        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloFiltered.count,CGFloat(eyeVeloFiltered.count)/240.0,vidDura[vidCurrent],timercnt+1)
+        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloFiltered.count,CGFloat(eyeVeloFiltered.count)/240.0,videosDura[videosCurrent],timercnt+1)
         //print(timetxt)
         timetxt.draw(at: CGPoint(x: 3, y: 3), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
