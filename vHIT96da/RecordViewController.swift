@@ -18,6 +18,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var videoDevice: AVCaptureDevice?
     var filePath:String?
     var timer:Timer?
+    var recordedFPS:Float?
     var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     var fpsMax:Int?
     var fps_non_120_240:Int=2
@@ -566,6 +567,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
+    func getFPS(url:URL) -> Float{
+        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        let avAsset = AVURLAsset(url: url, options: options)
+        return avAsset.tracks.first!.nominalFrameRate
+    }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
             AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
@@ -573,7 +579,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         print("終了ボタン、最大を超えた時もここを通る")
         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
-        
+        recordedFPS=getFPS(url: outputFileURL)
         recordedFlag=true
         if timer?.isValid == true {
             timer!.invalidate()

@@ -50,6 +50,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videosImg = Array<UIImage>()
     var videosDura = Array<String>()
     var videosCurrent:Int=0
+//    var recordedFPS:Float?
     //album関連、ここまで
     var vidCurrent:Int=0
     var vogImage:UIImage?
@@ -158,36 +159,36 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     @IBAction func eraseVideo(_ sender: Any) {
-        let str=getFsindoc().components(separatedBy: ",")
-        if !str[0].contains("vHIT96da"){
-            return
-        }
-        let str1=vidPath[vidCurrent].components(separatedBy: ".MOV")
-        //str1[0]=vHIT96da*(.MOVを削ったもの)
-        let lastvidCurrent=vidCurrent
-        for i in 0..<str.count{
-            if str[i].contains(str1[0]){
-                if removeFile(delFile: str[i])==true{
-                    print("remove completed:",str[i])
-                    eyeVeloOrig.removeAll()
-                    eyeVeloFiltered.removeAll()
-                    faceVeloOrig.removeAll()
-                    faceVeloFiltered.removeAll()
-                    eyePosOrig.removeAll()
-                    eyePosFiltered.removeAll()
-                    gyroMoved.removeAll()
-                }
-            }
-        }
-        setArrays()//vidCurrent -> lastoneにセットされる
-        vidCurrent=lastvidCurrent-1
-        if vidCurrent<0{
-            vidCurrent=0
-        }
-        startFrame=0
-//        showCurrent()
-        showBoxies(f: false)
-        showWakuImages()
+//        let str=getFsindoc().components(separatedBy: ",")
+//        if !str[0].contains("vHIT96da"){
+//            return
+//        }
+//        let str1=vidPath[vidCurrent].components(separatedBy: ".MOV")
+//        //str1[0]=vHIT96da*(.MOVを削ったもの)
+//        let lastvidCurrent=vidCurrent
+//        for i in 0..<str.count{
+//            if str[i].contains(str1[0]){
+//                if removeFile(delFile: str[i])==true{
+//                    print("remove completed:",str[i])
+//                    eyeVeloOrig.removeAll()
+//                    eyeVeloFiltered.removeAll()
+//                    faceVeloOrig.removeAll()
+//                    faceVeloFiltered.removeAll()
+//                    eyePosOrig.removeAll()
+//                    eyePosFiltered.removeAll()
+//                    gyroMoved.removeAll()
+//                }
+//            }
+//        }
+//        setArrays()//vidCurrent -> lastoneにセットされる
+//        vidCurrent=lastvidCurrent-1
+//        if vidCurrent<0{
+//            vidCurrent=0
+//        }
+//        startFrame=0
+////        showCurrent()
+//        showBoxies(f: false)
+//        showWakuImages()
     }
     
     @IBAction func vhitGo(_ sender: Any) {
@@ -230,18 +231,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showVideoIroiro(num: -1)
         return
                   
-        vhitVideocurrent -= 1
-        if vhitVideocurrent < 0 {
-            vhitVideocurrent = vhitVideos
-        }
-        vidCurrent -= 1
-        if vidCurrent < 0 {
-            vidCurrent = vidPath.count-1
-        }
-//        show1()
+//        vhitVideocurrent -= 1
+//        if vhitVideocurrent < 0 {
+//            vhitVideocurrent = vhitVideos
+//        }
+//        vidCurrent -= 1
+//        if vidCurrent < 0 {
+//            vidCurrent = vidPath.count-1
+//        }
+////        show1()
     }
    
     func showVideoIroiro(num:Int){//videosCurrentを移動
+        if videosDura.count == 0{
+            slowImage.image=UIImage(named:"vhittop")
+            return
+        }
         videosCurrent += num
         print(videosCurrent,num)
         if videosCurrent>videosArrayCount-1{
@@ -297,14 +302,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showVideoIroiro(num: 1)
         return
     
-        vhitVideocurrent += 1
-        vidCurrent += 1
-        if vhitVideocurrent > vhitVideos{
-            vhitVideocurrent = 0
-        }
-        if vidCurrent>vidPath.count-1{
-            vidCurrent=0
-        }
+//        vhitVideocurrent += 1
+//        vidCurrent += 1
+//        if vhitVideocurrent > vhitVideos{
+//            vhitVideocurrent = 0
+//        }
+//        if vidCurrent>vidPath.count-1{
+//            vidCurrent=0
+//        }
 //        show1()
     }
     
@@ -428,7 +433,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyrolineView?.isHidden = true
             setBacknext(f: true)
             //         playButton.isEnabled=true
-            if vidPath.count != 0{
+            if videosImg.count != 0{
                 eraseButton.isHidden=false
             }else{
                 eraseButton.isHidden=true
@@ -616,6 +621,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vHITlineView != nil{
             vHITlineView?.removeFromSuperview()
         }
+        
         readGyro(path: vidPath[vidCurrent])//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
@@ -1001,80 +1007,80 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        printR(str:"wakuEye:",rct: wakuEye.frame)
     }
     
-    func dispWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
-        if vidPath.count<1 {
-            return
-        }
-        //        print(vidCurrent)
-        let fileURL = getfileURL(path: vidPath[vidCurrent])
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: fileURL, options: options)
-        calcDate = videoDate.text!
-        var reader: AVAssetReader! = nil
-        do {
-            reader = try AVAssetReader(asset: avAsset)
-        } catch {
-            #if DEBUG
-            print("could not initialize reader.")
-            #endif
-            return
-        }
-        guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
-            #if DEBUG
-            print("could not retrieve the video track.")
-            #endif
-            return
-        }
-        
-        let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
-        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
-        
-        reader.add(readerOutput)
-        let frameRate = videoTrack.nominalFrameRate
-        //let startframe=startPoints[vhitVideocurrent]
-        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
-        let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
-        //print("time",timeRange)
-        reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
-        reader.startReading()
-        
-        let CGeye:CGImage!//eye
-        let UIeye:UIImage!
-        var CGfac:CGImage!//face
-        var UIfac:UIImage!
-        let context:CIContext = CIContext.init(options: nil)
-        let orientation = UIImage.Orientation.up//right
-        var sample:CMSampleBuffer!
-        sample = readerOutput.copyNextSampleBuffer()
-        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
-        
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-        
-        //        let eyeR = resizeR2(wakuE, viewRect:self.slowImage.frame,image:ciImage)
-        //slowImage.frameを以下のように　view.frame としたところ良くなった。
-        //起動時表示が一巡？するまでは　slowImage.frame はちょっと違う値を示す
-        let eyeR = resizeR2(wakuE, viewRect:view.frame,image:ciImage)
-        let facR = resizeR2(wakuF, viewRect:view.frame, image: ciImage)
-        //        printR(str:"eyeOnscreen:",rct: wakuE)
-        //        printR(str:"eyeOnVideo:",rct: eyeR)
-        CGfac = context.createCGImage(ciImage, from: facR)!
-        UIfac = UIImage.init(cgImage: CGfac, scale:1.0, orientation:orientation)
-        CGeye = context.createCGImage(ciImage, from: eyeR)!
-        UIeye = UIImage.init(cgImage: CGeye, scale:1.0, orientation:orientation)
-        let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
-//        print(videoFps.frame,wakuY)
-        wakuS_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
-        wakuS_image.layer.borderColor = UIColor.black.cgColor
-        wakuS_image.layer.borderWidth = 1.0
-        wakuS_image.backgroundColor = UIColor.clear
-        wakuS_image.layer.cornerRadius = 3
-        if rectType == 0{
-            wakuS_image.image=UIeye
-        }else{
-            wakuS_image.image=UIfac
-        }
-        //        printR(str:"wakuEye:",rct: wakuEye.frame)
-    }
+//    func dispWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
+//        if vidPath.count<1 {
+//            return
+//        }
+//        //        print(vidCurrent)
+//        let fileURL = getfileURL(path: vidPath[vidCurrent])
+//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+//        let avAsset = AVURLAsset(url: fileURL, options: options)
+//        calcDate = videoDate.text!
+//        var reader: AVAssetReader! = nil
+//        do {
+//            reader = try AVAssetReader(asset: avAsset)
+//        } catch {
+//            #if DEBUG
+//            print("could not initialize reader.")
+//            #endif
+//            return
+//        }
+//        guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
+//            #if DEBUG
+//            print("could not retrieve the video track.")
+//            #endif
+//            return
+//        }
+//
+//        let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+//        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
+//
+//        reader.add(readerOutput)
+//        let frameRate = videoTrack.nominalFrameRate
+//        //let startframe=startPoints[vhitVideocurrent]
+//        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
+//        let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
+//        //print("time",timeRange)
+//        reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
+//        reader.startReading()
+//
+//        let CGeye:CGImage!//eye
+//        let UIeye:UIImage!
+//        var CGfac:CGImage!//face
+//        var UIfac:UIImage!
+//        let context:CIContext = CIContext.init(options: nil)
+//        let orientation = UIImage.Orientation.up//right
+//        var sample:CMSampleBuffer!
+//        sample = readerOutput.copyNextSampleBuffer()
+//        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
+//
+//        let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
+//
+//        //        let eyeR = resizeR2(wakuE, viewRect:self.slowImage.frame,image:ciImage)
+//        //slowImage.frameを以下のように　view.frame としたところ良くなった。
+//        //起動時表示が一巡？するまでは　slowImage.frame はちょっと違う値を示す
+//        let eyeR = resizeR2(wakuE, viewRect:view.frame,image:ciImage)
+//        let facR = resizeR2(wakuF, viewRect:view.frame, image: ciImage)
+//        //        printR(str:"eyeOnscreen:",rct: wakuE)
+//        //        printR(str:"eyeOnVideo:",rct: eyeR)
+//        CGfac = context.createCGImage(ciImage, from: facR)!
+//        UIfac = UIImage.init(cgImage: CGfac, scale:1.0, orientation:orientation)
+//        CGeye = context.createCGImage(ciImage, from: eyeR)!
+//        UIeye = UIImage.init(cgImage: CGeye, scale:1.0, orientation:orientation)
+//        let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
+////        print(videoFps.frame,wakuY)
+//        wakuS_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
+//        wakuS_image.layer.borderColor = UIColor.black.cgColor
+//        wakuS_image.layer.borderWidth = 1.0
+//        wakuS_image.backgroundColor = UIColor.clear
+//        wakuS_image.layer.cornerRadius = 3
+//        if rectType == 0{
+//            wakuS_image.image=UIeye
+//        }else{
+//            wakuS_image.image=UIfac
+//        }
+//        //        printR(str:"wakuEye:",rct: wakuEye.frame)
+//    }
     
     func getframeImage(frameNumber:Int)->UIImage{//結果が表示されていない時、画面上部1/4をタップするとWaku表示
 //        let fileURL = getfileURL(path: vidPath[vidCurrent])
@@ -1822,6 +1828,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if assets.count == 0{
                 gettingAlbumF=false
                 albumExist=false
+                return
             }
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -2784,13 +2791,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //gyroは10msごとに拾ってある.合わせる
                 //これをvideoのフレーム数に合わせる
                 //                let fps=getFps(path:Controller.filePath!)
-                var fps=getFPS(url: videosURL[videosCurrent])
-                if fps<200.0{
-                    fps *= 2.0
+                //var fps=getFPS(url: videosURL[videosCurrent])
+                var fps=Controller.recordedFPS
+                if fps! < 200.0{
+                    fps! *= 2.0
                 }
-                let framecount=Int(Float(gyro.count)*fps/100.0)
+                let framecount=Int(Float(gyro.count)*(fps!)/100.0)
                 for i in 0...framecount+10{
-                    let gn=Double(i)/Double(fps)//iフレーム目の秒数
+                    let gn=Double(i)/Double(fps!)//iフレーム目の秒数
                     var getj:Int=0
                     for j in 0...gyro.count-1{
                         if gyroTime[j] >= gn{//secondの値が入っている。
