@@ -45,6 +45,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoArrayCount:Int = 0
     var videosDate = Array<String>()
     var videosURL = Array<URL>()
+    var videosImg = Array<UIImage>()
+    var videosDura = Array<String>()
     var albumExist:Bool=false
 
     var vidCurrent:Int=0
@@ -216,8 +218,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         showBoxies(f: boxF)
     }
-    
+    var videoCurrent:Int=0
+    func showNext(){
+        videoCurrent += 1
+        if videoCurrent>videoArrayCount-1{
+            videoCurrent=0
+        }
+        slowImage.image=videosImg[videoCurrent]
+    }
     @IBAction func backVideo(_ sender: Any) {
+        showNext()
+        return
         if vHITlineView?.isHidden == false{
             return
         }
@@ -251,7 +262,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             slowImage.image=UIImage(named:"vhittop")
             return
         }
-        slowImage.image = vidImg[vidCurrent]
+//        if vidCurrent<2{
+//            slowImage.image=videosImg[vidCurrent]
+//        }else{
+            slowImage.image = vidImg[vidCurrent]
+//        }
         videoDate.text = vidDate[vidCurrent]
         showTexts()
     }
@@ -1669,6 +1684,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let requestOptions = PHImageRequestOptions()
         videosURL.removeAll()
         videosDate.removeAll()
+        videosImg.removeAll()
+        videosDura.removeAll()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
@@ -1711,6 +1728,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         videosURL.append(urlAsset.url)
 //                        print(urlAsset.url)
                         videosDate.append(date + "(" + duration + ")")
+                        videosImg.append(getThumb(url: urlAsset.url))
 //                        print(videoDate.last as Any)
                         if i == assets.count - 1{
                             gettingAlbumF=false
@@ -2286,6 +2304,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
 //        camera_alert()
+        getAlbumList()
+        videoArrayCount = videosURL.count
         setArrays()
         vidCurrent=vidPath.count-1//ない場合は -1
         showCurrent()
@@ -2296,13 +2316,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         self.setNeedsStatusBarAppearanceUpdate()
 //        prefersHomeIndicatorAutoHidden
 //        dispWakuImages()
-        getAlbumList()
-        videoArrayCount = videosURL.count
-        print(videosURL.count)
-        for i in 0..<videosURL.count {
-            print(videosURL[i])
-            print(videosDate[i])
-        }
+//        getAlbumList()
+//        videoArrayCount = videosURL.count
+//        print(videosURL.count)
+//        for i in 0..<videosURL.count {
+//            print(videosURL[i])
+//            print(videosDate[i])
+//        }
     }
     func setButtons_first(){
         let ww=view.bounds.width
