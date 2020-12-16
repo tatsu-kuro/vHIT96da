@@ -94,8 +94,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vHITlineView: UIImageView?//vhits
     var voglineView:UIImageView?//vog
     var vogboxView:UIImageView?//vog
-    @IBOutlet weak var nextVideoOutlet: UIButton!
-    @IBOutlet weak var backVideoOutlet: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var eraseButton: UIButton!
     var startFrame:Int=0
     var calcFlag:Bool = false//calc中かどうか
@@ -185,7 +185,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vidCurrent=0
         }
         startFrame=0
-        showCurrent()
+//        showCurrent()
         showBoxies(f: false)
         showWakuImages()
     }
@@ -226,6 +226,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vHITlineView?.isHidden == false{
             return
         }
+        startFrame=0
         showVideoIroiro(num: -1)
         return
                   
@@ -237,11 +238,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vidCurrent < 0 {
             vidCurrent = vidPath.count-1
         }
-        show1()
+//        show1()
     }
    
     func showVideoIroiro(num:Int){//videosCurrentを移動
         videosCurrent += num
+        print(videosCurrent,num)
         if videosCurrent>videosArrayCount-1{
             videosCurrent=0
         }else if videosCurrent<0{
@@ -259,38 +261,39 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 ////        slowImage.image=videosImg[videoCurrent]
 ////        print("number:",videoCurrent,videoArrayCount,getFPS(url: videosURL[videoCurrent]))
 //    }
-    func showTexts(){
-        let str=vidDura[vidCurrent]
-        let str1=str.components(separatedBy: "s")
-        let roundFps:Int = Int(round(getFPS(videoPath:vidPath[vidCurrent])))
-        videoFps.text=str1[0] + "sec/" + String(format: "%dfps",roundFps)
-
-    }
-    func show1(){
-        vidImg[vidCurrent]=getframeImage(frameNumber: 0)
-        slowImage.image = vidImg[vidCurrent]
-        videoDate.text=vidDate[vidCurrent]
-        showTexts()
-        startFrame=0
-        dispWakuImages()
-    }
-    func showCurrent(){
-        if vidImg.count==0{
-            slowImage.image=UIImage(named:"vhittop")
-            return
-        }
+//    func showTexts(){
+//        let str=vidDura[vidCurrent]
+//        let str1=str.components(separatedBy: "s")
+//        let roundFps:Int = Int(round(getFPS(url: videosURL[videosCurrent])))
+//        videoFps.text=str1[0] + "sec/" + String(format: "%dfps",roundFps)
+//
+//    }
+//    func show1(){
+//        vidImg[vidCurrent]=getframeImage(frameNumber: 0)
+//        slowImage.image = vidImg[vidCurrent]
+//        videoDate.text=vidDate[vidCurrent]
+//        showTexts()
+//        startFrame=0
+//        dispWakuImages()
+//    }
+//    func showCurrent(){
+//        if vidImg.count==0{
+//            slowImage.image=UIImage(named:"vhittop")
+//            return
+//        }
 //        if vidCurrent<2{
 //            slowImage.image=videosImg[vidCurrent]
 //        }else{
-            slowImage.image = vidImg[vidCurrent]
+//            slowImage.image = vidImg[vidCurrent]
 //        }
-        videoDate.text = vidDate[vidCurrent]
-        showTexts()
-    }
+//        videoDate.text = vidDate[vidCurrent]
+//        showTexts()
+//    }
     @IBAction func nextVideo(_ sender: Any) {
         if vHITlineView?.isHidden == false{
             return
         }
+        startFrame=0
         showVideoIroiro(num: 1)
         return
     
@@ -302,7 +305,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vidCurrent>vidPath.count-1{
             vidCurrent=0
         }
-        show1()
+//        show1()
     }
     
     func resizeR2(_ targetRect:CGRect, viewRect:CGRect, image:CIImage) -> CGRect {
@@ -445,11 +448,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func setBacknext(f:Bool){//back and next button
-        nextVideoOutlet.isHidden = !f
-        backVideoOutlet.isHidden = !f
-        if vidPath.count < 2{
-            nextVideoOutlet.isHidden = true
-            backVideoOutlet.isHidden = true
+        nextButton.isHidden = !f
+        backButton.isHidden = !f
+        if videosURL.count < 2{
+            nextButton.isHidden = true
+            backButton.isHidden = true
         }
     }
     @IBAction func stopCalc(_ sender: Any) {
@@ -511,7 +514,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func vHITcalc(_ sender: Any) {
-        //        print("*****",getVideofns())//videoPathtxt())
+        //
         if !getVideofns().contains("vHIT96da"){//
             //        if vidPath[0]==""{//}.contains("var") && !vidPath[0].contains("MOV"){
             return
@@ -553,7 +556,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gyroMoved.removeAll()
         var sn=startFrame
         //120,240とのズレを修正してみたが、焼け石に水
-        let fps=getFPS(videoPath: vidPath[vidCurrent])
+        let fps=getFPS(url: videosURL[videosCurrent])//getFPS(videoPath: vidPath[vidCurrent])
         if fps<200{
             sn=startFrame*2
             print("sn-newsn:",sn,Int(Float(sn)*fps/120))
@@ -632,7 +635,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          calcDate = videoDate.text!
 //        print("calcdate:",calcDate)
         var fpsIs120:Bool=false
-        if getFPS(videoPath: vidPath[vidCurrent])<200.0{
+        if getFPS(url: videosURL[videosCurrent])<200.0{
             fpsIs120=true
         }
          var reader: AVAssetReader! = nil
@@ -1074,9 +1077,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func getframeImage(frameNumber:Int)->UIImage{//結果が表示されていない時、画面上部1/4をタップするとWaku表示
-        let fileURL = getfileURL(path: vidPath[vidCurrent])
+//        let fileURL = getfileURL(path: vidPath[vidCurrent])
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: fileURL, options: options)
+        let avAsset = AVURLAsset(url: videosURL[videosCurrent], options: options)
         var reader: AVAssetReader! = nil
         do {
             reader = try AVAssetReader(asset: avAsset)
@@ -1644,12 +1647,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return 0
         }
     }
-    
-    func addArray(path:String){
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0] as String
-        appendAll(doc: documentsDirectory, path: path)
-    }
+//
+//    func addArray(path:String){
+//        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+//        let documentsDirectory = paths[0] as String
+//        appendAll(doc: documentsDirectory, path: path)
+//    }
     
     func getVideofns()->String{
         let str=getFsindoc().components(separatedBy: ",")
@@ -1741,12 +1744,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let avAsset = AVURLAsset(url: url, options: options)
         return avAsset.tracks.first!.nominalFrameRate
     }
-    func getFPS(videoPath:String)->Float{
-        let fileURL = getfileURL(path: videoPath)
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: fileURL, options: options)
-        return avAsset.tracks.first!.nominalFrameRate
-    }
+//    func getFPS(videoPath:String)->Float{
+//        let fileURL = getfileURL(path: videoPath)
+//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+//        let avAsset = AVURLAsset(url: fileURL, options: options)
+//        return avAsset.tracks.first!.nominalFrameRate
+//    }
 //    func getFps(path:String)->Float{//最新のビデオのデータを得る.recordから飛んでくる。
 //        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
 //        let documentsDirectory = paths[0] as String
@@ -2413,13 +2416,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        setButtons_first()
         setButtons(mode: true)
         stopButton.isHidden = true
-//        camera_alert()
+        camera_alert()
         getAlbumList()
         videosArrayCount = videosURL.count
         videosCurrent=videosArrayCount-1
-        setArrays()
-        vidCurrent=vidPath.count-1//ない場合は -1
-        showCurrent()
+//        setArrays()
+//        vidCurrent=vidPath.count-1//ない場合は -1
+//        print("videopath:",vidPath.count)
+//        showCurrent()
         makeBoxies()//three boxies of gyro vHIT vog
         showBoxies(f: false)//isVHITに応じてviewを表示
 //        dispWakus()
@@ -2434,6 +2438,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            print(videosURL[i])
 //            print(videosDate[i])
 //        }
+//        getAlbumList()
+//        videosArrayCount = videosURL.count
+//        videosCurrent=videosArrayCount-1
+//        print("icapnys:",videosURL.count)
+        dispWakus()
         showVideoIroiro(num:0)
     }
     func setButtons_first(){
@@ -2447,8 +2456,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let bh1=bottomY-5-bh/2-bh//wh-10-bh-5-bh/2
 //        print("bottom",damyBottom.frame)
         let bh2=bottomY-10-bh/2-2*bh//bh1-5-bh
-        backVideoOutlet.layer.cornerRadius = 5
-        nextVideoOutlet.layer.cornerRadius = 5
+        backButton.layer.cornerRadius = 5
+        nextButton.layer.cornerRadius = 5
         setButtonProperty(button:cameraButton,bw:bw*2,bh:bh,cx:ww/2,cy:bh1)
         setButtonProperty(button:vhitButton,bw:bw,bh:bh,cx:10+bw/2,cy:bh1)
         setButtonProperty(button:vogButton,bw:bw,bh:bh,cx:ww - 10 - bw/2,cy:bh1)
@@ -2652,10 +2661,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #endif
         }else if let vc = segue.destination as? PlayViewController{
             let Controller:PlayViewController = vc
-            if vidCurrent == -1{
-                Controller.videoPath = ""
+            if videosCurrent == -1{
+                Controller.videoURL = nil
             }else{
-                Controller.videoPath = vidPath[vidCurrent]
+//                Controller.videoPath = vidPath[vidCurrent]
+                Controller.videoURL = videosURL[videosCurrent]
             }
         }else if let vc = segue.destination as? ImagePickerViewController{
             let Controller:ImagePickerViewController = vc
@@ -2727,14 +2737,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let Controller:PlayViewController = vc
             if !(vidCurrent == -1){
                 let curTime=Controller.seekBarValue
-                let fps=getFPS(videoPath: vidPath[vidCurrent])// Controller.currentFPS
+//                let fps=getFPS(videoPath: vidPath[vidCurrent])
+                let fps = getFPS(url: videosURL[videosCurrent])
+                //Controller.currentFPS
                 print("seek,fps:",Controller.seekBarValue,fps)
                 startFrame=Int(round(curTime*fps))//四捨五入したもの
 //                startFrame=Int(curTime*fps)//四捨五入してない、こちらが近そう
 
 //                print("round",Int(round(curTime*fps)),Int(curTime*fps),curTime*fps)
                 slowImage.image=getframeImage(frameNumber: startFrame)
-                vidImg[vidCurrent]=slowImage.image!
+//                vidImg[vidCurrent]=slowImage.image!
+                videosImg[videosCurrent]=slowImage.image!
                 boxF=false
                 showBoxies(f: false)
                 showWakuImages()
@@ -2750,12 +2763,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var gyroTime = Array<Double>()
                 //                var tGyro = Array<CGFloat>()
                 KalmanInit()
-                addArray(path:Controller.filePath!)//ここでvidImg[]登録
-                vidCurrent=vidPath.count-1
+//                addArray(path:Controller.filePath!)//ここでvidImg[]登録
+//                vidCurrent=vidPath.count-1
                 recStart = Controller.recStart
                 gyroFiltered.removeAll()
                 //                tGyro.removeAll()
-                showCurrent()
+//                showCurrent()
                 showBoxies(f: false)
                 //print(fps,createtime!)
                 //print("delay",delay,Controller.gyro[0]-createtime)
@@ -2771,7 +2784,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //gyroは10msごとに拾ってある.合わせる
                 //これをvideoのフレーム数に合わせる
                 //                let fps=getFps(path:Controller.filePath!)
-                var fps=getFPS(videoPath: vidPath[vidCurrent])//これではダメ？でもないみたい
+                var fps=getFPS(url: videosURL[videosCurrent])
                 if fps<200.0{
                     fps *= 2.0
                 }
