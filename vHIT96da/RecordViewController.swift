@@ -18,11 +18,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var videoDevice: AVCaptureDevice?
     var filePath:String?
     var timer:Timer?
-    var recordedFPS:Float?
+//    var recordedFPS:Float?
+//    var topImage:UIImage?
     var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     var fpsMax:Int?
     var fps_non_120_240:Int=2
     var maxFps:Double=240
+    var saved2album:Bool=false//albumに保存終了（エラーの時も）
     var fileOutput = AVCaptureMovieFileOutput()
     var gyro = Array<Double>()
     var recStart = CFAbsoluteTimeGetCurrent()
@@ -567,11 +569,34 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
-    func getFPS(url:URL) -> Float{
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: url, options: options)
-        return avAsset.tracks.first!.nominalFrameRate
-    }
+//    func getFPS(url:URL) -> Float{
+//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+//        let avAsset = AVURLAsset(url: url, options: options)
+//        return avAsset.tracks.first!.nominalFrameRate
+//    }
+//    var gettingThumbFlag:Bool=false
+//    func getThumb(url:URL) -> UIImage{//getするまで待って帰る
+//        gettingThumbFlag=true
+//        let img=getThumb_sub(url:url)
+//        while gettingThumbFlag==true{
+//            sleep(UInt32(0.1))
+//        }
+//        return img!
+//    }
+//    func getThumb_sub(url: URL) -> UIImage? {
+//        do {
+//            let asset = AVURLAsset(url: url as URL , options: nil)
+//            let imgGenerator = AVAssetImageGenerator(asset: asset)
+//            imgGenerator.appliesPreferredTrackTransform = true
+//            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+//            let thumbnail = UIImage(cgImage: cgImage)
+//            gettingThumbFlag=false
+//            return thumbnail
+//        } catch let error {
+//            print("*** Error generating thumbnail: \(error.localizedDescription)")
+//            return nil
+//        }
+//    }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
             AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
@@ -579,7 +604,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         print("終了ボタン、最大を超えた時もここを通る")
         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
-        recordedFPS=getFPS(url: outputFileURL)
+//        recordedFPS=getFPS(url: outputFileURL)
+//        topImage=getThumb(url: outputFileURL)
         recordedFlag=true
         if timer?.isValid == true {
             timer!.invalidate()
@@ -593,16 +619,17 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             albumChangeRequest?.addAssets([placeHolder!] as NSArray)
             //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
             print("file add to album")
-        }) { (isSuccess, error) in
+        }) { [self] (isSuccess, error) in
             if isSuccess {
                 // 保存した画像にアクセスする為のimageIDを返却
                 //completionBlock(imageID)
                 print("success")
+                self.saved2album=true
             } else {
                 //failureBlock(error)
                 print("fail")
 //                print(error)
-
+                self.saved2album=true
             }
 //            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
         }

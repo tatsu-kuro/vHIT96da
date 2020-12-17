@@ -1137,15 +1137,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewDidAppear(_ animated: Bool) {
         dispWakus()
-        showWakuImages()
         setButtons_first()
-        getAlbumList()
-        if videosArrayCount != videosURL.count{
-            videosArrayCount = videosURL.count
-            videosCurrent=videosArrayCount-1
-            showVideoIroiro(num: 0)
-            print("countChanged-recorded")
-        }
+        showWakuImages()
         print("didappear******")
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -2791,14 +2784,27 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //gyroは10msごとに拾ってある.合わせる
                 //これをvideoのフレーム数に合わせる
                 //                let fps=getFps(path:Controller.filePath!)
-                //var fps=getFPS(url: videosURL[videosCurrent])
-                var fps=Controller.recordedFPS
-                if fps! < 200.0{
-                    fps! *= 2.0
+                while Controller.saved2album == false{
+                    sleep(UInt32(0.1))
                 }
-                let framecount=Int(Float(gyro.count)*(fps!)/100.0)
+                getAlbumList()
+                while videosDura.count==videosArrayCount{
+                    sleep(UInt32(0.5))
+                }
+                videosArrayCount=videosDura.count
+                videosCurrent=videosArrayCount-1
+                showVideoIroiro(num:0)// videosCurrent)
+                showWakuImages()
+                var fps=getFPS(url: videosURL[videosCurrent])
+//                var fps=Controller.recordedFPS
+//                slowImage.image=Controller.topImage
+                print("fps:",fps)
+                if fps < 200.0{
+                    fps *= 2.0
+                }
+                let framecount=Int(Float(gyro.count)*(fps)/100.0)
                 for i in 0...framecount+10{
-                    let gn=Double(i)/Double(fps!)//iフレーム目の秒数
+                    let gn=Double(i)/Double(fps)//iフレーム目の秒数
                     var getj:Int=0
                     for j in 0...gyro.count-1{
                         if gyroTime[j] >= gn{//secondの値が入っている。
@@ -2815,16 +2821,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //                    gyroFiltered[i-2]=(tGyro[i]+tGyro[i-1]+tGyro[i-2]+tGyro[i-3]+tGyro[i-4])/5
                 //                }
                 saveGyro(path:Controller.filePath!)// str[0])//videoと同じ名前で保存
-  
+                
                 startFrame=0
-//                print("oldcount:",videosDura.count)
+//                while Controller.saved2album == false{
+//                    sleep(UInt32(0.1))
+//                }
 //                getAlbumList()
 //                while videosDura.count==videosArrayCount{
 //                    sleep(UInt32(0.5))
 //                }
 //                videosArrayCount=videosDura.count
 //                videosCurrent=videosArrayCount-1
-//                print("newcount:",videosDura.count)
 //                showVideoIroiro(num:0)// videosCurrent)
 //                showWakuImages()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
