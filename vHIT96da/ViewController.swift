@@ -39,7 +39,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
 //    var vidImg = Array<UIImage>()
-    var vidPath = Array<String>()
+//    var vidPath = Array<String>()
 //    var vidDate = Array<String>()
 //    var vidDura = Array<String>()
     //以下はalbum関連
@@ -520,10 +520,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     @IBAction func vHITcalc(_ sender: Any) {
         //
-        if !getVideofns().contains("vHIT96da"){//
-            //        if vidPath[0]==""{//}.contains("var") && !vidPath[0].contains("MOV"){
-            return
-        }
+//        if !getVideofns().contains("vHIT96da"){//
+//            //        if vidPath[0]==""{//}.contains("var") && !vidPath[0].contains("MOV"){
+//            return
+//        }
         setUserDefaults()
         //      print("vhitcalc")
         if nonsavedFlag == true && (waveTuple.count > 0 || eyePosFiltered.count > 0){
@@ -622,7 +622,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vHITlineView?.removeFromSuperview()
         }
         
-        readGyro(path: vidPath[vidCurrent])//gyroDataを読み込む
+        readGyro(date: videosDate[videosCurrent])//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
         
@@ -635,9 +635,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         startTimer()//resizerectのチェックの時はここをコメントアウト*********************
         //       let fileURL = URL(fileURLWithPath: vidPath[vidCurrent])
 
-         let fileURL = getfileURL(path: vidPath[vidCurrent])
+//         let fileURL = getfileURL(path: vidPath[vidCurrent])
          let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-         let avAsset = AVURLAsset(url: fileURL, options: options)
+         let avAsset = AVURLAsset(url: videosURL[videosCurrent], options: options)
          calcDate = videoDate.text!
 //        print("calcdate:",calcDate)
         var fpsIs120:Bool=false
@@ -1669,12 +1669,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let retStr2=retStr.dropLast()
         return String(retStr2)
     }
-    
+ /*
     func setArrays(){
         let path = getVideofns()//videoPathtxt()
         var str = path.components(separatedBy: ",")
         str.sort()//descend? ascend ?
-        vidPath.removeAll()
+//        vidPath.removeAll()
 //        vidDate.removeAll()
         //        vidDuraorg.removeAll()
 //        vidDura.removeAll()
@@ -1690,7 +1690,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         vidCurrent=vidPath.count-1
     }
-    
+ */
     func getfileURL(path:String)->URL{
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0] as String
@@ -1706,12 +1706,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
 //    var appendingFlag:Bool = false
-    func appendAll(doc:String,path:String){//for で回すのでdocumentsdirはgetgetしておる
+ /*   func appendAll(doc:String,path:String){//for で回すのでdocumentsdirはgetgetしておる
         let vidpath = doc + "/" + path
         let fileURL = URL(fileURLWithPath: vidpath)
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let asset = AVURLAsset(url: fileURL, options: options)
-        vidPath.append(path)
+//        vidPath.append(path)
 //        appendingFlag=true
 //        vidImg.append(getThumbnailFrom(path: vidpath))
 //        while appendingFlag == true{
@@ -1726,7 +1726,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let str3=str2[0] + " (\(vidPath.count-1))"
 //        vidDate.append(str3)
 //        print("date",path,str3)
-    }
+    }*/
 //    func getDura(path:String)->Double{//最新のビデオのデータを得る.recordから飛んでくる。
 //        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
 //        let documentsDirectory = paths[0] as String
@@ -2401,6 +2401,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(getFsindoc())
         //        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.viewWillEnterForeground(_:)), name: NSNotification.Name.UIApplication.willEnterForegroundNotification, object: nil)
         // Do any additional setup after loading the view, typically from a nib.
         //dispDoc()//ドキュメントにあるファイルをprint
@@ -2555,9 +2556,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return false
     }
  
-    func saveGyro(path:String) {//gyroData(GFloat)を100倍してcsvとして保存
-        let str=path.components(separatedBy: ".MOV")
-        let gyroPath=str[0] + "-gyro.csv"
+    func saveGyro(date:String) {//gyroData(GFloat)を100倍してcsvとして保存
+//        let str=path.components(separatedBy: ".MOV")
+        let gyroPath=date + "-gyro.csv"
         var text:String=""
         for i in 0..<gyroFiltered.count - 2{
             text += String(Int(gyroFiltered[i]*100.0)) + ","
@@ -2582,17 +2583,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     //calcVHITで実行、その後moveGyroData()
-    func readGyro(path:String){//gyroDataにデータを戻す
+    func readGyro(date:String){//gyroDataにデータを戻す
         //let text:String="test"
-        let str=path.components(separatedBy: ".MOV")
-        let gyroPath=str[0] + "-gyro.csv"
+//        let str=path.components(separatedBy: ".MOV")
+        let gyroPath=date + "-gyro.csv"
         //        print("gyropath:",gyroPath)
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            
             let path_file_name = dir.appendingPathComponent( gyroPath )
-            
             do {
-                
                 let text = try String( contentsOf: path_file_name, encoding: String.Encoding.utf8 )
                 gyroFiltered.removeAll()
                 let str=text.components(separatedBy: ",")
@@ -2600,13 +2598,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroFiltered.append(CGFloat(Double(str[i])!/100.0))
                     //    print(gyroData5.last)
                 }
-                
             } catch {
                 print("readGyro read error")//エラー処理
                 print("gyroData:",gyroFiltered.count)
                 return
             }
-            
             //gyro(CGFloat配列)にtext(csv)から書き込む
         }
     }
@@ -2774,7 +2770,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //print("delay",delay,Controller.gyro[0]-createtime)
                 //let vidDura=getDura(path:Controller.filePath!)
                 for i in 0...Controller.gyro.count/2-4{//-2でエラーなので、-5としてみた
-                    gyroTime.append(Controller.gyro[i*2]-recStart)
+                    gyroTime.append(Controller.gyro[i*2])
                     //                    d=Kalman3(measurement:Controller.gyro[i*2+1]*10)
                     d=Double(Kalman(value:CGFloat(Controller.gyro[i*2+1]*10),num:3))
                     //d=Controller.gyro[i*2+1]*10
@@ -2820,8 +2816,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //                for i in 4...gyroFiltered.count-5{//平均加算hightpass
                 //                    gyroFiltered[i-2]=(tGyro[i]+tGyro[i-1]+tGyro[i-2]+tGyro[i-3]+tGyro[i-4])/5
                 //                }
-                saveGyro(path:Controller.filePath!)// str[0])//videoと同じ名前で保存
-                
+                saveGyro(date:videosDate[videosCurrent])//Controller.filePath!)// str[0])//videoと同じ名前で保存
+                print("gyro-Date:",videosDate[videosCurrent])
                 startFrame=0
 //                while Controller.saved2album == false{
 //                    sleep(UInt32(0.1))

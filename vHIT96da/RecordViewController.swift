@@ -12,14 +12,15 @@ import GLKit
 import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
+    let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
     var recordedFlag:Bool = false
     let motionManager = CMMotionManager()
     var session: AVCaptureSession!
     var videoDevice: AVCaptureDevice?
     var filePath:String?
     var timer:Timer?
-//    var recordedFPS:Float?
-//    var topImage:UIImage?
+    //    var recordedFPS:Float?
+    //    var topImage:UIImage?
     var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     var fpsMax:Int?
     var fps_non_120_240:Int=2
@@ -27,8 +28,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var saved2album:Bool=false//albumに保存終了（エラーの時も）
     var fileOutput = AVCaptureMovieFileOutput()
     var gyro = Array<Double>()
-    var recStart = CFAbsoluteTimeGetCurrent()
-
+    var recStart:Double=0// = CFAbsoluteTimeGetCurrent()
+    
     @IBOutlet weak var focusNear: UILabel!
     
     @IBOutlet weak var focusBar: UISlider!
@@ -70,7 +71,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         squareLayer.path = UIBezierPath.init(rect: CGRect.init(x: 0, y: 0, width: squareFrame.size.width, height: squareFrame.size.height)).cgPath
         self.view.layer.addSublayer(squareLayer)
     }
-
+    
     var tapFlag:Bool=false
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
         let screenSize=cameraView.bounds.size
@@ -139,8 +140,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 let description = format.formatDescription as CMFormatDescription    // フォーマットの説明
                 let dimensions = CMVideoFormatDescriptionGetDimensions(description)  // 幅・高さ情報を抜き出す
                 let width = dimensions.width
-                 if desiredFps == range.maxFrameRate && width >= maxWidth {
-                      selectedFormat = format
+                if desiredFps == range.maxFrameRate && width >= maxWidth {
+                    selectedFormat = format
                     maxWidth = width
                 }
             }
@@ -181,11 +182,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //        var initf:Bool=false
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!, withHandler: { (motion, error) in
             guard let motion = motion, error == nil else { return }
-            self.gyro.append(CFAbsoluteTimeGetCurrent())
+            if self.recStart == 0{
+                self.gyro.append(0)//CFAbsoluteTimeGetCurrent())
+            }else{
+                self.gyro.append(CFAbsoluteTimeGetCurrent()-self.recStart)
+            }
             self.gyro.append(motion.rotationRate.y)//
-           })
+        })
     }
- 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
@@ -194,7 +199,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             maxFps = Double(UserDefaults.standard.integer(forKey:"maxFps"))
             fps_non_120_240 = UserDefaults.standard.integer(forKey: "fps_non_120_240")
             initSession(fps: fps_non_120_240)
-          }else{
+        }else{
             checkinitSession()//maxFpsを設定
             UserDefaults.standard.set(Int(maxFps),forKey: "maxFps")
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
@@ -202,10 +207,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         hideButtons(type: true)
         setButtons(type: true)
-//        stopButton.isHidden=true
+        //        stopButton.isHidden=true
         startButton.isHidden=false
         print("maxFps,fps2:",maxFps,fps_non_120_240)
-//        setFlashlevel(level: 0.0)
+        //        setFlashlevel(level: 0.0)
         LEDBar.minimumValue = 0
         LEDBar.maximumValue = 0.1
         LEDBar.addTarget(self, action: #selector(onLEDValueChange), for: UIControl.Event.valueChanged)
@@ -218,15 +223,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusBar.value=getUserDefault(str: "focusValue", ret: 0)
         setFocus(focus: focusBar.value)
         
-//        flashFlag=false
-//        let flashFlagTemp=getUserDefault(str: "flashFlag", ret: 0)
-//        if flashFlagTemp==1{
-//            LEDonoff(0)
-//        }
+        //        flashFlag=false
+        //        let flashFlagTemp=getUserDefault(str: "flashFlag", ret: 0)
+        //        if flashFlagTemp==1{
+        //            LEDonoff(0)
+        //        }
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
         
     }
-
+    
     func setFlashlevel(level:Float){
         if let device = videoDevice{
             do {
@@ -267,7 +272,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     @objc func onLEDValueChange(){
-//        setFocus(focus:focusBar.value)
+        //        setFocus(focus:focusBar.value)
         setFlashlevel(level: LEDBar.value)
         UserDefaults.standard.set(LEDBar.value, forKey: "LEDValue")
     }
@@ -281,14 +286,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     @IBAction func onClick120fps(_ sender: Any) {
         if fps_non_120_240==1{
-             return
-         }else{
-             fps_non_120_240=1
-             self.fps120Button.backgroundColor = UIColor.blue
-             self.fps240Button.backgroundColor = UIColor.darkGray
-             initSession(fps: fps_non_120_240)
-             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
-         }
+            return
+        }else{
+            fps_non_120_240=1
+            self.fps120Button.backgroundColor = UIColor.blue
+            self.fps240Button.backgroundColor = UIColor.darkGray
+            initSession(fps: fps_non_120_240)
+            UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
+        }
     }
     @IBAction func onClick240fps(_ sender: Any) {
         if fps_non_120_240==2{
@@ -297,7 +302,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fps_non_120_240=2
             self.fps120Button.backgroundColor = UIColor.darkGray
             self.fps240Button.backgroundColor = UIColor.blue
-
+            
             initSession(fps: fps_non_120_240)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
         }
@@ -324,7 +329,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //        let bd=Int(ww/5/4)
         let bh:CGFloat=60
         let bpos=wh-bh/2-10
-
+        
         currentTime.frame   = CGRect(x:0,   y: 0 ,width: bw*1.5, height: bh/2)
         currentTime.layer.position=CGPoint(x:ww/2,y:wh-bh*2.5)
         currentTime.isHidden=true
@@ -333,28 +338,28 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
         setButtonProperty(button: fps240Button, bw: bw, bh:bh, cx:(10+bw)/2 , cy: bpos-10-bh)
         setButtonProperty(button: fps120Button, bw: bw, bh: bh, cx:(10+bw)/2 , cy:bpos)
-
+        
         if fps_non_120_240==2{
-                self.fps120Button.backgroundColor = UIColor.darkGray
-                self.fps240Button.backgroundColor = UIColor.blue
-            }else{
-                self.fps120Button.backgroundColor = UIColor.blue
-                self.fps240Button.backgroundColor = UIColor.darkGray
-            }
+            self.fps120Button.backgroundColor = UIColor.darkGray
+            self.fps240Button.backgroundColor = UIColor.blue
+        }else{
+            self.fps120Button.backgroundColor = UIColor.blue
+            self.fps240Button.backgroundColor = UIColor.darkGray
+        }
         if maxFps==120{
-//            fps240Button.isHidden=true
+            //            fps240Button.isHidden=true
             fps120Button.backgroundColor=UIColor.gray
             fps120Button.isEnabled=false
             fps120Button.isHidden=false
         }else{
             fps240Button.isHidden=false
-//            fps120Button.isEnabled=false
+            //            fps120Button.isEnabled=false
             fps120Button.isHidden=false
         }
         //startButton
-//        LEDCircle.frame=CGRect(x:0,y:0,width:bw,height: bh)
-//        LEDCircle.layer.position=CGPoint(x:ww-10-bw/2,y:bpos-40-bh*12/4)
-//        setButtonProperty(button: LEDButton, bw: bw, bh: bh/2, cx: ww-10-bw/2, cy: bpos-100-bh*9/4)
+        //        LEDCircle.frame=CGRect(x:0,y:0,width:bw,height: bh)
+        //        LEDCircle.layer.position=CGPoint(x:ww-10-bw/2,y:bpos-40-bh*12/4)
+        //        setButtonProperty(button: LEDButton, bw: bw, bh: bh/2, cx: ww-10-bw/2, cy: bpos-100-bh*9/4)
         setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*7/4)
         setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-20-bh*7/4)
         setLabelProperty(label: LEDLow,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-30-bh*9/4)
@@ -363,7 +368,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*7/4)
         LEDBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
         LEDBar.layer.position=CGPoint(x:ww/2,y:bpos-30-bh*9/4)
-    
+        
         startButton.frame=CGRect(x:0,y:0,width:bh*2,height:bh*2)
         startButton.layer.position = CGPoint(x:ww/2,y:bpos-bh/3)
         stopButton.frame=CGRect(x:0,y:0,width:bh*2,height:bh*2)
@@ -427,7 +432,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
         session.addInput(videoInput)
-  
+        
         maxFps=240.0
         fps_non_120_240=2
         if switchFormat(desiredFps: 240.0)==false{
@@ -481,7 +486,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     func setFocus(focus:Float) {//focus 0:最接近　0-1.0
-         if let device = videoDevice{
+        if let device = videoDevice{
             do {
                 try device.lockForConfiguration()
                 device.focusMode = .locked
@@ -527,17 +532,22 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 AudioServicesCreateSystemSoundID(soundUrl, &soundIdstart)
                 AudioServicesPlaySystemSound(soundIdstart)
             }
-            
-            let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-            let documentsDirectory = paths[0] as String
-            // 現在時刻をファイル名に付与することでファイル重複を防ぐ : "myvideo-20190101125900.mp4" な形式になる
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
-            filePath = "vHIT96da\(formatter.string(from: Date())).MOV"
-            let filefullPath="\(documentsDirectory)/" + filePath!
-            let fileURL = NSURL(fileURLWithPath: filefullPath)
+            try? FileManager.default.removeItem(atPath: TempFilePath)
+
+//            let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+//            let documentsDirectory = paths[0] as String
+//            // 現在時刻をファイル名に付与することでファイル重複を防ぐ : "myvideo-20190101125900.mp4" な形式になる
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
+//            filePath = "vHIT96da\(formatter.string(from: Date())).MOV"
+//            filePath = "temp.MOV"
+//            let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
+//            let filefullPath="\(documentsDirectory)/" + filePath!
+//            let filefullPath="\(documentsDirectory)/" + "temp/MOV"
+//            let fileURL = NSURL(fileURLWithPath: filefullPath)
+            let fileURL = NSURL(fileURLWithPath: TempFilePath)
             //               setMotion()//作動中ならそのまま戻る
-            print("録画開始 : \(filePath!)")
+//            print("録画開始 : \(filefullPath)")
             fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
         }
     }
@@ -546,7 +556,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
         // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
         let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
-            PHAssetCollectionSubtype.albumRegular, options: nil)
+                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
         for i in 0 ..< albums.count {
             let album = albums.object(at: i)
             if album.localizedTitle != nil && album.localizedTitle == albumTitle {
@@ -569,34 +579,34 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
-//    func getFPS(url:URL) -> Float{
-//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-//        let avAsset = AVURLAsset(url: url, options: options)
-//        return avAsset.tracks.first!.nominalFrameRate
-//    }
-//    var gettingThumbFlag:Bool=false
-//    func getThumb(url:URL) -> UIImage{//getするまで待って帰る
-//        gettingThumbFlag=true
-//        let img=getThumb_sub(url:url)
-//        while gettingThumbFlag==true{
-//            sleep(UInt32(0.1))
-//        }
-//        return img!
-//    }
-//    func getThumb_sub(url: URL) -> UIImage? {
-//        do {
-//            let asset = AVURLAsset(url: url as URL , options: nil)
-//            let imgGenerator = AVAssetImageGenerator(asset: asset)
-//            imgGenerator.appliesPreferredTrackTransform = true
-//            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
-//            let thumbnail = UIImage(cgImage: cgImage)
-//            gettingThumbFlag=false
-//            return thumbnail
-//        } catch let error {
-//            print("*** Error generating thumbnail: \(error.localizedDescription)")
-//            return nil
-//        }
-//    }
+    //    func getFPS(url:URL) -> Float{
+    //        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+    //        let avAsset = AVURLAsset(url: url, options: options)
+    //        return avAsset.tracks.first!.nominalFrameRate
+    //    }
+    //    var gettingThumbFlag:Bool=false
+    //    func getThumb(url:URL) -> UIImage{//getするまで待って帰る
+    //        gettingThumbFlag=true
+    //        let img=getThumb_sub(url:url)
+    //        while gettingThumbFlag==true{
+    //            sleep(UInt32(0.1))
+    //        }
+    //        return img!
+    //    }
+    //    func getThumb_sub(url: URL) -> UIImage? {
+    //        do {
+    //            let asset = AVURLAsset(url: url as URL , options: nil)
+    //            let imgGenerator = AVAssetImageGenerator(asset: asset)
+    //            imgGenerator.appliesPreferredTrackTransform = true
+    //            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+    //            let thumbnail = UIImage(cgImage: cgImage)
+    //            gettingThumbFlag=false
+    //            return thumbnail
+    //        } catch let error {
+    //            print("*** Error generating thumbnail: \(error.localizedDescription)")
+    //            return nil
+    //        }
+    //    }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
             AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
@@ -604,8 +614,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         print("終了ボタン、最大を超えた時もここを通る")
         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
-//        recordedFPS=getFPS(url: outputFileURL)
-//        topImage=getThumb(url: outputFileURL)
+        //        recordedFPS=getFPS(url: outputFileURL)
+        //        topImage=getThumb(url: outputFileURL)
         recordedFlag=true
         if timer?.isValid == true {
             timer!.invalidate()
@@ -628,10 +638,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             } else {
                 //failureBlock(error)
                 print("fail")
-//                print(error)
+                //                print(error)
                 self.saved2album=true
             }
-//            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
+            //            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
         }
         performSegue(withIdentifier: "fromRecordToMain", sender: self)
     }
@@ -639,5 +649,5 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         recStart=CFAbsoluteTimeGetCurrent()
         print("録画開始")
         //fileOutput.stopRecording()
-     }
+    }
 }
