@@ -44,15 +44,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    var vidDura = Array<String>()
     //以下はalbum関連
     var albumExist:Bool=false
-    var videosArrayCount:Int = 0
-    var videosDate = Array<String>()
-    var videosURL = Array<URL>()
-    var videosImg = Array<UIImage>()
-    var videosDura = Array<String>()
-    var videosCurrent:Int=0
+    var videoArrayCount:Int = 0
+    var videoDate = Array<String>()
+    var videoURL = Array<URL>()
+    var videoImg = Array<UIImage>()
+    var videoDura = Array<String>()
+    var videoCurrent:Int=0
 //    var recordedFPS:Float?
     //album関連、ここまで
-    var vidCurrent:Int=0
+//    var vidCurrent:Int=0
     var vogImage:UIImage?
     let videoPathtext:String="videoPath.txt"
     var recStart = CFAbsoluteTimeGetCurrent()
@@ -127,7 +127,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var backImage2: UIImageView!
     @IBOutlet weak var backImage: UIImageView!
     @IBOutlet weak var slowImage: UIImageView!
-    @IBOutlet weak var videoDate: UILabel!
+    @IBOutlet weak var currentVideoDate: UILabel!
     var calcDate:String = ""
     var idNumber:Int = 0
     var vHITtitle:String = ""
@@ -198,7 +198,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         isVHIT=true
         setButtons(mode: true)
         dispWakus()
-        if eyeVeloOrig.count>0 && vidCurrent != -1{
+        if eyeVeloOrig.count>0 && videoCurrent != -1{
             vhitCurpoint=0
             drawOnewave(startcount: 0)
             calcDrawVHIT()
@@ -214,7 +214,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         isVHIT = false
         setButtons(mode: true)
         dispWakus()
-        if eyeVeloOrig.count>0  && vidCurrent != -1{
+        if eyeVeloOrig.count>0  && videoCurrent != -1{
             vogCurpoint=0
             drawVogall_new()
             drawVogtext()
@@ -244,29 +244,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
    
     func showVideoIroiro(num:Int){//videosCurrentを移動
 //        print("videosDate:",videosDate.count)
-        if videosDura.count == 0{
+        if videoDura.count == 0{
             slowImage.image=UIImage(named:"vhittop")
             return
         }
-        videosCurrent += num
-//        print(videosCurrent,num)
-        if videosCurrent>videosArrayCount-1{
-            videosCurrent=0
-        }else if videosCurrent<0{
-                videosCurrent=videosArrayCount-1
+        videoCurrent += num
+        print(videoCurrent,num,videoImg.count)
+        if videoCurrent>videoArrayCount-1{
+            videoCurrent=0
+        }else if videoCurrent<0{
+                videoCurrent=videoArrayCount-1
         }
-        slowImage.image=videosImg[videosCurrent]
-        videoDate.text=videosDate[videosCurrent] + "(" + (videosCurrent+1).description + ")"
-        let roundFps:Int = Int(round(getFPS(url: videosURL[videosCurrent])))
-        videoFps.text=videosDura[videosCurrent] + "/" + String(format: "%dfps",roundFps)
+        slowImage.image=videoImg[videoCurrent]
+        currentVideoDate.text=videoDate[videoCurrent] + "(" + (videoCurrent+1).description + ")"
+        let roundFps:Int = Int(round(getFPS(url: videoURL[videoCurrent])))
+        videoFps.text=videoDura[videoCurrent] + "/" + String(format: "%dfps",roundFps)
         showWakuImages()
     }
 
-//    func showNext(){
-//        showVideoIroiro(next: true)
-////        slowImage.image=videosImg[videoCurrent]
-////        print("number:",videoCurrent,videoArrayCount,getFPS(url: videosURL[videoCurrent]))
-//    }
 //    func showTexts(){
 //        let str=vidDura[vidCurrent]
 //        let str1=str.components(separatedBy: "s")
@@ -434,7 +429,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyrolineView?.isHidden = true
             setBacknext(f: true)
             //         playButton.isEnabled=true
-            if videosImg.count != 0{
+            if videoImg.count != 0{
                 eraseButton.isHidden=false
             }else{
                 eraseButton.isHidden=true
@@ -456,7 +451,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func setBacknext(f:Bool){//back and next button
         nextButton.isHidden = !f
         backButton.isHidden = !f
-        if videosURL.count < 2{
+        if videoURL.count < 2{
             nextButton.isHidden = true
             backButton.isHidden = true
         }
@@ -563,7 +558,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gyroMoved.removeAll()
         var sn=startFrame
         //120,240とのズレを修正してみたが、焼け石に水
-        let fps=getFPS(url: videosURL[videosCurrent])
+        let fps=getFPS(url: videoURL[videoCurrent])
         if fps<200{
             sn=startFrame*2
             print("sn-newsn:",sn,Int(Float(sn)*fps/120))
@@ -626,7 +621,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vHITlineView?.removeFromSuperview()
         }
         
-        readGyro(date: videosDate[videosCurrent])//gyroDataを読み込む
+        readGyro(date: videoDate[videoCurrent])//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
         
@@ -641,11 +636,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
 //         let fileURL = getfileURL(path: vidPath[vidCurrent])
          let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-         let avAsset = AVURLAsset(url: videosURL[videosCurrent], options: options)
-         calcDate = videoDate.text!
+         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
+         calcDate = currentVideoDate.text!
 //        print("calcdate:",calcDate)
         var fpsIs120:Bool=false
-        if getFPS(url: videosURL[videosCurrent])<200.0{
+        if getFPS(url: videoURL[videoCurrent])<200.0{
             fpsIs120=true
         }
          var reader: AVAssetReader! = nil
@@ -937,14 +932,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func showWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
-        if videosDura.count<1 {
+        if videoDura.count<1 {
             return
         }
         //        print(vidCurrent)
 //        let fileURL = getfileURL(path: vidPath[vidCurrent])
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: videosURL[videosCurrent], options: options)
-        calcDate = videoDate.text!
+        let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
+        calcDate = currentVideoDate.text!
         var reader: AVAssetReader! = nil
         do {
             reader = try AVAssetReader(asset: avAsset)
@@ -1089,7 +1084,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func getframeImage(frameNumber:Int)->UIImage{//結果が表示されていない時、画面上部1/4をタップするとWaku表示
 //        let fileURL = getfileURL(path: vidPath[vidCurrent])
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: videosURL[videosCurrent], options: options)
+        let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
         var reader: AVAssetReader! = nil
         do {
             reader = try AVAssetReader(asset: avAsset)
@@ -1305,7 +1300,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         // パスの初期化
         let drawPath = UIBezierPath()
-        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,videosDura[videosCurrent],timercnt+1)
+        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,videoDura[videoCurrent],timercnt+1)
         //print(timetxt)
         timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
@@ -1336,7 +1331,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let drawPath = UIBezierPath()
         
         if timeflag==true{
-            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,videosDura[videosCurrent],timercnt+1)
+            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloOrig.count,CGFloat(eyeVeloOrig.count)/240.0,videoDura[videoCurrent],timercnt+1)
             //print(timetxt)
             timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
                 NSAttributedString.Key.foregroundColor : UIColor.black,
@@ -1789,18 +1784,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var gettingAlbumF:Bool=true
     func getAlbumList(){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
-        getAlbumList_sub()
+        getAlbumList_sub()//videosURL,videosDate,videosDuraをゲット
         while gettingAlbumF == true{
             sleep(UInt32(0.1))
+        }
+        //videosImgだけはここでゲット
+        videoImg.removeAll()
+        for i in 0..<videoURL.count{
+            videoImg.append(getThumb(url: videoURL[i]))
         }
     }
     func getAlbumList_sub(){
         //     let imgManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
-        videosURL.removeAll()
-        videosDate.removeAll()
-        videosImg.removeAll()
-        videosDura.removeAll()
+        videoURL.removeAll()
+        videoDate.removeAll()
+//        videosImg.removeAll()
+        videoDura.removeAll()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
@@ -1831,26 +1831,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             for i in 0..<assets.count{
                 let asset=assets[i]
+//                print(asset)
                 let date_sub = asset.creationDate
                 let date = formatter.string(from: date_sub!)
                 let duration = String(format:"%.1fs",asset.duration)
- 
                 let options=PHVideoRequestOptions()
                 options.version = .original
                 PHImageManager.default().requestAVAsset(forVideo:asset,
                                                         options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
                     
                     if let urlAsset = asset as? AVURLAsset{//not on iCloud
-                        videosURL.append(urlAsset.url)
-//                        print(urlAsset.url)
-                        videosDate.append(date)// + "(" + duration + ")")
-                        videosDura.append(duration)
-                        videosImg.append(getThumb(url: urlAsset.url))
+                        videoURL.append(urlAsset.url)
+                        print(urlAsset.url)
+                        videoDate.append(date)// + "(" + duration + ")")
+                        videoDura.append(duration)
+                        //ここではgetThumbができないことがある。
+//                        videosImg.append(getThumb(url: urlAsset.url))
 //                        print(videoDate.last as Any)
                         if i == assets.count - 1{
                             gettingAlbumF=false
                         }
                     }else{//on icloud
+                        print("on icloud:",asset)
                         if i == assets.count - 1{
                             gettingAlbumF=false
                         }
@@ -2020,7 +2022,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawPath1.stroke()
         }
         drawPath2.stroke()
-        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloFiltered.count,CGFloat(eyeVeloFiltered.count)/240.0,videosDura[videosCurrent],timercnt+1)
+        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloFiltered.count,CGFloat(eyeVeloFiltered.count)/240.0,videoDura[videoCurrent],timercnt+1)
         //print(timetxt)
         timetxt.draw(at: CGPoint(x: 3, y: 3), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
@@ -2322,7 +2324,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            videoFps.text = "\(freeCounter)"
         }
     }
-    var gettingThumbFlag:Bool=false
+    var gettingThumbFlag:Bool?
     func getThumb(url:URL) -> UIImage{//getするまで待って帰る
         gettingThumbFlag=true
         let img=getThumb_sub(url:url)
@@ -2405,7 +2407,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(getFsindoc())
+//        print(getFsindoc())
+        print("width:",view.bounds.width)
         //        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.viewWillEnterForeground(_:)), name: NSNotification.Name.UIApplication.willEnterForegroundNotification, object: nil)
         // Do any additional setup after loading the view, typically from a nib.
         //dispDoc()//ドキュメントにあるファイルをprint
@@ -2423,8 +2426,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         stopButton.isHidden = true
         camera_alert()
         getAlbumList()
-        videosArrayCount = videosURL.count
-        videosCurrent=videosArrayCount-1
+        videoArrayCount = videoURL.count
+        videoCurrent=videoArrayCount-1
 //        setArrays()
 //        vidCurrent=vidPath.count-1//ない場合は -1
 //        print("videopath:",vidPath.count)
@@ -2661,11 +2664,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #endif
         }else if let vc = segue.destination as? PlayViewController{
             let Controller:PlayViewController = vc
-            if videosCurrent == -1{
-                Controller.videoURL = nil
+            if videoCurrent == -1{
+                Controller.playVideoURL = nil
             }else{
 //                Controller.videoPath = vidPath[vidCurrent]
-                Controller.videoURL = videosURL[videosCurrent]
+                Controller.playVideoURL = videoURL[videoCurrent]
             }
         }else if let vc = segue.destination as? ImagePickerViewController{
             let Controller:ImagePickerViewController = vc
@@ -2735,10 +2738,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #endif
         }else if let vc = segue.source as? PlayViewController{
             let Controller:PlayViewController = vc
-            if !(vidCurrent == -1){
+            if !(videoCurrent == -1){
                 let curTime=Controller.seekBarValue
 //                let fps=getFPS(videoPath: vidPath[vidCurrent])
-                let fps = getFPS(url: videosURL[videosCurrent])
+                let fps = getFPS(url: videoURL[videoCurrent])
                 //Controller.currentFPS
                 print("seek,fps:",Controller.seekBarValue,fps)
                 startFrame=Int(round(curTime*fps))//四捨五入したもの
@@ -2747,7 +2750,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                print("round",Int(round(curTime*fps)),Int(curTime*fps),curTime*fps)
                 slowImage.image=getframeImage(frameNumber: startFrame)
 //                vidImg[vidCurrent]=slowImage.image!
-                videosImg[videosCurrent]=slowImage.image!
+                videoImg[videoCurrent]=slowImage.image!
                 boxF=false
                 showBoxies(f: false)
                 showWakuImages()
@@ -2788,14 +2791,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     sleep(UInt32(0.1))
                 }
                 getAlbumList()
-                while videosDura.count==videosArrayCount{
+                while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
-                videosArrayCount=videosDura.count
-                videosCurrent=videosArrayCount-1
+                videoArrayCount=videoDura.count
+                videoCurrent=videoArrayCount-1
                 showVideoIroiro(num:0)// videosCurrent)
                 showWakuImages()
-                var fps=getFPS(url: videosURL[videosCurrent])
+                var fps=getFPS(url: videoURL[videoCurrent])
 //                var fps=Controller.recordedFPS
 //                slowImage.image=Controller.topImage
                 print("fps:",fps)
@@ -2820,8 +2823,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //                for i in 4...gyroFiltered.count-5{//平均加算hightpass
                 //                    gyroFiltered[i-2]=(tGyro[i]+tGyro[i-1]+tGyro[i-2]+tGyro[i-3]+tGyro[i-4])/5
                 //                }
-                saveGyro(date:videosDate[videosCurrent])//Controller.filePath!)// str[0])//videoと同じ名前で保存
-                print("gyro-Date:",videosDate[videosCurrent])
+                saveGyro(date:videoDate[videoCurrent])//Controller.filePath!)// str[0])//videoと同じ名前で保存
+                print("gyro-Date:",videoDate[videoCurrent])
                 startFrame=0
 //                while Controller.saved2album == false{
 //                    sleep(UInt32(0.1))

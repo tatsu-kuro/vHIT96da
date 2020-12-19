@@ -19,7 +19,7 @@ class PlayViewController: UIViewController {
     var startButton:UIButton!
     var nextButton:UIButton!
     var backButton:UIButton!
-    var videoURL:URL?
+    var playVideoURL:URL?
     var duration:Float=0
     var currTime:UILabel?
 //    var duraTime:UILabel?
@@ -52,7 +52,7 @@ class PlayViewController: UIViewController {
 //        }
 //        let fileURL = getfileURL(path: videoPath!)
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: videoURL!, options: options)
+        let avAsset = AVURLAsset(url: playVideoURL!, options: options)
 //        print("fps:",avAsset.tracks.first!.nominalFrameRate)
 //        currentFPS=avAsset.tracks.first!.nominalFrameRate
 //        let ww=view.bounds.width
@@ -90,7 +90,7 @@ class PlayViewController: UIViewController {
         let bh:CGFloat=(ww-20-6*4)/7//トップページのボタンの高さ
 //        let fileURL = getfileURL(path: videoPath!)
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: videoURL!, options: options)
+        let avAsset = AVURLAsset(url: playVideoURL!, options: options)
         // Create Movie SeekBar
         seekBar.frame = CGRect(x: 10, y: wh-bh*2-10, width: ww - 20, height: bh)
         seekBar.minimumValue = 0

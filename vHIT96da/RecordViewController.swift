@@ -194,14 +194,18 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
-        print("maxFps,fps2:",maxFps,fps_non_120_240)
+//        print("maxFps,fps2:",maxFps,fps_non_120_240)
+        
         if UserDefaults.standard.object(forKey: "maxFps") != nil{
-            maxFps = Double(UserDefaults.standard.integer(forKey:"maxFps"))
+             maxFps = Double(UserDefaults.standard.integer(forKey:"maxFps"))
+            print("maxFps 値あり",maxFps)
             fps_non_120_240 = UserDefaults.standard.integer(forKey: "fps_non_120_240")
             initSession(fps: fps_non_120_240)
         }else{
+            
             checkinitSession()//maxFpsを設定
             UserDefaults.standard.set(Int(maxFps),forKey: "maxFps")
+            print("maxFps 値無し",maxFps)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
             print("生まれて初めての時だけ、通るところのはず")//ここでmaxFpsを設定
         }
@@ -209,7 +213,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         setButtons(type: true)
         //        stopButton.isHidden=true
         startButton.isHidden=false
-        print("maxFps,fps2:",maxFps,fps_non_120_240)
+//        print("maxFps,fps2:",maxFps,fps_non_120_240)
         //        setFlashlevel(level: 0.0)
         LEDBar.minimumValue = 0
         LEDBar.maximumValue = 0.1
@@ -347,7 +351,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             self.fps240Button.backgroundColor = UIColor.darkGray
         }
         if maxFps==120{
-            //            fps240Button.isHidden=true
+            fps240Button.isHidden=true
             fps120Button.backgroundColor=UIColor.gray
             fps120Button.isEnabled=false
             fps120Button.isHidden=false
