@@ -1189,7 +1189,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroBoxView?.center = CGPoint(x:vw/2,y:vh*3/5)//340)
             view.addSubview(gyroBoxView!)
             vogBoxHeight=view.bounds.width*16/24//VOG
-            
+            vogBoxYmin=view.bounds.height/2-vogBoxHeight/2
             boxImage = makeBox(width: vw, height:vogBoxHeight)
             vogBoxView = UIImageView(image: boxImage)
 //            box1ys=view.bounds.height/2
@@ -1218,9 +1218,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        }
         //        //print("start:",temp)
         //        temp=0
-        let rect=vogBoxView?.frame
-//        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
-        wave3View!.frame=CGRect(x:0,y:rect!.minY,width:view.bounds.width*18,height:rect!.height)
+        wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
      }
     func drawVogall(){//すべてのvogを画面に表示
         if vogLineView != nil{
@@ -1238,15 +1236,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        if okpMode==0{//okpModeの時は3分全部を表示
         //            bai=18
         //        }
-        let rect=vogBoxView?.frame
-//        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
-        wave3View!.frame=CGRect(x:0,y:rect!.minY,width:view.bounds.width*18,height:rect!.height)
 
-        
-        
-        
-//        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
-    }
+        wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+     }
+    
     func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
         //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
         let size = CGSize(width:w, height:h)
@@ -2986,14 +2979,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 //                print("vogcur",vogCurpoint)
                 
-                let rect=vogBoxView?.frame
-        //        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
-                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:rect!.minY,width:view.bounds.width*18,height:rect!.height)
-
-                
-                
-//                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
-            }else{//枠 changed
+             wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+             }else{//枠 changed
                 if rectType > -1 {//枠の設定の場合
                     //                    let w3=view.bounds.width/3
                     let ww=view.bounds.width
