@@ -202,17 +202,17 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fps_non_120_240 = UserDefaults.standard.integer(forKey: "fps_non_120_240")
             initSession(fps: fps_non_120_240)
         }else{
-            
             checkinitSession()//maxFpsを設定
             UserDefaults.standard.set(Int(maxFps),forKey: "maxFps")
             print("maxFps 値無し",maxFps)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
             print("生まれて初めての時だけ、通るところのはず")//ここでmaxFpsを設定
         }
+//        setButtons()
         hideButtons(type: true)
-        setButtons(type: true)
+//        setButtons(type: true)
         //        stopButton.isHidden=true
-        startButton.isHidden=false
+//        startButton.isHidden=false
 //        print("maxFps,fps2:",maxFps,fps_non_120_240)
         //        setFlashlevel(level: 0.0)
         LEDBar.minimumValue = 0
@@ -284,9 +284,20 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         setFocus(focus:focusBar.value)
         UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
     }
+//    override func view
+//    override func viewWillAppear(_ animated: Bool) {
+//        setButtons()
+//        hideButtons(type: false)
+//    }
     override func viewDidAppear(_ animated: Bool) {
-        hideButtons(type: false)
-        setButtons(type: true)
+//        hideButtons(type: false)
+        setButtons()//type: true)
+        hideButtons(type:false)
+        stopButton.isHidden=true
+        currentTime.isHidden=true
+        if maxFps==120{
+            fps240Button.isHidden=true
+        }
     }
     @IBAction func onClick120fps(_ sender: Any) {
         if fps_non_120_240==1{
@@ -325,7 +336,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusNear.isHidden=type
         exitBut.isHidden=type
     }
-    func setButtons(type:Bool){
+    func setButtons(){//type:Bool){
         // recording button
         let ww=view.bounds.width
         let wh=damyBottom.frame.maxY// view.bounds.height
@@ -336,7 +347,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
         currentTime.frame   = CGRect(x:0,   y: 0 ,width: bw*1.5, height: bh/2)
         currentTime.layer.position=CGPoint(x:ww/2,y:wh-bh*2.5)
-        currentTime.isHidden=true
+//        currentTime.isHidden=true
         currentTime.layer.masksToBounds = true
         currentTime.layer.cornerRadius = 5
         
@@ -351,14 +362,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             self.fps240Button.backgroundColor = UIColor.darkGray
         }
         if maxFps==120{
-            fps240Button.isHidden=true
+//            fps240Button.isHidden=true
             fps120Button.backgroundColor=UIColor.gray
             fps120Button.isEnabled=false
-            fps120Button.isHidden=false
-        }else{
-            fps240Button.isHidden=false
+//            fps120Button.isHidden=false
+//        }else{
+//            fps240Button.isHidden=false
             //            fps120Button.isEnabled=false
-            fps120Button.isHidden=false
+//            fps120Button.isHidden=false
         }
         //startButton
         //        LEDCircle.frame=CGRect(x:0,y:0,width:bw,height: bh)
@@ -377,7 +388,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         startButton.layer.position = CGPoint(x:ww/2,y:bpos-bh/3)
         stopButton.frame=CGRect(x:0,y:0,width:bh*2,height:bh*2)
         stopButton.layer.position = CGPoint(x:ww/2,y:bpos-bh/3)
-        startButton.isHidden=false
+        startButton.isHidden=true
         stopButton.isHidden=true
         stopButton.tintColor=UIColor.orange
         setButtonProperty(button: exitBut, bw: bw, bh:bh, cx:ww-10-bw/2, cy:bpos)

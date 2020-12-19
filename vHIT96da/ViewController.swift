@@ -85,16 +85,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var wakuFac: UIImageView!
     @IBOutlet weak var wakuFacb: UIImageView!
     
-    var box1ys:CGFloat=0//上のboxのcenter:y VOGのみ
-    var boxHeight:CGFloat=0//VOGのみ
+//    var box1ys:CGFloat=0//上のboxのcenter:y VOGのみ
+    var vogBoxHeight:CGFloat=0
+    var vogBoxYmin:CGFloat=0
+    var vhitBoxHeight:CGFloat=0
+    var vhitBoxYmin:CGFloat=0
+    var gyroBoxHeight:CGFloat=0
+    var gyroBoxYmin:CGFloat=0
     var mailWidth:CGFloat=0//VOG
     var mailHeight:CGFloat=0//VOG
-    var gyroboxView: UIImageView?//vhit realtime
-    var gyrolineView: UIImageView?//vhit realtime
-    var vHITboxView: UIImageView?//vhits
-    var vHITlineView: UIImageView?//vhits
-    var voglineView:UIImageView?//vog
-    var vogboxView:UIImageView?//vog
+    var gyroBoxView: UIImageView?//vhit realtime
+    var gyroLineView: UIImageView?//vhit realtime
+    var vhitBoxView: UIImageView?//vhits
+    var vhitLineView: UIImageView?//vhits
+    var vogLineView:UIImageView?//vog
+    var vogBoxView:UIImageView?//vog
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var eraseButton: UIButton!
@@ -224,7 +229,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBAction func backVideo(_ sender: Any) {
   
-        if vHITlineView?.isHidden == false{
+        if vhitLineView?.isHidden == false{
             return
         }
         startFrame=0
@@ -291,7 +296,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        showTexts()
 //    }
     @IBAction func nextVideo(_ sender: Any) {
-        if vHITlineView?.isHidden == false{
+        if vhitLineView?.isHidden == false{
             return
         }
         startFrame=0
@@ -396,37 +401,37 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func showBoxies(f:Bool){
         if f==true && isVHIT==false{//vog wave
             boxF=true
-            vogboxView?.isHidden = false
-            voglineView?.isHidden = false
+            vogBoxView?.isHidden = false
+            vogLineView?.isHidden = false
             wave3View?.isHidden=false
-            vHITboxView?.isHidden = true
-            vHITlineView?.isHidden = true
-            gyroboxView?.isHidden = true
-            gyrolineView?.isHidden = true
+            vhitBoxView?.isHidden = true
+            vhitLineView?.isHidden = true
+            gyroBoxView?.isHidden = true
+            gyroLineView?.isHidden = true
             setBacknext(f: false)
             eraseButton.isHidden=true
             //       playButton.isEnabled=false
         }else if f==true && isVHIT==true{//vhit wave
             boxF=true
-            vogboxView?.isHidden = true
-            voglineView?.isHidden = true
+            vogBoxView?.isHidden = true
+            vogLineView?.isHidden = true
             wave3View?.isHidden=true
-            vHITboxView?.isHidden = false
-            vHITlineView?.isHidden = false
-            gyroboxView?.isHidden = false
-            gyrolineView?.isHidden = false
+            vhitBoxView?.isHidden = false
+            vhitLineView?.isHidden = false
+            gyroBoxView?.isHidden = false
+            gyroLineView?.isHidden = false
             setBacknext(f: false)
             eraseButton.isHidden=true
             //         playButton.isEnabled=false
         }else{//no wave
             boxF=false
-            vogboxView?.isHidden = true
-            voglineView?.isHidden = true
+            vogBoxView?.isHidden = true
+            vogLineView?.isHidden = true
             wave3View?.isHidden=true
-            vHITboxView?.isHidden = true
-            vHITlineView?.isHidden = true
-            gyroboxView?.isHidden = true
-            gyrolineView?.isHidden = true
+            vhitBoxView?.isHidden = true
+            vhitLineView?.isHidden = true
+            gyroBoxView?.isHidden = true
+            gyroLineView?.isHidden = true
             setBacknext(f: true)
             //         playButton.isEnabled=true
             if videoImg.count != 0{
@@ -440,7 +445,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true{
             return
         }
-        if vHITboxView?.isHidden==false || vogboxView?.isHidden==false{
+        if vhitBoxView?.isHidden==false || vogBoxView?.isHidden==false{
             showBoxies(f: false)
             //    playButton.isEnabled = true
         }else{
@@ -563,7 +568,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             sn=startFrame*2
             print("sn-newsn:",sn,Int(Float(sn)*fps/120))
 //            sn=Int(Float(sn)*fps/120)
-            sn=Int(Double(sn)*1.006)//適当に入れてみたiPhone11
+//            sn=Int(Double(sn)*1.006)//適当に入れてみたiPhone11
         }else{
             print("sn-newsn:",sn,Int(Float(sn)*fps/240))
 //            sn=Int(Float(sn)*fps/240)
@@ -572,12 +577,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //iPhone7plus "5DF2D3E7-F687-4ACC-BDC3-3BAF3523E374"
         //ipod touch  "19048224-362C-4B52-9242-9FB7B8085C59"
         
-        let udid = UIDevice.current.identifierForVendor?.uuidString
-        print("udid",udid as Any)
-        print(UIDevice.current.name,UIDevice.current.model)
-        if UIDevice.current.model.contains("touch"){
+//        let udid = UIDevice.current.identifierForVendor?.uuidString
+//        print("udid",udid as Any)
+//        print(UIDevice.current.name,UIDevice.current.model)
+        if view.bounds.width==320{//UIDevice.current.model.contains("touch"){
+            print("se touch")
             sn -= 30//ipod touchではこれで良さそう
         }else{
+            print("not se touch ")
             sn -= 10
         }
         if gyroFiltered.count>10{
@@ -617,8 +624,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showBoxies(f: true)
         vogImage = drawWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
         //vHITlinewViewだけは消しておく。その他波は１秒後には消えるので、そのまま。
-        if vHITlineView != nil{
-            vHITlineView?.removeFromSuperview()
+        if vhitLineView != nil{
+            vhitLineView?.removeFromSuperview()
         }
         
         readGyro(date: videoDate[videoCurrent])//gyroDataを読み込む
@@ -1170,33 +1177,36 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func makeBoxies(){
-        if gyroboxView == nil {//vHITboxView vogboxView
+        if gyroBoxView == nil {//vHITboxView vogboxView
             let vw=view.bounds.width
-            var boxImage = makeBox(width: vw, height: vw*200/500)
-            vHITboxView = UIImageView(image: boxImage)
-            vHITboxView?.center = CGPoint(x:vw/2,y:160)// view.center
-            view.addSubview(vHITboxView!)
-            boxImage = makeBox(width: vw, height: 180)
-            gyroboxView = UIImageView(image: boxImage)
-            gyroboxView?.center = CGPoint(x:vw/2,y:340)
-            view.addSubview(gyroboxView!)
+            let vh=view.bounds.height
+            var boxImage = makeBox(width: vw, height: vw*200/500)//128
+            vhitBoxView = UIImageView(image: boxImage)
+            vhitBoxView?.center = CGPoint(x:vw/2,y:vh/4)//160)// view.center
+            view.addSubview(vhitBoxView!)
+            boxImage = makeBox(width: vw, height: vw*300/500)
+            gyroBoxView = UIImageView(image: boxImage)
+            gyroBoxView?.center = CGPoint(x:vw/2,y:vh*3/5)//340)
+            view.addSubview(gyroBoxView!)
+            vogBoxHeight=view.bounds.width*16/24//VOG
             
-            boxImage = makeBox(width: vw, height:boxHeight)
-            vogboxView = UIImageView(image: boxImage)
-            box1ys=view.bounds.height/2
-            vogboxView?.center = CGPoint(x:vw/2,y:box1ys)
-            view.addSubview(vogboxView!)
+            boxImage = makeBox(width: vw, height:vogBoxHeight)
+            vogBoxView = UIImageView(image: boxImage)
+//            box1ys=view.bounds.height/2
+            
+            vogBoxView?.center = CGPoint(x:vw/2,y:vh/2)
+            view.addSubview(vogBoxView!)
         }
     }
     func drawVogall_new(){//すべてのvogを画面に表示
-        if voglineView != nil{
-            voglineView?.removeFromSuperview()
+        if vogLineView != nil{
+            vogLineView?.removeFromSuperview()
         }
         if wave3View != nil{
             wave3View?.removeFromSuperview()
         }
         
-        let drawImage = vogImage!.resize(size: CGSize(width:view.bounds.width*18, height:boxHeight))
+        let drawImage = vogImage!.resize(size: CGSize(width:view.bounds.width*18, height:vogBoxHeight))
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
         view.addSubview(wave3View!)
@@ -1208,17 +1218,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        }
         //        //print("start:",temp)
         //        temp=0
-        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
-    }
+        let rect=vogBoxView?.frame
+//        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
+        wave3View!.frame=CGRect(x:0,y:rect!.minY,width:view.bounds.width*18,height:rect!.height)
+     }
     func drawVogall(){//すべてのvogを画面に表示
-        if voglineView != nil{
-            voglineView?.removeFromSuperview()
+        if vogLineView != nil{
+            vogLineView?.removeFromSuperview()
         }
         if wave3View != nil{
             wave3View?.removeFromSuperview()
         }
         let dImage = drawAllvogwaves(width:mailWidth*18,height:mailHeight)
-        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width*18, height:boxHeight))
+        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width*18, height:vogBoxHeight))
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
         view.addSubview(wave3View!)
@@ -1226,7 +1238,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        if okpMode==0{//okpModeの時は3分全部を表示
         //            bai=18
         //        }
-        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
+        let rect=vogBoxView?.frame
+//        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
+        wave3View!.frame=CGRect(x:0,y:rect!.minY,width:view.bounds.width*18,height:rect!.height)
+
+        
+        
+        
+//        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
     }
     func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
         //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
@@ -1411,46 +1430,46 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func drawVogtext(){
-        if voglineView != nil{
-            voglineView?.removeFromSuperview()
+        if vogLineView != nil{
+            vogLineView?.removeFromSuperview()
         }
         let dImage = drawText(width:mailWidth,height:mailHeight)
-        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:boxHeight))
-        voglineView = UIImageView(image: drawImage)
-        voglineView?.center =  CGPoint(x:view.bounds.width/2,y:box1ys)
+        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:vogBoxHeight))
+        vogLineView = UIImageView(image: drawImage)
+        vogLineView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
         // 画面に表示する
-        view.addSubview(voglineView!)
+        view.addSubview(vogLineView!)
     }
     func drawVog(startcount:Int){//startcountまでのvogを画面に表示
-        if voglineView != nil{
-            voglineView?.removeFromSuperview()
+        if vogLineView != nil{
+            vogLineView?.removeFromSuperview()
         }
         if wave3View != nil{
             wave3View?.removeFromSuperview()
         }
         let dImage = drawVogwaves(timeflag:true,num:startcount,width:mailWidth,height:mailHeight)
-        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:boxHeight))
-        voglineView = UIImageView(image: drawImage)
-        voglineView?.center =  CGPoint(x:view.bounds.width/2,y:box1ys)
+        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:vogBoxHeight))
+        vogLineView = UIImageView(image: drawImage)
+        vogLineView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
         // 画面に表示する
-        view.addSubview(voglineView!)
+        view.addSubview(vogLineView!)
     }
     func drawVHITwaves(){//解析結果のvHITwavesを表示する
-        if vHITlineView != nil{
-            vHITlineView?.removeFromSuperview()
+        if vhitLineView != nil{
+            vhitLineView?.removeFromSuperview()
         }
         //        let drawImage = drawWaves(width:view.bounds.width,height: view.bounds.width*2/5)
         let drawImage = drawvhitWaves(width:500,height:200)
         let dImage = drawImage.resize(size: CGSize(width:view.bounds.width, height:view.bounds.width*2/5))
-        vHITlineView = UIImageView(image: dImage)
-        vHITlineView?.center =  CGPoint(x:view.bounds.width/2,y:160)
+        vhitLineView = UIImageView(image: dImage)
+        vhitLineView?.center =  CGPoint(x:view.bounds.width/2,y:160)
         // 画面に表示する
-        view.addSubview(vHITlineView!)
+        view.addSubview(vhitLineView!)
         //   showVog(f: true)
     }
     func drawRealwave(){//vHIT_eye_head
-        if gyrolineView != nil{//これが無いとエラーがでる。
-            gyrolineView?.removeFromSuperview()
+        if gyroLineView != nil{//これが無いとエラーがでる。
+            gyroLineView?.removeFromSuperview()
             //            lineView?.isHidden = false
         }
         var startcnt = 0
@@ -1462,10 +1481,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //波形を時間軸で表示
         let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:180)
         // イメージビューに設定する
-        gyrolineView = UIImageView(image: drawImage)
+        gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyrolineView?.center = CGPoint(x:view.bounds.width/2,y:340)//ここらあたりを変更se~7plusの大きさにも対応できた。
-        view.addSubview(gyrolineView!)
+        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:340)//ここらあたりを変更se~7plusの大きさにも対応できた。
+        view.addSubview(gyroLineView!)
         //      showBoxies(f: true)
         //        print("count----" + "\(view.subviews.count)")
     }
@@ -1475,8 +1494,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if startcnt < 0 {
             startcnt = 0
         }
-        if gyrolineView != nil{//これが無いとエラーがでる。
-            gyrolineView?.removeFromSuperview()
+        if gyroLineView != nil{//これが無いとエラーがでる。
+            gyroLineView?.removeFromSuperview()
             //            lineView?.isHidden = false
         }
         if eyeVeloFiltered.count < Int(self.view.bounds.width){//横幅以内なら０からそこまで表示
@@ -1487,11 +1506,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //波形を時間軸で表示
         let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:180)
         // イメージビューに設定する
-        gyrolineView = UIImageView(image: drawImage)
+        gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyrolineView?.center = CGPoint(x:view.bounds.width/2,y:340)
+        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:340)
         //ここらあたりを変更se~7plusの大きさにも対応できた。
-        view.addSubview(gyrolineView!)
+        view.addSubview(gyroLineView!)
         //        print("count----" + "\(view.subviews.count)")
     }
     var timercnt:Int = 0
@@ -1512,8 +1531,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //                vogCurpoint=vHITeye.count - 240*10
             //            }
             drawVogall_new()
-            if voglineView != nil{
-                voglineView?.removeFromSuperview()//waveを消して
+            if vogLineView != nil{
+                vogLineView?.removeFromSuperview()//waveを消して
                 drawVogtext()//文字を表示
             }
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれない
@@ -1852,7 +1871,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             gettingAlbumF=false
                         }
                     }else{//on icloud
-                        print("on icloud:",asset)
+//                        print("on icloud:",asset)
                         if i == assets.count - 1{
                             gettingAlbumF=false
                         }
@@ -2174,7 +2193,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if waveTuple.count < 1 {
             return
         }
-        if vHITboxView?.isHidden == true{
+        if vhitBoxView?.isHidden == true{
             showBoxies(f: true)
         }
         //var idNumber:Int = 0
@@ -2407,15 +2426,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        print(getFsindoc())
-        print("width:",view.bounds.width)
+        print(getFsindoc())
+        //11:414 ipodTouch7:320,568 se:320,568
+        print("width:",view.bounds.width,view.bounds.height)
         //        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.viewWillEnterForeground(_:)), name: NSNotification.Name.UIApplication.willEnterForegroundNotification, object: nil)
         // Do any additional setup after loading the view, typically from a nib.
         //dispDoc()//ドキュメントにあるファイルをprint
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
         mailHeight=1600//240*10*2/3//0.36*view.bounds.height/view.bounds.width
-        boxHeight=view.bounds.width*16/24//VOG
+//        boxHeight=view.bounds.width*16/24//VOG
         //         print("height:",view.bounds.height)
         //iPhone11:896 iPodTouch:568 se:568
 //        boxHeight=568*18/50//view.bounds.height*18/50
@@ -2593,22 +2613,30 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func readGyro(date:String){//gyroDataにデータを戻す
         //let text:String="test"
 //        let str=path.components(separatedBy: ".MOV")
+        gyroFiltered.removeAll()
         let gyroPath=date + "-gyro.csv"
         //        print("gyropath:",gyroPath)
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let path_file_name = dir.appendingPathComponent( gyroPath )
             do {
                 let text = try String( contentsOf: path_file_name, encoding: String.Encoding.utf8 )
-                gyroFiltered.removeAll()
+//                gyroFiltered.removeAll()
                 let str=text.components(separatedBy: ",")
                 for i in 0..<str.count-2{
                     gyroFiltered.append(CGFloat(Double(str[i])!/100.0))
                     //    print(gyroData5.last)
                 }
-            } catch {
+            } catch {//gyroデータファイルがない時
+//                gyroFiltered.removeAll()
                 print("readGyro read error")//エラー処理
-                print("gyroData:",gyroFiltered.count)
-                return
+//                print("duration:",videoDura[videoCurrent])
+                let str=videoDura[videoCurrent].components(separatedBy: "s")
+                let nStr:Double = Double(str[0])!
+                for _ in 0..<Int(nStr*240){
+                    gyroFiltered.append(0)
+                }
+//                print("gyroData:",gyroFiltered.count)
+//                return
             }
             //gyro(CGFloat配列)にtext(csv)から書き込む
         }
@@ -2687,10 +2715,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func removeBoxies(){
-        gyroboxView?.isHidden = true
-        vHITboxView?.isHidden = true
-        vHITlineView?.isHidden = true //removeFromSuperview()
-        gyrolineView?.isHidden = true //removeFromSuperview()
+        gyroBoxView?.isHidden = true
+        vhitBoxView?.isHidden = true
+        vhitLineView?.isHidden = true //removeFromSuperview()
+        gyroLineView?.isHidden = true //removeFromSuperview()
     }
     
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
@@ -2889,7 +2917,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let pos = sender.location(in: self.view)
         if sender.state == .began {
             stPo = sender.location(in: self.view)
-            if vHITboxView?.isHidden == true && vogboxView?.isHidden  == true{
+            if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
                 //タップして動かすと、ここに来る
                 //                rectType = checkWaks(po: pos)//0:枠設定 -1:違う
                 if isVHIT==false{
@@ -2902,7 +2930,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         } else if sender.state == .changed {
-            if isVHIT == true && vHITboxView?.isHidden == false{//vhit
+            if isVHIT == true && vhitBoxView?.isHidden == false{//vhit
                 let h=self.view.bounds.height
                 //let hI=Int(h)
                 //let posyI=Int(pos.y)
@@ -2936,7 +2964,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                     }
                 }
-            }else if isVHIT == false && vogboxView?.isHidden == false{//vog
+            }else if isVHIT == false && vogBoxView?.isHidden == false{//vog
                 //                print("okpMode:",okpMode)
                 if eyePosFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
                     return
@@ -2957,7 +2985,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     vogCurpoint = 0
                 }
                 //                print("vogcur",vogCurpoint)
-                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
+                
+                let rect=vogBoxView?.frame
+        //        wave3View!.frame=CGRect(x:0,y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
+                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:rect!.minY,width:view.bounds.width*18,height:rect!.height)
+
+                
+                
+//                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:box1ys-boxHeight/2,width:view.bounds.width*18,height:boxHeight)
             }else{//枠 changed
                 if rectType > -1 {//枠の設定の場合
                     //                    let w3=view.bounds.width/3
@@ -2985,7 +3020,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if sender.state == .ended{
             
             setUserDefaults()
-            if vHITboxView?.isHidden == false{//結果が表示されている時
+            if vhitBoxView?.isHidden == false{//結果が表示されている時
                 if waveTuple.count>0 {
                     for i in 0..<waveTuple.count{
                         if waveTuple[i].3 == 1{
@@ -3007,7 +3042,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            showWave(0)
 //            return
 //        }
-        if vHITboxView?.isHidden==false && waveTuple.count>0{
+        if vhitBoxView?.isHidden==false && waveTuple.count>0{
             if sender.location(in: self.view).y > self.view.bounds.width/5 + 160{
             //上に中央vHITwaveをタップで表示させるタップ範囲を設定
                 let temp = checksetPos(pos:lastVhitpoint + Int(sender.location(in: self.view).x),mode: 2)
