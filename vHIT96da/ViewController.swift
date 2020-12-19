@@ -88,10 +88,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    var box1ys:CGFloat=0//上のboxのcenter:y VOGのみ
     var vogBoxHeight:CGFloat=0
     var vogBoxYmin:CGFloat=0
+    var vogBoxYcenter:CGFloat=0
     var vhitBoxHeight:CGFloat=0
     var vhitBoxYmin:CGFloat=0
+    var vhitBoxYcenter:CGFloat=0
     var gyroBoxHeight:CGFloat=0
     var gyroBoxYmin:CGFloat=0
+    var gyroBoxYcenter:CGFloat=0
     var mailWidth:CGFloat=0//VOG
     var mailHeight:CGFloat=0//VOG
     var gyroBoxView: UIImageView?//vhit realtime
@@ -1180,21 +1183,31 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if gyroBoxView == nil {//vHITboxView vogboxView
             let vw=view.bounds.width
             let vh=view.bounds.height
-            var boxImage = makeBox(width: vw, height: vw*200/500)//128
+            
+            vhitBoxHeight=vw*2/5
+            vhitBoxYmin=160*vh/568-vogBoxHeight/2
+            vhitBoxYcenter=160*vh/568
+            var boxImage = makeBox(width: vw, height: vhitBoxHeight)//128
             vhitBoxView = UIImageView(image: boxImage)
-            vhitBoxView?.center = CGPoint(x:vw/2,y:vh/4)//160)// view.center
+            vhitBoxView?.center = CGPoint(x:vw/2,y:vhitBoxYcenter)//vh/4)//160)// view.center
             view.addSubview(vhitBoxView!)
-            boxImage = makeBox(width: vw, height: vw*300/500)
+            
+            gyroBoxHeight=180*vw/320
+            gyroBoxYmin=340*vh/568-vogBoxHeight/2
+            gyroBoxYcenter=340*vh/568
+            boxImage = makeBox(width: vw, height: gyroBoxHeight)
             gyroBoxView = UIImageView(image: boxImage)
-            gyroBoxView?.center = CGPoint(x:vw/2,y:vh*3/5)//340)
+            gyroBoxView?.center = CGPoint(x:vw/2,y:gyroBoxYcenter)//340)
             view.addSubview(gyroBoxView!)
-            vogBoxHeight=view.bounds.width*16/24//VOG
-            vogBoxYmin=view.bounds.height/2-vogBoxHeight/2
+            
+            vogBoxHeight=vw*16/24
+            vogBoxYmin=vh/2-vogBoxHeight/2
+            vogBoxYcenter=vh/2
             boxImage = makeBox(width: vw, height:vogBoxHeight)
             vogBoxView = UIImageView(image: boxImage)
 //            box1ys=view.bounds.height/2
             
-            vogBoxView?.center = CGPoint(x:vw/2,y:vh/2)
+            vogBoxView?.center = CGPoint(x:vw/2,y:vogBoxYcenter)
             view.addSubview(vogBoxView!)
         }
     }
@@ -1453,9 +1466,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         //        let drawImage = drawWaves(width:view.bounds.width,height: view.bounds.width*2/5)
         let drawImage = drawvhitWaves(width:500,height:200)
-        let dImage = drawImage.resize(size: CGSize(width:view.bounds.width, height:view.bounds.width*2/5))
+        let dImage = drawImage.resize(size: CGSize(width:view.bounds.width, height:vhitBoxHeight))//view.bounds.width*2/5))
         vhitLineView = UIImageView(image: dImage)
-        vhitLineView?.center =  CGPoint(x:view.bounds.width/2,y:160)
+        vhitLineView?.center =  CGPoint(x:view.bounds.width/2,y:vhitBoxYcenter)
         // 画面に表示する
         view.addSubview(vhitLineView!)
         //   showVog(f: true)
@@ -1472,11 +1485,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             startcnt = eyeVeloFiltered.count - Int(self.view.bounds.width)
         }
         //波形を時間軸で表示
-        let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:180)
+        let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:gyroBoxHeight)//180)
         // イメージビューに設定する
         gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:340)//ここらあたりを変更se~7plusの大きさにも対応できた。
+        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:gyroBoxYcenter)//340)//ここらあたりを変更se~7plusの大きさにも対応できた。
         view.addSubview(gyroLineView!)
         //      showBoxies(f: true)
         //        print("count----" + "\(view.subviews.count)")
@@ -1497,11 +1510,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             startcnt = eyeVeloFiltered.count - Int(self.view.bounds.width)
         }
         //波形を時間軸で表示
-        let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:180)
+        let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:gyroBoxHeight)// 180)
         // イメージビューに設定する
         gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:340)
+        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:gyroBoxYcenter)// 340)
         //ここらあたりを変更se~7plusの大きさにも対応できた。
         view.addSubview(gyroLineView!)
         //        print("count----" + "\(view.subviews.count)")
@@ -1969,16 +1982,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //     let height = UInt32(h)/2
         // 点の配列を作る
 //        print(gyroMoved.count)
+        print("gyroBoxHeight",gyroBoxHeight)//touch 180 ,11:232.875
         let eyeVeloFilteredCnt=eyeVeloFiltered.count
         let gyroMovedCnt=gyroMoved.count
+        
         for n in 1...(pointCount) {
             if num + n < eyeVeloFilteredCnt && num + n < gyroMovedCnt {
                 let px = dx * CGFloat(n)
-                let py0 = eyeVeloFiltered[num + n] * CGFloat(eyeRatio)/230.0 + 60.0
+                let py0 = eyeVeloFiltered[num + n] * CGFloat(eyeRatio)/230.0 + gyroBoxHeight*2/6
                 if faceF==1{
-                    py1 = faceVeloFiltered[num + n] * CGFloat(eyeRatio)/230.0 + 90.0
+                    py1 = faceVeloFiltered[num + n] * CGFloat(eyeRatio)/230.0 + gyroBoxHeight*3/6
                 }
-                let py2 = gyroMoved[num + n] * CGFloat(gyroRatio)/300.0 + 120.0
+                let py2 = gyroMoved[num + n] * CGFloat(gyroRatio)/300.0 + gyroBoxHeight*4/6
                 let point0 = CGPoint(x: px, y: py0)
                 if faceF==1{
                     point1 = CGPoint(x: px, y: py1!)
@@ -3045,11 +3060,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                return
             }
         }
-//        if vHITboxView?.isHidden == true && vogboxView?.isHidden == true && gyroboxView?.isHidden == true{
-//            if isVHIT==true && faceF==1{
-//                wakuToEye(0)
-//            }
-//        }
     }
     
     func checksetPos(pos:Int,mode:Int) -> Int{
