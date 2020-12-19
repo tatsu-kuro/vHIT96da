@@ -243,12 +243,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
    
     func showVideoIroiro(num:Int){//videosCurrentを移動
+//        print("videosDate:",videosDate.count)
         if videosDura.count == 0{
             slowImage.image=UIImage(named:"vhittop")
             return
         }
         videosCurrent += num
-        print(videosCurrent,num)
+//        print(videosCurrent,num)
         if videosCurrent>videosArrayCount-1{
             videosCurrent=0
         }else if videosCurrent<0{
@@ -558,10 +559,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func moveGyroData(){//gyroDeltaとstartFrameをずらして
+//        return
         gyroMoved.removeAll()
         var sn=startFrame
         //120,240とのズレを修正してみたが、焼け石に水
-        let fps=getFPS(url: videosURL[videosCurrent])//getFPS(videoPath: vidPath[vidCurrent])
+        let fps=getFPS(url: videosURL[videosCurrent])
         if fps<200{
             sn=startFrame*2
             print("sn-newsn:",sn,Int(Float(sn)*fps/120))
@@ -570,7 +572,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else{
             print("sn-newsn:",sn,Int(Float(sn)*fps/240))
 //            sn=Int(Float(sn)*fps/240)
-            sn=Int(Double(sn)*1.004)//適当に入れてみたiPhone11
+//            sn=Int(Double(sn)*1.004)//適当に入れてみたiPhone11
         }
         //iPhone7plus "5DF2D3E7-F687-4ACC-BDC3-3BAF3523E374"
         //ipod touch  "19048224-362C-4B52-9242-9FB7B8085C59"
@@ -580,6 +582,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         print(UIDevice.current.name,UIDevice.current.model)
         if UIDevice.current.model.contains("touch"){
             sn -= 30//ipod touchではこれで良さそう
+        }else{
+            sn -= 10
         }
         if gyroFiltered.count>10{
             for i in sn..<gyroFiltered.count{
