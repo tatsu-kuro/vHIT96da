@@ -160,6 +160,67 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     @IBAction func eraseVideo(_ sender: Any) {
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = false
+        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
+        // "iCapNYS"という名前のアルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
+        
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+//        print("asset:",assetCollections.count)
+        //アルバムが存在しない事もある？
+        var dialogStatus:Int=0
+        if (assetCollections.count > 0) {
+            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+            let assetCollection = assetCollections.object(at:0)
+            // creationDate降順でアルバム内のアセットをフェッチ
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+            for i in 0..<assets.count{
+                let date_sub=assets[i].creationDate
+                let date = formatter.string(from:date_sub!)
+                if videoDate[videoCurrent].contains(date){
+                    
+                    if !assets[i].canPerform(.delete) {
+                        return
+                    }
+
+                    PHPhotoLibrary.shared().performChanges({
+                        PHAssetChangeRequest.deleteAssets(NSArray(array: [assets[i]]))
+                    }, completionHandler: { success,error in//[self] _, _ in
+                        if success==true{
+                            dialogStatus = 1
+                        }else{
+                            dialogStatus = -1
+                        }
+                        // 削除後の処理
+                    })
+                    break
+                }
+            }
+        }
+        while dialogStatus == 0{
+            sleep(UInt32(0.2))
+        }
+        if dialogStatus == 1{
+            removeFile(delFile: videoDate[videoCurrent] + "-gyro.csv")
+            videoDate.remove(at: videoCurrent)
+            videoURL.remove(at: videoCurrent)
+            videoImg.remove(at: videoCurrent)
+            videoDura.remove(at: videoCurrent)
+            videoArrayCount -= 1
+            videoCurrent -= 1
+            showVideoIroiro(num: 0)
+
+        }
+//        slowImage.image=videoImg[videoCurrent]
 //        let str=getFsindoc().components(separatedBy: ",")
 //        if !str[0].contains("vHIT96da"){
 //            return
@@ -261,6 +322,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let roundFps:Int = Int(round(getFPS(url: videoURL[videoCurrent])))
         videoFps.text=videoDura[videoCurrent] + "/" + String(format: "%dfps",roundFps)
         showWakuImages()
+        setBacknext(f:true)
     }
 
 //    func showTexts(){
@@ -435,7 +497,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 eraseButton.isHidden=true
             }
-            eraseButton.isHidden=true//とりあえず
+//            eraseButton.isHidden=true//とりあえず
         }
     }
     @IBAction func showWave(_ sender: Any) {//saveresult record-unwind の２箇所
@@ -1112,7 +1174,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         setButtons_first()
         showWakuImages()
-        eraseButton.isHidden=true//とりあえず
+//        eraseButton.isHidden=true//とりあえず
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -1870,6 +1932,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gettingAlbumF=false
         }
     }
+
     func getUserDefaults(){
         widthRange = getUserDefault(str: "widthRange", ret: 30)
         waveWidth = getUserDefault(str: "waveWidth", ret: 80)
@@ -2422,7 +2485,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         super.viewDidLoad()
 //        print(UIDevice.self.current.model)//iPhone ,iPod touchが見れる
 //        print(UIDevice.self.current.systemName)
-//        dispFsindoc()
+        dispFsindoc()
        //7plus:414x736->15(15:120)
         //11:414x896->10(10:120fps)
         //ipodTouch7:320x568->30:12fps
@@ -2538,7 +2601,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return image!
     }
     
-    func removeFile(delFile:String)->Bool{
+    func removeFile(delFile:String){
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             
             let path_file_name = dir.appendingPathComponent( delFile )
@@ -2547,13 +2610,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             do {
                 try fileManager.removeItem(at: path_file_name)
             } catch {
-                print("del file error")//エラー処理
-                return false
+                print("remove -> error")//エラー処理
+//                return// false
             }
-            print("well done")
-            return true
+            print("remove -> well done")
+ //           return// true
         }
-        return false
+  //      return false
     }
  
     func saveGyro(date:String) {//gyroData(GFloat)を100倍してcsvとして保存
