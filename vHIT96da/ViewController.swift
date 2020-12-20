@@ -33,15 +33,10 @@ extension UIImage {
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let openCV = opencvWrapper()
-    var vhitVideocurrent:Int = 0
-    var slowVideoall:Int = 0
-    var vhitVideos:Int = 0
+
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
-//    var vidImg = Array<UIImage>()
-//    var vidPath = Array<String>()
-//    var vidDate = Array<String>()
-//    var vidDura = Array<String>()
+
     //以下はalbum関連
     var albumExist:Bool=false
     var videoArrayCount:Int = 0
@@ -50,12 +45,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoImg = Array<UIImage>()
     var videoDura = Array<String>()
     var videoCurrent:Int=0
-//    var recordedFPS:Float?
     //album関連、ここまで
-//    var vidCurrent:Int=0
     var vogImage:UIImage?
-    let videoPathtext:String="videoPath.txt"
-    var recStart = CFAbsoluteTimeGetCurrent()
+//    var recStart = CFAbsoluteTimeGetCurrent()
     @IBOutlet weak var cameraButton: UIButton!
     var boxF:Bool=false
     @IBOutlet weak var vogButton: UIButton!
@@ -149,6 +141,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var veloRatio:Int = 100//vog
     var isVHIT:Bool?//true-vhit false-vog
     var faceF:Int = 0
+    var videoGyroZure:Int = 40
     //解析結果保存用配列
     
     var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
@@ -257,7 +250,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         videoCurrent += num
-        print(videoCurrent,num,videoImg.count)
+//        print(videoCurrent,num,videoImg.count)
         if videoCurrent>videoArrayCount-1{
             videoCurrent=0
         }else if videoCurrent<0{
@@ -442,6 +435,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 eraseButton.isHidden=true
             }
+            eraseButton.isHidden=true//とりあえず
         }
     }
     @IBAction func showWave(_ sender: Any) {//saveresult record-unwind の２箇所
@@ -569,47 +563,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let fps=getFPS(url: videoURL[videoCurrent])
         if fps<200{
             sn=startFrame*2
-            print("sn-newsn:",sn,Int(Float(sn)*fps/120))
-//            sn=Int(Float(sn)*fps/120)
-//            sn=Int(Double(sn)*1.006)//適当に入れてみたiPhone11
-        }else{
-            print("sn-newsn:",sn,Int(Float(sn)*fps/240))
-//            sn=Int(Float(sn)*fps/240)
-//            sn=Int(Double(sn)*1.004)//適当に入れてみたiPhone11
         }
-        //iPhone7plus "5DF2D3E7-F687-4ACC-BDC3-3BAF3523E374"
-        //ipod touch  "19048224-362C-4B52-9242-9FB7B8085C59"
-        
-//        let udid = UIDevice.current.identifierForVendor?.uuidString
-//        print("udid",udid as Any)
-//        print(UIDevice.current.name,UIDevice.current.model)
-        if view.bounds.width==320{//UIDevice.current.model.contains("touch"){
-            print("se touch")
-            sn -= 30//ipod touchではこれで良さそう
-        }else{
-            print("not se touch ")
-            sn -= 10
-        }
+        sn -= videoGyroZure
+
         if gyroFiltered.count>10{
             for i in sn..<gyroFiltered.count{
                 if i>=0{
-//                if i+sn<gyroFiltered.count{
                     gyroMoved.append(gyroFiltered[i])
-//                }else{
-//                    gyroMoved.append(0)
-//                }
                 }else{
                     gyroMoved.append(0)
                 }
             }
-
-//            for i in 0..<gyroFiltered.count{
-//                if i+sn<gyroFiltered.count{
-//                    gyroMoved.append(gyroFiltered[i+sn])
-//                }else{
-//                    gyroMoved.append(0)
-//                }
-//            }
         }
     }
     
@@ -1148,7 +1112,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         setButtons_first()
         showWakuImages()
-        print("didappear******")
+        eraseButton.isHidden=true//とりあえず
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -1552,13 +1516,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             lastArraycount=eyeVeloOrig.count
         }
     }
-    /*
-     vogImage = addwaveImage(startingImage: vogImage!,sn:0,en:240*5)
-     //        vogImage = addwaveImage(startingImage: vogImage!,sn:480,en:240*5)
-     //vogImage=vogImage2.composite(image: vogImage1)!
-     let drawImage = vogImage!.resize(size: CGSize(width:view.bounds.width*18, height:boxHeight!))
-     wave3View = UIImageView(image: drawImage)
-     */
+   
     func addwaveImage(startingImage:UIImage,sn:Int,en:Int) ->UIImage{
         // Create a context of the starting image size and set it as the current one
         var stn=sn
@@ -1797,6 +1755,30 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
+    func getVideoGyryoZureDefault(){
+       
+        if UserDefaults.standard.object(forKey:"videoGyroZure") != nil{
+            videoGyroZure=UserDefaults.standard.integer(forKey: "videoGyroZure")
+        }else{
+            let vw=view.bounds.width
+            let vh=view.bounds.height
+            if UIDevice.self.current.model.contains("touch"){//Touch7:320x568->30:120fps
+                videoGyroZure=30
+            }else if vw==414 && vh==736{//7plus:414x736->15(15:120)
+                videoGyroZure=15
+            }else if vw==320 && vh==568{//se:320x568->25(25:120)
+                videoGyroZure=25
+            }else if vw==375 && vh==667{//8:375x667->22(15:120)
+                videoGyroZure=15
+            }else if vw==414 && vh==896{//11:414x896->10(10:120fps)
+                videoGyroZure=10
+            }else{
+                videoGyroZure=10
+            }
+            UserDefaults.standard.set(videoGyroZure, forKey: "videoGyroZure")
+            print("videoGyroZure",videoGyroZure)
+        }
+    }
     func getUserDefault(str:String,ret:Bool)->Bool{
         if (UserDefaults.standard.object(forKey: str) != nil){//keyがなければretをセット
             return UserDefaults.standard.bool(forKey:str)
@@ -1898,6 +1880,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         posRatio = getUserDefault(str: "posRatio", ret: 100)
         veloRatio = getUserDefault(str: "veloRatio", ret: 100)
         faceF = getUserDefault(str: "faceF", ret:0)
+        getVideoGyryoZureDefault()
+//        videoGyroZure = getUserDefault(str: "videoGyroZure", ret:40)
         isVHIT = getUserDefault(str: "isVHIT", ret: true)
         
         wakuE.origin.x = CGFloat(getUserDefault(str: "wakuE_x", ret:100))
@@ -1922,6 +1906,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UserDefaults.standard.set(posRatio, forKey: "posRatio")
         UserDefaults.standard.set(veloRatio, forKey: "veloRatio")
         UserDefaults.standard.set(faceF,forKey: "faceF")
+        UserDefaults.standard.set(videoGyroZure,forKey:"videoGyroZure")
         
         UserDefaults.standard.set(Int(wakuE.origin.x), forKey: "wakuE_x")
         UserDefaults.standard.set(Int(wakuE.origin.y), forKey: "wakuE_y")
@@ -1982,7 +1967,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //     let height = UInt32(h)/2
         // 点の配列を作る
 //        print(gyroMoved.count)
-        print("gyroBoxHeight",gyroBoxHeight)//touch 180 ,11:232.875
+//        print("gyroBoxHeight",gyroBoxHeight)//touch 180 ,11:232.875
         let eyeVeloFilteredCnt=eyeVeloFiltered.count
         let gyroMovedCnt=gyroMoved.count
         
@@ -2414,6 +2399,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             // フォトライブラリに写真を保存するなど、実施したいことをここに書く
         }
     }
+    /*
     func findVideos() {
         // Documents ディレクトリの URL
         let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -2431,53 +2417,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         catch {
             print("ファイル一覧取得エラー")
         }
-    }
+    }*/
+    //UIDevice
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(getFsindoc())
-        //11:414 ipodTouch7:320,568 se:320,568
+//        print(UIDevice.self.current.model)//iPhone ,iPod touchが見れる
+//        print(UIDevice.self.current.systemName)
+//        dispFsindoc()
+       //7plus:414x736->15(15:120)
+        //11:414x896->10(10:120fps)
+        //ipodTouch7:320x568->30:12fps
+        //se:320x568->25(25:120)
+        //8:375x667->22(15:120)
         print("width:",view.bounds.width,view.bounds.height)
-        //        NotificationCenter.default.addObserver(self, selector: #selector(ViewController.viewWillEnterForeground(_:)), name: NSNotification.Name.UIApplication.willEnterForegroundNotification, object: nil)
-        // Do any additional setup after loading the view, typically from a nib.
-        //dispDoc()//ドキュメントにあるファイルをprint
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
         mailHeight=1600//240*10*2/3//0.36*view.bounds.height/view.bounds.width
-//        boxHeight=view.bounds.width*16/24//VOG
-        //         print("height:",view.bounds.height)
-        //iPhone11:896 iPodTouch:568 se:568
-//        boxHeight=568*18/50//view.bounds.height*18/50
          //vHIT結果サイズは500*200
         getUserDefaults()
-//        setButtons_first()
         setButtons(mode: true)
         stopButton.isHidden = true
         camera_alert()
         getAlbumList()
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
-//        setArrays()
-//        vidCurrent=vidPath.count-1//ない場合は -1
-//        print("videopath:",vidPath.count)
-//        showCurrent()
         makeBoxies()//three boxies of gyro vHIT vog
         showBoxies(f: false)//isVHITに応じてviewを表示
-//        dispWakus()
-        //        vogImage = drawWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
         self.setNeedsStatusBarAppearanceUpdate()
-//        prefersHomeIndicatorAutoHidden
-//        dispWakuImages()
-//        getAlbumList()
-//        videoArrayCount = videosURL.count
-//        print(videosURL.count)
-//        for i in 0..<videosURL.count {
-//            print(videosURL[i])
-//            print(videosDate[i])
-//        }
-//        getAlbumList()
-//        videosArrayCount = videosURL.count
-//        videosCurrent=videosArrayCount-1
-//        print("icapnys:",videosURL.count)
         dispWakus()
         showVideoIroiro(num:0)
     }
@@ -2619,37 +2586,41 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     //calcVHITで実行、その後moveGyroData()
     func readGyro(date:String){//gyroDataにデータを戻す
-        //let text:String="test"
-//        let str=path.components(separatedBy: ".MOV")
         gyroFiltered.removeAll()
         let gyroPath=date + "-gyro.csv"
-        //        print("gyropath:",gyroPath)
+
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let path_file_name = dir.appendingPathComponent( gyroPath )
             do {
                 let text = try String( contentsOf: path_file_name, encoding: String.Encoding.utf8 )
-//                gyroFiltered.removeAll()
                 let str=text.components(separatedBy: ",")
                 for i in 0..<str.count-2{
                     gyroFiltered.append(CGFloat(Double(str[i])!/100.0))
-                    //    print(gyroData5.last)
                 }
             } catch {//gyroデータファイルがない時
-//                gyroFiltered.removeAll()
                 print("readGyro read error")//エラー処理
-//                print("duration:",videoDura[videoCurrent])
                 let str=videoDura[videoCurrent].components(separatedBy: "s")
                 let nStr:Double = Double(str[0])!
                 for _ in 0..<Int(nStr*240){
                     gyroFiltered.append(0)
                 }
-//                print("gyroData:",gyroFiltered.count)
-//                return
             }
             //gyro(CGFloat配列)にtext(csv)から書き込む
         }
     }
-    
+    func dispFsindoc(){
+        let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        do {
+            let contentUrls = try FileManager.default.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil)
+            let files = contentUrls.map{$0.lastPathComponent}
+            
+            for i in 0..<files.count{
+                print(files[i])
+            }
+        } catch {
+            print("ないよ？")
+        }
+    }
     func getFsindoc()->String{
         let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
@@ -2690,6 +2661,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if isVHIT == true{
                 ParametersViewController.ratio1 = eyeRatio
                 ParametersViewController.ratio2 = gyroRatio
+                ParametersViewController.videoGyroZure=videoGyroZure
             }else{
                 ParametersViewController.ratio1 = posRatio
                 ParametersViewController.ratio2 = veloRatio
@@ -2744,6 +2716,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 eyeRatio=ParametersViewController.ratio1
                 gyroRatio=ParametersViewController.ratio2
                 faceF=ParametersViewController.faceF!
+                videoGyroZure=ParametersViewController.videoGyroZure
             }else{
                 if posRatio != ParametersViewController.ratio1 ||
                     veloRatio != ParametersViewController.ratio2{
@@ -2776,16 +2749,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let Controller:PlayViewController = vc
             if !(videoCurrent == -1){
                 let curTime=Controller.seekBarValue
-//                let fps=getFPS(videoPath: vidPath[vidCurrent])
                 let fps = getFPS(url: videoURL[videoCurrent])
                 //Controller.currentFPS
                 print("seek,fps:",Controller.seekBarValue,fps)
                 startFrame=Int(round(curTime*fps))//四捨五入したもの
 //                startFrame=Int(curTime*fps)//四捨五入してない、こちらが近そう
-
 //                print("round",Int(round(curTime*fps)),Int(curTime*fps),curTime*fps)
                 slowImage.image=getframeImage(frameNumber: startFrame)
-//                vidImg[vidCurrent]=slowImage.image!
                 videoImg[videoCurrent]=slowImage.image!
                 boxF=false
                 showBoxies(f: false)
@@ -2804,7 +2774,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 KalmanInit()
 //                addArray(path:Controller.filePath!)//ここでvidImg[]登録
 //                vidCurrent=vidPath.count-1
-                recStart = Controller.recStart
+//                recStart = Controller.recStart
                 gyroFiltered.removeAll()
                 //                tGyro.removeAll()
 //                showCurrent()
@@ -2823,7 +2793,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //gyroは10msごとに拾ってある.合わせる
                 //これをvideoのフレーム数に合わせる
                 //                let fps=getFps(path:Controller.filePath!)
-                while Controller.saved2album == false{
+                while Controller.saved2album == false{//fileができるまで待つ
                     sleep(UInt32(0.1))
                 }
                 getAlbumList()
@@ -2837,7 +2807,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var fps=getFPS(url: videoURL[videoCurrent])
 //                var fps=Controller.recordedFPS
 //                slowImage.image=Controller.topImage
-                print("fps:",fps)
+//                print("fps:",fps)
                 if fps < 200.0{
                     fps *= 2.0
                 }
@@ -2860,19 +2830,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //                    gyroFiltered[i-2]=(tGyro[i]+tGyro[i-1]+tGyro[i-2]+tGyro[i-3]+tGyro[i-4])/5
                 //                }
                 saveGyro(date:videoDate[videoCurrent])//Controller.filePath!)// str[0])//videoと同じ名前で保存
-                print("gyro-Date:",videoDate[videoCurrent])
+//                print("gyro-Date:",videoDate[videoCurrent])
                 startFrame=0
-//                while Controller.saved2album == false{
-//                    sleep(UInt32(0.1))
-//                }
-//                getAlbumList()
-//                while videosDura.count==videosArrayCount{
-//                    sleep(UInt32(0.5))
-//                }
-//                videosArrayCount=videosDura.count
-//                videosCurrent=videosArrayCount-1
-//                showVideoIroiro(num:0)// videosCurrent)
-//                showWakuImages()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
             //            UserDefaults.standard.set(fps_non_120_240,forKey:"fps_non_120_240")
@@ -2971,6 +2930,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             drawVHITwaves()
                         }
                     }
+                }else{
+                    
                 }
             }else if isVHIT == false && vogBoxView?.isHidden == false{//vog
                 //                print("okpMode:",okpMode)
