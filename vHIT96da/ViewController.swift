@@ -1838,7 +1838,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             for i in 0..<assets.count{
                 let asset=assets[i]
-//                print(asset)
                 let date_sub = asset.creationDate
                 let date = formatter.string(from: date_sub!)
                 let duration = String(format:"%.1fs",asset.duration)
@@ -1881,7 +1880,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         veloRatio = getUserDefault(str: "veloRatio", ret: 100)
         faceF = getUserDefault(str: "faceF", ret:0)
         getVideoGyryoZureDefault()
-//        videoGyroZure = getUserDefault(str: "videoGyroZure", ret:40)
         isVHIT = getUserDefault(str: "isVHIT", ret: true)
         
         wakuE.origin.x = CGFloat(getUserDefault(str: "wakuE_x", ret:100))
