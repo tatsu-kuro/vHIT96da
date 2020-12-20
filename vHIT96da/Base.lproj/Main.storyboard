@@ -981,36 +981,28 @@
                                     <action selector="langChan:" destination="jcX-Lf-HTi" eventType="touchUpInside" id="d97-Fs-pdZ"/>
                                 </connections>
                             </button>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" maximumZoomScale="2" translatesAutoresizingMaskIntoConstraints="NO" id="Eho-aH-LT3">
-                                <rect key="frame" x="0.0" y="44" width="414" height="762"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j2D-6T-AEW">
-                                        <rect key="frame" x="0.0" y="0.0" width="418" height="667"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
-                                </subviews>
-                            </scrollView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Am6-gR-aqp">
+                                <rect key="frame" x="0.0" y="44" width="414" height="778"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E8V-fc-BMe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Eho-aH-LT3" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" id="3ph-xL-Z18"/>
+                            <constraint firstItem="Am6-gR-aqp" firstAttribute="top" secondItem="E8V-fc-BMe" secondAttribute="top" id="25f-bS-yDA"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="Qiw-FJ-LWg" secondAttribute="bottom" constant="5" id="T3i-UR-i91"/>
-                            <constraint firstItem="Eho-aH-LT3" firstAttribute="trailing" secondItem="E8V-fc-BMe" secondAttribute="trailing" id="TXn-Qf-JxF"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="fPw-uT-6g8" secondAttribute="bottom" constant="5" id="Wtb-U0-3iu"/>
+                            <constraint firstItem="Am6-gR-aqp" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" id="ek2-Wl-gF0"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="trailing" secondItem="fPw-uT-6g8" secondAttribute="trailing" constant="5" id="fwC-Ow-EK2"/>
-                            <constraint firstItem="fPw-uT-6g8" firstAttribute="top" secondItem="Eho-aH-LT3" secondAttribute="bottom" id="hKi-bW-DmM"/>
                             <constraint firstItem="Qiw-FJ-LWg" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" constant="5" id="jRu-lN-br8"/>
-                            <constraint firstItem="Eho-aH-LT3" firstAttribute="top" secondItem="E8V-fc-BMe" secondAttribute="top" id="tkD-aW-S7v"/>
+                            <constraint firstItem="fPw-uT-6g8" firstAttribute="top" secondItem="Am6-gR-aqp" secondAttribute="bottom" id="vwv-5F-Qzr"/>
+                            <constraint firstItem="E8V-fc-BMe" firstAttribute="trailing" secondItem="Am6-gR-aqp" secondAttribute="trailing" id="w3I-z4-c29"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Cnj-ab-cAW"/>
                     <connections>
                         <outlet property="exitButton" destination="fPw-uT-6g8" id="8qq-Wh-wiQ"/>
-                        <outlet property="hView" destination="j2D-6T-AEW" id="HXI-09-XgW"/>
+                        <outlet property="helpView" destination="Am6-gR-aqp" id="6ed-93-aZf"/>
                         <outlet property="langButton" destination="Qiw-FJ-LWg" id="wnH-Ef-Ga1"/>
-                        <outlet property="scrollView" destination="Eho-aH-LT3" id="kw4-08-pxa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8AV-xf-OhK" userLabel="First Responder" sceneMemberID="firstResponder"/>
