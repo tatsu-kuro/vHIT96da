@@ -196,9 +196,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         PHAssetChangeRequest.deleteAssets(NSArray(array: [assets[i]]))
                     }, completionHandler: { success,error in//[self] _, _ in
                         if success==true{
-                            dialogStatus = 1
+                            dialogStatus = 1//YES
                         }else{
-                            dialogStatus = -1
+                            dialogStatus = -1//NO
                         }
                         // 削除後の処理
                     })
@@ -206,10 +206,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }
-        while dialogStatus == 0{
+        while dialogStatus == 0{//dialogから抜けるまでは0
             sleep(UInt32(0.2))
         }
-        if dialogStatus == 1{
+        if dialogStatus == 1{//yesで抜けた時
             removeFile(delFile: videoDate[videoCurrent] + "-gyro.csv")
             videoDate.remove(at: videoCurrent)
             videoURL.remove(at: videoCurrent)
@@ -220,37 +220,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             showVideoIroiro(num: 0)
 
         }
-//        slowImage.image=videoImg[videoCurrent]
-//        let str=getFsindoc().components(separatedBy: ",")
-//        if !str[0].contains("vHIT96da"){
-//            return
-//        }
-//        let str1=vidPath[vidCurrent].components(separatedBy: ".MOV")
-//        //str1[0]=vHIT96da*(.MOVを削ったもの)
-//        let lastvidCurrent=vidCurrent
-//        for i in 0..<str.count{
-//            if str[i].contains(str1[0]){
-//                if removeFile(delFile: str[i])==true{
-//                    print("remove completed:",str[i])
-//                    eyeVeloOrig.removeAll()
-//                    eyeVeloFiltered.removeAll()
-//                    faceVeloOrig.removeAll()
-//                    faceVeloFiltered.removeAll()
-//                    eyePosOrig.removeAll()
-//                    eyePosFiltered.removeAll()
-//                    gyroMoved.removeAll()
-//                }
-//            }
-//        }
-//        setArrays()//vidCurrent -> lastoneにセットされる
-//        vidCurrent=lastvidCurrent-1
-//        if vidCurrent<0{
-//            vidCurrent=0
-//        }
-//        startFrame=0
-////        showCurrent()
-//        showBoxies(f: false)
-//        showWakuImages()
     }
     
     @IBAction func vhitGo(_ sender: Any) {
@@ -621,13 +590,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        return
         gyroMoved.removeAll()
         var sn=startFrame
-        //120,240とのズレを修正してみたが、焼け石に水
         let fps=getFPS(url: videoURL[videoCurrent])
         if fps<200{
             sn=startFrame*2
         }
-        sn -= videoGyroZure
-
+        sn -= videoGyroZure//初起動時に機種を判定（適当）して設定。設定ページで変更可能。
         if gyroFiltered.count>10{
             for i in sn..<gyroFiltered.count{
                 if i>=0{
@@ -2611,12 +2578,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 try fileManager.removeItem(at: path_file_name)
             } catch {
                 print("remove -> error")//エラー処理
-//                return// false
+                return
             }
             print("remove -> well done")
- //           return// true
         }
-  //      return false
     }
  
     func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
