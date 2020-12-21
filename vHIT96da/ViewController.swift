@@ -657,7 +657,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vhitLineView?.removeFromSuperview()
         }
         
-        readGyro(date: videoDate[videoCurrent])//gyroDataを読み込む
+        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
         
@@ -2619,9 +2619,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
   //      return false
     }
  
-    func saveGyro(date:String) {//gyroData(GFloat)を100倍してcsvとして保存
-//        let str=path.components(separatedBy: ".MOV")
-        let gyroPath=date + "-gyro.csv"
+    func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
         var text:String=""
         for i in 0..<gyroFiltered.count - 2{
             text += String(Int(gyroFiltered[i]*100.0)) + ","
@@ -2646,10 +2644,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     //calcVHITで実行、その後moveGyroData()
-    func readGyro(date:String){//gyroDataにデータを戻す
+    func readGyro(gyroPath:String){//gyroDataにデータを戻す
         gyroFiltered.removeAll()
-        let gyroPath=date + "-gyro.csv"
-
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let path_file_name = dir.appendingPathComponent( gyroPath )
             do {
@@ -2890,7 +2886,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //                for i in 4...gyroFiltered.count-5{//平均加算hightpass
                 //                    gyroFiltered[i-2]=(tGyro[i]+tGyro[i-1]+tGyro[i-2]+tGyro[i-3]+tGyro[i-4])/5
                 //                }
-                saveGyro(date:videoDate[videoCurrent])//Controller.filePath!)// str[0])//videoと同じ名前で保存
+                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
+                //Controller.filePath!)// str[0])//videoと同じ名前で保存
 //                print("gyro-Date:",videoDate[videoCurrent])
                 startFrame=0
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
