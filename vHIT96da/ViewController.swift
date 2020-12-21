@@ -260,27 +260,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         startFrame=0
         showVideoIroiro(num: -1)
-        return
-                  
-//        vhitVideocurrent -= 1
-//        if vhitVideocurrent < 0 {
-//            vhitVideocurrent = vhitVideos
-//        }
-//        vidCurrent -= 1
-//        if vidCurrent < 0 {
-//            vidCurrent = vidPath.count-1
-//        }
-////        show1()
     }
    
-    func showVideoIroiro(num:Int){//videosCurrentを移動
-//        print("videosDate:",videosDate.count)
+    func showVideoIroiro(num:Int){//videosCurrentを移動して、諸々表示
         if videoDura.count == 0{
             slowImage.image=UIImage(named:"vhittop")
             return
         }
         videoCurrent += num
-//        print(videoCurrent,num,videoImg.count)
         if videoCurrent>videoArrayCount-1{
             videoCurrent=0
         }else if videoCurrent<0{
@@ -294,51 +281,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setBacknext(f:true)
     }
 
-//    func showTexts(){
-//        let str=vidDura[vidCurrent]
-//        let str1=str.components(separatedBy: "s")
-//        let roundFps:Int = Int(round(getFPS(url: videosURL[videosCurrent])))
-//        videoFps.text=str1[0] + "sec/" + String(format: "%dfps",roundFps)
-//
-//    }
-//    func show1(){
-//        vidImg[vidCurrent]=getframeImage(frameNumber: 0)
-//        slowImage.image = vidImg[vidCurrent]
-//        videoDate.text=vidDate[vidCurrent]
-//        showTexts()
-//        startFrame=0
-//        dispWakuImages()
-//    }
-//    func showCurrent(){
-//        if vidImg.count==0{
-//            slowImage.image=UIImage(named:"vhittop")
-//            return
-//        }
-//        if vidCurrent<2{
-//            slowImage.image=videosImg[vidCurrent]
-//        }else{
-//            slowImage.image = vidImg[vidCurrent]
-//        }
-//        videoDate.text = vidDate[vidCurrent]
-//        showTexts()
-//    }
     @IBAction func nextVideo(_ sender: Any) {
         if vhitLineView?.isHidden == false{
             return
         }
         startFrame=0
         showVideoIroiro(num: 1)
-        return
-    
-//        vhitVideocurrent += 1
-//        vidCurrent += 1
-//        if vhitVideocurrent > vhitVideos{
-//            vhitVideocurrent = 0
-//        }
-//        if vidCurrent>vidPath.count-1{
-//            vidCurrent=0
-//        }
-//        show1()
     }
     
     func resizeR2(_ targetRect:CGRect, viewRect:CGRect, image:CIImage) -> CGRect {
@@ -548,13 +496,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func vHITcalc(_ sender: Any) {
-        //
-//        if !getVideofns().contains("vHIT96da"){//
-//            //        if vidPath[0]==""{//}.contains("var") && !vidPath[0].contains("MOV"){
-//            return
-//        }
         setUserDefaults()
-        //      print("vhitcalc")
         if nonsavedFlag == true && (waveTuple.count > 0 || eyePosFiltered.count > 0){
             setButtons(mode: false)
             var alert = UIAlertController(
@@ -587,7 +529,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func moveGyroData(){//gyroDeltaとstartFrameをずらして
-//        return
+
         gyroMoved.removeAll()
         var sn=startFrame
         let fps=getFPS(url: videoURL[videoCurrent])
@@ -673,50 +615,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          //print("time",timeRange)
          reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
          reader.startReading()
-   
-//        let fpsIs120=false
-        
- /*
-        let fileURL = getfileURL(path: vidPath[vidCurrent])
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: fileURL, options: options)
-        var fpsIs120:Bool=false
-        if getFPS(videoPath: vidPath[vidCurrent])<200.0{
-            fpsIs120=true
-//            print("currentFps=120")
-        }else{
-//            print("currentFps=240 ")
-        }
-        calcDate = videoDate.text!
-        var reader: AVAssetReader! = nil
-        do {
-            reader = try AVAssetReader(asset: avAsset)
-        } catch {
-            #if DEBUG
-            print("could not initialize reader.")
-            #endif
-            return
-        }
-        guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
-            #if DEBUG
-            print("could not retrieve the video track.")
-            #endif
-            return
-        }
-        
-        let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
-        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
-        
-        reader.add(readerOutput)
-        let frameRate = videoTrack.nominalFrameRate
-        //let startframe=startPoints[vhitVideocurrent]
-        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
-        let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
-        //print("time",timeRange)
-        reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
-        reader.startReading()
- */
-        //startPoints[vhitVideocurrent] startframe 1sec=240
+ 
         // UnsafeとMutableはまあ調べてもらうとして、eX, eY等は<Int32>が一つ格納されている場所へのポインタとして宣言される。
         let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
         let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
@@ -733,10 +632,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
         let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
-        //        let eyeErrorRectOnScreen = expandRectError(rect: eyeRectOnScreen, border: eyeborder*2)
+ 
         let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
         let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
-        //        let faceErrorRectOnScreen = expandRectError(rect: faceRectOnScreen, border: eyeborder*2)
+ 
         let context:CIContext = CIContext.init(options: nil)
         //            let up = UIImage.Orientation.right
         var sample:CMSampleBuffer!
@@ -749,21 +648,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let maxHeight=ciImage.extent.size.height
         let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
         var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
-        //        let eyeErrorRect = resizeR2(eyeErrorRectOnScreen,viewRect:view.frame,image:ciImage)
+ 
         let maxWidthWithBorder=maxWidth-eyeWithBorderRect.width-5
         let maxHeightWithBorder=maxHeight-eyeWithBorderRect.height-5
         let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:ciImage)
         var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
-        //        let faceErrorRect=resizeR2(faceErrorRectOnScreen,viewRect:view.frame,image:ciImage)
         
         let eyebR0 = eyeWithBorderRect
         let facbR0 = faceWithBorderRect
         
         eyeCGImage = context.createCGImage(ciImage, from: eyeRect)!
-        //        eyeCGImage = eyeCGImage.cropping(to: CGRect(x: 0, y: 0, width: eyeCGImage.width, height: eyeCGImage.height))
+ 
         eyeUIImage = UIImage.init(cgImage: eyeCGImage)
         faceCGImage = context.createCGImage(ciImage, from: faceRect)!
-        //        faceCGImage = faceCGImage.cropping(to: CGRect(x: 0, y: 0, width: faceCGImage.width, height: faceCGImage.height))
+ 
         faceUIImage = UIImage.init(cgImage:faceCGImage)
         
         
@@ -771,11 +669,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0//左右方向
         let osFacX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0//上下方向
         let osFacY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0//左右方向
-        
-        //        let osEyeErrorX:CGFloat = (eyeErrorRect.size.width - eyeRect.size.width) / 2.0//上下方向
-        //        let osEyeErrorY:CGFloat = (eyeErrorRect.size.height - eyeRect.size.height) / 2.0//左右方向
-        //        let osFacErrorX:CGFloat = (faceErrorRect.size.width - faceRect.size.width) / 2.0//上下方向
-        //        let osFacErrorY:CGFloat = (faceErrorRect.size.height - faceRect.size.height) / 2.0//左右方向
+ 
         var maxV:Double = 0
         var maxVf:Double = 0
         while reader.status != AVAssetReader.Status.reading {
@@ -938,8 +832,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDura.count<1 {
             return
         }
-        //        print(vidCurrent)
-//        let fileURL = getfileURL(path: vidPath[vidCurrent])
+ 
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
         calcDate = currentVideoDate.text!
@@ -982,8 +875,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
         
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-        
-        //        let eyeR = resizeR2(wakuE, viewRect:self.slowImage.frame,image:ciImage)
+  
         //slowImage.frameを以下のように　view.frame としたところ良くなった。
         //起動時表示が一巡？するまでは　slowImage.frame はちょっと違う値を示す
         let eyeR = resizeR2(wakuE, viewRect:view.frame,image:ciImage)
@@ -1008,82 +900,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         //        printR(str:"wakuEye:",rct: wakuEye.frame)
     }
-    
-//    func dispWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
-//        if vidPath.count<1 {
-//            return
-//        }
-//        //        print(vidCurrent)
-//        let fileURL = getfileURL(path: vidPath[vidCurrent])
-//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-//        let avAsset = AVURLAsset(url: fileURL, options: options)
-//        calcDate = videoDate.text!
-//        var reader: AVAssetReader! = nil
-//        do {
-//            reader = try AVAssetReader(asset: avAsset)
-//        } catch {
-//            #if DEBUG
-//            print("could not initialize reader.")
-//            #endif
-//            return
-//        }
-//        guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
-//            #if DEBUG
-//            print("could not retrieve the video track.")
-//            #endif
-//            return
-//        }
-//
-//        let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
-//        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
-//
-//        reader.add(readerOutput)
-//        let frameRate = videoTrack.nominalFrameRate
-//        //let startframe=startPoints[vhitVideocurrent]
-//        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
-//        let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
-//        //print("time",timeRange)
-//        reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
-//        reader.startReading()
-//
-//        let CGeye:CGImage!//eye
-//        let UIeye:UIImage!
-//        var CGfac:CGImage!//face
-//        var UIfac:UIImage!
-//        let context:CIContext = CIContext.init(options: nil)
-//        let orientation = UIImage.Orientation.up//right
-//        var sample:CMSampleBuffer!
-//        sample = readerOutput.copyNextSampleBuffer()
-//        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
-//
-//        let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-//
-//        //        let eyeR = resizeR2(wakuE, viewRect:self.slowImage.frame,image:ciImage)
-//        //slowImage.frameを以下のように　view.frame としたところ良くなった。
-//        //起動時表示が一巡？するまでは　slowImage.frame はちょっと違う値を示す
-//        let eyeR = resizeR2(wakuE, viewRect:view.frame,image:ciImage)
-//        let facR = resizeR2(wakuF, viewRect:view.frame, image: ciImage)
-//        //        printR(str:"eyeOnscreen:",rct: wakuE)
-//        //        printR(str:"eyeOnVideo:",rct: eyeR)
-//        CGfac = context.createCGImage(ciImage, from: facR)!
-//        UIfac = UIImage.init(cgImage: CGfac, scale:1.0, orientation:orientation)
-//        CGeye = context.createCGImage(ciImage, from: eyeR)!
-//        UIeye = UIImage.init(cgImage: CGeye, scale:1.0, orientation:orientation)
-//        let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
-////        print(videoFps.frame,wakuY)
-//        wakuS_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
-//        wakuS_image.layer.borderColor = UIColor.black.cgColor
-//        wakuS_image.layer.borderWidth = 1.0
-//        wakuS_image.backgroundColor = UIColor.clear
-//        wakuS_image.layer.cornerRadius = 3
-//        if rectType == 0{
-//            wakuS_image.image=UIeye
-//        }else{
-//            wakuS_image.image=UIfac
-//        }
-//        //        printR(str:"wakuEye:",rct: wakuEye.frame)
-//    }
-    
+
     func getframeImage(frameNumber:Int)->UIImage{//結果が表示されていない時、画面上部1/4をタップするとWaku表示
 //        let fileURL = getfileURL(path: vidPath[vidCurrent])
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
@@ -1524,11 +1341,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             setButtons(mode: true)
             UIApplication.shared.isIdleTimerDisabled = false
             vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-100, en: eyeVeloOrig.count)
-            //            if vHITeye.count<240*10{
-            //            vogCurpoint=0
-            //            }else{
-            //                vogCurpoint=vHITeye.count - 240*10
-            //            }
+  
             drawVogall_new()
             if vogLineView != nil{
                 vogLineView?.removeFromSuperview()//waveを消して
@@ -1657,12 +1470,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return 0
         }
     }
-//
-//    func addArray(path:String){
-//        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-//        let documentsDirectory = paths[0] as String
-//        appendAll(doc: documentsDirectory, path: path)
-//    }
     
     func getVideofns()->String{
         let str=getFsindoc().components(separatedBy: ",")
@@ -1680,28 +1487,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let retStr2=retStr.dropLast()
         return String(retStr2)
     }
- /*
-    func setArrays(){
-        let path = getVideofns()//videoPathtxt()
-        var str = path.components(separatedBy: ",")
-        str.sort()//descend? ascend ?
-//        vidPath.removeAll()
-//        vidDate.removeAll()
-        //        vidDuraorg.removeAll()
-//        vidDura.removeAll()
-//        vidImg.removeAll()
-        if str[0]==""{//"*.MOV"でstr.countは１,"*.MOV,*.MOV"で2
-            return//""と何も無くてもstr.countは1   !!!!!
-        }
-        
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0] as String
-        for i in 0..<str.count{
-            appendAll(doc: documentsDirectory,path: str[i])
-        }
-        vidCurrent=vidPath.count-1
-    }
- */
+ 
     func getfileURL(path:String)->URL{
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0] as String
@@ -1716,66 +1502,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return vidpath
     }
     
-//    var appendingFlag:Bool = false
- /*   func appendAll(doc:String,path:String){//for で回すのでdocumentsdirはgetgetしておる
-        let vidpath = doc + "/" + path
-        let fileURL = URL(fileURLWithPath: vidpath)
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let asset = AVURLAsset(url: fileURL, options: options)
-//        vidPath.append(path)
-//        appendingFlag=true
-//        vidImg.append(getThumbnailFrom(path: vidpath))
-//        while appendingFlag == true{
-//            sleep(UInt32(0.1))
-//        }
-        let sec10 = Int(10*asset.duration.seconds)
-        let temp = "\(sec10/10)" + "." + "\(sec10%10)" + "s"
-//        vidDura.append(temp)
-        //        vidDuraorg.append(temp)
-        let str1=path.components(separatedBy: "vHIT96da")
-        let str2=str1[1].components(separatedBy: ".MOV")
-        let str3=str2[0] + " (\(vidPath.count-1))"
-//        vidDate.append(str3)
-//        print("date",path,str3)
-    }*/
-//    func getDura(path:String)->Double{//最新のビデオのデータを得る.recordから飛んでくる。
-//        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-//        let documentsDirectory = paths[0] as String
-//        let filepath=documentsDirectory+"/"+path
-//        let fileURL=URL(fileURLWithPath: filepath)
-//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-//        //options.version = .original
-//        let asset = AVURLAsset(url: fileURL, options: options)
-//        let durSec=CMTimeGetSeconds(asset.duration)
-//        return durSec
-//    }
+
     func getFPS(url:URL) -> Float{
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: url, options: options)
         return avAsset.tracks.first!.nominalFrameRate
     }
-//    func getFPS(videoPath:String)->Float{
-//        let fileURL = getfileURL(path: videoPath)
-//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-//        let avAsset = AVURLAsset(url: fileURL, options: options)
-//        return avAsset.tracks.first!.nominalFrameRate
-//    }
-//    func getFps(path:String)->Float{//最新のビデオのデータを得る.recordから飛んでくる。
-//        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-//        let documentsDirectory = paths[0] as String
-//        let filepath=documentsDirectory+"/"+path
-//        let fileURL=URL(fileURLWithPath: filepath)
-//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-//        //options.version = .original
-//        let asset = AVURLAsset(url: fileURL, options: options)
-//        //       let durSec=Float(CMTimeGetSeconds(asset.duration))
-//        //       let framePS=asset.tracks.first!.nominalFrameRate
-//        //       let numberOfframes = durSec * framePS
-//        //       print("frameNum:",durSec,framePS,numberOfframes)
-//        //       print(asset.tracks.first?.nominalFrameRate as Any)
-//        return asset.tracks.first!.nominalFrameRate
-//    }
-    
+
     func getUserDefault(str:String,ret:Int) -> Int{//getUserDefault_one
         if (UserDefaults.standard.object(forKey: str) != nil){//keyが設定してなければretをセット
             return UserDefaults.standard.integer(forKey:str)
@@ -2459,7 +2192,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //ipodTouch7:320x568->30:12fps
         //se:320x568->25(25:120)
         //8:375x667->22(15:120)
-        print("width:",view.bounds.width,view.bounds.height)
+//        print("width:",view.bounds.width,view.bounds.height)
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
         mailHeight=1600//240*10*2/3//0.36*view.bounds.height/view.bounds.width
@@ -2483,10 +2216,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var bw=(ww-30)/4//vhit,camera,vogのボタンの幅
         let distance:CGFloat=4//最下段のボタンとボタンの距離
         let bottomY=damyBottom.frame.minY
-//        print("bottomY",bottomY)
+
         let bh:CGFloat=(ww-20-6*distance)/7//最下段のボタンの高さ、幅と同じ
         let bh1=bottomY-5-bh/2-bh//wh-10-bh-5-bh/2
-//        print("bottom",damyBottom.frame)
+
         let bh2=bottomY-10-bh/2-2*bh//bh1-5-bh
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
@@ -2518,14 +2251,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         button.layer.position=CGPoint(x:cx,y:cy)
         button.layer.cornerRadius = 5
     }
-//    func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat,bc:UIColor){
-//        button.frame = CGRect(x:0,   y: 0 ,width: bw, height: bh)
-//        button.layer.borderColor = UIColor.green.cgColor
-//        button.backgroundColor = bc
-//        button.layer.borderWidth = 1.0
-//        button.layer.position=CGPoint(x:cx,y:cy)
-//        button.layer.cornerRadius = 5
-//    }
+
     @objc func onEyeFaceButton(sender: UIButton) {
         showWave(0)
     }
@@ -2828,9 +2554,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 showVideoIroiro(num:0)// videosCurrent)
                 showWakuImages()
                 var fps=getFPS(url: videoURL[videoCurrent])
-//                var fps=Controller.recordedFPS
-//                slowImage.image=Controller.topImage
-//                print("fps:",fps)
                 if fps < 200.0{
                     fps *= 2.0
                 }
@@ -2846,20 +2569,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     gyroFiltered.append(Kalman(value:CGFloat(gyro[getj]),num:4))
                 }
-                //                for i in 0...gyroFiltered.count-1{//tempデータに入れる
-                //                    tGyro.append(gyroFiltered[i])
-                //                }
-                //                for i in 4...gyroFiltered.count-5{//平均加算hightpass
-                //                    gyroFiltered[i-2]=(tGyro[i]+tGyro[i-1]+tGyro[i-2]+tGyro[i-3]+tGyro[i-4])/5
-                //                }
                 saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
-                //Controller.filePath!)// str[0])//videoと同じ名前で保存
-//                print("gyro-Date:",videoDate[videoCurrent])
                 startFrame=0
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
-            //            UserDefaults.standard.set(fps_non_120_240,forKey:"fps_non_120_240")
-        }else{
+         }else{
             #if DEBUG
             print("tatsuaki-unwind from list")
             #endif
