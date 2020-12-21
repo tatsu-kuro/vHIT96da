@@ -1835,11 +1835,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let requestOptions = PHImageRequestOptions()
         videoURL.removeAll()
         videoDate.removeAll()
-//        videosImg.removeAll()
         videoDura.removeAll()
+        //videoImgだけは上記３arrayを取得後に、getAlbumListで取得する。
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
-        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
+        requestOptions.deliveryMode = .highQualityFormat
+        //これでもicloud上のvideoを取ってしまう
         // "iCapNYS"という名前のアルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
