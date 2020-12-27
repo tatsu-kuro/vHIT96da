@@ -42,9 +42,29 @@
         *y_ret = max_pt.y;
         return maxVal;//恐らく見つかった時は　0.7　より大の模様
 }
-//-(UIImage *)GrayScale:(UIImage *)image{
+-(UIImage *)GrayScale:(UIImage *)image{
+    // 変換用Matの宣言
+    cv::Mat image_mat;
+    cv::Mat gray_mat;
+    // input_imageをcv::Mat型へ変換
+    UIImageToMat(image, image_mat);
+    cv::cvtColor(image_mat,gray_mat,CV_BGR2GRAY);
+    image = MatToUIImage(gray_mat);
+    return image;
+}
 /*
- -(UIImage *)GrayScale:(UIImage *)input_img vn:(NSString *)vname x:(int *)x_ret{
+-(UIImage *)GrayScale1:(UIImage *)image data:d[Int]{
+    // 変換用Matの宣言
+    cv::Mat image_mat;
+    cv::Mat gray_mat;
+    // input_imageをcv::Mat型へ変換
+    UIImageToMat(image, image_mat);
+    cv::cvtColor(image_mat,gray_mat,CV_BGR2GRAY);
+    image = MatToUIImage(gray_mat);
+    return image;
+}*/
+/*
+-(UIImage *)GrayScale:(UIImage *)input_img vn:(NSString *)vname x:(int *)x_ret{
     // 変換用Matの宣言
     cv::Mat gray_img;
     cv::VideoCapture cap;
@@ -65,7 +85,7 @@
     _cvImage0=input_img;
     *x_ret=678;
     return MatToUIImage(frame);//input_img; //---⑤
-}
+}*/
 -(double) matching_gray:(UIImage *)wide_img narrow:(UIImage *)narrow_img x:(int *)x_ret y:(int *)y_ret
 {
     cv::Mat wide_mat;
@@ -113,7 +133,7 @@
 //        *y_ret = 0;
     }
       return maxVal;
-}*/
+}
 /*
 cv::Mat oldmat;//うまくいかない。何か方法があるかもしれないが・・・下のコードではだめ
 -(void) matching0:(UIImage *)newimg

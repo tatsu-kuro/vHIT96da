@@ -13,8 +13,68 @@ import Photos
 import MessageUI
 //import CoreLocation
 //import CoreTelephony
+class PixelBuffer {
+    private var pixelData: Data
+    var width: Int
+    var height: Int
+    private var bytesPerRow: Int
+    private let bytesPerPixel = 4 //1ピクセル4バイトのデータ固定
+
+    init?(uiImage: UIImage) {
+        guard let cgImage = uiImage.cgImage,
+            //R,G,B,A各8Bit
+            cgImage.bitsPerComponent == 8,
+            cgImage.bitsPerPixel == bytesPerPixel * 8 else {
+                return nil
+                
+        }
+        pixelData = cgImage.dataProvider!.data! as Data
+        width = cgImage.width
+        height = cgImage.height
+        bytesPerRow = cgImage.bytesPerRow
+    }
+
+    func getRed(x: Int, y: Int) -> CGFloat {
+        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
+        let r = CGFloat(pixelData[pixelInfo]) / CGFloat(255.0)
+        
+        return r
+    }
+    func getGreen(x: Int, y: Int) -> CGFloat {
+        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
+        let green = CGFloat(pixelData[pixelInfo+1]) / CGFloat(255.0)
+        
+        return green
+    }
+    func getBlue(x: Int, y: Int) -> CGFloat {
+        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
+        let blue = CGFloat(pixelData[pixelInfo+2]) / CGFloat(255.0)
+        
+        return blue
+    }
+    func getAlpha(x: Int, y: Int) -> CGFloat {
+        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
+        let alpha = CGFloat(pixelData[pixelInfo+3]) / CGFloat(255.0)
+        return alpha
+    }
+}
 extension UIImage {
-    
+    func pixelData() -> [UInt8]? {
+        let size = self.size
+        let dataSize = size.width * size.height * 4
+        var pixelData = [UInt8](repeating: 0, count: Int(dataSize))
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let context = CGContext(data: &pixelData,
+                                width: Int(size.width),
+                                height: Int(size.height),
+                                bitsPerComponent: 8,
+                                bytesPerRow: 4 * Int(size.width),
+                                space: colorSpace,
+                                bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)
+        guard let cgImage = self.cgImage else { return nil }
+        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        return pixelData
+    }
     func resize(size _size: CGSize) -> UIImage? {
         let widthRatio = _size.width / size.width
         let heightRatio = _size.height / size.height
@@ -27,6 +87,45 @@ extension UIImage {
         let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return resizedImage
+    }
+    
+    func createGrayImage(r:[CGFloat], g: [CGFloat], b:[CGFloat], a:[CGFloat]) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let wid:Int = Int(size.width)
+        let hei:Int = Int(size.height)
+        
+        for w in 0..<wid {
+            for h in 0..<hei {
+                let index = (w * wid) + h
+                let color = 0.2126 * r[index] + 0.7152 * g[index] + 0.0722 * b[index]
+                UIColor(red: color, green: color, blue: color, alpha: a[index]).setFill()
+                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                UIRectFill(drawRect)
+                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+            }
+        }
+        let grayImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return grayImage
+    }
+    func create0Image() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let wid:Int = Int(size.width)
+        let hei:Int = Int(size.height)
+        
+        for w in 0..<wid {
+            for h in 0..<hei {
+                let index = (w * wid) + h
+                let color:CGFloat = 0.9//0.2126 * 0.5 + 0.7152 * 0.2 + 0.0722 * 0.3
+                UIColor(red: color, green: color, blue: color, alpha: 1).setFill()
+                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                UIRectFill(drawRect)
+                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+            }
+        }
+        let grayImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return grayImage
     }
 }
 
@@ -2311,6 +2410,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func saveGyro2Img(img:UIImage)->UIImage{
+        if let pixelBuffer = PixelBuffer(uiImage: img) {
+            for x in 0..<pixelBuffer.width {
+                for y in 0..<pixelBuffer.height {
+//                    r.append(pixelBuffer.getRed(x: x, y: y))
+//                    g.append(pixelBuffer.getBlue(x: x, y: y))
+//                    b.append(pixelBuffer.getGreen(x: x, y: y))
+//                    a.append(pixelBuffer.getAlpha(x: x, y: y))
+                }
+            }
+        } else {
+            print("image not format")
+        }
+        
         return img
     }
     func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
@@ -2651,12 +2763,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroFiltered.append(Kalman(value:CGFloat(gyro[getj]),num:4))
                 }
                 saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
-                let gyroImage=saveGyro2Img(img: videoImg[videoCurrent])
-                saveImage2path(image: gyroImage, path: "tmpimg.jpg")
+//                let gyroImage=saveGyro2Img(img: videoImg[videoCurrent])
+//                let gyroImage=videoImg[videoCurrent].create0Image()
+                let gyroImage=openCV.grayScale(videoImg[videoCurrent])
+            
+                saveImage2path(image: gyroImage!, path: "tmpimg.jpg")//save in doc at first
                 while existFile(aFile: "tmpimg.jpg")==false{
                     sleep(UInt32(0.1))
                 }
-                savePath2album(path: "tmpimg.jpg")
+                savePath2album(path: "tmpimg.jpg")//then copy into album(vHIT_VOG)
 
                 startFrame=0
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）

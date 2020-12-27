@@ -28,5 +28,7 @@
 //-(double) matching_gray:(UIImage *)wide_img narrow:(UIImage *)narrow_img x:(int *)x_ret y:(int *)y_ret;
 //-(void) matching3:(UIImage *)UIEyeB n1:(UIImage *)UIEye x1:(int *)eX y1:(int *)eY w2:(UIImage *)UIFaceB n2:(UIImage *)UIFace x2:(int *)fX y2:(int *)fY w3:(UIImage *)UIOuterB n3:(UIImage *)UIOuter x3:(int *)oX y3:(int *)oY;
 //-(UIImage *)GrayScale:(UIImage *)input_img vn:(NSString*)vname x:(int *)x_ret;
+//-(UIImage *)GrayScale1:(UIImage *)input_img data:[Int];
+-(UIImage *)GrayScale:(UIImage *)input_img;
 //-(int)getInt: (NSString*)fn;
 @end
