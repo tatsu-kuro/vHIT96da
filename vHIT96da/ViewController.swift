@@ -2449,7 +2449,66 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vhitLineView?.isHidden = true //removeFromSuperview()
         gyroLineView?.isHidden = true //removeFromSuperview()
     }
+    var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     
+    func albumExists(albumTitle: String) -> Bool {
+        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
+        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
+        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
+                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
+        for i in 0 ..< albums.count {
+            let album = albums.object(at: i)
+            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
+                vHIT96daAlbum = album
+                return true
+            }
+        }
+        return false
+    }
+    func savePath2album(path:String){
+        
+        if albumExists(albumTitle: "vHIT_VOG")==false{
+            return
+        }
+        if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
+            
+            let fileURL = dir.appendingPathComponent( path )
+            
+            PHPhotoLibrary.shared().performChanges({ [self] in
+                let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: fileURL)!
+                let albumChangeRequest = PHAssetCollectionChangeRequest(for: vHIT96daAlbum!)
+                let placeHolder = assetRequest.placeholderForCreatedAsset
+                albumChangeRequest?.addAssets([placeHolder!] as NSArray)
+            }) { (isSuccess, error) in
+                if isSuccess {
+                    // 保存成功
+                } else {
+                    // 保存失敗
+                }
+            }
+        }
+    }
+    var saving2pathFlag:Bool=true
+    func saveImage2path(image:UIImage,path:String){
+        saving2pathFlag=true
+        saveImage2path_sub(image: image, path: path)
+        while saving2pathFlag==true{
+            sleep(UInt32(0.1))
+        }
+    }
+    func saveImage2path_sub(image:UIImage,path:String) {
+        if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
+            
+            let path_url = dir.appendingPathComponent( path )
+            let jpgImageData = image.jpegData(compressionQuality:1.0)
+            do {
+                try jpgImageData!.write(to: path_url, options: .atomic)
+                saving2pathFlag=false
+            } catch {
+                print("gyroData.txt write err")//エラー処理
+            }
+        }
+    }
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
    
@@ -2549,6 +2608,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
+                saveImage2path(image: videoImg[videoCurrent], path: "tmpimg.jpg")
+                savePath2album(path: "tmpimg.jpg")//tmpimg.jpg保存のcheckができていない！
                 videoArrayCount=videoDura.count
                 videoCurrent=videoArrayCount-1
                 showVideoIroiro(num:0)// videosCurrent)

@@ -54,24 +54,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBAction func stopRecord(_ sender: Any) {
         onClickRecordButton()
     }
-    func drawSquare(x:CGFloat,y:CGFloat){
-        /* --- 正方形を描画 --- */
-        let dia:CGFloat = view.bounds.width/5
-        let squareLayer = CAShapeLayer.init()
-        let squareFrame = CGRect.init(x:x-dia/2,y:y-dia/2,width:dia,height:dia)
-        squareLayer.frame = squareFrame
-        // 輪郭の色
-        squareLayer.strokeColor = UIColor.red.cgColor
-        // 中の色
-        squareLayer.fillColor = UIColor.clear.cgColor//UIColor.red.cgColor
-        // 輪郭の太さ
-        squareLayer.lineWidth = 1.0
-        // 正方形を描画
-        squareLayer.path = UIBezierPath.init(rect: CGRect.init(x: 0, y: 0, width: squareFrame.size.width, height: squareFrame.size.height)).cgPath
-        self.view.layer.addSublayer(squareLayer)
-    }
-    
-    var tapFlag:Bool=false
+ 
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
         let screenSize=cameraView.bounds.size
         let x0 = sender.location(in: self.view).x
@@ -84,7 +67,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let x = y0/screenSize.height
         let y = 1.0 - x0/screenSize.width
         let focusPoint = CGPoint(x:x,y:y)
-        
         if let device = videoDevice{
             do {
                 try device.lockForConfiguration()
@@ -92,20 +74,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 device.focusPointOfInterest = focusPoint
                 //                device.focusMode = .continuousAutoFocus
                 device.focusMode = .autoFocus
-                //                device.focusMode = .locked
-                // 露出の設定
-                if device.isExposureModeSupported(.continuousAutoExposure) && device.isExposurePointOfInterestSupported {
-                    device.exposurePointOfInterest = focusPoint
-                    device.exposureMode = .continuousAutoExposure
-                }
+
                 device.unlockForConfiguration()
-                
-                if tapFlag {
-                    view.layer.sublayers?.removeLast()
-                }
-                drawSquare(x: x0, y: y0)
-                tapFlag=true;
-                //                }
+ 
             }
             catch {
                 // just ignore
