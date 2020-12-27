@@ -2310,7 +2310,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("remove -> well done")
         }
     }
- 
+    func saveGyro2Img(img:UIImage)->UIImage{
+        return img
+    }
     func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
         var text:String=""
         for i in 0..<gyroFiltered.count - 2{
@@ -2626,13 +2628,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 videoArrayCount=videoDura.count
                 videoCurrent=videoArrayCount-1
-                showVideoIroiro(num:0)// videosCurrent)
-//                showWakuImages()
-                saveImage2path(image: videoImg[videoCurrent], path: "tmpimg.jpg")
-                while existFile(aFile: "tmpimg.jpg")==false{
-                    sleep(UInt32(0.1))
-                }
-                savePath2album(path: "tmpimg.jpg")//tmpimg.jpg保存のcheckができていない！
+                showVideoIroiro(num:0)
+//                saveImage2path(image: videoImg[videoCurrent], path: "tmpimg.jpg")
+//                while existFile(aFile: "tmpimg.jpg")==false{
+//                    sleep(UInt32(0.1))
+//                }
+//                savePath2album(path: "tmpimg.jpg")
                 var fps=getFPS(url: videoURL[videoCurrent])
                 if fps < 200.0{
                     fps *= 2.0
@@ -2650,6 +2651,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroFiltered.append(Kalman(value:CGFloat(gyro[getj]),num:4))
                 }
                 saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
+                let gyroImage=saveGyro2Img(img: videoImg[videoCurrent])
+                saveImage2path(image: gyroImage, path: "tmpimg.jpg")
+                while existFile(aFile: "tmpimg.jpg")==false{
+                    sleep(UInt32(0.1))
+                }
+                savePath2album(path: "tmpimg.jpg")
+
                 startFrame=0
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
