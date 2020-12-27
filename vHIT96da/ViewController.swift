@@ -2294,7 +2294,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
-    
+
     func removeFile(delFile:String){
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             
@@ -2488,26 +2488,41 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    var saving2pathFlag:Bool=true
-    func saveImage2path(image:UIImage,path:String){
-        saving2pathFlag=true
-        saveImage2path_sub(image: image, path: path)
-        while saving2pathFlag==true{
-            sleep(UInt32(0.1))
-        }
-    }
-    func saveImage2path_sub(image:UIImage,path:String) {
+//    var saving2pathFlag:Bool=true
+//    func saveImage2path(image:UIImage,path:String){
+//        saving2pathFlag=true
+//        saveImage2path_sub(image: image, path: path)
+//        while saving2pathFlag==true{
+//            sleep(UInt32(0.1))
+//        }
+//    }
+    func saveImage2path(image:UIImage,path:String) {
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             
             let path_url = dir.appendingPathComponent( path )
             let jpgImageData = image.jpegData(compressionQuality:1.0)
             do {
                 try jpgImageData!.write(to: path_url, options: .atomic)
-                saving2pathFlag=false
+//                saving2pathFlag=false
             } catch {
                 print("gyroData.txt write err")//エラー処理
             }
         }
+    }
+    
+    func existFile(aFile:String)->Bool{
+        if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
+            
+            let path_url = dir.appendingPathComponent( aFile )
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: path_url.path){
+                return true
+            }else{
+                return false
+            }
+            
+        }
+        return false
     }
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
@@ -2604,16 +2619,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while Controller.saved2album == false{//fileができるまで待つ
                     sleep(UInt32(0.1))
                 }
+                removeFile(delFile: "tmpimg.jpg")
                 getAlbumList()
                 while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
-                saveImage2path(image: videoImg[videoCurrent], path: "tmpimg.jpg")
-                savePath2album(path: "tmpimg.jpg")//tmpimg.jpg保存のcheckができていない！
                 videoArrayCount=videoDura.count
                 videoCurrent=videoArrayCount-1
                 showVideoIroiro(num:0)// videosCurrent)
                 showWakuImages()
+                saveImage2path(image: videoImg[videoCurrent], path: "tmpimg.jpg")
+                while existFile(aFile: "tmpimg.jpg")==false{
+                    sleep(UInt32(0.1))
+                }
+                savePath2album(path: "tmpimg.jpg")//tmpimg.jpg保存のcheckができていない！
                 var fps=getFPS(url: videoURL[videoCurrent])
                 if fps < 200.0{
                     fps *= 2.0
