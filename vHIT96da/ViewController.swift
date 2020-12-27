@@ -218,7 +218,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoArrayCount -= 1
             videoCurrent -= 1
             showVideoIroiro(num: 0)
-
         }
     }
     
@@ -1588,6 +1587,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             // creationDate降順でアルバム内のアセットをフェッチ
             let fetchOptions = PHFetchOptions()
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue)
             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
 //            videoAssets = assets
 //            print("assets:",assets.count)
@@ -2627,7 +2627,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 videoArrayCount=videoDura.count
                 videoCurrent=videoArrayCount-1
                 showVideoIroiro(num:0)// videosCurrent)
-                showWakuImages()
+//                showWakuImages()
                 saveImage2path(image: videoImg[videoCurrent], path: "tmpimg.jpg")
                 while existFile(aFile: "tmpimg.jpg")==false{
                     sleep(UInt32(0.1))
