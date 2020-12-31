@@ -30,5 +30,7 @@
 //-(UIImage *)GrayScale:(UIImage *)input_img vn:(NSString*)vname x:(int *)x_ret;
 //-(UIImage *)GrayScale1:(UIImage *)input_img data:[Int];
 -(UIImage *)GrayScale:(UIImage *)input_img;
+-(UIImage *)pixel2image:(UIImage *)input_img csv:(NSString *)gyroCSV;
 //-(int)getInt: (NSString*)fn;
 @end
+

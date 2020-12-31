@@ -52,17 +52,20 @@
     image = MatToUIImage(gray_mat);
     return image;
 }
-/*
--(UIImage *)GrayScale1:(UIImage *)image data:d[Int]{
+
+-(UIImage *)pixel2image:(UIImage *)input_img csv:(NSString *)gyroCSV{
     // 変換用Matの宣言
-    cv::Mat image_mat;
-    cv::Mat gray_mat;
+//    cv::Mat image_mat;
+//    cv::Mat gray_mat;
+//    CvFileStorage *fs;
+//    std::ifstream read_data("kkkk");
+//    std::ifstream ifs(gyrofn);
     // input_imageをcv::Mat型へ変換
-    UIImageToMat(image, image_mat);
-    cv::cvtColor(image_mat,gray_mat,CV_BGR2GRAY);
-    image = MatToUIImage(gray_mat);
-    return image;
-}*/
+//    UIImageToMat(image, image_mat);
+//    cv::cvtColor(image_mat,gray_mat,CV_BGR2GRAY);
+//    image = MatToUIImage(gray_mat);
+    return input_img;//image;
+}
 /*
 -(UIImage *)GrayScale:(UIImage *)input_img vn:(NSString *)vname x:(int *)x_ret{
     // 変換用Matの宣言

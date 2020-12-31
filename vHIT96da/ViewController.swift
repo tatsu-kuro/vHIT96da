@@ -13,6 +13,7 @@ import Photos
 import MessageUI
 //import CoreLocation
 //import CoreTelephony
+/*
 class PixelBuffer {
     private var pixelData: Data
     var width: Int
@@ -22,11 +23,11 @@ class PixelBuffer {
 
     init?(uiImage: UIImage) {
         guard let cgImage = uiImage.cgImage,
-            //R,G,B,A各8Bit
-            cgImage.bitsPerComponent == 8,
-            cgImage.bitsPerPixel == bytesPerPixel * 8 else {
-                return nil
-                
+              //R,G,B,A各8Bit
+              cgImage.bitsPerComponent == 8,
+              cgImage.bitsPerPixel == bytesPerPixel * 8 else {
+            return nil
+            
         }
         pixelData = cgImage.dataProvider!.data! as Data
         width = cgImage.width
@@ -57,7 +58,7 @@ class PixelBuffer {
         let alpha = CGFloat(pixelData[pixelInfo+3]) / CGFloat(255.0)
         return alpha
     }
-}
+}*/
 extension UIImage {
     func pixelData() -> [UInt8]? {
         let size = self.size
@@ -88,6 +89,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return resizedImage
     }
+
     
     func createGrayImage(r:[CGFloat], g: [CGFloat], b:[CGFloat], a:[CGFloat]) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -108,6 +110,55 @@ extension UIImage {
         UIGraphicsEndImageContext()
         return grayImage
     }
+    
+    func tint(color: [UIColor]) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        var colorCnt:Int = 0
+        let colorTotalCnt=color.count
+        for w in 0..<Int(size.width) {
+            for h in 0..<Int(size.height) {
+                let index = (w * Int(size.width)) + h
+                if colorCnt==colorTotalCnt{
+                    color[index-1].setFill()
+                    let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                    UIRectFill(drawRect)
+                    draw(in: drawRect, blendMode: .destinationIn, alpha: 0)
+                    break
+                }else{
+                    color[index].setFill()
+                    let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                    UIRectFill(drawRect)
+                    draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+                }
+                colorCnt += 1
+            }
+            if colorCnt==colorTotalCnt{
+                break
+            }
+        }
+        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return tintedImage
+    }
+    func createImage(r:[CGFloat], g: [CGFloat], b:[CGFloat], a:[CGFloat]) -> UIImage {
+            UIGraphicsBeginImageContextWithOptions(size, false, 0)
+            let wid:Int = Int(size.width)
+            let hei:Int = Int(size.height)
+            
+            for w in 0..<wid {
+                for h in 0..<hei {
+                    let index = (w * wid) + h
+                    UIColor(red: r[index], green: g[index], blue: b[index], alpha: a[index]).setFill()
+                    let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                    UIRectFill(drawRect)
+                    draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+                }
+                print("createImage/h:",w)
+            }
+            let tintedImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            return tintedImage
+        }
     func create0Image() -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let wid:Int = Int(size.width)
@@ -144,6 +195,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoImg = Array<UIImage>()
     var videoDura = Array<String>()
     var videoCurrent:Int=0
+  
     //album関連、ここまで
     var vogImage:UIImage?
 //    var recStart = CFAbsoluteTimeGetCurrent()
@@ -156,6 +208,46 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var eyeButton: UIButton!
     
     @IBOutlet weak var damyBottom: UILabel!
+    
+    /*
+    func image(fromPixelValues pixelValues: [UInt8]?, width: Int, height: Int) -> CGImage?
+    {
+        var imageRef: CGImage?
+        if var pixelValues = pixelValues {
+            let bitsPerComponent = 8
+            let bytesPerPixel = 1
+            let bitsPerPixel = bytesPerPixel * bitsPerComponent
+            let bytesPerRow = bytesPerPixel * width
+            let totalBytes = height * bytesPerRow
+            imageRef = withUnsafePointer(to: &pixelValues, {
+                ptr -> CGImage? in
+                var imageRef: CGImage?
+                let colorSpaceRef = CGColorSpaceCreateDeviceGray()
+                let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue).union(CGBitmapInfo())
+                let data = UnsafeRawPointer(ptr.pointee).assumingMemoryBound(to: UInt8.self)
+                let releaseData: CGDataProviderReleaseDataCallback = {
+                    (info: UnsafeMutableRawPointer?, data: UnsafeRawPointer, size: Int) -> () in
+                }
+                if let providerRef = CGDataProvider(dataInfo: nil, data: data, size: totalBytes, releaseData: releaseData) {
+                    imageRef = CGImage(width: width,
+                                       height: height,
+                                       bitsPerComponent: bitsPerComponent,
+                                       bitsPerPixel: bitsPerPixel,
+                                       bytesPerRow: bytesPerRow,
+                                       space: colorSpaceRef,
+                                       bitmapInfo: bitmapInfo,
+                                       provider: providerRef,
+                                       decode: nil,
+                                       shouldInterpolate: false,
+                                       intent: CGColorRenderingIntent.defaultIntent)
+                }
+                return imageRef
+            })
+        }
+        return imageRef
+     }*/
+  
+    
     @IBAction func wakuToFace(_ sender: Any) {
         rectType=1
         dispWakus()
@@ -1710,7 +1802,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     
                     if let urlAsset = asset as? AVURLAsset{//not on iCloud
                         videoURL.append(urlAsset.url)
-                        print(urlAsset.url)
+//                        print(urlAsset.url)
                         videoDate.append(date)// + "(" + duration + ")")
                         videoDura.append(duration)
                         //ここではgetThumbができないことがある。
@@ -2285,7 +2377,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         super.viewDidLoad()
 //        print(UIDevice.self.current.model)//iPhone ,iPod touchが見れる
 //        print(UIDevice.self.current.systemName)
-        dispFsindoc()
+//        dispFsindoc()
        //7plus:414x736->15(15:120)
         //11:414x896->10(10:120fps)
         //ipodTouch7:320x568->30:12fps
@@ -2409,7 +2501,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("remove -> well done")
         }
     }
-    func saveGyro2Img(img:UIImage)->UIImage{
+ /*   func saveGyro2Img(img:UIImage)->UIImage{
         if let pixelBuffer = PixelBuffer(uiImage: img) {
             for x in 0..<pixelBuffer.width {
                 for y in 0..<pixelBuffer.height {
@@ -2424,7 +2516,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         
         return img
-    }
+    }*/
     func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
         var text:String=""
         for i in 0..<gyroFiltered.count - 2{
@@ -2445,11 +2537,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 try text.write( to: path_file_name, atomically: false, encoding: String.Encoding.utf8 )
                 
             } catch {
-                print("gyroData.txt write err")//エラー処理
+                print("gyroData.txt write err")//エラー処理docu
             }
         }
     }
     //calcVHITで実行、その後moveGyroData()
+    func getGyroCSV()->NSString{//gyroDataにデータを戻す
+        let Start=CFAbsoluteTimeGetCurrent()
+        var text:String=""
+        for i in 0..<gyroFiltered.count{
+//            let str=String(Int(gyroFiltered[i]*100))
+            text += String(Int(gyroFiltered[i]*100)) + ","
+//            print(text,str,gyroFiltered[i])
+        }
+        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
+        let txt:NSString = text as NSString
+        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
+        return txt
+    }
     func readGyro(gyroPath:String){//gyroDataにデータを戻す
         gyroFiltered.removeAll()
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
@@ -2610,7 +2715,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            sleep(UInt32(0.1))
 //        }
 //    }
-    func saveImage2path(image:UIImage,path:String) {
+    func saveImage2path(image:UIImage,path:String) {//imageを無圧縮（最高クオリティ）で保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             
             let path_url = dir.appendingPathComponent( path )
@@ -2638,6 +2743,173 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return false
     }
+    
+    struct PixelData {
+        var a: UInt8 = 0
+        var r: UInt8 = 0
+        var g: UInt8 = 0
+        var b: UInt8 = 0
+    }
+   /* func imageFromARGB32Bitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
+        guard width > 0 && height > 0 else { return nil }
+        guard pixels.count == width * height else { return nil }
+
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        let bitsPerComponent = 8
+        let bitsPerPixel = 32
+
+        var data = pixels // Copy to mutable []
+        guard let providerRef = CGDataProvider(data: NSData(bytes: &data,
+                                length: data.count * MemoryLayout<PixelData>.size)
+            )
+            else { return nil }
+
+        guard let cgim = CGImage(
+            width: width,
+            height: height,
+            bitsPerComponent: bitsPerComponent,
+            bitsPerPixel: bitsPerPixel,
+            bytesPerRow: width * MemoryLayout<PixelData>.size,
+            space: rgbColorSpace,
+            bitmapInfo: bitmapInfo,
+            provider: providerRef,
+            decode: nil,
+            shouldInterpolate: true,
+            intent: .defaultIntent
+            )
+            else { return nil }
+
+        return UIImage(cgImage: cgim)
+    }*/
+    func imageFromBitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
+        assert(width > 0)
+        assert(height > 0)
+        let pixelDataSize = MemoryLayout<PixelData>.size
+        assert(pixelDataSize == 4)
+        assert(pixels.count == Int(width * height))
+        let data: Data = pixels.withUnsafeBufferPointer {
+            return Data(buffer: $0)
+        }
+        let cfdata = NSData(data: data) as CFData
+        let provider: CGDataProvider! = CGDataProvider(data: cfdata)
+        if provider == nil {
+            print("CGDataProvider is not supposed to be nil")
+            return nil
+        }
+        let cgimage: CGImage! = CGImage(
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bitsPerPixel: 32,
+            bytesPerRow: width * pixelDataSize,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue),
+            provider: provider,
+            decode: nil,
+            shouldInterpolate: true,
+            intent: .defaultIntent
+        )
+        if cgimage == nil {
+            print("CGImage is not supposed to be nil")
+            return nil
+        }
+        return UIImage(cgImage: cgimage)
+    }
+    /*
+    func imageFromBitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
+        assert(width > 0)
+        assert(height > 0)
+        let pixelDataSize = MemoryLayout<PixelData>.size
+        assert(pixelDataSize == 4)
+        assert(pixels.count == Int(width * height))
+        let data: Data = pixels.withUnsafeBufferPointer {
+         return Data(buffer: $0)
+        }
+
+        let cfdata = NSData(data: data) as CFData
+        let provider: CGDataProvider! = CGDataProvider(data: cfdata)
+        if provider == nil {
+         print("CGDataProvider is not supposed to be nil")
+         return nil
+        }
+        let cgimage: CGImage! = CGImage(
+         width: width,
+         height: height,
+         bitsPerComponent: 8,
+         bitsPerPixel: 32,
+         bytesPerRow: width * pixelDataSize,
+         space: CGColorSpaceCreateDeviceRGB(),
+         bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue),
+         provider: provider,
+         decode: nil,
+         shouldInterpolate: true,
+         intent: .defaultIntent
+        )
+        if cgimage == nil {
+         print("CGImage is not supposed to be nil")
+         return nil
+        }
+        return UIImage(cgImage: cgimage)
+    }*/
+    
+    func imageFromARGB32Bitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
+        guard width > 0 && height > 0 else { return nil }
+        guard pixels.count == width * height else { return nil }
+
+        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        let bitsPerComponent = 8
+        let bitsPerPixel = 32
+
+        var data = pixels // Copy to mutable []
+        guard let providerRef = CGDataProvider(data: NSData(bytes: &data,
+                                length: data.count * MemoryLayout<PixelData>.size)
+            )
+            else { return nil }
+
+        guard let cgim = CGImage(
+            width: width,
+            height: height,
+            bitsPerComponent: bitsPerComponent,
+            bitsPerPixel: bitsPerPixel,
+            bytesPerRow: width * MemoryLayout<PixelData>.size,
+            space: rgbColorSpace,
+            bitmapInfo: bitmapInfo,
+            provider: providerRef,
+            decode: nil,
+            shouldInterpolate: true,
+            intent: .defaultIntent
+            )
+            else { return nil }
+
+        return UIImage(cgImage: cgim)
+    }
+ /*   var r:[CGFloat] = []
+    var g:[CGFloat] = []
+    var b:[CGFloat] = []
+    var a:[CGFloat] = []
+    func changeColor(img:UIImage)->UIImage{
+        
+      
+        if let pixelBuffer = PixelBuffer(uiImage: img) {
+            for x in 0..<pixelBuffer.width {
+                for y in 0..<pixelBuffer.height {
+                    r.append(pixelBuffer.getRed(x: x, y: y))
+                    g.append(pixelBuffer.getBlue(x: x, y: y))
+                    b.append(pixelBuffer.getGreen(x: x, y: y))
+                    a.append(pixelBuffer.getAlpha(x: x, y: y))
+                }
+                print("x:",x)
+            }
+        } else {
+            print("image not format")
+        }
+        //rgbの入れ替え
+        print("changeimage-end")
+        return img.createImage(r: g, g: b, b: r, a: a)
+    }*/
+    
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
    
@@ -2707,6 +2979,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var d:Double=0
                 var gyro = Array<Double>()
                 var gyroTime = Array<Double>()
+                var pixelArray = Array<PixelData>()
+                var pixels = [PixelData]()
+                var colorArray = Array<UIColor>()
+                var rgb8 = UnsafeMutablePointer<UInt8>.allocate(capacity: 240*300)
+
                 //                var tGyro = Array<CGFloat>()
                 KalmanInit()
 //                addArray(path:Controller.filePath!)//ここでvidImg[]登録
@@ -2741,11 +3018,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 videoArrayCount=videoDura.count
                 videoCurrent=videoArrayCount-1
                 showVideoIroiro(num:0)
-//                saveImage2path(image: videoImg[videoCurrent], path: "tmpimg.jpg")
-//                while existFile(aFile: "tmpimg.jpg")==false{
-//                    sleep(UInt32(0.1))
-//                }
-//                savePath2album(path: "tmpimg.jpg")
                 var fps=getFPS(url: videoURL[videoCurrent])
                 if fps < 200.0{
                     fps *= 2.0
@@ -2762,11 +3034,32 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     gyroFiltered.append(Kalman(value:CGFloat(gyro[getj]),num:4))
                 }
-                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
-//                let gyroImage=saveGyro2Img(img: videoImg[videoCurrent])
+    
+                let start=CFAbsoluteTimeGetCurrent()
+  //gyroデータをcsvテキストとして保存
+//                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
+//                let gyropath=getdocumentPath(path: videoDate[videoCurrent] + "-gyro.csv")
+//                let gyroCSV=getGyroCSV(gyroPath: videoDate[videoCurrent] + "-gyro.csv")
+//                let gyroCSV=getGyroCSV()
+//                let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
+                print(CFAbsoluteTimeGetCurrent()-start)
+//                print(gyroCSV as NSString)
+//                print(gyroCSV)
+//                let gyroImage=saveGyro2Img(img: videoImg[videoCurrent])=
 //                let gyroImage=videoImg[videoCurrent].create0Image()
-                let gyroImage=openCV.grayScale(videoImg[videoCurrent])
-            
+//               let gyroImage=openCV.grayScale(videoImg[videoCurrent])
+//                let gyroImage=changeColor(img: videoImg[videoCurrent])
+//                print("changeColor-done")
+//                for _ in 0...100{
+//                    colorArray.append(UIColor.gray)
+//                }
+//                let aImage=gyroImage?.tint(color: colorArray)
+//                let rgb=gyroImage!.pixelData()
+//                rgb8 = (UInt8 *)rgb
+//                print("rgb8",rgb8!.count,gyroImage?.size.width,gyroImage?.size.height,1080*1920*4)
+//                for i in 0...110{
+//                    print(rgb8![i*4],rgb8![i*4+1],rgb8![i*4+2],rgb8![i*4+3])
+//                }
                 saveImage2path(image: gyroImage!, path: "tmpimg.jpg")//save in doc at first
                 while existFile(aFile: "tmpimg.jpg")==false{
                     sleep(UInt32(0.1))
