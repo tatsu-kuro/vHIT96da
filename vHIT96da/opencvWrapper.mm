@@ -53,18 +53,31 @@
     return image;
 }
 
--(UIImage *)pixel2image:(UIImage *)input_img csv:(NSString *)gyroCSV{
+-(UIImage *)pixel2image:(UIImage *)inputImg csv:(NSString *)gyroCSV{
     // 変換用Matの宣言
-//    cv::Mat image_mat;
-//    cv::Mat gray_mat;
-//    CvFileStorage *fs;
-//    std::ifstream read_data("kkkk");
-//    std::ifstream ifs(gyrofn);
-    // input_imageをcv::Mat型へ変換
-//    UIImageToMat(image, image_mat);
-//    cv::cvtColor(image_mat,gray_mat,CV_BGR2GRAY);
-//    image = MatToUIImage(gray_mat);
-    return input_img;//image;
+    int rows=inputImg.size.width;
+    int cols=inputImg.size.height;
+
+    cv::Mat inputMat;
+    cv::Mat grayMat;
+    UIImageToMat(inputImg, inputMat);
+    //int step = inputMat.step;
+    for (int y = 0; y < 5; y++) {//rows
+        for (int x = 0; x <5; x++) {//cols
+            int xy=y * cols * 4 + x * 4;
+            // Blue
+            inputMat.data[xy + 0] = 200;
+            // Green
+            inputMat.data[xy + 1] = 150;
+            // Red
+            inputMat.data[xy + 2] = 100;
+            //Reserved
+            inputMat.data[xy + 3] = 255;
+        }
+    }
+    putText(inputMat,"gyro-data",cvPoint(10,cols/2),cv::FONT_HERSHEY_SIMPLEX,5,cvScalar(0,0,0),5,CV_AA);
+    inputImg = MatToUIImage(inputMat);
+    return inputImg;
 }
 /*
 -(UIImage *)GrayScale:(UIImage *)input_img vn:(NSString *)vname x:(int *)x_ret{

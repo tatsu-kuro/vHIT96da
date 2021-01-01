@@ -2979,34 +2979,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var d:Double=0
                 var gyro = Array<Double>()
                 var gyroTime = Array<Double>()
-                var pixelArray = Array<PixelData>()
-                var pixels = [PixelData]()
-                var colorArray = Array<UIColor>()
-                var rgb8 = UnsafeMutablePointer<UInt8>.allocate(capacity: 240*300)
-
-                //                var tGyro = Array<CGFloat>()
                 KalmanInit()
-//                addArray(path:Controller.filePath!)//ここでvidImg[]登録
-//                vidCurrent=vidPath.count-1
-//                recStart = Controller.recStart
                 gyroFiltered.removeAll()
-                //                tGyro.removeAll()
-//                showCurrent()
                 showBoxies(f: false)
-                //print(fps,createtime!)
-                //print("delay",delay,Controller.gyro[0]-createtime)
-                //let vidDura=getDura(path:Controller.filePath!)
                 for i in 0...Controller.gyro.count/2-4{//-2でエラーなので、-5としてみた
                     gyroTime.append(Controller.gyro[i*2])
-                    //                    d=Kalman3(measurement:Controller.gyro[i*2+1]*10)
                     d=Double(Kalman(value:CGFloat(Controller.gyro[i*2+1]*10),num:3))
-                    //d=Controller.gyro[i*2+1]*10
                     gyro.append(-d)
-                    //                    gyro5.append(-d)
                 }
                 //gyroは10msごとに拾ってある.合わせる
                 //これをvideoのフレーム数に合わせる
-                //                let fps=getFps(path:Controller.filePath!)
                 while Controller.saved2album == false{//fileができるまで待つ
                     sleep(UInt32(0.1))
                 }
@@ -3036,36 +3018,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
     
                 let start=CFAbsoluteTimeGetCurrent()
+                print("elapsed time:0")
   //gyroデータをcsvテキストとして保存
-//                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
-//                let gyropath=getdocumentPath(path: videoDate[videoCurrent] + "-gyro.csv")
-//                let gyroCSV=getGyroCSV(gyroPath: videoDate[videoCurrent] + "-gyro.csv")
-//                let gyroCSV=getGyroCSV()
-//                let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
-                print(CFAbsoluteTimeGetCurrent()-start)
-//                print(gyroCSV as NSString)
-//                print(gyroCSV)
-//                let gyroImage=saveGyro2Img(img: videoImg[videoCurrent])=
-//                let gyroImage=videoImg[videoCurrent].create0Image()
-//               let gyroImage=openCV.grayScale(videoImg[videoCurrent])
-//                let gyroImage=changeColor(img: videoImg[videoCurrent])
-//                print("changeColor-done")
-//                for _ in 0...100{
-//                    colorArray.append(UIColor.gray)
-//                }
-//                let aImage=gyroImage?.tint(color: colorArray)
-//                let rgb=gyroImage!.pixelData()
-//                rgb8 = (UInt8 *)rgb
-//                print("rgb8",rgb8!.count,gyroImage?.size.width,gyroImage?.size.height,1080*1920*4)
-//                for i in 0...110{
-//                    print(rgb8![i*4],rgb8![i*4+1],rgb8![i*4+2],rgb8![i*4+3])
-//                }
+                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
+                let gyroCSV=getGyroCSV()//csv文字列
+                printRGB(img: videoImg[videoCurrent])
+                let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
+                print("elapsed time:",CFAbsoluteTimeGetCurrent()-start)
+                printRGB(img:gyroImage!)
                 saveImage2path(image: gyroImage!, path: "tmpimg.jpg")//save in doc at first
                 while existFile(aFile: "tmpimg.jpg")==false{
                     sleep(UInt32(0.1))
                 }
                 savePath2album(path: "tmpimg.jpg")//then copy into album(vHIT_VOG)
-
                 startFrame=0
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
@@ -3075,7 +3040,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #endif
         }
     }
-    
+    func printRGB(img:UIImage){
+        let rgb8=img.pixelData()
+        print("rgb8",rgb8!.count,img.size.width,img.size.height)
+        for i in 0...10{
+            print(rgb8![i*4],rgb8![i*4+1],rgb8![i*4+2],rgb8![i*4+3])
+        }
+    }
     func moveWakus
         (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect) -> CGRect{
         var r:CGRect
