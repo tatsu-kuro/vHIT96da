@@ -195,6 +195,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoImg = Array<UIImage>()
     var videoDura = Array<String>()
     var videoCurrent:Int=0
+    var jpgURL = Array<URL>()
+    var jpgDate = Array<String>()
+    var jpgImg = Array<UIImage>()
   
     //album関連、ここまで
     var vogImage:UIImage?
@@ -1739,8 +1742,214 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
+    func getImage4album(){
+        jpgImg.removeAll()
+        let imgManager = PHImageManager.default()
+        
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        requestOptions.deliveryMode = .highQualityFormat
+        
+        let fetchOptions = PHFetchOptions()
+        //        fetchOptions.predicate = NSPredicate(format: "title = %@", "vHIT_VOG")
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        
+        // アルバムをフェッチ
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
+        
+        assetCollections.enumerateObjects { assetCollection, _, _ in
+            
+            // アルバムタイトル
+            //             print(assetCollection.localizedTitle ?? "vHIT_VOG")
+            if assetCollection.localizedTitle?.contains("vHIT")==true{
+                
+                
+                // アセットをフェッチ
+                let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+                
+                assets.enumerateObjects { asset, _, _ in
+                    // 画像のリクエスト
+                    let width=asset.pixelWidth
+                    let height=asset.pixelHeight
+                    imgManager.requestImage(for: asset, targetSize: CGSize(width: width, height: height), contentMode:
+                                                .aspectFill, options: requestOptions, resultHandler: { img, _ in
+                                                    if let img = img {
+                                                        if asset.duration==0{
+                                                            self.jpgImg.append(img)
+                                                        }
+                                                        print("画像の取得に成功",asset.duration,asset.mediaType.rawValue,img.size.width,img.size.height)
+                                                    }
+                                                    //以下のコードではURLは取れない様だ？
+//                                                        if let urlAsset = asset as? AVURLAsset{
+//                                                            print("getURLok")
+//                                                        }else{
+//                                                            print("getURLerror")
+//                                                        }
+                                                    
+                                                })
+                }
+            }
+        }
+    }
+    func fetchCustomAlbumPhotos()
+    {
+        let albumName = "vHIT_VOG"
+        var assetCollection = PHAssetCollection()
+        var albumFound = Bool()
+        var photoAssets = PHFetchResult<AnyObject>()
+        let fetchOptions = PHFetchOptions()
+
+        fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumSelfPortraits, options: fetchOptions)
+
+        if let firstObject = collection.firstObject{
+            //found the album
+            assetCollection = firstObject
+            albumFound = true
+        }
+        else { albumFound = false }
+        _ = collection.count
+        photoAssets = PHAsset.fetchAssets(in: assetCollection, options: nil) as! PHFetchResult<AnyObject>
+        let imageManager = PHCachingImageManager()
+        photoAssets.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+
+            if object is PHAsset{
+                let asset = object as! PHAsset
+                print("Inside  If object is PHAsset, This is number 1")
+
+                let imageSize = CGSize(width: asset.pixelWidth,
+                                       height: asset.pixelHeight)
+
+                /* For faster performance, and maybe degraded image */
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .fastFormat
+                options.isSynchronous = true
+            
+                imageManager.requestImage(for: asset,
+                                                  targetSize: imageSize,
+                                                  contentMode: .aspectFill,
+                                                  options: options,
+                                                  resultHandler: {
+                                                    (image, info) -> Void in
+//                                                    self.photo = image!
+                                                    /* The image is now available to us */
+                                                    self.jpgDate.append((asset.creationDate?.description)!)
+                                                    self.jpgImg.append(image!)
+//                                                    self.addImgToArray(uploadImage: image!/*self.photo!*/)
+                                                    print("enum for image, This is number 2")
+
+                })
+
+            }
+        }
+    }
+
+    func addImgToArray(uploadImage:UIImage)
+    {
+        jpgImg.append(uploadImage)
+    }
+    func identiFier(localID:String){
+        if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [localID], options: nil).firstObject {
+                let options = PHVideoRequestOptions()
+                options.version = .original
+                PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { (asset: AVAsset?, audioMix: AVAudioMix?, info: [AnyHashable : Any]?) -> Void in
+                    if let urlAsset = asset as? AVURLAsset {
+                        let localVideoUrl = urlAsset.url as URL
+                        print("URL:",localVideoUrl) // ここで取れる？
+                    }
+                }
+            }
+    }
+    
+    
     //アルバムの一覧取得
     var gettingAlbumF:Bool=true
+    func getAlbumJPGList(){//最後のvideoを取得するまで待つ
+        gettingAlbumF = true
+        getAlbumJPGList_sub()//videosURL,videosDate,videosDuraをゲット
+        while gettingAlbumF == true{
+            sleep(UInt32(0.1))
+        }
+//        //videosImgだけはここでゲット
+//        jpgImg.removeAll()
+//        for i in 0..<videoURL.count{
+//            jpgImg.append(getThumb(url: jpgURL[i]))
+//        }
+    }
+    func getAlbumJPGList_sub(){
+        //     let imgManager = PHImageManager.default()
+        let requestOptions = PHImageRequestOptions()
+        jpgURL.removeAll()
+        jpgDate.removeAll()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = false
+        requestOptions.deliveryMode = .highQualityFormat
+        //これでもicloud上のvideoを取ってしまう
+        //アルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
+        
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: assetFetchOptions)
+        print("asset:",assetCollections.count)
+        //アルバムが存在しない事もある？
+        if (assetCollections.count > 0) {
+            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+            let assetCollection = assetCollections.object(at:0)
+            // creationDate降順でアルバム内のアセットをフェッチ
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+//            videoAssets = assets
+            print("assets:",assets)
+            print("assets count:",assets.count)
+            albumExist=true
+            if assets.count == 0{
+                gettingAlbumF=false
+                albumExist=false
+                return
+            }
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            
+            for i in 0..<assets.count{
+                let asset=assets[i]
+                identiFier(localID: asset.localIdentifier)
+//                let image=asset.localIdentifier
+//                print("localIdentifier:",asset.localIdentifier)
+                let date_sub = asset.creationDate
+                let date = formatter.string(from: date_sub!)
+//                let duration = String(format:"%.1fs",asset.duration)
+                let options=PHVideoRequestOptions()
+                print("date:",date)
+                print("url:",asset)
+                options.version = .original
+                PHImageManager.default().requestAVAsset(forVideo:asset,
+                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
+                    
+                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
+                        jpgURL.append(urlAsset.url)
+                        print(urlAsset.url)
+                        jpgDate.append(date)
+                         if i == assets.count - 1{
+                            gettingAlbumF=false
+                        }
+                    }else{//on icloud
+                        print("on icloud:",asset)
+                        if i == assets.count - 1{
+                            gettingAlbumF=false
+                        }
+                    }
+                }
+            }
+        }else{
+            albumExist=false
+            gettingAlbumF=false
+        }
+    }
     func getAlbumList(){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
         getAlbumList_sub()//videosURL,videosDate,videosDuraをゲット
@@ -1753,6 +1962,39 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoImg.append(getThumb(url: videoURL[i]))
         }
     }
+ /*   func getAlbumimage(){
+        let imgManager = PHImageManager.default()
+
+         let requestOptions = PHImageRequestOptions()
+         requestOptions.isSynchronous = true
+         requestOptions.deliveryMode = .highQualityFormat
+
+         let fetchOptions = PHFetchOptions()
+         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+
+         // アルバムをフェッチ
+         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
+
+         assetCollections.enumerateObjects { assetCollection, _, _ in
+
+             // アルバムタイトル
+             print(assetCollection.localizedTitle ?? "vHIT_VOG")
+
+             // アセットをフェッチ
+             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+
+             assets.enumerateObjects { asset, _, _ in
+                 // 画像のリクエスト
+                imgManager.requesti (for:asset,targetSize: any,content) (for: <#T##PHAsset#>, options: <#T##PHImageRequestOptions?#>, resultHandler: <#T##(Data?, String?, UIImage.Orientation, [AnyHashable : Any]?) -> Void#>)
+                 imgManager.requestImage(for: asset, targetSize: CGSize(width: 200, height: 200), contentMode:
+                     .aspectFill, options: requestOptions, resultHandler: { img, _ in
+                     if let img = img {
+                         print("画像の取得に成功")
+                     }
+                 })
+             }
+         }
+    }*/
     func getAlbumList_sub(){
         //     let imgManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
@@ -2393,6 +2635,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         stopButton.isHidden = true
         camera_alert()
         getAlbumList()
+//        getAlbumJPGList()
+        getImage4album()
+        print("jpgImg.count:",jpgImg.count)
+//        fetchCustomAlbumPhotos()
+//        print("videoDate;",videoDate)
+//        print("jpgDate:",jpgDate)
+//        print("jpgImg-count:",jpgImg.count)
+        printRGB(img: jpgImg[0])
+        printRGB(img: jpgImg[1])
+//        print(jpgDate)
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
         makeBoxies()//three boxies of gyro vHIT vog
