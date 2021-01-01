@@ -62,8 +62,8 @@
     cv::Mat grayMat;
     UIImageToMat(inputImg, inputMat);
     //int step = inputMat.step;
-    for (int y = 0; y < rows; y++) {//rows
-        for (int x = 0; x <cols; x++) {//cols
+    for (int y = 0; y < 5; y++) {//rows
+        for (int x = 0; x <5; x++) {//cols
             int xy=y * cols * 4 + x * 4;
             // Blue
             inputMat.data[xy + 0] = 200;

@@ -2642,8 +2642,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        print("videoDate;",videoDate)
 //        print("jpgDate:",jpgDate)
 //        print("jpgImg-count:",jpgImg.count)
-        printRGB(img: jpgImg[0])
-        printRGB(img: jpgImg[1])
+        for i in 0..<jpgImg.count{
+        printRGB(img: jpgImg[i])
+        }
+//        printRGB(img: jpgImg[1])
 //        print(jpgDate)
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
@@ -2969,11 +2971,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    }
     func saveImage2path(image:UIImage,path:String) {//imageを無圧縮（最高クオリティ）で保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            
+//            UIImageWriteToSavedPhotosAlbum(saveImage!, nil, nil, nil)
             let path_url = dir.appendingPathComponent( path )
-            let jpgImageData = image.jpegData(compressionQuality:1.0)
+//            let jpgImageData = image.jpegData(compressionQuality:1.0)
+            let pngImageData = image.pngData()
             do {
-                try jpgImageData!.write(to: path_url, options: .atomic)
+//                try jpgImageData!.write(to: path_url, options: .atomic)
+                try pngImageData!.write(to: path_url, options: .atomic)
 //                saving2pathFlag=false
             } catch {
                 print("gyroData.txt write err")//エラー処理
@@ -3295,7 +3299,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func printRGB(img:UIImage){
         let rgb8=img.pixelData()
         print("rgb8",rgb8!.count,img.size.width,img.size.height)
-        for i in 0...10{
+        for i in 0...6{
             print(rgb8![i*4],rgb8![i*4+1],rgb8![i*4+2],rgb8![i*4+3])
         }
     }
