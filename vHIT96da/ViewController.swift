@@ -191,13 +191,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var albumExist:Bool=false
     var videoArrayCount:Int = 0
     var videoDate = Array<String>()
+    var videoDateTime = Array<Date>()
     var videoURL = Array<URL>()
     var videoImg = Array<UIImage>()
     var videoDura = Array<String>()
+    var videoAsset = Array<AVAsset>()
     var videoCurrent:Int=0
-    var jpgURL = Array<URL>()
-    var jpgDate = Array<String>()
+    var jpgDateTime = Array<Date>()
     var jpgImg = Array<UIImage>()
+    var jpgAsset = Array<PHAsset>()
   
     //album関連、ここまで
     var vogImage:UIImage?
@@ -758,7 +760,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vhitLineView != nil{
             vhitLineView?.removeFromSuperview()
         }
-        
+//        readGyro4Img(img: jpgImg[videoCurrent])
         readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
@@ -1744,6 +1746,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func getImage4album(){
         jpgImg.removeAll()
+        jpgDateTime.removeAll()
+        jpgAsset.removeAll()
         let imgManager = PHImageManager.default()
         
         let requestOptions = PHImageRequestOptions()
@@ -1752,7 +1756,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let fetchOptions = PHFetchOptions()
         //        fetchOptions.predicate = NSPredicate(format: "title = %@", "vHIT_VOG")
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
         // アルバムをフェッチ
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
@@ -1776,8 +1780,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                     if let img = img {
                                                         if asset.duration==0{
                                                             self.jpgImg.append(img)
+                                                            self.jpgAsset.append(asset)
+                                                            self.jpgDateTime.append(asset.creationDate!)
                                                         }
-                                                        print("画像の取得に成功",asset.duration,asset.mediaType.rawValue,img.size.width,img.size.height)
+//                                                        print("画像の取得に成功",asset.duration,asset.mediaType.rawValue,img.size.width,img.size.height)
                                                     }
                                                     //以下のコードではURLは取れない様だ？
 //                                                        if let urlAsset = asset as? AVURLAsset{
@@ -1791,7 +1797,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    func fetchCustomAlbumPhotos()
+ /*   func fetchCustomAlbumPhotos()
     {
         let albumName = "vHIT_VOG"
         var assetCollection = PHAssetCollection()
@@ -1835,7 +1841,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                     (image, info) -> Void in
 //                                                    self.photo = image!
                                                     /* The image is now available to us */
-                                                    self.jpgDate.append((asset.creationDate?.description)!)
+                                                    self.jpgDateTime.append(asset.creationDate!)
                                                     self.jpgImg.append(image!)
 //                                                    self.addImgToArray(uploadImage: image!/*self.photo!*/)
                                                     print("enum for image, This is number 2")
@@ -1849,8 +1855,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func addImgToArray(uploadImage:UIImage)
     {
         jpgImg.append(uploadImage)
-    }
-    func identiFier(localID:String){
+    }*/
+ /*   func identiFier(localID:String){
         if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [localID], options: nil).firstObject {
                 let options = PHVideoRequestOptions()
                 options.version = .original
@@ -1861,12 +1867,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                 }
             }
-    }
+    }*/
     
     
     //アルバムの一覧取得
     var gettingAlbumF:Bool=true
-    func getAlbumJPGList(){//最後のvideoを取得するまで待つ
+ /*   func getAlbumJPGList(){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
         getAlbumJPGList_sub()//videosURL,videosDate,videosDuraをゲット
         while gettingAlbumF == true{
@@ -1949,7 +1955,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             albumExist=false
             gettingAlbumF=false
         }
-    }
+    }*/
     func getAlbumList(){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
         getAlbumList_sub()//videosURL,videosDate,videosDuraをゲット
@@ -2000,7 +2006,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let requestOptions = PHImageRequestOptions()
         videoURL.removeAll()
         videoDate.removeAll()
+        videoDateTime.removeAll()
         videoDura.removeAll()
+        videoAsset.removeAll()
         //videoImgだけは上記３arrayを取得後に、getAlbumListで取得する。
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
@@ -2047,6 +2055,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                        print(urlAsset.url)
                         videoDate.append(date)// + "(" + duration + ")")
                         videoDura.append(duration)
+                        videoDateTime.append(date_sub!)//jpgDateTimeと比較する？念のため
+                        videoAsset.append(asset!)
                         //ここではgetThumbができないことがある。
 //                        videosImg.append(getThumb(url: urlAsset.url))
 //                        print(videoDate.last as Any)
@@ -2638,13 +2648,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        getAlbumJPGList()
         getImage4album()
         print("jpgImg.count:",jpgImg.count)
+        print("videoImg.count:",videoImg.count)
 //        fetchCustomAlbumPhotos()
 //        print("videoDate;",videoDate)
 //        print("jpgDate:",jpgDate)
 //        print("jpgImg-count:",jpgImg.count)
-        for i in 0..<jpgImg.count{
-        printRGB(img: jpgImg[i])
-        }
+//        for i in 0..<jpgImg.count{
+//        printRGB(img: jpgImg[i])
+//        }
 //        printRGB(img: jpgImg[1])
 //        print(jpgDate)
         videoArrayCount = videoURL.count
@@ -3274,19 +3285,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
     
                 let start=CFAbsoluteTimeGetCurrent()
-                print("elapsed time:0")
+//                print("elapsed time:0")
   //gyroデータをcsvテキストとして保存
                 saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
                 let gyroCSV=getGyroCSV()//csv文字列
-                printRGB(img: videoImg[videoCurrent])
+//                printRGB(img: videoImg[videoCurrent])
                 let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
-                print("elapsed time:",CFAbsoluteTimeGetCurrent()-start)
-                printRGB(img:gyroImage!)
-                saveImage2path(image: gyroImage!, path: "tmpimg.jpg")//save in doc at first
-                while existFile(aFile: "tmpimg.jpg")==false{
+//                print("elapsed time:",CFAbsoluteTimeGetCurrent()-start)
+//                printRGB(img:gyroImage!)
+                saveImage2path(image: gyroImage!, path: "tmpimg.png")//save in doc at first
+                while existFile(aFile: "tmpimg.png")==false{
                     sleep(UInt32(0.1))
                 }
-                savePath2album(path: "tmpimg.jpg")//then copy into album(vHIT_VOG)
+                savePath2album(path: "tmpimg.png")//then copy into album(vHIT_VOG)
                 startFrame=0
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
@@ -3296,12 +3307,45 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #endif
         }
     }
-    func printRGB(img:UIImage){
+//    func printRGB(img:UIImage){
+//           let rgb8=img.pixelData()
+//           print("rgb8",rgb8!.count,img.size.width,img.size.height)
+//           for i in 0...6{
+//               print(rgb8![i*4],rgb8![i*4+1],rgb8![i*4+2],rgb8![i*4+3])
+//           }
+//       }
+    func readGyro4Img(img:UIImage){
+        gyroFiltered.removeAll()
         let rgb8=img.pixelData()
-        print("rgb8",rgb8!.count,img.size.width,img.size.height)
+        for i in 0..<rgb8!.count/4{
+            var rgb:Int=0
+            if rgb8![i*4]==1{
+                rgb = Int(rgb8![i*4+1])*256 + Int(rgb8![i*4+2])
+            }else{
+                rgb = -Int(rgb8![i*4+1])*256 - Int(rgb8![i*4+2])
+            }
+            gyroFiltered.append(CGFloat(rgb)/100.0)
+        }
+    }
+    func printRGB(img:UIImage){
+        gyroFiltered.removeAll()
+        let rgb8=img.pixelData()
         for i in 0...6{
             print(rgb8![i*4],rgb8![i*4+1],rgb8![i*4+2],rgb8![i*4+3])
         }
+        var str:String=""
+        print("rgb8",rgb8!.count,img.size.width,img.size.height)
+        for i in 0...50{
+            var rgb:Int=0
+            if rgb8![i*4]==1{
+                rgb = Int(rgb8![i*4+1])*256 + Int(rgb8![i*4+2])
+            }else{
+                rgb = -Int(rgb8![i*4+1])*256 - Int(rgb8![i*4+2])
+            }
+            str += rgb.description + ","
+            gyroFiltered.append(CGFloat(rgb)/100.0)
+        }
+        print(str)
     }
     func moveWakus
         (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect) -> CGRect{

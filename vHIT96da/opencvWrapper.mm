@@ -57,25 +57,44 @@
     // 変換用Matの宣言
     int rows=inputImg.size.width;
     int cols=inputImg.size.height;
+    int rgb[240*60*5];
+    int cnt=0;
 
+    NSArray *arr = [gyroCSV componentsSeparatedByString:@","];
+    
+    for(int i=0;i<arr.count-1;i++){
+        rgb[i]=[arr[i] intValue];
+    }
     cv::Mat inputMat;
     cv::Mat grayMat;
     UIImageToMat(inputImg, inputMat);
     //int step = inputMat.step;
-    for (int y = 0; y < 5; y++) {//rows
-        for (int x = 0; x <5; x++) {//cols
-            int xy=y * cols * 4 + x * 4;
-            // Blue
-            inputMat.data[xy + 0] = 200;
-            // Green
-            inputMat.data[xy + 1] = 150;
-            // Red
-            inputMat.data[xy + 2] = 100;
-            //Reserved
-            inputMat.data[xy + 3] = 255;
+    for (int row = 0; row < rows; row++) {//rows
+        for (int col = 0; col <cols; col++) {//cols
+            if(cnt<arr.count-1){
+                int xy=row * cols * 4 + col * 4;
+                // Blue
+                inputMat.data[xy+0]=1;
+                if (rgb[cnt]<0){
+                    inputMat.data[xy+0]=0;
+                    rgb[cnt]=-rgb[cnt];
+                }
+                //green
+                inputMat.data[xy + 1] = rgb[cnt]/256;
+                // red
+                inputMat.data[xy + 2] = rgb[cnt]%256;
+                //Reserved
+                inputMat.data[xy + 3] = 255;
+                cnt ++;
+            }else{
+                break;
+            }
+        }
+        if (!(cnt<arr.count-1)){
+            break;
         }
     }
-    putText(inputMat,"gyro-data",cvPoint(10,cols/2),cv::FONT_HERSHEY_SIMPLEX,5,cvScalar(0,0,0),5,CV_AA);
+    putText(inputMat,"GyroData",cvPoint(10,cols*3/5),cv::FONT_HERSHEY_SIMPLEX,4,cvScalar(0,0,0),15,CV_AA);
     inputImg = MatToUIImage(inputMat);
     return inputImg;
 }

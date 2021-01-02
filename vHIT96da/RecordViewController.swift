@@ -47,12 +47,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBOutlet weak var exitBut: UIButton!
     @IBOutlet weak var cameraView: UIImageView!
     @IBAction func startRecord(_ sender: Any) {
-        onClickRecordButton()
+        Record_or_Stop()
     }
     
     @IBOutlet weak var damyBottom: UILabel!
-    @IBAction func stopRecord(_ sender: Any) {
-        onClickRecordButton()
+    @IBAction func onClickStopButton(_ sender: Any) {
+        Record_or_Stop()
     }
  
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
@@ -411,7 +411,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         // ファイル出力設定
         fileOutput = AVCaptureMovieFileOutput()
-        fileOutput.maxRecordedDuration = CMTimeMake(value: 5*60, timescale: 1)//最長録画時間
+//        fileOutput.maxRecordedDuration = CMTimeMake(value: 5*60, timescale: 1)//最長録画時間
         session.addOutput(fileOutput)
         
         let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
@@ -436,12 +436,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var soundIdstop:SystemSoundID = 1118
     var soundIdpint:SystemSoundID = 1109//1009//7
     
-    var counter:Int=0
+    var timerCnt:Int=0
     @objc func update(tm: Timer) {
+        timerCnt += 1
         if fileOutput.isRecording{
-            counter += 1
-            currentTime.text=String(format:"%02d",counter/60) + ":" + String(format: "%02d",counter%60)
-            if counter%2==0{
+//            timerCnt += 1
+            currentTime.text=String(format:"%02d",timerCnt/60) + ":" + String(format: "%02d",timerCnt%60)
+            if timerCnt%2==0{
                 stopButton.tintColor=UIColor.orange
             }else{
                 stopButton.tintColor=UIColor.red
@@ -449,6 +450,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }else{
             UserDefaults.standard.set(videoDevice?.lensPosition, forKey: "focusValue")
             focusBar.value=videoDevice!.lensPosition
+        }
+        if timerCnt > 60*5{
+            timer!.invalidate()
+            if self.fileOutput.isRecording{
+                Record_or_Stop()
+            }else{
+                performSegue(withIdentifier: "fromRecordToMain", sender: self)
+            }
         }
     }
     func setFocus(focus:Float) {//focus 0:最接近　0-1.0
@@ -481,7 +490,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             print("vHIT_VOG_album exist already.")
         }
     }
-    func onClickRecordButton() {
+    var soundIdx:SystemSoundID = 0
+    func Record_or_Stop() {
         albumCheck()
         if self.fileOutput.isRecording {
             // stop recording
@@ -489,15 +499,25 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fileOutput.stopRecording()
         } else {
             //start recording
+            timerCnt=0
             setMotion()
             hideButtons(type: true)
             stopButton.isHidden=false
             currentTime.isHidden=false
             UIApplication.shared.isIdleTimerDisabled = true//スリープしない
-            if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
-                AudioServicesCreateSystemSoundID(soundUrl, &soundIdstart)
-                AudioServicesPlaySystemSound(soundIdstart)
+            
+            if let soundUrl = URL(string:
+                              "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+                AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+                AudioServicesPlaySystemSound(soundIdx)
             }
+            
+            
+            
+//            if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
+//                AudioServicesCreateSystemSoundID(soundUrl, &soundIdstart)
+//                AudioServicesPlaySystemSound(soundIdstart)
+//            }
             try? FileManager.default.removeItem(atPath: TempFilePath)
 
             let fileURL = NSURL(fileURLWithPath: TempFilePath)
@@ -533,12 +553,17 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
-
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
-            AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
-            AudioServicesPlaySystemSound(soundIdstop)
+//        if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
+//            AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
+//            AudioServicesPlaySystemSound(soundIdstop)
+//        }
+        if let soundUrl = URL(string:
+                          "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+            AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+            AudioServicesPlaySystemSound(soundIdx)
         }
+
         print("終了ボタン、最大を超えた時もここを通る")
         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
         //        recordedFPS=getFPS(url: outputFileURL)
