@@ -309,7 +309,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
         currentTime.layer.masksToBounds = true
         currentTime.layer.cornerRadius = 5
-        
+        currentTime.font = UIFont.monospacedDigitSystemFont(ofSize: 25*view.bounds.width/320, weight: .medium)
+
         setButtonProperty(button: fps240Button, bw: bw, bh:bh, cx:(10+bw)/2 , cy: bpos-10-bh)
         setButtonProperty(button: fps120Button, bw: bw, bh: bh, cx:(10+bw)/2 , cy:bpos)
         
@@ -379,7 +380,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         // ファイル出力設定
         fileOutput = AVCaptureMovieFileOutput()
-        fileOutput.maxRecordedDuration = CMTimeMake(value:5*60, timescale: 1)//最長録画時間
+//        fileOutput.maxRecordedDuration = CMTimeMake(value:5*60, timescale: 1)//最長録画時間
         session.addOutput(fileOutput)
         
         let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)

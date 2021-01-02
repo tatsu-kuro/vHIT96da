@@ -197,9 +197,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoDura = Array<String>()
     var videoAsset = Array<AVAsset>()
     var videoCurrent:Int=0
-    var jpgDateTime = Array<Date>()
-    var jpgImg = Array<UIImage>()
-    var jpgAsset = Array<PHAsset>()
+    var pngDateTime = Array<Date>()
+    var pngImg = Array<UIImage>()
+    var pngAsset = Array<PHAsset>()
   
     //album関連、ここまで
     var vogImage:UIImage?
@@ -356,11 +356,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     @IBAction func eraseVideo(_ sender: Any) {
+ //       videoAsset[videoCurrent]
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
-        // "iCapNYS"という名前のアルバムをフェッチ
+        //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
@@ -760,8 +761,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vhitLineView != nil{
             vhitLineView?.removeFromSuperview()
         }
-//        readGyro4Img(img: jpgImg[videoCurrent])
-        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
+        readGyroFromPng(img: pngImg[videoCurrent])// readGyro4Img(img: jpgImg[videoCurrent])
+//        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
         
@@ -1744,10 +1745,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
-    func getImage4album(){
-        jpgImg.removeAll()
-        jpgDateTime.removeAll()
-        jpgAsset.removeAll()
+    func getPngsAlbumList(){
+        pngImg.removeAll()
+        pngDateTime.removeAll()
+        pngAsset.removeAll()
         let imgManager = PHImageManager.default()
         
         let requestOptions = PHImageRequestOptions()
@@ -1779,9 +1780,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                 .aspectFill, options: requestOptions, resultHandler: { img, _ in
                                                     if let img = img {
                                                         if asset.duration==0{
-                                                            self.jpgImg.append(img)
-                                                            self.jpgAsset.append(asset)
-                                                            self.jpgDateTime.append(asset.creationDate!)
+                                                            self.pngImg.append(img)
+                                                            self.pngAsset.append(asset)
+                                                            self.pngDateTime.append(asset.creationDate!)
                                                         }
 //                                                        print("画像の取得に成功",asset.duration,asset.mediaType.rawValue,img.size.width,img.size.height)
                                                     }
@@ -1956,7 +1957,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gettingAlbumF=false
         }
     }*/
-    func getAlbumList(){//最後のvideoを取得するまで待つ
+    func getVideosAlbumList(){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
         getAlbumList_sub()//videosURL,videosDate,videosDuraをゲット
         while gettingAlbumF == true{
@@ -2644,10 +2645,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
         camera_alert()
-        getAlbumList()
+        getVideosAlbumList()
 //        getAlbumJPGList()
-        getImage4album()
-        print("jpgImg.count:",jpgImg.count)
+        getPngsAlbumList()
+        print("jpgImg.count:",pngImg.count)
         print("videoImg.count:",videoImg.count)
 //        fetchCustomAlbumPhotos()
 //        print("videoDate;",videoDate)
@@ -2808,16 +2809,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     //calcVHITで実行、その後moveGyroData()
     func getGyroCSV()->NSString{//gyroDataにデータを戻す
-        let Start=CFAbsoluteTimeGetCurrent()
+//        let Start=CFAbsoluteTimeGetCurrent()
         var text:String=""
         for i in 0..<gyroFiltered.count{
 //            let str=String(Int(gyroFiltered[i]*100))
             text += String(Int(gyroFiltered[i]*100)) + ","
 //            print(text,str,gyroFiltered[i])
         }
-        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
+//        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
         let txt:NSString = text as NSString
-        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
+//        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
         return txt
     }
     func readGyro(gyroPath:String){//gyroDataにデータを戻す
@@ -2949,7 +2950,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return false
     }
+    var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為
     func savePath2album(path:String){
+        path2albumDoneFlag=false
+        savePath2album_sub(path: path)
+        while path2albumDoneFlag==false{
+            sleep(UInt32(0.2))
+        }
+    }
+    func savePath2album_sub(path:String){
         
         if albumExists(albumTitle: "vHIT_VOG")==false{
             return
@@ -2965,8 +2974,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 albumChangeRequest?.addAssets([placeHolder!] as NSArray)
             }) { (isSuccess, error) in
                 if isSuccess {
+                    self.path2albumDoneFlag=true
                     // 保存成功
                 } else {
+                    self.path2albumDoneFlag=true
                     // 保存失敗
                 }
             }
@@ -3259,8 +3270,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while Controller.saved2album == false{//fileができるまで待つ
                     sleep(UInt32(0.1))
                 }
-                removeFile(delFile: "tmpimg.jpg")
-                getAlbumList()
+                removeFile(delFile: "temp.png")
+                getVideosAlbumList()
                 while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
@@ -3284,21 +3295,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroFiltered.append(Kalman(value:CGFloat(gyro[getj]),num:4))
                 }
     
-                let start=CFAbsoluteTimeGetCurrent()
+//                let start=CFAbsoluteTimeGetCurrent()
 //                print("elapsed time:0")
   //gyroデータをcsvテキストとして保存
                 saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
                 let gyroCSV=getGyroCSV()//csv文字列
 //                printRGB(img: videoImg[videoCurrent])
+                //pixel2imageで240*60*6の配列を作るので,増やすときは注意
                 let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
 //                print("elapsed time:",CFAbsoluteTimeGetCurrent()-start)
 //                printRGB(img:gyroImage!)
-                saveImage2path(image: gyroImage!, path: "tmpimg.png")//save in doc at first
-                while existFile(aFile: "tmpimg.png")==false{
+                saveImage2path(image: gyroImage!, path: "temp.png")//save in doc at first
+                while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
-                savePath2album(path: "tmpimg.png")//then copy into album(vHIT_VOG)
+                savePath2album(path: "temp.png")//then copy into album(vHIT_VOG)
                 startFrame=0
+                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
          }else{
@@ -3314,7 +3327,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //               print(rgb8![i*4],rgb8![i*4+1],rgb8![i*4+2],rgb8![i*4+3])
 //           }
 //       }
-    func readGyro4Img(img:UIImage){
+    func readGyroFromPng(img:UIImage){
         gyroFiltered.removeAll()
         let rgb8=img.pixelData()
         for i in 0..<rgb8!.count/4{
