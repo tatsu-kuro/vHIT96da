@@ -1934,14 +1934,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         faceF = getUserDefault(str: "faceF", ret:0)
         getVideoGyryoZureDefault()
         isVHIT = getUserDefault(str: "isVHIT", ret: true)
-        
-        wakuE.origin.x = CGFloat(getUserDefault(str: "wakuE_x", ret:100))
-        wakuE.origin.y = CGFloat(getUserDefault(str: "wakuE_y", ret:100))
+        let width=Int(view.bounds.width/2)
+        let height=Int(view.bounds.height/3)
+        wakuE.origin.x = CGFloat(getUserDefault(str: "wakuE_x", ret:width))
+        wakuE.origin.y = CGFloat(getUserDefault(str: "wakuE_y", ret:height))
         
         wakuE.size.width = 5
         wakuE.size.height = 5
-        wakuF.origin.x = CGFloat(getUserDefault(str: "wakuF_x", ret:100))
-        wakuF.origin.y = CGFloat(getUserDefault(str: "wakuF_y", ret: 100))
+        wakuF.origin.x = CGFloat(getUserDefault(str: "wakuF_x", ret:width))
+        wakuF.origin.y = CGFloat(getUserDefault(str: "wakuF_y", ret:height+30))
         
         wakuF.size.width = 5
         wakuF.size.height = 5
