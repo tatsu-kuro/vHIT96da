@@ -2865,38 +2865,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var g: UInt8 = 0
         var b: UInt8 = 0
     }
-   /* func imageFromARGB32Bitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
-        guard width > 0 && height > 0 else { return nil }
-        guard pixels.count == width * height else { return nil }
 
-        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
-        let bitsPerComponent = 8
-        let bitsPerPixel = 32
-
-        var data = pixels // Copy to mutable []
-        guard let providerRef = CGDataProvider(data: NSData(bytes: &data,
-                                length: data.count * MemoryLayout<PixelData>.size)
-            )
-            else { return nil }
-
-        guard let cgim = CGImage(
-            width: width,
-            height: height,
-            bitsPerComponent: bitsPerComponent,
-            bitsPerPixel: bitsPerPixel,
-            bytesPerRow: width * MemoryLayout<PixelData>.size,
-            space: rgbColorSpace,
-            bitmapInfo: bitmapInfo,
-            provider: providerRef,
-            decode: nil,
-            shouldInterpolate: true,
-            intent: .defaultIntent
-            )
-            else { return nil }
-
-        return UIImage(cgImage: cgim)
-    }*/
     func imageFromBitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
         assert(width > 0)
         assert(height > 0)
@@ -2931,99 +2900,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return UIImage(cgImage: cgimage)
     }
-    /*
-    func imageFromBitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
-        assert(width > 0)
-        assert(height > 0)
-        let pixelDataSize = MemoryLayout<PixelData>.size
-        assert(pixelDataSize == 4)
-        assert(pixels.count == Int(width * height))
-        let data: Data = pixels.withUnsafeBufferPointer {
-         return Data(buffer: $0)
-        }
-
-        let cfdata = NSData(data: data) as CFData
-        let provider: CGDataProvider! = CGDataProvider(data: cfdata)
-        if provider == nil {
-         print("CGDataProvider is not supposed to be nil")
-         return nil
-        }
-        let cgimage: CGImage! = CGImage(
-         width: width,
-         height: height,
-         bitsPerComponent: 8,
-         bitsPerPixel: 32,
-         bytesPerRow: width * pixelDataSize,
-         space: CGColorSpaceCreateDeviceRGB(),
-         bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue),
-         provider: provider,
-         decode: nil,
-         shouldInterpolate: true,
-         intent: .defaultIntent
-        )
-        if cgimage == nil {
-         print("CGImage is not supposed to be nil")
-         return nil
-        }
-        return UIImage(cgImage: cgimage)
-    }*/
-    
-    func imageFromARGB32Bitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
-        guard width > 0 && height > 0 else { return nil }
-        guard pixels.count == width * height else { return nil }
-
-        let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
-        let bitsPerComponent = 8
-        let bitsPerPixel = 32
-
-        var data = pixels // Copy to mutable []
-        guard let providerRef = CGDataProvider(data: NSData(bytes: &data,
-                                length: data.count * MemoryLayout<PixelData>.size)
-            )
-            else { return nil }
-
-        guard let cgim = CGImage(
-            width: width,
-            height: height,
-            bitsPerComponent: bitsPerComponent,
-            bitsPerPixel: bitsPerPixel,
-            bytesPerRow: width * MemoryLayout<PixelData>.size,
-            space: rgbColorSpace,
-            bitmapInfo: bitmapInfo,
-            provider: providerRef,
-            decode: nil,
-            shouldInterpolate: true,
-            intent: .defaultIntent
-            )
-            else { return nil }
-
-        return UIImage(cgImage: cgim)
-    }
- /*   var r:[CGFloat] = []
-    var g:[CGFloat] = []
-    var b:[CGFloat] = []
-    var a:[CGFloat] = []
-    func changeColor(img:UIImage)->UIImage{
-        
-      
-        if let pixelBuffer = PixelBuffer(uiImage: img) {
-            for x in 0..<pixelBuffer.width {
-                for y in 0..<pixelBuffer.height {
-                    r.append(pixelBuffer.getRed(x: x, y: y))
-                    g.append(pixelBuffer.getBlue(x: x, y: y))
-                    b.append(pixelBuffer.getGreen(x: x, y: y))
-                    a.append(pixelBuffer.getAlpha(x: x, y: y))
-                }
-                print("x:",x)
-            }
-        } else {
-            print("image not format")
-        }
-        //rgbの入れ替え
-        print("changeimage-end")
-        return img.createImage(r: g, g: b, b: r, a: a)
-    }*/
     
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
@@ -3289,7 +3165,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     
                 }
             }else if isVHIT == false && vogBoxView?.isHidden == false{//vog
-                //                print("okpMode:",okpMode)
                 if eyePosFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
                     return
                 }
@@ -3308,9 +3183,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }else if vogCurpoint>0{//240*10以下には動けない
                     vogCurpoint = 0
                 }
-                //                print("vogcur",vogCurpoint)
+                                print("vogcur",vogCurpoint)
                 
-             wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
              }else{//枠 changed
                 if rectType > -1 {//枠の設定の場合
                     //                    let w3=view.bounds.width/3
