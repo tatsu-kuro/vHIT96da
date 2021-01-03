@@ -191,19 +191,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var albumExist:Bool=false
     var videoArrayCount:Int = 0
     var videoDate = Array<String>()
-    var videoDateTime = Array<Date>()
+    var videoDateTime = Array<Date>()//creationDate+durationより１−２秒遅れるpngdate
     var videoURL = Array<URL>()
     var videoImg = Array<UIImage>()
     var videoDura = Array<String>()
     var videoAsset = Array<AVAsset>()
     var videoCurrent:Int=0
-    var pngDateTime = Array<Date>()
+    var pngDateTime = Array<Date>()//videoDateTimeより遅れる
     var pngImg = Array<UIImage>()
     var pngAsset = Array<PHAsset>()
-  
     //album関連、ここまで
+    
     var vogImage:UIImage?
-//    var recStart = CFAbsoluteTimeGetCurrent()
     @IBOutlet weak var cameraButton: UIButton!
     var boxF:Bool=false
     @IBOutlet weak var vogButton: UIButton!
@@ -213,45 +212,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var eyeButton: UIButton!
     
     @IBOutlet weak var damyBottom: UILabel!
-    
-    /*
-    func image(fromPixelValues pixelValues: [UInt8]?, width: Int, height: Int) -> CGImage?
-    {
-        var imageRef: CGImage?
-        if var pixelValues = pixelValues {
-            let bitsPerComponent = 8
-            let bytesPerPixel = 1
-            let bitsPerPixel = bytesPerPixel * bitsPerComponent
-            let bytesPerRow = bytesPerPixel * width
-            let totalBytes = height * bytesPerRow
-            imageRef = withUnsafePointer(to: &pixelValues, {
-                ptr -> CGImage? in
-                var imageRef: CGImage?
-                let colorSpaceRef = CGColorSpaceCreateDeviceGray()
-                let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.none.rawValue).union(CGBitmapInfo())
-                let data = UnsafeRawPointer(ptr.pointee).assumingMemoryBound(to: UInt8.self)
-                let releaseData: CGDataProviderReleaseDataCallback = {
-                    (info: UnsafeMutableRawPointer?, data: UnsafeRawPointer, size: Int) -> () in
-                }
-                if let providerRef = CGDataProvider(dataInfo: nil, data: data, size: totalBytes, releaseData: releaseData) {
-                    imageRef = CGImage(width: width,
-                                       height: height,
-                                       bitsPerComponent: bitsPerComponent,
-                                       bitsPerPixel: bitsPerPixel,
-                                       bytesPerRow: bytesPerRow,
-                                       space: colorSpaceRef,
-                                       bitmapInfo: bitmapInfo,
-                                       provider: providerRef,
-                                       decode: nil,
-                                       shouldInterpolate: false,
-                                       intent: CGColorRenderingIntent.defaultIntent)
-                }
-                return imageRef
-            })
-        }
-        return imageRef
-     }*/
-  
     
     @IBAction func wakuToFace(_ sender: Any) {
         rectType=1
@@ -265,7 +225,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showWakuImages()
     }
     
-//    var eyeFaceButton: UIButton!
     @IBOutlet weak var wakuAll: UIImageView!
     
     @IBOutlet weak var wakuEye: UIImageView!
@@ -273,7 +232,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var wakuFac: UIImageView!
     @IBOutlet weak var wakuFacb: UIImageView!
     
-//    var box1ys:CGFloat=0//上のboxのcenter:y VOGのみ
     var vogBoxHeight:CGFloat=0
     var vogBoxYmin:CGFloat=0
     var vogBoxYcenter:CGFloat=0
@@ -379,18 +337,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-
+//            var eraseAssetDate=assets[0].creationDate
+            var eraseAssetPngNumber=0
             for i in 0..<assets.count{
                 let date_sub=assets[i].creationDate
                 let date = formatter.string(from:date_sub!)
+                eraseAssetPngNumber=i+1
                 if videoDate[videoCurrent].contains(date){
-                    
                     if !assets[i].canPerform(.delete) {
                         return
                     }
-
+                    var delAssets=Array<PHAsset>()
+                    delAssets.append(assets[i])
+                    delAssets.append(assets[i+1])//pngはその次に入っているはず
                     PHPhotoLibrary.shared().performChanges({
-                        PHAssetChangeRequest.deleteAssets(NSArray(array: [assets[i]]))
+                        PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
                     }, completionHandler: { success,error in//[self] _, _ in
                         if success==true{
                             dialogStatus = 1//YES
@@ -399,7 +360,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                         // 削除後の処理
                     })
-                    break
+//                    break
                 }
             }
         }
@@ -761,7 +722,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vhitLineView != nil{
             vhitLineView?.removeFromSuperview()
         }
-        readGyroFromPng(img: pngImg[videoCurrent])// readGyro4Img(img: jpgImg[videoCurrent])
+        readGyroFromPng(img: pngImg[videoCurrent])
 //        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
@@ -1755,6 +1716,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         requestOptions.isSynchronous = true
         requestOptions.deliveryMode = .highQualityFormat
         
+        
         let fetchOptions = PHFetchOptions()
         //        fetchOptions.predicate = NSPredicate(format: "title = %@", "vHIT_VOG")
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
@@ -1779,12 +1741,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     imgManager.requestImage(for: asset, targetSize: CGSize(width: width, height: height), contentMode:
                                                 .aspectFill, options: requestOptions, resultHandler: { img, _ in
                                                     if let img = img {
+                                                        let date=asset.creationDate!+asset.duration
+
                                                         if asset.duration==0{
                                                             self.pngImg.append(img)
                                                             self.pngAsset.append(asset)
                                                             self.pngDateTime.append(asset.creationDate!)
                                                         }
-//                                                        print("画像の取得に成功",asset.duration,asset.mediaType.rawValue,img.size.width,img.size.height)
                                                     }
                                                     //以下のコードではURLは取れない様だ？
 //                                                        if let urlAsset = asset as? AVURLAsset{
@@ -1842,8 +1805,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                     (image, info) -> Void in
 //                                                    self.photo = image!
                                                     /* The image is now available to us */
-                                                    self.jpgDateTime.append(asset.creationDate!)
-                                                    self.jpgImg.append(image!)
+                                                    self.pngDateTime.append(asset.creationDate!)
+                                                    self.pngImg.append(image!)
 //                                                    self.addImgToArray(uploadImage: image!/*self.photo!*/)
                                                     print("enum for image, This is number 2")
 
@@ -1853,10 +1816,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-    func addImgToArray(uploadImage:UIImage)
-    {
-        jpgImg.append(uploadImage)
-    }*/
+   */
  /*   func identiFier(localID:String){
         if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [localID], options: nil).firstObject {
                 let options = PHVideoRequestOptions()
@@ -1873,90 +1833,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     //アルバムの一覧取得
     var gettingAlbumF:Bool=true
- /*   func getAlbumJPGList(){//最後のvideoを取得するまで待つ
-        gettingAlbumF = true
-        getAlbumJPGList_sub()//videosURL,videosDate,videosDuraをゲット
-        while gettingAlbumF == true{
-            sleep(UInt32(0.1))
-        }
-//        //videosImgだけはここでゲット
-//        jpgImg.removeAll()
-//        for i in 0..<videoURL.count{
-//            jpgImg.append(getThumb(url: jpgURL[i]))
-//        }
-    }
-    func getAlbumJPGList_sub(){
-        //     let imgManager = PHImageManager.default()
-        let requestOptions = PHImageRequestOptions()
-        jpgURL.removeAll()
-        jpgDate.removeAll()
-        requestOptions.isSynchronous = true
-        requestOptions.isNetworkAccessAllowed = false
-        requestOptions.deliveryMode = .highQualityFormat
-        //これでもicloud上のvideoを取ってしまう
-        //アルバムをフェッチ
-        let assetFetchOptions = PHFetchOptions()
-        
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
-        
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: assetFetchOptions)
-        print("asset:",assetCollections.count)
-        //アルバムが存在しない事もある？
-        if (assetCollections.count > 0) {
-            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
-            let assetCollection = assetCollections.object(at:0)
-            // creationDate降順でアルバム内のアセットをフェッチ
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-//            videoAssets = assets
-            print("assets:",assets)
-            print("assets count:",assets.count)
-            albumExist=true
-            if assets.count == 0{
-                gettingAlbumF=false
-                albumExist=false
-                return
-            }
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            
-            for i in 0..<assets.count{
-                let asset=assets[i]
-                identiFier(localID: asset.localIdentifier)
-//                let image=asset.localIdentifier
-//                print("localIdentifier:",asset.localIdentifier)
-                let date_sub = asset.creationDate
-                let date = formatter.string(from: date_sub!)
-//                let duration = String(format:"%.1fs",asset.duration)
-                let options=PHVideoRequestOptions()
-                print("date:",date)
-                print("url:",asset)
-                options.version = .original
-                PHImageManager.default().requestAVAsset(forVideo:asset,
-                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
-                    
-                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
-                        jpgURL.append(urlAsset.url)
-                        print(urlAsset.url)
-                        jpgDate.append(date)
-                         if i == assets.count - 1{
-                            gettingAlbumF=false
-                        }
-                    }else{//on icloud
-                        print("on icloud:",asset)
-                        if i == assets.count - 1{
-                            gettingAlbumF=false
-                        }
-                    }
-                }
-            }
-        }else{
-            albumExist=false
-            gettingAlbumF=false
-        }
-    }*/
+ 
     func getVideosAlbumList(){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
         getAlbumList_sub()//videosURL,videosDate,videosDuraをゲット
@@ -1969,39 +1846,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoImg.append(getThumb(url: videoURL[i]))
         }
     }
- /*   func getAlbumimage(){
-        let imgManager = PHImageManager.default()
-
-         let requestOptions = PHImageRequestOptions()
-         requestOptions.isSynchronous = true
-         requestOptions.deliveryMode = .highQualityFormat
-
-         let fetchOptions = PHFetchOptions()
-         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-
-         // アルバムをフェッチ
-         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
-
-         assetCollections.enumerateObjects { assetCollection, _, _ in
-
-             // アルバムタイトル
-             print(assetCollection.localizedTitle ?? "vHIT_VOG")
-
-             // アセットをフェッチ
-             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-
-             assets.enumerateObjects { asset, _, _ in
-                 // 画像のリクエスト
-                imgManager.requesti (for:asset,targetSize: any,content) (for: <#T##PHAsset#>, options: <#T##PHImageRequestOptions?#>, resultHandler: <#T##(Data?, String?, UIImage.Orientation, [AnyHashable : Any]?) -> Void#>)
-                 imgManager.requestImage(for: asset, targetSize: CGSize(width: 200, height: 200), contentMode:
-                     .aspectFill, options: requestOptions, resultHandler: { img, _ in
-                     if let img = img {
-                         print("画像の取得に成功")
-                     }
-                 })
-             }
-         }
-    }*/
+ 
     func getAlbumList_sub(){
         //     let imgManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
@@ -2029,6 +1874,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             // creationDate降順でアルバム内のアセットをフェッチ
             let fetchOptions = PHFetchOptions()
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+//            fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
             fetchOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue)
             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
 //            videoAssets = assets
@@ -2053,10 +1899,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     
                     if let urlAsset = asset as? AVURLAsset{//not on iCloud
                         videoURL.append(urlAsset.url)
-//                        print(urlAsset.url)
                         videoDate.append(date)// + "(" + duration + ")")
                         videoDura.append(duration)
-                        videoDateTime.append(date_sub!)//jpgDateTimeと比較する？念のため
+                        videoDateTime.append(date_sub!)//pngDateTimeと比較する？念のため
                         videoAsset.append(asset!)
                         //ここではgetThumbができないことがある。
 //                        videosImg.append(getThumb(url: urlAsset.url))
@@ -2646,19 +2491,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         stopButton.isHidden = true
         camera_alert()
         getVideosAlbumList()
-//        getAlbumJPGList()
         getPngsAlbumList()
-        print("jpgImg.count:",pngImg.count)
+        print("pngImg.count:",pngImg.count)
         print("videoImg.count:",videoImg.count)
-//        fetchCustomAlbumPhotos()
-//        print("videoDate;",videoDate)
-//        print("jpgDate:",jpgDate)
-//        print("jpgImg-count:",jpgImg.count)
-//        for i in 0..<jpgImg.count{
-//        printRGB(img: jpgImg[i])
-//        }
-//        printRGB(img: jpgImg[1])
-//        print(jpgDate)
+
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
         makeBoxies()//three boxies of gyro vHIT vog
@@ -2783,6 +2619,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         return img
     }*/
+    /*
     func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
         var text:String=""
         for i in 0..<gyroFiltered.count - 2{
@@ -2806,7 +2643,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 print("gyroData.txt write err")//エラー処理docu
             }
         }
-    }
+    }*/
     //calcVHITで実行、その後moveGyroData()
     func getGyroCSV()->NSString{//gyroDataにデータを戻す
 //        let Start=CFAbsoluteTimeGetCurrent()
@@ -2821,6 +2658,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
         return txt
     }
+    /*
     func readGyro(gyroPath:String){//gyroDataにデータを戻す
         gyroFiltered.removeAll()
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
@@ -2841,7 +2679,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             //gyro(CGFloat配列)にtext(csv)から書き込む
         }
-    }
+    }*/
     func dispFsindoc(){
         let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
@@ -2993,12 +2831,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    }
     func saveImage2path(image:UIImage,path:String) {//imageを無圧縮（最高クオリティ）で保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-//            UIImageWriteToSavedPhotosAlbum(saveImage!, nil, nil, nil)
             let path_url = dir.appendingPathComponent( path )
-//            let jpgImageData = image.jpegData(compressionQuality:1.0)
             let pngImageData = image.pngData()
             do {
-//                try jpgImageData!.write(to: path_url, options: .atomic)
                 try pngImageData!.write(to: path_url, options: .atomic)
 //                saving2pathFlag=false
             } catch {
@@ -3298,7 +3133,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                let start=CFAbsoluteTimeGetCurrent()
 //                print("elapsed time:0")
   //gyroデータをcsvテキストとして保存
-                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
+//                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
                 let gyroCSV=getGyroCSV()//csv文字列
 //                printRGB(img: videoImg[videoCurrent])
                 //pixel2imageで240*60*6の配列を作るので,増やすときは注意
