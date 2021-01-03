@@ -368,7 +368,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             sleep(UInt32(0.2))
         }
         if dialogStatus == 1{//yesで抜けた時
-            removeFile(delFile: videoDate[videoCurrent] + "-gyro.csv")
+//            removeFile(delFile: videoDate[videoCurrent] + "-gyro.csv")
             videoDate.remove(at: videoCurrent)
             videoURL.remove(at: videoCurrent)
             videoImg.remove(at: videoCurrent)
@@ -1627,7 +1627,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return 0
         }
     }
-    
+ /*
     func getVideofns()->String{
         let str=getFsindoc().components(separatedBy: ",")
         
@@ -1651,7 +1651,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let vidpath = documentsDirectory + "/" + path
         return URL(fileURLWithPath: vidpath)
     }
-    
+  
     func getdocumentPath(path:String)->String{
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0] as String
@@ -1659,7 +1659,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return vidpath
     }
     
-
+*/
     func getFPS(url:URL) -> Float{
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: url, options: options)
@@ -2475,7 +2475,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         super.viewDidLoad()
 //        print(UIDevice.self.current.model)//iPhone ,iPod touchが見れる
 //        print(UIDevice.self.current.systemName)
-//        dispFsindoc()
+        dispFsindoc()//for debug
        //7plus:414x736->15(15:120)
         //11:414x896->10(10:120fps)
         //ipodTouch7:320x568->30:12fps
@@ -2693,6 +2693,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("ないよ？")
         }
     }
+    /*
     func getFsindoc()->String{
         let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
@@ -2712,7 +2713,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         } catch {
             return ""
         }
-    }
+    }*/
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
