@@ -13,7 +13,6 @@ import AVFoundation
 class PlayViewController: UIViewController {
     var currentCMTime:CMTime?
     var seekBarValue:Float=0
-//    var currentFPS:Float?
     var videoPlayer: AVPlayer!
     lazy var seekBar = UISlider()
     var startButton:UIButton!
@@ -22,11 +21,8 @@ class PlayViewController: UIViewController {
     var playVideoURL:URL?
     var duration:Float=0
     var currTime:UILabel?
-//    var duraTime:UILabel?
     var timer: Timer!
-//    var videoPath:String?
     var explanationLabel:UILabel?
-//    var startFrame:Int?
     @IBOutlet weak var damyBottom: UILabel!
     
     var exitButton: UIButton!
@@ -43,23 +39,9 @@ class PlayViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        if videoPath==""{
-//              return
-//        }
-        // Create AVPlayerItem
-//        guard let path = Bundle.main.path(forResource: "vhit20", ofType: "mov") else {
-//            fatalError("Movie file can not find.")
-//        }
-//        let fileURL = getfileURL(path: videoPath!)
+        
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: playVideoURL!, options: options)
-//        print("fps:",avAsset.tracks.first!.nominalFrameRate)
-//        currentFPS=avAsset.tracks.first!.nominalFrameRate
-//        let ww=view.bounds.width
-//        let wh=view.bounds.height
-        
-//        let fileURL = URL(fileURLWithPath: path)
-//        let avAsset = AVURLAsset(url: fileURL)
         let playerItem: AVPlayerItem = AVPlayerItem(asset: avAsset)
         // Create AVPlayer
         videoPlayer = AVPlayer(playerItem: playerItem)
@@ -71,7 +53,6 @@ class PlayViewController: UIViewController {
         layer.frame = view.bounds
         view.layer.addSublayer(layer)
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-//        setButtons()
     }
     override func viewDidAppear(_ animated: Bool) {
         setButtons()

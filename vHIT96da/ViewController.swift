@@ -378,6 +378,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoArrayCount -= 1
             videoCurrent -= 1
             showVideoIroiro(num: 0)
+            if videoImg.count==0{
+                playButton.isEnabled=false
+            }
         }
     }
     func readGyroFromPngOfVideo(videoDate:String){
@@ -702,6 +705,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func vHITcalc(_ sender: Any) {
+        if videoImg.count==0{
+            return
+        }
         setUserDefaults()
         if nonsavedFlag == true && (waveTuple.count > 0 || eyePosFiltered.count > 0){
             setButtons(mode: false)
@@ -2476,6 +2482,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         self.setNeedsStatusBarAppearanceUpdate()
         dispWakus()
         showVideoIroiro(num:0)
+        if videoImg.count==0{
+            playButton.isEnabled=false
+        }
     }
     func setButtons_first(){
         let ww=view.bounds.width
@@ -2577,22 +2586,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("remove -> well done")
         }
     }
- /*   func saveGyro2Img(img:UIImage)->UIImage{
-        if let pixelBuffer = PixelBuffer(uiImage: img) {
-            for x in 0..<pixelBuffer.width {
-                for y in 0..<pixelBuffer.height {
-//                    r.append(pixelBuffer.getRed(x: x, y: y))
-//                    g.append(pixelBuffer.getBlue(x: x, y: y))
-//                    b.append(pixelBuffer.getGreen(x: x, y: y))
-//                    a.append(pixelBuffer.getAlpha(x: x, y: y))
-                }
-            }
-        } else {
-            print("image not format")
-        }
-        
-        return img
-    }*/
+ 
     /*
     func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
         var text:String=""
@@ -2722,7 +2716,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if videoCurrent == -1{
                 Controller.playVideoURL = nil
             }else{
-//                Controller.videoPath = vidPath[vidCurrent]
                 Controller.playVideoURL = videoURL[videoCurrent]
             }
         }else if let vc = segue.destination as? ImagePickerViewController{
@@ -2939,6 +2932,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 KalmanInit()
                 gyroFiltered.removeAll()
                 showBoxies(f: false)
+                playButton.isEnabled=true
                 for i in 0...Controller.gyro.count/2-4{//-2でエラーなので、-5としてみた
                     gyroTime.append(Controller.gyro[i*2])
                     d=Double(Kalman(value:CGFloat(Controller.gyro[i*2+1]*10),num:3))

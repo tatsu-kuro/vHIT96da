@@ -175,7 +175,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         if isVHIT==false{
             markText.isHidden = true
             faceFbutton.isHidden = true
-
             vhitpng.isHidden=true
             paraText1.isHidden=true
             //paraText2.isHidden=true
@@ -187,7 +186,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             videoGyroZureinput.isHidden = true
             ratio1input.isHidden = false
             ratio2input.isHidden = false
-
+            paraText7.isHidden = true
             gyroText.isHidden = true
             paraText2.text = "VOG 波形表示高さの調整"
             paraText6.text="角膜上反射光源の移動（検出）幅"
