@@ -382,7 +382,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         fileOutput = AVCaptureMovieFileOutput()
 //        fileOutput.maxRecordedDuration = CMTimeMake(value:5*60, timescale: 1)//最長録画時間
         session.addOutput(fileOutput)
-        
+        //手振れ補正はデフォルトがoff
+//        fileOutput.connections[0].preferredVideoStabilizationMode=AVCaptureVideoStabilizationMode.off
         let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
         videoLayer.frame = self.view.bounds
         videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill//無くても同じ

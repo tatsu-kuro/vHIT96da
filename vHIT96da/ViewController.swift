@@ -197,9 +197,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoDura = Array<String>()
     var videoAsset = Array<AVAsset>()
     var videoCurrent:Int=0
-    var pngDateTime = Array<Date>()//videoDateTimeより遅れる
-    var pngImg = Array<UIImage>()
-    var pngAsset = Array<PHAsset>()
+//    var pngDateTime = Array<Date>()//videoDateTimeより遅れる
+//    var pngImg = Array<UIImage>()
+//    var pngAsset = Array<PHAsset>()
     //album関連、ここまで
     
     var vogImage:UIImage?
@@ -338,18 +338,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 //            var eraseAssetDate=assets[0].creationDate
-            var eraseAssetPngNumber=0
+//            var eraseAssetPngNumber=0
             for i in 0..<assets.count{
                 let date_sub=assets[i].creationDate
                 let date = formatter.string(from:date_sub!)
-                eraseAssetPngNumber=i+1
+//                eraseAssetPngNumber=i+1
                 if videoDate[videoCurrent].contains(date){
                     if !assets[i].canPerform(.delete) {
                         return
                     }
                     var delAssets=Array<PHAsset>()
                     delAssets.append(assets[i])
-                    delAssets.append(assets[i+1])//pngはその次に入っているはず
+                    if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
+                        delAssets.append(assets[i+1])//pngはその次に入っているはず
+                    }
                     PHPhotoLibrary.shared().performChanges({
                         PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
                     }, completionHandler: { success,error in//[self] _, _ in
@@ -378,7 +380,54 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             showVideoIroiro(num: 0)
         }
     }
-    
+    func readGyroFromPngOfVideo(videoDate:String){
+        gyroFiltered.removeAll()
+        for _ in 0...240*60*6{
+            gyroFiltered.append(0)
+        }
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = false
+        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
+        //アルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
+        
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        //アルバムが存在しない事もある？
+        if (assetCollections.count > 0) {
+            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+            let assetCollection = assetCollections.object(at:0)
+            // creationDate降順でアルバム内のアセットをフェッチ
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            for i in 0..<assets.count{
+                let date = formatter.string(from:assets[i].creationDate!)
+                if videoDate.contains(date){//find currentVideo
+                    if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
+                        //currentVideoの次がpngならそれを選択
+                        let width=assets[i+1].pixelWidth
+                        let height=assets[i+1].pixelHeight
+                        let imgManager = PHImageManager.default()
+                        imgManager.requestImage(for: assets[i+1], targetSize: CGSize(width: width, height: height), contentMode:
+                                                    .aspectFill, options: requestOptions, resultHandler: { [self] img, _ in
+                                                        if let img = img {
+                                                            readGyroFromPng(img: img)
+                                                        }
+                                                    })
+                        
+                    }else{
+                      
+                    }
+                }
+            }
+        }
+    }
+   
     @IBAction func vhitGo(_ sender: Any) {
         if calcFlag == true || isVHIT == true{
             return
@@ -722,7 +771,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vhitLineView != nil{
             vhitLineView?.removeFromSuperview()
         }
-        readGyroFromPng(img: pngImg[videoCurrent])
+        //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
+        readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+//        if pngImg.count>videoCurrent{
+//            readGyroFromPng(img: pngImg[videoCurrent])
+//        }else{
+//            for _ in 0...240*60*5+10{
+//                gyroFiltered.append(0)
+//            }
+//        }
 //        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
@@ -1706,7 +1763,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
-    func getPngsAlbumList(){
+/*    func getPngsAlbumList(){
         pngImg.removeAll()
         pngDateTime.removeAll()
         pngAsset.removeAll()
@@ -1725,15 +1782,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
         
         assetCollections.enumerateObjects { assetCollection, _, _ in
-            
             // アルバムタイトル
-            //             print(assetCollection.localizedTitle ?? "vHIT_VOG")
             if assetCollection.localizedTitle?.contains("vHIT")==true{
-                
-                
                 // アセットをフェッチ
                 let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-                
                 assets.enumerateObjects { asset, _, _ in
                     // 画像のリクエスト
                     let width=asset.pixelWidth
@@ -1741,99 +1793,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     imgManager.requestImage(for: asset, targetSize: CGSize(width: width, height: height), contentMode:
                                                 .aspectFill, options: requestOptions, resultHandler: { img, _ in
                                                     if let img = img {
-                                                        let date=asset.creationDate!+asset.duration
-
                                                         if asset.duration==0{
                                                             self.pngImg.append(img)
                                                             self.pngAsset.append(asset)
                                                             self.pngDateTime.append(asset.creationDate!)
                                                         }
                                                     }
-                                                    //以下のコードではURLは取れない様だ？
-//                                                        if let urlAsset = asset as? AVURLAsset{
-//                                                            print("getURLok")
-//                                                        }else{
-//                                                            print("getURLerror")
-//                                                        }
-                                                    
                                                 })
                 }
             }
         }
-    }
- /*   func fetchCustomAlbumPhotos()
-    {
-        let albumName = "vHIT_VOG"
-        var assetCollection = PHAssetCollection()
-        var albumFound = Bool()
-        var photoAssets = PHFetchResult<AnyObject>()
-        let fetchOptions = PHFetchOptions()
-
-        fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
-        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumSelfPortraits, options: fetchOptions)
-
-        if let firstObject = collection.firstObject{
-            //found the album
-            assetCollection = firstObject
-            albumFound = true
-        }
-        else { albumFound = false }
-        _ = collection.count
-        photoAssets = PHAsset.fetchAssets(in: assetCollection, options: nil) as! PHFetchResult<AnyObject>
-        let imageManager = PHCachingImageManager()
-        photoAssets.enumerateObjects{(object: AnyObject!,
-            count: Int,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-
-            if object is PHAsset{
-                let asset = object as! PHAsset
-                print("Inside  If object is PHAsset, This is number 1")
-
-                let imageSize = CGSize(width: asset.pixelWidth,
-                                       height: asset.pixelHeight)
-
-                /* For faster performance, and maybe degraded image */
-                let options = PHImageRequestOptions()
-                options.deliveryMode = .fastFormat
-                options.isSynchronous = true
-            
-                imageManager.requestImage(for: asset,
-                                                  targetSize: imageSize,
-                                                  contentMode: .aspectFill,
-                                                  options: options,
-                                                  resultHandler: {
-                                                    (image, info) -> Void in
-//                                                    self.photo = image!
-                                                    /* The image is now available to us */
-                                                    self.pngDateTime.append(asset.creationDate!)
-                                                    self.pngImg.append(image!)
-//                                                    self.addImgToArray(uploadImage: image!/*self.photo!*/)
-                                                    print("enum for image, This is number 2")
-
-                })
-
-            }
-        }
-    }
-
-   */
- /*   func identiFier(localID:String){
-        if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [localID], options: nil).firstObject {
-                let options = PHVideoRequestOptions()
-                options.version = .original
-                PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { (asset: AVAsset?, audioMix: AVAudioMix?, info: [AnyHashable : Any]?) -> Void in
-                    if let urlAsset = asset as? AVURLAsset {
-                        let localVideoUrl = urlAsset.url as URL
-                        print("URL:",localVideoUrl) // ここで取れる？
-                    }
-                }
-            }
     }*/
-    
-    
+
     //アルバムの一覧取得
     var gettingAlbumF:Bool=true
- 
     func getVideosAlbumList(){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
         getAlbumList_sub()//videosURL,videosDate,videosDuraをゲット
@@ -2492,9 +2465,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         stopButton.isHidden = true
         camera_alert()
         getVideosAlbumList()
-        getPngsAlbumList()
-        print("pngImg.count:",pngImg.count)
-        print("videoImg.count:",videoImg.count)
+//        getPngsAlbumList()
+//        print("pngImg.count:",pngImg.count)
+//        print("videoImg.count:",videoImg.count)
 
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
@@ -2823,14 +2796,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-//    var saving2pathFlag:Bool=true
-//    func saveImage2path(image:UIImage,path:String){
-//        saving2pathFlag=true
-//        saveImage2path_sub(image: image, path: path)
-//        while saving2pathFlag==true{
-//            sleep(UInt32(0.1))
-//        }
-//    }
+
     func saveImage2path(image:UIImage,path:String) {//imageを無圧縮（最高クオリティ）で保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let path_url = dir.appendingPathComponent( path )
@@ -2858,7 +2824,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return false
     }
-    
+    /*
     struct PixelData {
         var a: UInt8 = 0
         var r: UInt8 = 0
@@ -2900,7 +2866,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return UIImage(cgImage: cgimage)
     }
-    
+    */
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
    
@@ -3007,24 +2973,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     gyroFiltered.append(Kalman(value:CGFloat(gyro[getj]),num:4))
                 }
-    
-//                let start=CFAbsoluteTimeGetCurrent()
-//                print("elapsed time:0")
-  //gyroデータをcsvテキストとして保存
-//                saveGyro(gyroPath:videoDate[videoCurrent] + "-gyro.csv")
                 let gyroCSV=getGyroCSV()//csv文字列
-//                printRGB(img: videoImg[videoCurrent])
                 //pixel2imageで240*60*6の配列を作るので,増やすときは注意
                 let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
-//                print("elapsed time:",CFAbsoluteTimeGetCurrent()-start)
-//                printRGB(img:gyroImage!)
-                saveImage2path(image: gyroImage!, path: "temp.png")//save in doc at first
+                //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
+                saveImage2path(image: gyroImage!, path: "temp.png")
                 while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
-                savePath2album(path: "temp.png")//then copy into album(vHIT_VOG)
+                savePath2album(path: "temp.png")
                 startFrame=0
-                getPngsAlbumList()
+//                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }
          }else{
