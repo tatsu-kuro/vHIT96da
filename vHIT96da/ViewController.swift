@@ -2797,7 +2797,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-    func saveImage2path(image:UIImage,path:String) {//imageを無圧縮（最高クオリティ）で保存
+    func saveImage2path(image:UIImage,path:String) {//imageを保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let path_url = dir.appendingPathComponent( path )
             let pngImageData = image.pngData()

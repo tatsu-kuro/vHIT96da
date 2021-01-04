@@ -72,11 +72,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 try device.lockForConfiguration()
                 
                 device.focusPointOfInterest = focusPoint
-                //                device.focusMode = .continuousAutoFocus
+//                                device.focusMode = .continuousAutoFocus
                 device.focusMode = .autoFocus
-
+                
                 device.unlockForConfiguration()
- 
             }
             catch {
                 // just ignore
