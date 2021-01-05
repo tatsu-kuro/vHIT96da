@@ -21,12 +21,12 @@ class HelpjViewController: UIViewController, UIScrollViewDelegate   {
     @IBAction func langChan(_ sender: Any) {
         if jap_eng==0{
             jap_eng=1
-            helpView.image=UIImage(named:"vhithelpenglish")
+            helpView.image=UIImage(named:"help2")
             langButton.setTitle("Japanese", for: .normal)
             
         }else{
             jap_eng=0
-            helpView.image=UIImage(named:"vhithelp")
+            helpView.image=UIImage(named:"help1")
             langButton.setTitle("English", for: .normal)
         }
     }
@@ -41,9 +41,9 @@ class HelpjViewController: UIViewController, UIScrollViewDelegate   {
         exitButton.layer.cornerRadius = 5
 //        self.view.addSubview(scrollView)
         if isVHIT == true{
-            helpView.image = UIImage(named: "vhithelp")
+            helpView.image = UIImage(named: "help1")
         }else{
-            helpView.image = UIImage(named: "voghelp")
+            helpView.image = UIImage(named: "help3")
             langButton.isHidden=true
         }
 //        print(helpView.frame)
