@@ -183,7 +183,7 @@ extension UIImage {
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let openCV = opencvWrapper()
-
+//    var isIphone:Bool = true//falseではアラートを出して走らないようにする
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
 
@@ -2450,9 +2450,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }*/
     //UIDevice
-   
+    var alertController: UIAlertController!
+    func alert(title:String, message:String) {
+        alertController = UIAlertController(title: title,
+                                            message: message,
+                                            preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK",
+                                                style: .default,
+                                                handler: nil))
+        present(alertController, animated: true)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+ 
 //        print(UIDevice.self.current.model)//iPhone ,iPod touchが見れる
 //        print(UIDevice.self.current.systemName)
         dispFsindoc()//for debug
@@ -2485,6 +2496,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoImg.count==0{
             playButton.isEnabled=false
         }
+//        if UIDevice.current.userInterfaceIdiom == .phone {
+//            print("iPhone")
+//            alert(title: "iPad ",message: "iphone")
+//
+//        }else if UIDevice.current.userInterfaceIdiom == .pad{
+//            print("iPad")
+//            isIphone=false
+//            alert(title: "iPad ",message: "iphone")
+//        }
     }
     func setButtons_first(){
         let ww=view.bounds.width

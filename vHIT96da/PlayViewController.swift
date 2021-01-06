@@ -146,7 +146,7 @@ class PlayViewController: UIViewController {
         exitButton.addTarget(self, action: #selector(onExitButtonTapped), for: UIControl.Event.touchUpInside)
         view.addSubview(exitButton)
         
-        explanationLabel = UILabel(frame: CGRect(x: 10, y: wh-bh*4-30, width: ww - 20, height: bh))
+        explanationLabel = UILabel(frame: CGRect(x: 10, y:wh-bh*3-20/* wh-bh*4-30*/, width: ww - 20, height: bh))
         explanationLabel!.layer.masksToBounds = true
         explanationLabel!.layer.cornerRadius = 5.0
         explanationLabel!.backgroundColor = UIColor.darkGray
@@ -155,7 +155,7 @@ class PlayViewController: UIViewController {
         explanationLabel!.text = "Set the start frame & exit"
         view.addSubview(explanationLabel!)
         
-        currTime = UILabel(frame:CGRect(x:ww-150,y:wh-bh*3-20,width:140,height:bh))
+        currTime = UILabel(frame:CGRect(x:ww/2-100,y:wh-bh*4-30,width:200,height:bh))
         currTime?.backgroundColor = UIColor.white
         currTime?.layer.masksToBounds = true
         currTime?.layer.cornerRadius = 5
@@ -163,7 +163,7 @@ class PlayViewController: UIViewController {
         currTime?.layer.borderColor = UIColor.black.cgColor
         currTime?.textColor = UIColor.black
         currTime?.textAlignment = .center
-        currTime?.font=UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .medium)
+        currTime?.font=UIFont.monospacedDigitSystemFont(ofSize: 25, weight: .medium)
         currTime!.text = String(format:"%.1f/%.1f",0.0,duration)
         view.addSubview(currTime!)
         //        duraTime = UILabel(frame:CGRect(x:10,y:wh-150,width:70,height:25))
