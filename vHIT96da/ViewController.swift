@@ -188,6 +188,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogCurpoint:Int = 0
 
     //以下はalbum関連
+    let albumName:String = "vHIT_VOG"
     var albumExist:Bool=false
     var videoArrayCount:Int = 0
     var videoDate = Array<String>()
@@ -313,6 +314,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
+    func getPHAssetcollection(albumTitle:String)->PHAssetCollection{
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = false
+        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
+        //アルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumTitle)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        //アルバムはviewdidloadで作っているのであるはず？
+//        if (assetCollections.count > 0) {
+        //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+        return assetCollections.object(at:0)
+    }
     @IBAction func eraseVideo(_ sender: Any) {
  //       videoAsset[videoCurrent]
         let requestOptions = PHImageRequestOptions()
@@ -322,7 +337,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
 //        print("asset:",assetCollections.count)
@@ -395,7 +410,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         //アルバムが存在しない事もある？
@@ -483,6 +498,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 videoCurrent=videoArrayCount-1
         }
         slowImage.image=videoImg[videoCurrent]
+        currentVideoDate.font=UIFont.monospacedDigitSystemFont(ofSize: 22, weight: .medium)
         currentVideoDate.text=videoDate[videoCurrent] + "(" + (videoCurrent+1).description + ")"
         let roundFps:Int = Int(round(getFPS(url: videoURL[videoCurrent])))
         videoFps.text=videoDura[videoCurrent] + "/" + String(format: "%dfps",roundFps)
@@ -2460,10 +2476,47 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                 handler: nil))
         present(alertController, animated: true)
     }
-
+    // アルバムが既にあるか確認し
+    func albumExists(albumTitle: String) -> Bool {
+        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
+        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
+        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
+                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
+        for i in 0 ..< albums.count {
+            let album = albums.object(at: i)
+            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
+//                vHIT96daAlbum = album
+                return true
+            }
+        }
+        return false
+    }
+    
+    //何も返していないが、ここで見つけたor作成したalbumを返したい。そうすればグローバル変数にアクセスせずに済む
+    func createNewAlbum(albumTitle: String, callback: @escaping (Bool) -> Void) {
+        if self.albumExists(albumTitle: albumTitle) {
+            callback(true)
+        } else {
+            PHPhotoLibrary.shared().performChanges({
+                let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
+            }) { (isSuccess, error) in
+                callback(isSuccess)
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+//        if albumExists(albumTitle: albumName)==false{
+//            createNewAlbum(albumTitle: albumName) { [self] (isSuccess) in
+//                if isSuccess{
+//                    print(albumName," can be made,")
+//                } else{
+//                    print(albumName," can't be made.")
+//                }
+//            }
+//        }else{
+//            print(albumName," exist already.")
+//        }
 //        print(UIDevice.self.current.model)//iPhone ,iPod touchが見れる
 //        print(UIDevice.self.current.systemName)
         dispFsindoc()//for debug
@@ -2745,9 +2798,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if let vc = segue.destination as? HelpjViewController{
             let Controller:HelpjViewController = vc
             Controller.isVHIT = isVHIT
-            //        }else if let vc = segue.destination as? RecordViewController{
-            //                    let Controller:RecordViewController = vc
-            //                    Controller.fps_non_120_240 = fps_non_120_240
+        }else if let vc = segue.destination as? RecordViewController{
+            if albumExists(albumTitle: albumName)==false{
+                createNewAlbum(albumTitle: albumName) { [self] (isSuccess) in
+                    if isSuccess{
+                        print(albumName," can be made,")
+                    } else{
+                        print(albumName," can't be made.")
+                    }
+                }
+            }else{
+                print(albumName," exist already.")
+            }
         }else{
             #if DEBUG
             print("prepare list")
@@ -2760,22 +2822,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vhitLineView?.isHidden = true //removeFromSuperview()
         gyroLineView?.isHidden = true //removeFromSuperview()
     }
-    var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
-    
-    func albumExists(albumTitle: String) -> Bool {
-        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
-        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
-        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
-                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
-        for i in 0 ..< albums.count {
-            let album = albums.object(at: i)
-            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
-                vHIT96daAlbum = album
-                return true
-            }
-        }
-        return false
-    }
     var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為
     func savePath2album(path:String){
         path2albumDoneFlag=false
@@ -2784,18 +2830,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             sleep(UInt32(0.2))
         }
     }
+//    var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
+    
+
     func savePath2album_sub(path:String){
         
-        if albumExists(albumTitle: "vHIT_VOG")==false{
-            return
-        }
+//        if albumExists(albumTitle: "vHIT_VOG")==false{
+//            return
+//        }
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             
             let fileURL = dir.appendingPathComponent( path )
             
             PHPhotoLibrary.shared().performChanges({ [self] in
                 let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: fileURL)!
-                let albumChangeRequest = PHAssetCollectionChangeRequest(for: vHIT96daAlbum!)
+                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumTitle: albumName))
                 let placeHolder = assetRequest.placeholderForCreatedAsset
                 albumChangeRequest?.addAssets([placeHolder!] as NSArray)
             }) { (isSuccess, error) in

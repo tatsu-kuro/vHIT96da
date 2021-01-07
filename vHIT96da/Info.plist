@@ -37,7 +37,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>made the album and put the recorded video in it</string>
+	<string>made the album and put the recorded videos in it</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

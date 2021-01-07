@@ -13,6 +13,7 @@ import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
     let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
+    let albumName:String = "vHIT_VOG"
     var recordedFlag:Bool = false
     let motionManager = CMMotionManager()
     var session: AVCaptureSession!
@@ -478,22 +479,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
-    func albumCheck(){//ここでもチェックしないとダメのよう
-        if albumExists(albumTitle: "vHIT_VOG")==false{
-            createNewAlbum(albumTitle: "vHIT_VOG") { (isSuccess) in
-                if isSuccess{
-                    print("vHIT_VOG_album can be made,")
-                } else{
-                    print("vHIT_VOG_album can't be made.")
-                }
-            }
-        }else{
-            print("vHIT_VOG_album exist already.")
-        }
-    }
+  
     var soundIdx:SystemSoundID = 0
     func Record_or_Stop() {
-        albumCheck()
+//        albumCheck(albumTitle:albumName)
         if self.fileOutput.isRecording {
             // stop recording
             print("ストップボタンを押した。")
@@ -526,6 +515,20 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
         }
     }
+    /*
+    func albumCheck(albumTitle:String){//ここでもチェックしないとダメのよう
+        if albumExists(albumTitle: albumTitle)==false{
+            createNewAlbum(albumTitle: albumTitle) { (isSuccess) in
+                if isSuccess{
+                    print(albumTitle," can be made,")
+                } else{
+                    print(albumTitle," can't be made.")
+                }
+            }
+        }else{
+            print(albumTitle," exist already.")
+        }
+    }
     // アルバムが既にあるか確認し、iCapNYSAlbumに代入
     func albumExists(albumTitle: String) -> Bool {
         // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
@@ -553,6 +556,20 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 callback(isSuccess)
             }
         }
+    }*/
+    func getPHAssetcollection(albumTitle:String)->PHAssetCollection{
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = false
+        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
+        //アルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumTitle)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        //アルバムはviewdidloadで作っているのであるはず？
+//        if (assetCollections.count > 0) {
+        //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+        return assetCollections.object(at:0)
     }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
 //        if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
@@ -574,10 +591,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             timer!.invalidate()
         }
         
-        PHPhotoLibrary.shared().performChanges({
+        PHPhotoLibrary.shared().performChanges({ [self] in
             //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
             let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
-            let albumChangeRequest = PHAssetCollectionChangeRequest(for: (self.vHIT96daAlbum)!)
+            let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumTitle: albumName))
             let placeHolder = assetRequest.placeholderForCreatedAsset
             albumChangeRequest?.addAssets([placeHolder!] as NSArray)
             //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
