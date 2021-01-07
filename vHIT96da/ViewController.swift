@@ -323,7 +323,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let assetFetchOptions = PHFetchOptions()
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumTitle)
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
-        //アルバムはviewdidloadで作っているのであるはず？
+        //ここはunwindから呼ばれる。アルバムはprepareで作っているはず？
 //        if (assetCollections.count > 0) {
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
         return assetCollections.object(at:0)
@@ -1198,7 +1198,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-//              print("willappear")
        // dispWakuImages()ここでは効かない
         //        dispWakus()ここでは効かない
     }
@@ -1855,10 +1854,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         requestOptions.isNetworkAccessAllowed = false
         requestOptions.deliveryMode = .highQualityFormat
         //これでもicloud上のvideoを取ってしまう
-        // "iCapNYS"という名前のアルバムをフェッチ
+        // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
 //        print("asset:",assetCollections.count)
@@ -2432,17 +2431,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return nil
         }
     }
-    
-    
+
     func camera_alert(){
         if PHPhotoLibrary.authorizationStatus() != .authorized {
-            PHPhotoLibrary.requestAuthorization { status in
+            PHPhotoLibrary.requestAuthorization { [self] status in
                 if status == .authorized {
+//                    camera_alertDoneF=true
                     // フォトライブラリに写真を保存するなど、実施したいことをここに書く
                 } else if status == .denied {
+//                    camera_alertDoneF=true
                 }
             }
         } else {
+//            camera_alertDoneF=true
             // フォトライブラリに写真を保存するなど、実施したいことをここに書く
         }
     }
@@ -2506,26 +2507,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        if albumExists(albumTitle: albumName)==false{
-//            createNewAlbum(albumTitle: albumName) { [self] (isSuccess) in
-//                if isSuccess{
-//                    print(albumName," can be made,")
-//                } else{
-//                    print(albumName," can't be made.")
-//                }
-//            }
-//        }else{
-//            print(albumName," exist already.")
-//        }
-//        print(UIDevice.self.current.model)//iPhone ,iPod touchが見れる
-//        print(UIDevice.self.current.systemName)
         dispFsindoc()//for debug
-       //7plus:414x736->15(15:120)
-        //11:414x896->10(10:120fps)
-        //ipodTouch7:320x568->30:12fps
-        //se:320x568->25(25:120)
-        //8:375x667->22(15:120)
-//        print("width:",view.bounds.width,view.bounds.height)
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
         mailHeight=1600//240*10*2/3//0.36*view.bounds.height/view.bounds.width
@@ -2535,10 +2517,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         stopButton.isHidden = true
         camera_alert()
         getVideosAlbumList()
-//        getPngsAlbumList()
-//        print("pngImg.count:",pngImg.count)
-//        print("videoImg.count:",videoImg.count)
-
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
         makeBoxies()//three boxies of gyro vHIT vog
@@ -2549,15 +2527,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoImg.count==0{
             playButton.isEnabled=false
         }
-//        if UIDevice.current.userInterfaceIdiom == .phone {
-//            print("iPhone")
-//            alert(title: "iPad ",message: "iphone")
-//
-//        }else if UIDevice.current.userInterfaceIdiom == .pad{
-//            print("iPad")
-//            isIphone=false
-//            alert(title: "iPad ",message: "iphone")
-//        }
     }
     func setButtons_first(){
         let ww=view.bounds.width
@@ -2759,6 +2728,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+   
+    func makeAlbum(albumTitle:String){
+        if albumExists(albumTitle: albumName)==false{
+            createNewAlbum(albumTitle: albumName) { [self] (isSuccess) in
+                if isSuccess{
+                    print(albumName," can be made,")
+                } else{
+                    print(albumName," can't be made.")
+                }
+            }
+        }else{
+            print(albumName," exist already.")
+        }
+    }
     //    var tempCalcflag:Bool = false
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // segueから遷移先のResultViewControllerを取得する
@@ -2799,17 +2782,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let Controller:HelpjViewController = vc
             Controller.isVHIT = isVHIT
         }else if let vc = segue.destination as? RecordViewController{
-            if albumExists(albumTitle: albumName)==false{
-                createNewAlbum(albumTitle: albumName) { [self] (isSuccess) in
-                    if isSuccess{
-                        print(albumName," can be made,")
-                    } else{
-                        print(albumName," can't be made.")
-                    }
-                }
-            }else{
-                print(albumName," exist already.")
-            }
+            makeAlbum(albumTitle: "vHIT_VOG")//なければ作る
         }else{
             #if DEBUG
             print("prepare list")

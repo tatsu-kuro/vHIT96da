@@ -421,8 +421,8 @@
                                 <rect key="frame" x="349" y="94" width="60" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="l57-66-Ax7"/>
-                                    <constraint firstAttribute="height" constant="60" id="r9F-fX-Ami"/>
+                                    <constraint firstAttribute="height" constant="60" id="lnP-Fp-zcF"/>
+                                    <constraint firstAttribute="width" constant="60" id="uY5-Rk-ljl"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="trash.circle" catalog="system"/>
@@ -461,6 +461,7 @@
                             <constraint firstItem="LZQ-Ez-rYI" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" constant="5" id="35q-nb-BQZ"/>
                             <constraint firstAttribute="trailing" secondItem="9Q7-F1-xlh" secondAttribute="trailing" id="507-Y2-orE"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="top" secondItem="0q7-O3-Ich" secondAttribute="bottom" id="5cp-XU-Cr2"/>
+                            <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="WVy-FW-eP4" secondAttribute="trailing" constant="5" id="65Q-R2-8VM"/>
                             <constraint firstItem="9Q7-F1-xlh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="A0b-xi-20m"/>
                             <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="jL1-T4-URC" secondAttribute="trailing" id="AHv-77-Yxx"/>
                             <constraint firstItem="jL1-T4-URC" firstAttribute="bottom" secondItem="uIe-Wh-aZk" secondAttribute="bottom" id="B6C-OM-KBz"/>
@@ -468,13 +469,12 @@
                             <constraint firstItem="LZQ-Ez-rYI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CRr-oI-MBz"/>
                             <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="0q7-O3-Ich" secondAttribute="trailing" id="Ghd-6I-3P1"/>
                             <constraint firstAttribute="bottom" secondItem="9Q7-F1-xlh" secondAttribute="bottom" id="Hbc-lJ-aIj"/>
-                            <constraint firstItem="WVy-FW-eP4" firstAttribute="top" secondItem="6oH-Ur-nDk" secondAttribute="bottom" constant="5" id="Nf6-Mr-muQ"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="trailing" secondItem="uIe-Wh-aZk" secondAttribute="trailing" id="UXU-uA-NDy"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="V4x-mg-ors"/>
                             <constraint firstItem="fee-9L-VIg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="bF3-q0-2lB"/>
-                            <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="WVy-FW-eP4" secondAttribute="trailing" constant="5" id="chY-Oy-YRC"/>
                             <constraint firstItem="9Q7-F1-xlh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="jP4-Wz-Ohg"/>
                             <constraint firstItem="jL1-T4-URC" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="jaB-cr-2Db"/>
+                            <constraint firstItem="WVy-FW-eP4" firstAttribute="top" secondItem="6oH-Ur-nDk" secondAttribute="bottom" constant="5" id="nVd-pt-WcX"/>
                             <constraint firstItem="0q7-O3-Ich" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="z7J-NG-hcc"/>
                         </constraints>
                         <connections>
