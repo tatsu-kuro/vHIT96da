@@ -572,10 +572,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         return assetCollections.object(at:0)
     }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-//        if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
-//            AudioServicesCreateSystemSoundID(soundUrl, &soundIdstop)
-//            AudioServicesPlaySystemSound(soundIdstop)
-//        }
         if let soundUrl = URL(string:
                           "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
             AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
