@@ -159,25 +159,25 @@ extension UIImage {
             UIGraphicsEndImageContext()
             return tintedImage
         }
-    func create0Image() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        let wid:Int = Int(size.width)
-        let hei:Int = Int(size.height)
-        
-        for w in 0..<wid {
-            for h in 0..<hei {
-                let index = (w * wid) + h
-                let color:CGFloat = 0.9//0.2126 * 0.5 + 0.7152 * 0.2 + 0.0722 * 0.3
-                UIColor(red: color, green: color, blue: color, alpha: 1).setFill()
-                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
-                UIRectFill(drawRect)
-                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
-            }
-        }
-        let grayImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return grayImage
-    }
+//    func create0Image() -> UIImage {
+//        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+//        let wid:Int = Int(size.width)
+//        let hei:Int = Int(size.height)
+//        
+//        for w in 0..<wid {
+//            for h in 0..<hei {
+////                let index = (w * wid) + h
+//                let color:CGFloat = 0.9//0.2126 * 0.5 + 0.7152 * 0.2 + 0.0722 * 0.3
+//                UIColor(red: color, green: color, blue: color, alpha: 1).setFill()
+//                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+//                UIRectFill(drawRect)
+//                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+//            }
+//        }
+//        let grayImage = UIGraphicsGetImageFromCurrentImageContext()!
+//        UIGraphicsEndImageContext()
+//        return grayImage
+//    }
 }
 
 @available(iOS 13.0, *)
@@ -2499,7 +2499,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             callback(true)
         } else {
             PHPhotoLibrary.shared().performChanges({
-                let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
+                _ = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
             }) { (isSuccess, error) in
                 callback(isSuccess)
             }
@@ -2781,7 +2781,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if let vc = segue.destination as? HelpjViewController{
             let Controller:HelpjViewController = vc
             Controller.isVHIT = isVHIT
-        }else if let vc = segue.destination as? RecordViewController{
+        }else if segue.destination is RecordViewController{
             makeAlbum(albumTitle: "vHIT_VOG")//なければ作る
         }else{
             #if DEBUG
