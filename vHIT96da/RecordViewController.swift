@@ -48,19 +48,19 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBOutlet weak var exitBut: UIButton!
     @IBOutlet weak var cameraView: UIImageView!
     @IBAction func startRecord(_ sender: Any) {
-        if ( UIDevice.current.model.range(of: "iPad") == nil){//universalized
-//            print("iPad")
-            let alert: UIAlertController = UIAlertController(title: "Not available on iPad.", message: "This application captures eye movements using goggles that fix the iPhone to the face, as shown on the usage page.", preferredStyle:  UIAlertController.Style.alert)
-            
-            let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{
-                // ボタンが押された時の処理を書く（クロージャ実装）
-                (action: UIAlertAction!) -> Void in
-                print("OK")
-            })
-            alert.addAction(defaultAction)
-            present(alert, animated: true, completion: nil)
-            return
-        }
+//        if ( UIDevice.current.model.range(of: "iPad") != nil){//universalized
+////            print("iPad")
+//            let alert: UIAlertController = UIAlertController(title: "Not available on iPad.", message: "This application captures eye movements using goggles that fix the iPhone to the face, as shown on the usage page.", preferredStyle:  UIAlertController.Style.alert)
+//            
+//            let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{
+//                // ボタンが押された時の処理を書く（クロージャ実装）
+//                (action: UIAlertAction!) -> Void in
+//                print("OK")
+//            })
+//            alert.addAction(defaultAction)
+//            present(alert, animated: true, completion: nil)
+//            return
+//        }
         Record_or_Stop()
     }
     
