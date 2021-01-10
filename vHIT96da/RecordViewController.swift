@@ -570,14 +570,28 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }*/
-    func getPHAssetcollection(albumTitle:String)->PHAssetCollection{
+    func albumExists() -> Bool {
+        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
+        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
+        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
+                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
+        for i in 0 ..< albums.count {
+            let album = albums.object(at: i)
+            if album.localizedTitle != nil && album.localizedTitle == "vHIT_VOG" {
+//                vHIT96daAlbum = album
+                return true
+            }
+        }
+        return false
+    }
+    func getPHAssetcollection()->PHAssetCollection{
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumTitle)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         //アルバムはviewdidloadで作っているのであるはず？
 //        if (assetCollections.count > 0) {
@@ -595,32 +609,37 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
         //        recordedFPS=getFPS(url: outputFileURL)
         //        topImage=getThumb(url: outputFileURL)
-        recordedFlag=true
+        
         if timer?.isValid == true {
             timer!.invalidate()
         }
-        
-        PHPhotoLibrary.shared().performChanges({ [self] in
-            //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
-            let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
-            let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumTitle: albumName))
-            let placeHolder = assetRequest.placeholderForCreatedAsset
-            albumChangeRequest?.addAssets([placeHolder!] as NSArray)
-            //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
-            print("file add to album")
-        }) { [self] (isSuccess, error) in
-            if isSuccess {
-                // 保存した画像にアクセスする為のimageIDを返却
-                //completionBlock(imageID)
-                print("success")
-                self.saved2album=true
-            } else {
-                //failureBlock(error)
-                print("fail")
-                //                print(error)
-                self.saved2album=true
+        if albumExists()==true{
+            recordedFlag=true
+            PHPhotoLibrary.shared().performChanges({ [self] in
+                //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
+                let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
+                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection())
+                let placeHolder = assetRequest.placeholderForCreatedAsset
+                albumChangeRequest?.addAssets([placeHolder!] as NSArray)
+                //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
+                print("file add to album")
+            }) { [self] (isSuccess, error) in
+                if isSuccess {
+                    // 保存した画像にアクセスする為のimageIDを返却
+                    //completionBlock(imageID)
+                    print("success")
+                    self.saved2album=true
+                } else {
+                    //failureBlock(error)
+                    print("fail")
+                    //                print(error)
+                    self.saved2album=true
+                }
+                //            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
             }
-            //            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
+        }else{
+            //アプリ起動中にアルバムを消したら、保存せずに戻る。
+            //削除してもどこかにあるようで、参照URLは生きていて、再生できる。
         }
         performSegue(withIdentifier: "fromRecordToMain", sender: self)
     }
