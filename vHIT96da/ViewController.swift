@@ -2432,21 +2432,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-    func camera_alert(){
-        if PHPhotoLibrary.authorizationStatus() != .authorized {
-            PHPhotoLibrary.requestAuthorization { [self] status in
-                if status == .authorized {
-//                    camera_alertDoneF=true
-                    // フォトライブラリに写真を保存するなど、実施したいことをここに書く
-                } else if status == .denied {
-//                    camera_alertDoneF=true
-                }
-            }
-        } else {
-//            camera_alertDoneF=true
-            // フォトライブラリに写真を保存するなど、実施したいことをここに書く
-        }
-    }
+//    func camera_alert(){
+//        if PHPhotoLibrary.authorizationStatus() != .authorized {
+//            PHPhotoLibrary.requestAuthorization { [self] status in
+//                if status == .authorized {
+////                    camera_alertDoneF=true
+//                    // フォトライブラリに写真を保存するなど、実施したいことをここに書く
+//                } else if status == .denied {
+////                    camera_alertDoneF=true
+//                }
+//            }
+//        } else {
+////            camera_alertDoneF=true
+//            // フォトライブラリに写真を保存するなど、実施したいことをここに書く
+//        }
+//    }
     /*
     func findVideos() {
         // Documents ディレクトリの URL
@@ -2515,7 +2515,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         getUserDefaults()
         setButtons(mode: true)
         stopButton.isHidden = true
-        camera_alert()
+//        camera_alert()
         getVideosAlbumList()
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
