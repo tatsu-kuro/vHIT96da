@@ -33,11 +33,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app takes movies of eye movement and saves them in app's data area.</string>
+	<string>This app takes movies of eye movement and saves them in the album(vHIT_VOG).</string>
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>made the album and put the recorded videos in it</string>
+	<string>This app makes the album(vHIT_VOG). It puts the recorded videos and the images of gyro-data in it.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
