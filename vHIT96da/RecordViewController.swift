@@ -638,6 +638,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 //            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
             }
         }else{
+            startButton.isHidden=true
+            stopButton.isHidden=true
+            //上二つをunwindでチェック
             //アプリ起動中にアルバムを消したら、保存せずに戻る。
             //削除してもどこかにあるようで、参照URLは生きていて、再生できる。
         }

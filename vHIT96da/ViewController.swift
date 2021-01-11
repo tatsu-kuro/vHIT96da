@@ -2966,8 +2966,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let Controller:RecordViewController = vc
             if Controller.session.isRunning{//何もせず帰ってきた時
                 Controller.session.stopRunning()
+                print("sessionが動いている")
+            }else{
+                print("sessionが動いていない")
             }
             if Controller.recordedFlag==true{
+                //                getVideosAlbumList()
+                //            }else{//
+                print("ちゃんと録画した")
                 var d:Double=0
                 var gyro = Array<Double>()
                 var gyroTime = Array<Double>()
@@ -3019,10 +3025,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 savePath2album(path: "temp.png")
                 startFrame=0
-//                getPngsAlbumList()
+                //                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
+            }else{
+                if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
+                    getVideosAlbumList()
+                    slowImage.image=UIImage(named:"vhittop")
+                    playButton.isEnabled=false
+                    print("アルバムを消されていたので、録画を保存しなかった。")
+                }else{
+                    print("Exitで抜けた。")
+                }
             }
-         }else{
+        }else{
             #if DEBUG
             print("tatsuaki-unwind from list")
             #endif
