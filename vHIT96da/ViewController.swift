@@ -959,10 +959,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                   narrow: eyeUIImage,
                                                   x: eX,
                                                   y: eY)
-                        while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
-                            usleep(1)
-                        }
-                        
+//                        while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
+//                            usleep(1)
+//                        }
                         if maxEyeV < 0.7{//errorもここに来るぞ!!　ey=0で戻ってくる
                             cvError=5//10/240secはcontinue
                             eyeWithBorderRect=eyebR0//初期位置に戻す
@@ -992,16 +991,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 #endif
                                 
                                 maxFaceV=self.openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
-                                while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
-                                    usleep(1)
-                                }
+//                                while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
+//                                    usleep(1)
+//                                }
                                 if maxFaceV<0.7{
                                     cvError=5
                                     faceWithBorderRect=facbR0
                                     eyeWithBorderRect=eyebR0
                                 }else{
                                     fx = CGFloat(fX.pointee) - osFacX
-                                    fy = faceWithBorderRect.height - CGFloat(fY.pointee) - faceRect.height - osFacY
+                                    fy = -CGFloat(fY.pointee) + osFacY
                                     faceWithBorderRect.origin.x += fx
                                     faceWithBorderRect.origin.y += fy
                                 }
@@ -1039,7 +1038,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     {
                         self.calcFlag=false//quit
                     }
-                    
                 }
                 //マッチングデバッグ用スリープ、デバッグが終わったら削除
                 #if DEBUG
