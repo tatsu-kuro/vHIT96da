@@ -880,13 +880,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let pixelBuffer:CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
         let ciImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-        let maxWidth=ciImage.extent.size.width
-        let maxHeight=ciImage.extent.size.height
+        let videoWidth=ciImage.extent.size.width
+        let videoHeight=ciImage.extent.size.height
         let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
         var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
  
-        let maxWidthWithBorder=maxWidth-eyeWithBorderRect.width-5
-        let maxHeightWithBorder=maxHeight-eyeWithBorderRect.height-5
+        let maxWidthWithBorder=videoWidth-eyeWithBorderRect.width-5
+        let maxHeightWithBorder=videoHeight-eyeWithBorderRect.height-5
         let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:ciImage)
         var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
         
@@ -906,8 +906,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let osFacX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0//上下方向
         let osFacY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0//左右方向
  
-        var maxV:Double = 0
-        var maxVf:Double = 0
+        var maxEyeV:Double = 0
+        var maxFaceV:Double = 0
         while reader.status != AVAssetReader.Status.reading {
             sleep(UInt32(0.1))
         }
@@ -955,7 +955,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             }
                         }
                         #endif
-                        maxV=self.openCV.matching(eyeWithBorderUIImage,
+                        maxEyeV=self.openCV.matching(eyeWithBorderUIImage,
                                                   narrow: eyeUIImage,
                                                   x: eX,
                                                   y: eY)
@@ -963,7 +963,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             usleep(1)
                         }
                         
-                        if maxV < 0.7{//errorもここに来るぞ!!　ey=0で戻ってくる
+                        if maxEyeV < 0.7{//errorもここに来るぞ!!　ey=0で戻ってくる
                             cvError=5//10/240secはcontinue
                             eyeWithBorderRect=eyebR0//初期位置に戻す
                             faceWithBorderRect=facbR0
@@ -991,11 +991,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 }
                                 #endif
                                 
-                                maxVf=self.openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
+                                maxFaceV=self.openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
                                 while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
                                     usleep(1)
                                 }
-                                if maxVf<0.7{
+                                if maxFaceV<0.7{
                                     cvError=5
                                     faceWithBorderRect=facbR0
                                     eyeWithBorderRect=eyebR0
