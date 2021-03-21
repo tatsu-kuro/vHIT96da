@@ -273,6 +273,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBOutlet weak var faceWaku_image: UIImageView!
     
+    @IBOutlet weak var wakuS2_image: UIImageView!
     @IBOutlet weak var wakuS_image: UIImageView!
     
     var wave3View:UIImageView?
@@ -1127,12 +1128,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         wakuS_image.layer.borderWidth = 1.0
         wakuS_image.backgroundColor = UIColor.clear
         wakuS_image.layer.cornerRadius = 3
-        if rectType == 0{
+        wakuS2_image.frame=CGRect(x:5,y:wakuY+eyeR.size.height*5.1,width: eyeR.size.width*5,height: eyeR.size.height*5)
+        wakuS2_image.layer.borderColor = UIColor.black.cgColor
+        wakuS2_image.layer.borderWidth = 1.0
+        wakuS2_image.backgroundColor = UIColor.clear
+        wakuS2_image.layer.cornerRadius = 3
+//        if rectType == 0{
             wakuS_image.image=UIeye
-        }else{
-            wakuS_image.image=UIfac
-        }
+//        }else{
+            wakuS2_image.image=UIfac
+//        }
         //        printR(str:"wakuEye:",rct: wakuEye.frame)
+        if faceF==1{
+            wakuS2_image.isHidden=false
+        }else{
+            wakuS2_image.isHidden=true
+        }
     }
 
     func getframeImage(frameNumber:Int)->UIImage{//結果が表示されていない時、画面上部1/4をタップするとWaku表示
@@ -3257,6 +3268,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 
                 drawVHITwaves()
 //                return
+            }
+        }else{
+            if faceF==1{
+                if rectType==0{
+                    rectType=1
+                }else{
+                    rectType=0
+                }
+                dispWakus()
+                showWakuImages()
             }
         }
     }
