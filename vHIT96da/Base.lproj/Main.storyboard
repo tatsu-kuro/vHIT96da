@@ -512,8 +512,8 @@
                         <outlet property="wakuEyeb" destination="k50-f5-jh1" id="BGH-eT-L8b"/>
                         <outlet property="wakuFac" destination="tQh-go-BDj" id="pz4-mk-m61"/>
                         <outlet property="wakuFacb" destination="i5c-dW-a9a" id="1wZ-Uk-56k"/>
-                        <outlet property="wakuS2_image" destination="dKd-kY-X4M" id="e6q-bn-W00"/>
-                        <outlet property="wakuS_image" destination="ac1-F6-YXh" id="xbD-VV-AMd"/>
+                        <outlet property="wakuShowEye_image" destination="ac1-F6-YXh" id="xbD-VV-AMd"/>
+                        <outlet property="wakuShowFace_image" destination="dKd-kY-X4M" id="e6q-bn-W00"/>
                         <outlet property="waveButton" destination="Q2m-D3-Mdm" id="hsZ-Du-slr"/>
                     </connections>
                 </viewController>
