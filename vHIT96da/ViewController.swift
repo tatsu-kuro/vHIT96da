@@ -306,6 +306,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyePosXFiltered = Array<CGFloat>()//eyePosFiltered
     var eyeVeloXOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloXFiltered = Array<CGFloat>()//eyeVeloFiltered
+ 
+    var eyePosYOrig = Array<CGFloat>()//eyePosOrig
+    var eyePosYFiltered = Array<CGFloat>()//eyePosFiltered
+    var eyeVeloYOrig = Array<CGFloat>()//eyeVeloOrig
+    var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
+
+    
     var faceVeloOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroFiltered = Array<CGFloat>()//gyroFiltered
@@ -568,7 +575,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                       height:rect.size.height + border * 2)
     }
     
-    var kalVs:[[CGFloat]]=[[0.0001,0.001,0,1,2],[0.0001,0.001,3,4,5],[0.0001,0.001,6,7,8],[0.0001,0.001,10,11,12],[0.0001,0.001,13,14,15]]
+    var kalVs:[[CGFloat]]=[[0.0001,0.001,0,1,2],[0.0001,0.001,3,4,5],[0.0001,0.001,6,7,8],[0.0001,0.001,10,11,12],[0.0001,0.001,13,14,15],[0.0001,0.001,16,17,18],[0.0001,0.001,19,20,21]]
     func KalmanS(Q:CGFloat,R:CGFloat,num:Int){
         kalVs[num][4] = (kalVs[num][3] + Q) / (kalVs[num][3] + Q + R);
         kalVs[num][3] = R * (kalVs[num][3] + Q) / (R + kalVs[num][3] + Q);
@@ -580,7 +587,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return result;
     }
     func KalmanInit(){
-        for i in 0...4{
+        for i in 0...6{
             kalVs[i][2]=0
             kalVs[i][3]=0
             kalVs[i][4]=0
@@ -780,12 +787,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func vHITcalc(){
         var cvError:Int = 0
         calcFlag = true
-        eyeVeloXOrig.removeAll()
-        eyeVeloXFiltered.removeAll()
         faceVeloOrig.removeAll()
         faceVeloFiltered.removeAll()
         eyePosXOrig.removeAll()
         eyePosXFiltered.removeAll()
+        eyeVeloXOrig.removeAll()
+        eyeVeloXFiltered.removeAll()
+        eyePosYOrig.removeAll()
+        eyePosYFiltered.removeAll()
+        eyeVeloYOrig.removeAll()
+        eyeVeloYFiltered.removeAll()
         gyroMoved.removeAll()
         KalmanInit()
         showBoxies(f: true)
@@ -901,7 +912,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  
         faceUIImage = UIImage.init(cgImage:faceCGImage)
         
-        
+        let borderRectDiffer=faceWithBorderRect.width-faceRect.width
+
         let osEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0//上下方向
         let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0//左右方向
         let osFacX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0//上下方向
@@ -969,13 +981,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyeWithBorderRect=eyebR0//初期位置に戻す
                             faceWithBorderRect=facbR0
                         }else{//検出できた時
+
+                            
                             //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
                             //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
                             ex = CGFloat(eX.pointee) - osEyeX
-                            ey = eyeWithBorderRect.height - CGFloat(eY.pointee) - eyeRect.height - osEyeY
+                            ey = borderRectDiffer - CGFloat(eY.pointee) - osEyeY
+//                            ey = eyeWithBorderRect.height - CGFloat(eY.pointee) - eyeRect.height - osEyeY
                             eyeWithBorderRect.origin.x += ex
                             eyeWithBorderRect.origin.y += ey
                             eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + ex
+                            eyePosY = eyeWithBorderRect.origin.y - eyebR0.origin.y + ey
                             
                             if self.faceF==1 && self.isVHIT==true{
                                 faceWithBorderCGImage = context.createCGImage(ciImage, from:faceWithBorderRect)!
@@ -1022,11 +1038,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     // vogをkalmanにかけ配列に追加
                     self.eyePosXOrig.append(eyePosX)
                     self.eyePosXFiltered.append( -1.0*self.Kalman(value:eyePosX,num:1))
-                    
+                    self.eyePosYOrig.append(eyePosY)
+                    self.eyePosYFiltered.append( -1.0*self.Kalman(value:eyePosY,num:5))
+
                     self.eyeVeloXOrig.append(ex)
-                    let eye5 = -12.0*self.Kalman(value: ex,num:2)//そのままではずれる
-                    self.eyeVeloXFiltered.append(eye5-self.faceVeloFiltered.last!)
+                    let eye5x = -12.0*self.Kalman(value: ex,num:2)//そのままではずれる
+                    self.eyeVeloXFiltered.append(eye5x-self.faceVeloFiltered.last!)
                     
+                    self.eyeVeloYOrig.append(ey)
+                    let eye5y = -12.0*self.Kalman(value: ey,num:6)//そのままではずれる
+                    self.eyeVeloYFiltered.append(eye5y-self.faceVeloFiltered.last!)
+
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
                         sleep(UInt32(0.1))
@@ -1307,7 +1329,74 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
         wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
      }
-    
+    /*
+     func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
+         //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
+         let size = CGSize(width:w, height:h)
+         // イメージ処理の開始
+         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+         // パスの初期化
+         let drawPath = UIBezierPath()
+         
+         //let wI:Int = Int(w)//2400*18
+         let wid:CGFloat=w/90.0
+         for i in 0..<90 {
+             let xp = CGFloat(i)*wid
+             drawPath.move(to: CGPoint(x:xp,y:0))
+             drawPath.addLine(to: CGPoint(x:xp,y:h-120))
+         }
+         drawPath.move(to:CGPoint(x:0,y:0))
+         drawPath.addLine(to: CGPoint(x:w,y:0))
+         drawPath.move(to:CGPoint(x:0,y:h-120))
+         drawPath.addLine(to: CGPoint(x:w,y:h-120))
+         //UIColor.blue.setStroke()
+         drawPath.lineWidth = 2.0//1.0
+         drawPath.stroke()
+         drawPath.removeAllPoints()
+         var pointList = Array<CGPoint>()
+         var pointList2 = Array<CGPoint>()
+         //let pointCount = Int(w) // 点の個数
+         //        print("pointCount:",wI)
+         
+         let dx = 1// xの間隔
+         
+         for i in 0..<Int(w) {
+             if i < eyeVeloXOrig.count - 4{
+                 let px = CGFloat(dx * i)
+                 let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
+                 let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
+                 let point = CGPoint(x: px, y: py)
+                 let point2 = CGPoint(x: px, y: py2)
+                 pointList.append(point)
+                 pointList2.append(point2)
+             }
+         }
+         // 始点に移動する
+         drawPath.move(to: pointList[0])
+         // 配列から始点の値を取り除く
+         pointList.removeFirst()
+         // 配列から点を取り出して連結していく
+         for pt in pointList {
+             drawPath.addLine(to: pt)
+         }
+         drawPath.move(to: pointList2[0])
+         // 配列から始点の値を取り除く
+         pointList2.removeFirst()
+         // 配列から点を取り出して連結していく
+         for pt in pointList2 {
+             drawPath.addLine(to: pt)
+         }
+         // 線の色
+         UIColor.black.setStroke()
+         // 線を描く
+         drawPath.stroke()
+         // イメージコンテキストからUIImageを作る
+         let image = UIGraphicsGetImageFromCurrentImageContext()
+         // イメージ処理の終了
+         UIGraphicsEndImageContext()
+         return image!
+     }
+     */
     func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
         //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
         let size = CGSize(width:w, height:h)
@@ -1331,8 +1420,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawPath.lineWidth = 2.0//1.0
         drawPath.stroke()
         drawPath.removeAllPoints()
-        var pointList = Array<CGPoint>()
-        var pointList2 = Array<CGPoint>()
+        var pntListXpos = Array<CGPoint>()
+        var pntListXvelo = Array<CGPoint>()
+        var pntListYpos = Array<CGPoint>()
+        var pntListYvelo = Array<CGPoint>()
+
         //let pointCount = Int(w) // 点の個数
         //        print("pointCount:",wI)
         
@@ -1341,27 +1433,40 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for i in 0..<Int(w) {
             if i < eyeVeloXOrig.count - 4{
                 let px = CGFloat(dx * i)
-                let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
-                let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
-                let point = CGPoint(x: px, y: py)
-                let point2 = CGPoint(x: px, y: py2)
-                pointList.append(point)
-                pointList2.append(point2)
+                let pyXpos = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
+                let pyXvelo = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
+                let pyYpos = eyePosYFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
+                let pyYvelo = eyeVeloYFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
+                let pntXpos = CGPoint(x: px, y: pyXpos)
+                let pntXvelo = CGPoint(x: px, y: pyXvelo)
+                let pntYpos = CGPoint(x: px, y: pyYpos)
+                let pntYvelo = CGPoint(x: px, y: pyYvelo)
+                pntListYpos.append(pntYpos)
+                pntListYvelo.append(pntYvelo)
+                pntListXpos.append(pntXpos)
+                pntListXvelo.append(pntXvelo)
             }
         }
-        // 始点に移動する
-        drawPath.move(to: pointList[0])
-        // 配列から始点の値を取り除く
-        pointList.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList {
+        
+        drawPath.move(to: pntListXpos[0])//move to start
+        pntListXpos.removeFirst()//remove start point
+        for pt in pntListXpos {//add points
             drawPath.addLine(to: pt)
         }
-        drawPath.move(to: pointList2[0])
-        // 配列から始点の値を取り除く
-        pointList2.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList2 {
+        
+        drawPath.move(to: pntListXvelo[0])
+        pntListXvelo.removeFirst()
+        for pt in pntListXvelo {
+            drawPath.addLine(to: pt)
+        }
+        drawPath.move(to: pntListYpos[0])
+        pntListYpos.removeFirst()
+        for pt in pntListYpos {
+            drawPath.addLine(to: pt)
+        }
+        drawPath.move(to: pntListYvelo[0])
+        pntListYvelo.removeFirst()
+        for pt in pntListYvelo {
             drawPath.addLine(to: pt)
         }
         // 線の色
@@ -1403,6 +1508,104 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
+   
+    func addwaveImage(startingImage:UIImage,sn:Int,en:Int) ->UIImage{
+        // Create a context of the starting image size and set it as the current one
+        var stn=sn
+        if sn<0{
+            stn=0
+        }
+        UIGraphicsBeginImageContext(startingImage.size)
+        // Draw the starting image in the current context as background
+        startingImage.draw(at: CGPoint.zero)
+        
+        // Get the current context
+        let drawPath = UIGraphicsGetCurrentContext()!
+        
+        // Draw a red line
+        drawPath.setLineWidth(2.0)
+        drawPath.setStrokeColor(UIColor.black.cgColor)
+        var pointListXpos = Array<CGPoint>()
+        var pointListXvelo = Array<CGPoint>()
+        var pointListYpos = Array<CGPoint>()
+        var pointListYvelo = Array<CGPoint>()
+
+        var pointList = Array<CGPoint>()
+        var pointList2 = Array<CGPoint>()
+        let h=startingImage.size.height
+        let vogPos_count=eyePosXOrig.count
+        let dx = 1// xの間隔
+        for i in stn..<en {
+            if i < vogPos_count{
+                let px = CGFloat(dx * i)
+                
+                let pyXpos = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
+                let pyXvelo = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
+                let pyYpos = eyePosYFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
+                let pyYvelo = eyeVeloYFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
+                let pntXpos = CGPoint(x: px, y: pyXpos)
+                let pntXvelo = CGPoint(x: px, y: pyXvelo)
+                let pntYpos = CGPoint(x: px, y: pyYpos)
+                let pntYvelo = CGPoint(x: px, y: pyYvelo)
+                pointListXpos.append(pntXpos)
+                pointListXvelo.append(pntXvelo)
+                pointListYpos.append(pntYpos)
+                pointListYvelo.append(pntYvelo)
+  
+                let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
+                let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
+                let point = CGPoint(x: px, y: py)
+                let point2 = CGPoint(x: px, y: py2)
+                pointList.append(point)
+                pointList2.append(point2)
+            }
+        }
+        
+        drawPath.move(to: pointListXpos[0])//move to start
+        pointListXpos.removeFirst()//remove start point
+        for pt in pointListXpos {//add points
+            drawPath.addLine(to: pt)
+        }
+        
+        drawPath.move(to: pointListXvelo[0])
+        pointListXvelo.removeFirst()
+        for pt in pointListXvelo {
+            drawPath.addLine(to: pt)
+        }
+        drawPath.move(to: pointListYpos[0])
+        pointListYpos.removeFirst()
+        for pt in pointListYpos {
+            drawPath.addLine(to: pt)
+        }
+        drawPath.move(to: pointListYvelo[0])
+        pointListYvelo.removeFirst()
+        for pt in pointListYvelo {
+            drawPath.addLine(to: pt)
+        }
+        // 始点に移動する
+  /*      context.move(to: pointList[0])
+        // 配列から始点の値を取り除く
+        pointList.removeFirst()
+        // 配列から点を取り出して連結していく
+        for pt in pointList {
+            context.addLine(to: pt)
+        }
+        context.move(to: pointList2[0])
+        // 配列から始点の値を取り除く
+        pointList2.removeFirst()
+        // 配列から点を取り出して連結していく
+        for pt in pointList2 {
+            context.addLine(to: pt)
+        }*/
+        // 線の色
+        drawPath.strokePath()
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        // イメージ処理の終了
+        UIGraphicsEndImageContext()
+        return image!
+    }
+    
     func drawVogwaves(timeflag:Bool,num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         // イメージ処理の開始
@@ -1447,36 +1650,53 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawPath.addLine(to: CGPoint(x:w,y:h-120))
         drawPath.stroke()
         drawPath.removeAllPoints()
-        var pointList = Array<CGPoint>()
-        var pointList2 = Array<CGPoint>()
+        var pointListXpos = Array<CGPoint>()
+        var pointListXvelo = Array<CGPoint>()
+        var pointListYpos = Array<CGPoint>()
+        var pointListYvelo = Array<CGPoint>()
+ 
         let eyeVeloFilteredCnt=eyeVeloXFiltered.count
         let dx = 1// xの間隔
         //        print("vogPos5,vHITEye5,vHITeye",vogPos5.count,vHITEye5.count,vHITEye.count)
+        
+ 
         for n in 1..<wI {
             if startp + n < eyeVeloFilteredCnt {//-20としてみたがエラー。関係なさそう。
                 let px = CGFloat(dx * n)
-                let py = eyePosXFiltered[startp + n] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
-                let py2 = eyeVeloXFiltered[startp + n] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
-                let point = CGPoint(x: px, y: py)
-                let point2 = CGPoint(x: px, y: py2)
-                pointList.append(point)
-                pointList2.append(point2)
-                //                print("VOGdata:",px,py,py2)
+                let pyXpos = eyePosXFiltered[n] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
+                let pyXvelo = eyeVeloXFiltered[n] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
+                let pyYpos = eyePosYFiltered[n] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
+                let pyYvelo = eyeVeloYFiltered[n] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
+                let pntXpos = CGPoint(x: px, y: pyXpos)
+                let pntXvelo = CGPoint(x: px, y: pyXvelo)
+                let pntYpos = CGPoint(x: px, y: pyYpos)
+                let pntYvelo = CGPoint(x: px, y: pyYvelo)
+                pointListYpos.append(pntYpos)
+                pointListYvelo.append(pntYvelo)
+                pointListXpos.append(pntXpos)
+                pointListXvelo.append(pntXvelo)
             }
         }
-        // 始点に移動する
-        drawPath.move(to: pointList[0])
-        // 配列から始点の値を取り除く
-        pointList.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList {
+        
+        drawPath.move(to: pointListXpos[0])//move to start
+        pointListXpos.removeFirst()//remove start point
+        for pt in pointListXpos {//add points
             drawPath.addLine(to: pt)
         }
-        drawPath.move(to: pointList2[0])
-        // 配列から始点の値を取り除く
-        pointList2.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList2 {
+        
+        drawPath.move(to: pointListXvelo[0])
+        pointListXvelo.removeFirst()
+        for pt in pointListXvelo {
+            drawPath.addLine(to: pt)
+        }
+        drawPath.move(to: pointListYpos[0])
+        pointListYpos.removeFirst()
+        for pt in pointListYpos {
+            drawPath.addLine(to: pt)
+        }
+        drawPath.move(to: pointListYvelo[0])
+        pointListYvelo.removeFirst()
+        for pt in pointListYvelo {
             drawPath.addLine(to: pt)
         }
         // 線の色
@@ -1604,63 +1824,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
    
-    func addwaveImage(startingImage:UIImage,sn:Int,en:Int) ->UIImage{
-        // Create a context of the starting image size and set it as the current one
-        var stn=sn
-        if sn<0{
-            stn=0
-        }
-        UIGraphicsBeginImageContext(startingImage.size)
-        // Draw the starting image in the current context as background
-        startingImage.draw(at: CGPoint.zero)
-        
-        // Get the current context
-        let context = UIGraphicsGetCurrentContext()!
-        
-        // Draw a red line
-        context.setLineWidth(2.0)
-        context.setStrokeColor(UIColor.black.cgColor)
-        
-        var pointList = Array<CGPoint>()
-        var pointList2 = Array<CGPoint>()
-        let h=startingImage.size.height
-        let vogPos_count=eyePosXOrig.count
-        let dx = 1// xの間隔
-        for i in stn..<en {
-            if i < vogPos_count{
-                let px = CGFloat(dx * i)
-                let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
-                let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
-                let point = CGPoint(x: px, y: py)
-                let point2 = CGPoint(x: px, y: py2)
-                pointList.append(point)
-                pointList2.append(point2)
-            }
-        }
-        // 始点に移動する
-        context.move(to: pointList[0])
-        // 配列から始点の値を取り除く
-        pointList.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList {
-            context.addLine(to: pt)
-        }
-        context.move(to: pointList2[0])
-        // 配列から始点の値を取り除く
-        pointList2.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList2 {
-            context.addLine(to: pt)
-        }
-        // 線の色
-        context.strokePath()
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
-    
+ 
     @objc func update(tm: Timer) {
         if eyeVeloXFiltered.count < 5 {
             return
