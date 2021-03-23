@@ -13,52 +13,7 @@ import Photos
 import MessageUI
 //import CoreLocation
 //import CoreTelephony
-/*
-class PixelBuffer {
-    private var pixelData: Data
-    var width: Int
-    var height: Int
-    private var bytesPerRow: Int
-    private let bytesPerPixel = 4 //1ピクセル4バイトのデータ固定
 
-    init?(uiImage: UIImage) {
-        guard let cgImage = uiImage.cgImage,
-              //R,G,B,A各8Bit
-              cgImage.bitsPerComponent == 8,
-              cgImage.bitsPerPixel == bytesPerPixel * 8 else {
-            return nil
-            
-        }
-        pixelData = cgImage.dataProvider!.data! as Data
-        width = cgImage.width
-        height = cgImage.height
-        bytesPerRow = cgImage.bytesPerRow
-    }
-
-    func getRed(x: Int, y: Int) -> CGFloat {
-        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
-        let r = CGFloat(pixelData[pixelInfo]) / CGFloat(255.0)
-        
-        return r
-    }
-    func getGreen(x: Int, y: Int) -> CGFloat {
-        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
-        let green = CGFloat(pixelData[pixelInfo+1]) / CGFloat(255.0)
-        
-        return green
-    }
-    func getBlue(x: Int, y: Int) -> CGFloat {
-        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
-        let blue = CGFloat(pixelData[pixelInfo+2]) / CGFloat(255.0)
-        
-        return blue
-    }
-    func getAlpha(x: Int, y: Int) -> CGFloat {
-        let pixelInfo = bytesPerRow * y + x * bytesPerPixel
-        let alpha = CGFloat(pixelData[pixelInfo+3]) / CGFloat(255.0)
-        return alpha
-    }
-}*/
 extension UIImage {
     func pixelData() -> [UInt8]? {
         let size = self.size
@@ -141,43 +96,24 @@ extension UIImage {
         return tintedImage
     }
     func createImage(r:[CGFloat], g: [CGFloat], b:[CGFloat], a:[CGFloat]) -> UIImage {
-            UIGraphicsBeginImageContextWithOptions(size, false, 0)
-            let wid:Int = Int(size.width)
-            let hei:Int = Int(size.height)
-            
-            for w in 0..<wid {
-                for h in 0..<hei {
-                    let index = (w * wid) + h
-                    UIColor(red: r[index], green: g[index], blue: b[index], alpha: a[index]).setFill()
-                    let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
-                    UIRectFill(drawRect)
-                    draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
-                }
-                print("createImage/h:",w)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let wid:Int = Int(size.width)
+        let hei:Int = Int(size.height)
+        
+        for w in 0..<wid {
+            for h in 0..<hei {
+                let index = (w * wid) + h
+                UIColor(red: r[index], green: g[index], blue: b[index], alpha: a[index]).setFill()
+                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                UIRectFill(drawRect)
+                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
             }
-            let tintedImage = UIGraphicsGetImageFromCurrentImageContext()!
-            UIGraphicsEndImageContext()
-            return tintedImage
+            print("createImage/h:",w)
         }
-//    func create0Image() -> UIImage {
-//        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-//        let wid:Int = Int(size.width)
-//        let hei:Int = Int(size.height)
-//        
-//        for w in 0..<wid {
-//            for h in 0..<hei {
-////                let index = (w * wid) + h
-//                let color:CGFloat = 0.9//0.2126 * 0.5 + 0.7152 * 0.2 + 0.0722 * 0.3
-//                UIColor(red: color, green: color, blue: color, alpha: 1).setFill()
-//                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
-//                UIRectFill(drawRect)
-//                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
-//            }
-//        }
-//        let grayImage = UIGraphicsGetImageFromCurrentImageContext()!
-//        UIGraphicsEndImageContext()
-//        return grayImage
-//    }
+        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return tintedImage
+    }
 }
 
 @available(iOS 13.0, *)
@@ -1329,74 +1265,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
         wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
      }
-    /*
-     func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
-         //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
-         let size = CGSize(width:w, height:h)
-         // イメージ処理の開始
-         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-         // パスの初期化
-         let drawPath = UIBezierPath()
-         
-         //let wI:Int = Int(w)//2400*18
-         let wid:CGFloat=w/90.0
-         for i in 0..<90 {
-             let xp = CGFloat(i)*wid
-             drawPath.move(to: CGPoint(x:xp,y:0))
-             drawPath.addLine(to: CGPoint(x:xp,y:h-120))
-         }
-         drawPath.move(to:CGPoint(x:0,y:0))
-         drawPath.addLine(to: CGPoint(x:w,y:0))
-         drawPath.move(to:CGPoint(x:0,y:h-120))
-         drawPath.addLine(to: CGPoint(x:w,y:h-120))
-         //UIColor.blue.setStroke()
-         drawPath.lineWidth = 2.0//1.0
-         drawPath.stroke()
-         drawPath.removeAllPoints()
-         var pointList = Array<CGPoint>()
-         var pointList2 = Array<CGPoint>()
-         //let pointCount = Int(w) // 点の個数
-         //        print("pointCount:",wI)
-         
-         let dx = 1// xの間隔
-         
-         for i in 0..<Int(w) {
-             if i < eyeVeloXOrig.count - 4{
-                 let px = CGFloat(dx * i)
-                 let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
-                 let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
-                 let point = CGPoint(x: px, y: py)
-                 let point2 = CGPoint(x: px, y: py2)
-                 pointList.append(point)
-                 pointList2.append(point2)
-             }
-         }
-         // 始点に移動する
-         drawPath.move(to: pointList[0])
-         // 配列から始点の値を取り除く
-         pointList.removeFirst()
-         // 配列から点を取り出して連結していく
-         for pt in pointList {
-             drawPath.addLine(to: pt)
-         }
-         drawPath.move(to: pointList2[0])
-         // 配列から始点の値を取り除く
-         pointList2.removeFirst()
-         // 配列から点を取り出して連結していく
-         for pt in pointList2 {
-             drawPath.addLine(to: pt)
-         }
-         // 線の色
-         UIColor.black.setStroke()
-         // 線を描く
-         drawPath.stroke()
-         // イメージコンテキストからUIImageを作る
-         let image = UIGraphicsGetImageFromCurrentImageContext()
-         // イメージ処理の終了
-         UIGraphicsEndImageContext()
-         return image!
-     }
-     */
+
     func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
         //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
         let size = CGSize(width:w, height:h)
@@ -1582,21 +1451,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointListYvelo {
             drawPath.addLine(to: pt)
         }
-        // 始点に移動する
-  /*      context.move(to: pointList[0])
-        // 配列から始点の値を取り除く
-        pointList.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList {
-            context.addLine(to: pt)
-        }
-        context.move(to: pointList2[0])
-        // 配列から始点の値を取り除く
-        pointList2.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList2 {
-            context.addLine(to: pt)
-        }*/
+  
         // 線の色
         drawPath.strokePath()
         
@@ -1659,14 +1514,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let dx = 1// xの間隔
         //        print("vogPos5,vHITEye5,vHITeye",vogPos5.count,vHITEye5.count,vHITEye.count)
         
- 
         for n in 1..<wI {
-            if startp + n < eyeVeloFilteredCnt {//-20としてみたがエラー。関係なさそう。
+            let start = startp + n
+            if start < eyeVeloFilteredCnt {//-20としてみたがエラー。関係なさそう。
                 let px = CGFloat(dx * n)
-                let pyXpos = eyePosXFiltered[n] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
-                let pyXvelo = eyeVeloXFiltered[n] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
-                let pyYpos = eyePosYFiltered[n] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
-                let pyYvelo = eyeVeloYFiltered[n] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
+                let pyXpos = eyePosXFiltered[start] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
+                let pyXvelo = eyeVeloXFiltered[start] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
+                let pyYpos = eyePosYFiltered[start] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
+                let pyYvelo = eyeVeloYFiltered[start] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
                 let pntXpos = CGPoint(x: px, y: pyXpos)
                 let pntXvelo = CGPoint(x: px, y: pyXvelo)
                 let pntYpos = CGPoint(x: px, y: pyYpos)
@@ -1677,7 +1532,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 pointListXvelo.append(pntXvelo)
             }
         }
-        
+    
         drawPath.move(to: pointListXpos[0])//move to start
         pointListXpos.removeFirst()//remove start point
         for pt in pointListXpos {//add points
@@ -1710,6 +1565,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return image!
     }
     
+ 
     func drawVogtext(){
         if vogLineView != nil{
             vogLineView?.removeFromSuperview()
@@ -1958,48 +1814,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
-/*    func getPngsAlbumList(){
-        pngImg.removeAll()
-        pngDateTime.removeAll()
-        pngAsset.removeAll()
-        let imgManager = PHImageManager.default()
-        
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .highQualityFormat
-        
-        
-        let fetchOptions = PHFetchOptions()
-        //        fetchOptions.predicate = NSPredicate(format: "title = %@", "vHIT_VOG")
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        
-        // アルバムをフェッチ
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
-        
-        assetCollections.enumerateObjects { assetCollection, _, _ in
-            // アルバムタイトル
-            if assetCollection.localizedTitle?.contains("vHIT")==true{
-                // アセットをフェッチ
-                let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-                assets.enumerateObjects { asset, _, _ in
-                    // 画像のリクエスト
-                    let width=asset.pixelWidth
-                    let height=asset.pixelHeight
-                    imgManager.requestImage(for: asset, targetSize: CGSize(width: width, height: height), contentMode:
-                                                .aspectFill, options: requestOptions, resultHandler: { img, _ in
-                                                    if let img = img {
-                                                        if asset.duration==0{
-                                                            self.pngImg.append(img)
-                                                            self.pngAsset.append(asset)
-                                                            self.pngDateTime.append(asset.creationDate!)
-                                                        }
-                                                    }
-                                                })
-                }
-            }
-        }
-    }*/
-
     //アルバムの一覧取得
     var gettingAlbumF:Bool=true
     func getVideosAlbumList(){//最後のvideoを取得するまで待つ
@@ -2606,40 +2420,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-//    func camera_alert(){
-//        if PHPhotoLibrary.authorizationStatus() != .authorized {
-//            PHPhotoLibrary.requestAuthorization { [self] status in
-//                if status == .authorized {
-////                    camera_alertDoneF=true
-//                    // フォトライブラリに写真を保存するなど、実施したいことをここに書く
-//                } else if status == .denied {
-////                    camera_alertDoneF=true
-//                }
-//            }
-//        } else {
-////            camera_alertDoneF=true
-//            // フォトライブラリに写真を保存するなど、実施したいことをここに書く
-//        }
-//    }
-    /*
-    func findVideos() {
-        // Documents ディレクトリの URL
-        let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        do {
-            // Documents ディレクトリ配下のファイル一覧を取得する
-            let contentUrls = try FileManager.default.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil)
-            for contentUrl in contentUrls {
-                // 拡張子で判定する
-                if contentUrl.pathExtension == "MOV" {
-                    print(contentUrl.absoluteString)
-                    // mp4 ファイルならフォトライブラリに書き出す
-                }
-            }
-        }
-        catch {
-            print("ファイル一覧取得エラー")
-        }
-    }*/
     //UIDevice
     var alertController: UIAlertController!
     func alert(title:String, message:String) {
@@ -2803,31 +2583,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
  
-    /*
-    func saveGyro(gyroPath:String) {//gyroData(GFloat)を100倍してcsvとして保存
-        var text:String=""
-        for i in 0..<gyroFiltered.count - 2{
-            text += String(Int(gyroFiltered[i]*100.0)) + ","
-            //print(Int(gyroData[i]*100))
-        }
-        //        text += String(0) + ","
-        //        print("save_gyroDelta:",String(gyroDelta))
-        text += "0"//gyroData.count-1=0
-        //Gyro(CGFloat配列）からtext(csv)を作り書き込む
-        
-        if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            
-            let path_file_name = dir.appendingPathComponent( gyroPath )
-            
-            do {
-                
-                try text.write( to: path_file_name, atomically: false, encoding: String.Encoding.utf8 )
-                
-            } catch {
-                print("gyroData.txt write err")//エラー処理docu
-            }
-        }
-    }*/
     //calcVHITで実行、その後moveGyroData()
     func getGyroCSV()->NSString{//gyroDataにデータを戻す
 //        let Start=CFAbsoluteTimeGetCurrent()
@@ -2842,28 +2597,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
         return txt
     }
-    /*
-    func readGyro(gyroPath:String){//gyroDataにデータを戻す
-        gyroFiltered.removeAll()
-        if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            let path_file_name = dir.appendingPathComponent( gyroPath )
-            do {
-                let text = try String( contentsOf: path_file_name, encoding: String.Encoding.utf8 )
-                let str=text.components(separatedBy: ",")
-                for i in 0..<str.count-2{
-                    gyroFiltered.append(CGFloat(Double(str[i])!/100.0))
-                }
-            } catch {//gyroデータファイルがない時
-                print("readGyro read error")//エラー処理
-                let str=videoDura[videoCurrent].components(separatedBy: "s")
-                let nStr:Double = Double(str[0])!
-                for _ in 0..<Int(nStr*240){
-                    gyroFiltered.append(0)
-                }
-            }
-            //gyro(CGFloat配列)にtext(csv)から書き込む
-        }
-    }*/
+ 
     func dispFsindoc(){
         let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
@@ -2877,27 +2611,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("ないよ？")
         }
     }
-    /*
-    func getFsindoc()->String{
-        let documentDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        do {
-            let contentUrls = try FileManager.default.contentsOfDirectory(at: documentDirectoryURL, includingPropertiesForKeys: nil)
-            let files = contentUrls.map{$0.lastPathComponent}
-            var str:String=""
-            if files.count==0{
-                return("")
-            }
-            for i in 0..<files.count{
-                str += files[i] + ","
-            }
-            let str2=str.dropLast()
-//            print("before",str)
-//            print("after",str2)
-            return String(str2)
-        } catch {
-            return ""
-        }
-    }*/
+  
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -2977,8 +2691,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             sleep(UInt32(0.2))
         }
     }
-//    var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
-    
 
     func savePath2album_sub(path:String){
         
@@ -3033,49 +2745,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return false
     }
-    /*
-    struct PixelData {
-        var a: UInt8 = 0
-        var r: UInt8 = 0
-        var g: UInt8 = 0
-        var b: UInt8 = 0
-    }
-
-    func imageFromBitmap(pixels: [PixelData], width: Int, height: Int) -> UIImage? {
-        assert(width > 0)
-        assert(height > 0)
-        let pixelDataSize = MemoryLayout<PixelData>.size
-        assert(pixelDataSize == 4)
-        assert(pixels.count == Int(width * height))
-        let data: Data = pixels.withUnsafeBufferPointer {
-            return Data(buffer: $0)
-        }
-        let cfdata = NSData(data: data) as CFData
-        let provider: CGDataProvider! = CGDataProvider(data: cfdata)
-        if provider == nil {
-            print("CGDataProvider is not supposed to be nil")
-            return nil
-        }
-        let cgimage: CGImage! = CGImage(
-            width: width,
-            height: height,
-            bitsPerComponent: 8,
-            bitsPerPixel: 32,
-            bytesPerRow: width * pixelDataSize,
-            space: CGColorSpaceCreateDeviceRGB(),
-            bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue),
-            provider: provider,
-            decode: nil,
-            shouldInterpolate: true,
-            intent: .defaultIntent
-        )
-        if cgimage == nil {
-            print("CGImage is not supposed to be nil")
-            return nil
-        }
-        return UIImage(cgImage: cgimage)
-    }
-    */
+ 
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
    
