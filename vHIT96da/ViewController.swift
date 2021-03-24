@@ -397,6 +397,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         isVHIT=true
         setButtons(mode: true)
         dispWakus()
+        showWakuImages()
         if eyeVeloXOrig.count>0 && videoCurrent != -1{
             vhitCurpoint=0
             drawOnewave(startcount: 0)
@@ -413,6 +414,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         isVHIT = false
         setButtons(mode: true)
         dispWakus()
+        showWakuImages()
         if eyeVeloXOrig.count>0  && videoCurrent != -1{
             vogCurpoint=0
             drawVogall_new()
@@ -1098,10 +1100,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wakuShowFace_image.image=UIfac
 //        }
         //        printR(str:"wakuEye:",rct: wakuEye.frame)
-        if faceF==1{
+        if faceF==1 && isVHIT==true{
             wakuShowFace_image.isHidden=false
+//            wakuShowEye_image.isHidden=false
         }else{
             wakuShowFace_image.isHidden=true
+//            wakuShowEye_image.isHidden=
         }
     }
 
@@ -1293,10 +1297,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var pntListXvelo = Array<CGPoint>()
         var pntListYpos = Array<CGPoint>()
         var pntListYvelo = Array<CGPoint>()
-
-        //let pointCount = Int(w) // 点の個数
-        //        print("pointCount:",wI)
-        
         let dx = 1// xの間隔
         
         for i in 0..<Int(w) {
@@ -1997,11 +1997,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let pointCount = Int(w) // 点の個数
         // xの間隔
         let dx:CGFloat = 1//Int(w)/pointCount
-        // yの振幅
-        //     let height = UInt32(h)/2
-        // 点の配列を作る
-//        print(gyroMoved.count)
-//        print("gyroBoxHeight",gyroBoxHeight)//touch 180 ,11:232.875
         let eyeVeloFilteredCnt=eyeVeloXFiltered.count
         let gyroMovedCnt=gyroMoved.count
         
