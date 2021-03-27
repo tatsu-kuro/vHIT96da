@@ -168,17 +168,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
         let x1:CGFloat=3
         let x2=x1+bw+5
-//        markText.isHidden = false
-//        markSwitch.isHidden = false
-//        markdispText.isHidden = true
-//        markdispSwitch.isHidden = true
         if isVHIT==false{
             markText.isHidden = true
             faceFbutton.isHidden = true
             vhitpng.isHidden=true
             paraText1.isHidden=true
-            //paraText2.isHidden=true
-//            paraText5.isHidden=true//false
             paraText6.isHidden=false
             waveWidthinput.isHidden = true
             widthRangeinput.isHidden = true
@@ -215,6 +209,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
             videoGyroZureinput.frame = CGRect(x:x1,y: topY+by+bh1*5 ,width: bw, height: bh)
             faceFbutton.frame =  CGRect(x:x1,y: topY+by+bh1*6 ,width: bw, height: bh)
+//            keyDown.frame =
         }
     }
     override func viewDidLoad() {
@@ -235,9 +230,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.videoGyroZureinput.keyboardType = UIKeyboardType.numberPad
         setTexts()
         dispParam()
-        setKeydown()
+//        setKeydown()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
+        keyDown.layer.cornerRadius = 5
         keyDown.isHidden = true
     }
     override func viewDidAppear(_ animated: Bool) {

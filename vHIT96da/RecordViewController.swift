@@ -47,6 +47,37 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var exitBut: UIButton!
     @IBOutlet weak var cameraView: UIImageView!
+    
+    @IBOutlet weak var cameraChangeButton: UIButton!
+    
+    @IBAction func onCameraChange(_ sender: Any) {//camera>1
+        cameraType=UserDefaults.standard.integer(forKey:"cameraType")
+        if cameraType==0{
+            if telephotoCamera == true{
+                cameraType=1//telephoto
+            }else{//} if ultrawideCamera == true{
+                cameraType=2
+            }
+        }else if cameraType==1{
+            if ultrawideCamera==true{
+                cameraType=2//ultraWide
+            }else{
+                cameraType=0
+            }
+        }else{
+            cameraType=0//wideAngle
+        }
+        print("cameraType",cameraType)
+        UserDefaults.standard.set(cameraType, forKey: "cameraType")
+        
+        if session.isRunning{
+        // セッションが始動中なら止める
+            print("isrunning")
+            session.stopRunning()
+        }
+        initSession(fps: fps_non_120_240)
+    }
+    
     @IBAction func startRecord(_ sender: Any) {
 //        if ( UIDevice.current.model.range(of: "iPad") != nil){//universalized
 ////            print("iPad")
@@ -70,6 +101,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
  
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
+        if cameraType==2{
+            return
+        }
         let screenSize=cameraView.bounds.size
         let x0 = sender.location(in: self.view).x
         let y0 = sender.location(in: self.view).y
@@ -172,9 +206,26 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             self.gyro.append(motion.rotationRate.y)//
         })
     }
-    
+    var telephotoCamera:Bool=false
+    var ultrawideCamera:Bool=false
+    var cameraType:Int = 0
+    func getCameras(){
+        if AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) != nil{
+            ultrawideCamera=true
+        }
+        if AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back) != nil{
+            telephotoCamera=true
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        getCameras()
+        if (UserDefaults.standard.object(forKey: "cameraType") != nil){//keyが設定してなければretをセット
+            cameraType=UserDefaults.standard.integer(forKey:"cameraType")
+        }else{
+            UserDefaults.standard.set(cameraType, forKey: "cameraType")
+        }
+        print("cameraType",cameraType)
         self.view.backgroundColor = .black
 //        print("maxFps,fps2:",maxFps,fps_non_120_240)
         
@@ -307,6 +358,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusFar.isHidden=type
         focusNear.isHidden=type
         exitBut.isHidden=type
+        cameraChangeButton.isHidden=type
     }
     func setButtons(){//type:Bool){
         // recording button
@@ -344,6 +396,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-20-bh*7/4)
         setLabelProperty(label: LEDLow,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-30-bh*9/4)
         setLabelProperty(label:LEDHigh, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-30-bh*9/4)
+        setButtonProperty(button:cameraChangeButton, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-40-bh*11/4)
+        if ultrawideCamera == true || telephotoCamera == true{
+            cameraChangeButton.isHidden=false
+        }else{
+            cameraChangeButton.isHidden=true
+        }
         focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
         focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*7/4)
         LEDBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
@@ -377,7 +435,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // セッション生成
         session = AVCaptureSession()
         // 入力 : 背面カメラ
-        videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+        if cameraType==0{
+            videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+        }else if cameraType==1{
+            videoDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back)
+
+        }else if cameraType==2{
+            videoDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
+
+        }
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
         session.addInput(videoInput)
         // ↓ココ重要！！！！！
@@ -463,8 +529,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 stopButton.tintColor=UIColor.red
             }
         }else{
-            UserDefaults.standard.set(videoDevice?.lensPosition, forKey: "focusValue")
-            focusBar.value=videoDevice!.lensPosition
+            if cameraType != 2{
+                UserDefaults.standard.set(videoDevice?.lensPosition, forKey: "focusValue")
+                focusBar.value=videoDevice!.lensPosition
+            }
         }
         if timerCnt > 60*5{
             timer!.invalidate()
@@ -476,6 +544,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     func setFocus(focus:Float) {//focus 0:最接近　0-1.0
+        if cameraType==2{
+            return
+        }
         if let device = videoDevice{
             do {
                 try device.lockForConfiguration()
@@ -507,6 +578,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             hideButtons(type: true)
             stopButton.isHidden=false
             currentTime.isHidden=false
+        
             UIApplication.shared.isIdleTimerDisabled = true//スリープしない
             
             if let soundUrl = URL(string:

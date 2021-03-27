@@ -1022,6 +1022,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             self.eyePosXFiltered.append(self.eyePosXFiltered.last!)
             self.eyeVeloXOrig.append(self.eyeVeloXOrig.last!)
             self.eyeVeloXFiltered.append(self.eyeVeloXFiltered.last!)
+            self.eyePosYOrig.append(self.eyePosYOrig.last!)
+            self.eyePosYFiltered.append(self.eyePosYFiltered.last!)
+            self.eyeVeloYOrig.append(self.eyeVeloYOrig.last!)
+            self.eyeVeloYFiltered.append(self.eyeVeloYFiltered.last!)
         }
     }
     func showWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
@@ -1399,8 +1403,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var pointListYpos = Array<CGPoint>()
         var pointListYvelo = Array<CGPoint>()
 
-        var pointList = Array<CGPoint>()
-        var pointList2 = Array<CGPoint>()
+//        var pointList = Array<CGPoint>()
+//        var pointList2 = Array<CGPoint>()
         let h=startingImage.size.height
         let vogPos_count=eyePosXOrig.count
         let dx = 1// xの間隔
@@ -1421,12 +1425,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 pointListYpos.append(pntYpos)
                 pointListYvelo.append(pntYvelo)
   
-                let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
-                let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
-                let point = CGPoint(x: px, y: py)
-                let point2 = CGPoint(x: px, y: py2)
-                pointList.append(point)
-                pointList2.append(point2)
+//                let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
+//                let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
+//                let point = CGPoint(x: px, y: py)
+//                let point2 = CGPoint(x: px, y: py2)
+//                pointList.append(point)
+//                pointList2.append(point2)
             }
         }
         
@@ -1661,7 +1665,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             timer.invalidate()
             setButtons(mode: true)
             UIApplication.shared.isIdleTimerDisabled = false
-            vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-100, en: eyeVeloXOrig.count)
+            vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-200, en: eyeVeloXOrig.count)
   
             drawVogall_new()
             if vogLineView != nil{
@@ -1674,7 +1678,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("debug-update",timercnt)
             #endif
             drawVog(startcount: eyeVeloXOrig.count)
-            vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-100, en: eyeVeloXOrig.count)
+            vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-200, en: eyeVeloXOrig.count)
             //            vogCurpoint=vHITeye.count
             lastArraycount=eyeVeloXOrig.count
         }
