@@ -55,7 +55,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         if cameraType==0{
             if telephotoCamera == true{
                 cameraType=1//telephoto
-            }else{//} if ultrawideCamera == true{
+            }else if ultrawideCamera == true{
                 cameraType=2
             }
         }else if cameraType==1{
