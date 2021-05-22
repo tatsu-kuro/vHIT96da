@@ -122,7 +122,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    var isIphone:Bool = true//falseではアラートを出して走らないようにする
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
+    var videoPlayer: AVPlayer!
 
+    @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
     let albumName:String = "vHIT_VOG"
     var albumExist:Bool=false
@@ -145,21 +147,29 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var vogButton: UIButton!
     @IBOutlet weak var vhitButton: UIButton!
     
-    @IBOutlet weak var faceButton: UIButton!
-    @IBOutlet weak var eyeButton: UIButton!
+    @IBOutlet weak var forwardButton: UIButton!
+    @IBOutlet weak var backwardButton: UIButton!
     
     @IBOutlet weak var damyBottom: UILabel!
-    
-    @IBAction func wakuToFace(_ sender: Any) {
-        rectType=1
-        dispWakus()
-        showWakuImages()
+  
+    @IBAction func onForwardButton(_ sender: Any) {
+        videoPlayer.pause()
+        if videoSlider.value>videoSlider.maximumValue-0.02{
+            return
+        }
+        videoSlider.value += 0.01
+        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
-    @IBAction func wakuToEye(_ sender: Any) {
-        rectType = 0
-        dispWakus()
-        showWakuImages()
+    @IBAction func onBackwardButton(_ sender: Any) {
+        videoPlayer.pause()
+        if videoSlider.value < 0.01{
+            return
+        }
+        videoSlider.value -= 0.01
+        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
     @IBOutlet weak var wakuAll: UIImageView!
@@ -258,6 +268,141 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
+    var initialFlag:Bool=true//:Int = 0
+    func playVideoURL(video:URL){//nextVideo
+        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        let avAsset = AVURLAsset(url: video, options: options)
+        let playerItem: AVPlayerItem = AVPlayerItem(asset: avAsset)
+        let videoDuration=Float(CMTimeGetSeconds(avAsset.duration))
+        // Create AVPlayer
+        videoPlayer = AVPlayer(playerItem: playerItem)
+        // Add AVPlayer
+        let layer = AVPlayerLayer()
+        layer.videoGravity = AVLayerVideoGravity.resize//resizeAspect
+        layer.player = videoPlayer
+        layer.frame = view.bounds
+        print("layerCount:",view.layer.sublayers?.count)
+        if initialFlag==true{//1回目は一番奥にビデオのlayerを加える。
+            view.layer.insertSublayer(layer, at: 0)
+            initialFlag = false
+        }else{//2回目からは一番奥のlayerに置き換える。
+            view.layer.sublayers![0]=layer
+        }
+        videoSlider.minimumValue = 0
+        videoSlider.maximumValue = videoDuration
+        videoSlider.value=0
+        videoSlider.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
+        // Set SeekBar Interval
+        let interval : Double = Double(0.5 * videoSlider.maximumValue) / Double(videoSlider.bounds.maxX)
+        // ConvertCMTime
+        let time : CMTime = CMTimeMakeWithSeconds(interval, preferredTimescale: Int32(NSEC_PER_SEC))
+        // Observer
+        videoPlayer.addPeriodicTimeObserver(forInterval: time, queue: nil, using: {time in
+            // Change SeekBar Position
+            let duration = CMTimeGetSeconds(self.videoPlayer.currentItem!.duration)
+            let time = CMTimeGetSeconds(self.videoPlayer.currentTime())
+            let value = Float(self.videoSlider.maximumValue - self.videoSlider.minimumValue) * Float(time) / Float(duration) + Float(self.videoSlider.minimumValue)
+            self.videoSlider.value = value
+        })
+    }
+    @objc func onSliderValueChange(){
+        videoPlayer.pause()
+        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+     }
+    /*
+     override func viewDidLoad() {
+         super.viewDidLoad()
+         getUserDefaults()
+ //        cameraButton.selectedSegmentIndex = cameraMode
+         //setteiしてなければ、以下
+     
+         let avAsset = AVURLAsset(url: videoURL!)
+         let ww:CGFloat=view.bounds.width
+         let wh:CGFloat=view.bounds.height
+         let sp=ww/120//間隙
+         let bw=(ww-sp*10)/7//ボタン幅
+         let bh=bw*170/440
+         let by = wh - bh - sp
+         let seeky = by - bh
+         
+         videoDuration=Float(CMTimeGetSeconds(avAsset.duration))
+         let playerItem: AVPlayerItem = AVPlayerItem(asset: avAsset)
+         // Create AVPlayer
+         videoPlayer = AVPlayer(playerItem: playerItem)
+         // Add AVPlayer
+         let videoPlayerLayer = AVPlayerLayer()
+         videoPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+         videoPlayerLayer.player = videoPlayer
+         if videoPlayerLayerRect.width==0 {
+             videoPlayerLayerRect=view.bounds
+         }
+         videoPlayerLayer.frame = videoPlayerLayerRect
+ //        layer.frame = CGRect(x:-view.bounds.width,y:0,width: view.bounds.width*2,height:view.bounds.height*2)
+         view.layer.addSublayer(videoPlayerLayer)
+         // Create Movie SeekBar
+         seekBar.frame = CGRect(x: sp*2, y:seeky, width: ww - 4*sp, height: bh)
+         seekBar.thumbTintColor=UIColor.orange
+         seekBar.minimumValue = 0
+         seekBar.maximumValue = videoDuration
+         seekBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
+         view.addSubview(seekBar)
+         // Set SeekBar Interval
+         let interval : Double = Double(0.5 * seekBar.maximumValue) / Double(seekBar.bounds.maxX)
+         // ConvertCMTime
+         let time : CMTime = CMTimeMakeWithSeconds(interval, preferredTimescale: Int32(NSEC_PER_SEC))
+         // Observer
+         videoPlayer.addPeriodicTimeObserver(forInterval: time, queue: nil, using: {time in
+             // Change SeekBar Position
+             let duration = CMTimeGetSeconds(self.videoPlayer.currentItem!.duration)
+             let time = CMTimeGetSeconds(self.videoPlayer.currentTime())
+             let value = Float(self.seekBar.maximumValue - self.seekBar.minimumValue) * Float(time) / Float(duration) + Float(self.seekBar.minimumValue)
+             self.seekBar.value = value
+         })
+         currTimeLabel.frame = CGRect(x: sp*2, y: 5, width: bw*2, height: bh)
+         currTimeLabel!.font=UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .medium)
+         view.bringSubviewToFront(currTimeLabel)
+         // Create Movie Start Button
+         mailButton.frame = CGRect(x:sp*2+bw*0,y:by,width:bw,height:bh)
+         setButtonProperty(button: mailButton, color: UIColor.darkGray)
+         view.bringSubviewToFront(mailButton)
+         saveButton.frame = CGRect(x:sp*3+bw*1,y:by,width:bw,height:bh)
+         setButtonProperty(button: saveButton, color: UIColor.darkGray)
+         view.bringSubviewToFront(saveButton)
+         waveButton.frame = CGRect(x:sp*4+bw*2,y:by,width:bw,height:bh)
+         setButtonProperty(button: waveButton, color: UIColor.darkGray)
+         view.bringSubviewToFront(waveButton)
+         calcButton.frame = CGRect(x: sp*5+bw*3, y: by, width: bw, height: bh)
+         setButtonProperty(button: calcButton, color: UIColor.blue)
+         view.bringSubviewToFront(calcButton)
+         playButton.frame = CGRect(x: sp*6+bw*4, y: by, width: bw, height: bh)
+         setButtonProperty(button: playButton, color: UIColor.orange)
+         view.bringSubviewToFront(playButton)
+         album.setButtonProperty(setteiButton,x:sp*7+bw*5,y:by,w:bw,h:bh,UIColor.darkGray)
+         view.bringSubviewToFront(setteiButton)
+         album.setButtonProperty(exitButton,x: sp*8+bw*6,y:by, w:bw,h:bh,UIColor.darkGray)
+         view.bringSubviewToFront(exitButton)
+         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+         videoSize=resolutionSizeOfVideo(url:videoURL!)
+         screenSize=view.bounds.size
+         videoFps=getFPS(url: videoURL!)
+         dispWakus()
+         showWakuImages()
+         fpsLabel.frame=CGRect(x:ww - bw*2,y:5,width: bw*2-sp*2,height: bh)
+         fpsLabel.text = String(format:"fps:%.0f w:%.0f h:%.0f",videoFps,videoSize.width,videoSize.height)
+         fpsLabel!.font=UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .medium)
+         view.bringSubviewToFront(fpsLabel)
+         vogBoxHeight=ww*16/25
+         vogBoxYmin=wh/2-vogBoxHeight/2
+         vogBoxYcenter=wh/2
+         fpsXd=Int((240.0/videoFps).rounded())
+ //        mailButton.isEnabled=false
+ //        cameraButton.frame = CGRect(x:  sp*7+bw*5, y: by-bh*2, width: bw*2+sp, height:bh)
+ //        view.bringSubviewToFront(cameraButton)
+ //        cameraButton.isHidden=true//fps<230ならfrontCameraと判定することとした
+     }
+   
+     */
     func getPHAssetcollection(albumTitle:String)->PHAssetCollection{
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
@@ -268,7 +413,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumTitle)
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         //ここはunwindから呼ばれる。アルバムはprepareで作っているはず？
-//        if (assetCollections.count > 0) {
+        //        if (assetCollections.count > 0) {
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
         return assetCollections.object(at:0)
     }
@@ -429,6 +574,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         startFrame=0
+//        let layer = view.layer.sublayers![0]
+//        view.layer.sublayers![0] = view.layer.sublayers![1]
+//        view.layer.sublayers![1] = layer
         showVideoIroiro(num: -1)
     }
    
@@ -443,7 +591,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if videoCurrent<0{
                 videoCurrent=videoArrayCount-1
         }
-        slowImage.image=videoImg[videoCurrent]
+        playVideoURL(video: videoURL[videoCurrent])
+//        slowImage.isHidden=true
+
+//        slowImage.image=videoImg[videoCurrent]
         currentVideoDate.font=UIFont.monospacedDigitSystemFont(ofSize: 22, weight: .medium)
         currentVideoDate.text=videoDate[videoCurrent] + "(" + (videoCurrent+1).description + ")"
         let roundFps:Int = Int(round(getFPS(url: videoURL[videoCurrent])))
@@ -452,7 +603,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setBacknext(f:true)
     }
 
-    @IBAction func nextVideo(_ sender: Any) {
+    @IBAction func nextVideo(_ sender: Any) {//
+           
         if vhitLineView?.isHidden == false{
             return
         }
@@ -623,8 +775,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = true
             helpButton.isEnabled = true
             playButton.isEnabled = true
-            faceButton.isEnabled = true
-            eyeButton.isEnabled = true
+//            faceButton.isEnabled = true
+//            eyeButton.isEnabled = true
             vogButton.isEnabled = true
             vhitButton.isEnabled = true
             cameraButton.isEnabled = true
@@ -636,8 +788,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                  vogButton.backgroundColor=UIColor.blue
             }
             cameraButton.backgroundColor=UIColor.orange
-            eyeButton.backgroundColor=UIColor.darkGray
-            faceButton.backgroundColor=UIColor.darkGray
+//            eyeButton.backgroundColor=UIColor.darkGray
+//            faceButton.backgroundColor=UIColor.darkGray
         }else{
             calcButton.isHidden = true
             stopButton.isHidden = false
@@ -648,8 +800,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             playButton.isEnabled = false
-            faceButton.isEnabled = false
-            eyeButton.isEnabled = false
+//            faceButton.isEnabled = false
+//            eyeButton.isEnabled = false
             vogButton.isEnabled = false
             vhitButton.isEnabled = false
             cameraButton.isEnabled = false
@@ -662,8 +814,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 vogButton.backgroundColor=UIColor.systemBlue
             }
             
-            eyeButton.backgroundColor=UIColor.gray
-            faceButton.backgroundColor=UIColor.gray
+//            eyeButton.backgroundColor=UIColor.gray
+//            faceButton.backgroundColor=UIColor.gray
         }
     }
     @IBAction func vHITcalc(_ sender: Any) {
@@ -745,14 +897,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
-//        if pngImg.count>videoCurrent{
-//            readGyroFromPng(img: pngImg[videoCurrent])
-//        }else{
-//            for _ in 0...240*60*5+10{
-//                gyroFiltered.append(0)
-//            }
-//        }
-//        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
+        //        if pngImg.count>videoCurrent{
+        //            readGyroFromPng(img: pngImg[videoCurrent])
+        //        }else{
+        //            for _ in 0...240*60*5+10{
+        //                gyroFiltered.append(0)
+        //            }
+        //        }
+        //        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
         
@@ -764,44 +916,44 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        print("eyeborder:",eyeBorder,faceF)
         startTimer()//resizerectのチェックの時はここをコメントアウト*********************
         //       let fileURL = URL(fileURLWithPath: vidPath[vidCurrent])
-
-//         let fileURL = getfileURL(path: vidPath[vidCurrent])
-         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
-         calcDate = currentVideoDate.text!
-//        print("calcdate:",calcDate)
+        
+        //         let fileURL = getfileURL(path: vidPath[vidCurrent])
+        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
+        calcDate = currentVideoDate.text!
+        //        print("calcdate:",calcDate)
         var fpsIs120:Bool=false
         if getFPS(url: videoURL[videoCurrent])<200.0{
             fpsIs120=true
         }
-         var reader: AVAssetReader! = nil
-         do {
-             reader = try AVAssetReader(asset: avAsset)
-         } catch {
-             #if DEBUG
-             print("could not initialize reader.")
-             #endif
-             return
-         }
-          guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
-             #if DEBUG
-             print("could not retrieve the video track.")
-             #endif
-             return
-         }
-
-         let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
-         let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
-         
-         reader.add(readerOutput)
-         let frameRate = videoTrack.nominalFrameRate
-         //let startframe=startPoints[vhitVideocurrent]
-         let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
+        var reader: AVAssetReader! = nil
+        do {
+            reader = try AVAssetReader(asset: avAsset)
+        } catch {
+            #if DEBUG
+            print("could not initialize reader.")
+            #endif
+            return
+        }
+        guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
+            #if DEBUG
+            print("could not retrieve the video track.")
+            #endif
+            return
+        }
+        
+        let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
+        
+        reader.add(readerOutput)
+        let frameRate = videoTrack.nominalFrameRate
+        //let startframe=startPoints[vhitVideocurrent]
+        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
         let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
-         //print("time",timeRange)
-         reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
-         reader.startReading()
- 
+        //print("time",timeRange)
+        reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
+        reader.startReading()
+        
         // UnsafeとMutableはまあ調べてもらうとして、eX, eY等は<Int32>が一つ格納されている場所へのポインタとして宣言される。
         let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
         let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
@@ -818,10 +970,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
         let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
- 
+        
         let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
         let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
- 
+        
         let context:CIContext = CIContext.init(options: nil)
         //            let up = UIImage.Orientation.right
         var sample:CMSampleBuffer!
@@ -834,7 +986,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let videoHeight=ciImage.extent.size.height
         let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
         var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
- 
+        
         let maxWidthWithBorder=videoWidth-eyeWithBorderRect.width-5
         let maxHeightWithBorder=videoHeight-eyeWithBorderRect.height-5
         let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:ciImage)
@@ -844,19 +996,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let facbR0 = faceWithBorderRect
         
         eyeCGImage = context.createCGImage(ciImage, from: eyeRect)!
- 
+        
         eyeUIImage = UIImage.init(cgImage: eyeCGImage)
         faceCGImage = context.createCGImage(ciImage, from: faceRect)!
- 
+        
         faceUIImage = UIImage.init(cgImage:faceCGImage)
         
         let borderRectDiffer=faceWithBorderRect.width-faceRect.width
-
+        
         let osEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0//上下方向
         let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0//左右方向
         let osFacX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0//上下方向
         let osFacY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0//左右方向
- 
+        
         var maxEyeV:Double = 0
         var maxFaceV:Double = 0
         while reader.status != AVAssetReader.Status.reading {
@@ -908,24 +1060,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                         #endif
                         maxEyeV=self.openCV.matching(eyeWithBorderUIImage,
-                                                  narrow: eyeUIImage,
-                                                  x: eX,
-                                                  y: eY)
-//                        while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
-//                            usleep(1)
-//                        }
+                                                     narrow: eyeUIImage,
+                                                     x: eX,
+                                                     y: eY)
+                        //                        while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
+                        //                            usleep(1)
+                        //                        }
                         if maxEyeV < 0.7{//errorもここに来るぞ!!　ey=0で戻ってくる
                             cvError=5//10/240secはcontinue
                             eyeWithBorderRect=eyebR0//初期位置に戻す
                             faceWithBorderRect=facbR0
                         }else{//検出できた時
-
+                            
                             
                             //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
                             //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
                             ex = CGFloat(eX.pointee) - osEyeX
                             ey = borderRectDiffer - CGFloat(eY.pointee) - osEyeY
-//                            ey = eyeWithBorderRect.height - CGFloat(eY.pointee) - eyeRect.height - osEyeY
+                            //                            ey = eyeWithBorderRect.height - CGFloat(eY.pointee) - eyeRect.height - osEyeY
                             eyeWithBorderRect.origin.x += ex
                             eyeWithBorderRect.origin.y += ey
                             eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + ex
@@ -947,9 +1099,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 #endif
                                 
                                 maxFaceV=self.openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
-//                                while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
-//                                    usleep(1)
-//                                }
+                                //                                while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
+                                //                                    usleep(1)
+                                //                                }
                                 if maxFaceV<0.7{
                                     cvError=5
                                     faceWithBorderRect=facbR0
@@ -978,7 +1130,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     self.eyePosXFiltered.append( -1.0*self.Kalman(value:eyePosX,num:1))
                     self.eyePosYOrig.append(eyePosY)
                     self.eyePosYFiltered.append( -1.0*self.Kalman(value:eyePosY,num:5))
-
+                    
                     self.eyeVeloXOrig.append(ex)
                     let eye5x = -12.0*self.Kalman(value: ex,num:2)//そのままではずれる
                     self.eyeVeloXFiltered.append(eye5x-self.faceVeloFiltered.last!)
@@ -986,7 +1138,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     self.eyeVeloYOrig.append(ey)
                     let eye5y = -12.0*self.Kalman(value: ey,num:6)//そのままではずれる
                     self.eyeVeloYFiltered.append(eye5y-self.faceVeloFiltered.last!)
-
+                    
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
                         sleep(UInt32(0.1))
@@ -1032,7 +1184,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDura.count<1 {
             return
         }
- 
+        if faceF==1 && isVHIT==true{
+            wakuShowFace_image.isHidden=false
+        }else{
+            wakuShowFace_image.isHidden=true
+        }
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
         calcDate = currentVideoDate.text!
@@ -1089,28 +1245,31 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
 //        print(videoFps.frame,wakuY)
         wakuShowEye_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
-        wakuShowEye_image.layer.borderColor = UIColor.black.cgColor
+//        wakuShowEye_image.layer.borderColor = UIColor.black.cgColor
         wakuShowEye_image.layer.borderWidth = 1.0
         wakuShowEye_image.backgroundColor = UIColor.clear
         wakuShowEye_image.layer.cornerRadius = 3
         wakuShowFace_image.frame=CGRect(x:5,y:wakuY+eyeR.size.height*5.1,width: eyeR.size.width*5,height: eyeR.size.height*5)
-        wakuShowFace_image.layer.borderColor = UIColor.black.cgColor
+//        wakuShowFace_image.layer.borderColor = UIColor.black.cgColor
         wakuShowFace_image.layer.borderWidth = 1.0
         wakuShowFace_image.backgroundColor = UIColor.clear
         wakuShowFace_image.layer.cornerRadius = 3
-//        if rectType == 0{
-            wakuShowEye_image.image=UIeye
-//        }else{
-            wakuShowFace_image.image=UIfac
-//        }
-        //        printR(str:"wakuEye:",rct: wakuEye.frame)
-        if faceF==1 && isVHIT==true{
-            wakuShowFace_image.isHidden=false
-//            wakuShowEye_image.isHidden=false
+        wakuShowEye_image.image=UIeye
+        wakuShowFace_image.image=UIfac
+        
+        if rectType == 0{
+            wakuShowEye_image.layer.borderColor = UIColor.green.cgColor
+            wakuShowFace_image.layer.borderColor = UIColor.black.cgColor
         }else{
-            wakuShowFace_image.isHidden=true
-//            wakuShowEye_image.isHidden=
+            wakuShowEye_image.layer.borderColor = UIColor.black.cgColor
+            wakuShowFace_image.layer.borderColor = UIColor.green.cgColor
         }
+        //        printR(str:"wakuEye:",rct: wakuEye.frame)
+//        if faceF==1 && isVHIT==true{
+//            wakuShowFace_image.isHidden=false
+//        }else{
+//            wakuShowFace_image.isHidden=true
+//        }
     }
 
     func getframeImage(frameNumber:Int)->UIImage{//結果が表示されていない時、画面上部1/4をタップするとWaku表示
@@ -1979,14 +2138,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             faceWaku_image.layer.cornerRadius = 3
             eyeWaku_image.layer.borderWidth = 0
         }
-        if isVHIT==true&&faceF==1{
-            eyeButton.isHidden=false
-            faceButton.isHidden=false
-         }else{
-            eyeButton.isHidden=true
-            faceButton.isHidden=true
-         }
-        //        dispWakuImages()
     }
     //vHIT_eye_head
     func drawLine(num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
@@ -2458,6 +2609,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+    @IBAction func onPlayButton(_ sender: Any) {
+        if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
+            videoPlayer.pause()
+        }else{
+        videoPlayer.play()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dispFsindoc()//for debug
@@ -2489,17 +2648,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let bottomY=damyBottom.frame.minY
 
         let bh:CGFloat=(ww-20-6*distance)/7//最下段のボタンの高さ、幅と同じ
-        let bh1=bottomY-5-bh/2-bh//wh-10-bh-5-bh/2
-
-        let bh2=bottomY-10-bh/2-2*bh//bh1-5-bh
+        let bh1=bottomY-5-bh/2-bh//2段目
+        let bh2=bottomY-10-2.8*bh//videoSlider
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
-        setButtonProperty(button:cameraButton,bw:bw*2,bh:bh,cx:ww/2,cy:bh1)
-        setButtonProperty(button:vhitButton,bw:bw,bh:bh,cx:10+bw/2,cy:bh1)
-        setButtonProperty(button:vogButton,bw:bw,bh:bh,cx:ww - 10 - bw/2,cy:bh1)
-        
-        setButtonProperty(button:eyeButton,bw:bw,bh:bh,cx:10+bw/2,cy:bh2)
-        setButtonProperty(button:faceButton,bw:bw,bh:bh,cx:ww-10-bw/2,cy:bh2)
+        videoSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
+        videoSlider.thumbTintColor=UIColor.systemYellow
 
         bw=bh//bhは冒頭で決めている。上２段のボタンの高さと同じ。
         let bwd=bw+distance
@@ -2511,12 +2665,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         calcButton.backgroundColor=UIColor.blue
         setButtonProperty(button:stopButton,bw:bw,bh:bh,cx:10+bw/2+bwd*3,cy:bh0)
         stopButton.backgroundColor=UIColor.blue
-        setButtonProperty(button:playButton,bw:bw,bh:bh,cx:10+bw/2+bwd*4,cy:bh0)
-        setButtonProperty(button:paraButton,bw:bw,bh:bh,cx:10+bw/2+bwd*5,cy:bh0)
+        setButtonProperty(button:paraButton,bw:bw,bh:bh,cx:10+bw/2+bwd*4,cy:bh0)
+        setButtonProperty(button:cameraButton,bw:bw,bh:bh,cx:10+bw/2+bwd*5,cy:bh0)
         setButtonProperty(button:helpButton,bw:bw,bh:bh,cx:10+bw/2+bwd*6,cy:bh0)
+        setButtonProperty(button:backwardButton,bw:bh,bh:bh,cx:10+bw/2+bwd*4,cy:bh1)
+        setButtonProperty(button:playButton,bw:bh,bh:bh,cx:10+bw/2+bwd*5,cy:bh1)
+        setButtonProperty(button:forwardButton,bw:bh,bh:bh,cx:10+bw/2+bwd*6,cy:bh1)
+        bw=(bh*3+distance)/2
+        setButtonProperty(button:vhitButton,bw:bw,bh:bh,cx:10+bw/2,cy:bh1)
+        setButtonProperty(button:vogButton,bw:bw,bh:bh,cx:10+bw/2+bw+distance,cy:bh1)
     }
     func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
-        button.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
+        button.frame = CGRect(x:0,y:0,width:bw,height:bh)
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.borderWidth = 1.0
         button.layer.position=CGPoint(x:cx,y:cy)
@@ -2799,7 +2959,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 startFrame=Int(round(curTime*fps))//四捨五入したもの
 //                startFrame=Int(curTime*fps)//四捨五入してない、こちらが近そう
 //                print("round",Int(round(curTime*fps)),Int(curTime*fps),curTime*fps)
-                slowImage.image=getframeImage(frameNumber: startFrame)
+//                slowImage.image=getframeImage(frameNumber: startFrame)
                 videoImg[videoCurrent]=slowImage.image!
                 boxF=false
                 showBoxies(f: false)
@@ -3040,6 +3200,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 
                 wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
              }else{//枠 changed
+                if pos.y>view.bounds.height*3/4{
+                   return
+                }
                 if rectType > -1 {//枠の設定の場合
                     //                    let w3=view.bounds.width/3
                     let ww=view.bounds.width
@@ -3080,7 +3243,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     @IBAction func tapFrame(_ sender: UITapGestureRecognizer) {
-//        print("tapFrame****before")
+        print("tapFrame****before")
         if calcFlag == true {
             return
         }
@@ -3104,7 +3267,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                return
             }
         }else{
-            if faceF==1{
+            if sender.location(in:self.view).y>view.bounds.height*3/4{
+                return
+            }
+            if faceF==1 && isVHIT==true{
+                print("faceF:",faceF)
                 if rectType==0{
                     rectType=1
                 }else{

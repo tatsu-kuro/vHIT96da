@@ -239,19 +239,19 @@
                                     <action selector="stopCalc:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZYP-2r-Mah"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4bc-dn-f4s">
-                                <rect key="frame" x="255" y="830" width="43" height="43"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4bc-dn-f4s">
+                                <rect key="frame" x="306" y="768" width="43" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="play.circle" catalog="system"/>
+                                <state key="normal" image="playpause.fill" catalog="system"/>
                                 <connections>
-                                    <segue destination="Ung-pQ-waq" kind="show" id="mNE-Vl-zDj"/>
+                                    <action selector="onPlayButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pjc-8F-eHV"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHY-L8-P6Q">
-                                <rect key="frame" x="301" y="830" width="52" height="43"/>
+                                <rect key="frame" x="255" y="819" width="52" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
@@ -298,13 +298,12 @@
                                     <action selector="nextVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wKd-qU-2SQ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w2G-cJ-1fV">
-                                <rect key="frame" x="153" y="775" width="120" height="50"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w2G-cJ-1fV">
+                                <rect key="frame" x="315" y="833" width="25" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="CAMERA">
+                                <state key="normal" image="camera.fill" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -312,7 +311,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3A-xm-U7g">
-                                <rect key="frame" x="321" y="778" width="76" height="50"/>
+                                <rect key="frame" x="97" y="771" width="76" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -391,19 +390,6 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NjV-Ob-HQy">
-                                <rect key="frame" x="48" y="741" width="32" height="36"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="eye">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="wakuToEye:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gRB-v6-KaX"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Afb-7h-V8u">
                                 <rect key="frame" x="48" y="828" width="40.5" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -439,23 +425,38 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hru-fB-bbG">
-                                <rect key="frame" x="337" y="741" width="44" height="36"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hru-fB-bbG">
+                                <rect key="frame" x="371" y="782" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="mark">
+                                <state key="normal" image="forward.frame.fill" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="wakuToFace:" destination="BYZ-38-t0r" eventType="touchUpInside" id="k1L-q2-JOm"/>
+                                    <action selector="onForwardButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="k1L-q2-JOm"/>
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dKd-kY-X4M">
                                 <rect key="frame" x="63" y="69" width="40" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="rzY-7a-f2q">
+                                <rect key="frame" x="155" y="673" width="118" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </slider>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NjV-Ob-HQy">
+                                <rect key="frame" x="271" y="775" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="backward.frame.fill" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="onBackwardButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gRB-v6-KaX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="uIe-Wh-aZk"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -487,15 +488,15 @@
                     </view>
                     <connections>
                         <outlet property="backButton" destination="LZQ-Ez-rYI" id="3UD-xa-nFJ"/>
+                        <outlet property="backwardButton" destination="NjV-Ob-HQy" id="Rph-oU-hig"/>
                         <outlet property="calcButton" destination="sZn-CJ-Yxe" id="hF7-9w-d0q"/>
                         <outlet property="cameraButton" destination="w2G-cJ-1fV" id="bJm-SI-8sf"/>
                         <outlet property="currentVideoDate" destination="0q7-O3-Ich" id="Lv3-7t-LiK"/>
                         <outlet property="damyBottom" destination="jL1-T4-URC" id="KLc-ZX-cis"/>
                         <outlet property="eraseButton" destination="WVy-FW-eP4" id="1mR-HG-0Sd"/>
-                        <outlet property="eyeButton" destination="NjV-Ob-HQy" id="Rph-oU-hig"/>
                         <outlet property="eyeWaku_image" destination="3KZ-x3-xdg" id="W38-c9-yno"/>
-                        <outlet property="faceButton" destination="hru-fB-bbG" id="4o4-De-TdZ"/>
                         <outlet property="faceWaku_image" destination="8Nc-UQ-RY5" id="c7S-Ij-XHD"/>
+                        <outlet property="forwardButton" destination="hru-fB-bbG" id="4o4-De-TdZ"/>
                         <outlet property="helpButton" destination="7OA-cL-B3S" id="YzF-8f-1r2"/>
                         <outlet property="listButton" destination="Afb-7h-V8u" id="hfI-Hx-H2E"/>
                         <outlet property="nextButton" destination="fee-9L-VIg" id="Dl0-G1-Z6x"/>
@@ -506,6 +507,7 @@
                         <outlet property="stopButton" destination="sqt-I0-fRF" id="uIR-70-WpH"/>
                         <outlet property="vhitButton" destination="XhS-eE-NWD" id="sXQ-mD-lpc"/>
                         <outlet property="videoFps" destination="6oH-Ur-nDk" id="EUJ-xJ-mml"/>
+                        <outlet property="videoSlider" destination="rzY-7a-f2q" id="ge5-Op-ylX"/>
                         <outlet property="vogButton" destination="O3A-xm-U7g" id="5il-Ju-r1z"/>
                         <outlet property="wakuAll" destination="Iqh-4c-2st" id="IGY-sR-TIm"/>
                         <outlet property="wakuEye" destination="jhl-W2-Rd7" id="La3-kk-kYg"/>
@@ -885,14 +887,11 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pMb-F1-KQb">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pMb-F1-KQb">
                                 <rect key="frame" x="324" y="54" width="80" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Dfx-2j-ROf"/>
-                                    <constraint firstAttribute="width" constant="80" id="Oyg-vj-PRO"/>
-                                </constraints>
-                                <state key="normal" title="KeyDown">
+                                <state key="normal" title="KeyOff">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -906,11 +905,9 @@
                         <constraints>
                             <constraint firstItem="jKr-ew-5wj" firstAttribute="top" secondItem="w0o-6n-dxQ" secondAttribute="top" id="A2g-6r-Z2G"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="trailing" secondItem="jKr-ew-5wj" secondAttribute="trailing" id="JG8-1Y-F8I"/>
-                            <constraint firstItem="pMb-F1-KQb" firstAttribute="top" secondItem="jKr-ew-5wj" secondAttribute="bottom" id="MjN-V5-8U9"/>
                             <constraint firstItem="jKr-ew-5wj" firstAttribute="leading" secondItem="w0o-6n-dxQ" secondAttribute="leading" id="R0j-aZ-gYY"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="trailing" secondItem="ut3-ve-Fe7" secondAttribute="trailing" constant="10" id="S8h-uY-5se"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="bottom" secondItem="ut3-ve-Fe7" secondAttribute="bottom" constant="10" id="ZCw-hA-PVB"/>
-                            <constraint firstItem="w0o-6n-dxQ" firstAttribute="trailing" secondItem="pMb-F1-KQb" secondAttribute="trailing" constant="10" id="p7I-xs-bWX"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="bottom" secondItem="5sT-gS-ZO9" secondAttribute="bottom" constant="10" id="qns-QB-U5q"/>
                             <constraint firstItem="5sT-gS-ZO9" firstAttribute="leading" secondItem="rqU-p6-0r2" secondAttribute="leadingMargin" constant="-10" id="vpD-DJ-vko"/>
                         </constraints>
@@ -1022,14 +1019,17 @@
         </scene>
     </scenes>
     <resources>
+        <image name="backward.frame.fill" catalog="system" width="128" height="93"/>
+        <image name="camera.fill" catalog="system" width="128" height="94"/>
         <image name="chevron.left.circle" catalog="system" width="128" height="121"/>
         <image name="chevron.right.circle" catalog="system" width="128" height="121"/>
         <image name="eye" width="212" height="212"/>
         <image name="face" width="212" height="212"/>
+        <image name="forward.frame.fill" catalog="system" width="128" height="93"/>
         <image name="gear" catalog="system" width="128" height="119"/>
         <image name="largecircle.fill.circle" catalog="system" width="128" height="121"/>
         <image name="paperplane" catalog="system" width="128" height="118"/>
-        <image name="play.circle" catalog="system" width="128" height="121"/>
+        <image name="playpause.fill" catalog="system" width="128" height="70"/>
         <image name="questionmark.circle" catalog="system" width="128" height="121"/>
         <image name="stop.circle" catalog="system" width="128" height="121"/>
         <image name="trash.circle" catalog="system" width="128" height="121"/>
@@ -1052,6 +1052,9 @@
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

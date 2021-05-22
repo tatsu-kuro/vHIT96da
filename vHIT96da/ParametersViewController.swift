@@ -183,14 +183,16 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText7.isHidden = true
             gyroText.isHidden = true
             paraText2.text = "VOG 波形表示高さの調整"
+            paraText3.text = "眼球偏位位置表示の高さ％"
+            paraText4.text = "眼球偏位速度表示の高さ％"
             paraText6.text="角膜上反射光源の移動（検出）幅"
-            paraText2.frame   = CGRect(x:x2,   y: topY+bh1*1.5 ,width: tw, height: bh)
-            paraText3.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
-            paraText4.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
-            paraText6.frame   = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
-            ratio1input.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
-            ratio2input.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
-            eyeBinput.frame = CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
+            paraText2.frame   = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
+            paraText3.frame   = CGRect(x:x2,   y: topY+by+bh1*1,width: tw, height: bh)
+            paraText4.frame   = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
+            paraText6.frame   = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
+            ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*1 ,width: bw, height: bh)
+            ratio2input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
+            eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
         }else{//vhit
             paraText1.frame = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
             paraText2.frame = CGRect(x:x2,   y: topY+by+bh1 ,width: tw, height: bh)
@@ -209,8 +211,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
             videoGyroZureinput.frame = CGRect(x:x1,y: topY+by+bh1*5 ,width: bw, height: bh)
             faceFbutton.frame =  CGRect(x:x1,y: topY+by+bh1*6 ,width: bw, height: bh)
-//            keyDown.frame =
         }
+        keyDown.frame = CGRect(x:ww-80-10, y: topY+by,width: 80, height: 40)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -230,7 +232,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.videoGyroZureinput.keyboardType = UIKeyboardType.numberPad
         setTexts()
         dispParam()
-//        setKeydown()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
         keyDown.layer.cornerRadius = 5
@@ -239,21 +240,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(_ animated: Bool) {
 //        setTexts()
     }
-    func setKeydown(){
-        //se:640(568) 6s:750(667) 7plus:1080(736) x:1125(812)
-        self.keyDown.frame.origin.x = view.bounds.width*2/3
-        //print(view.bounds.height)
-        if view.bounds.height>810 {//X
-            self.keyDown.frame.origin.y = view.bounds.height - 255 - 75
-        }else if view.bounds.height>730 {
-            self.keyDown.frame.origin.y = view.bounds.height - 255 - 10
-        }else{
-            self.keyDown.frame.origin.y = view.bounds.height - 255
-        }
-        self.keyDown.frame.size.width = view.bounds.width/3
-        self.keyDown.frame.size.height = 40
-    //    keyDown.isHidden = false//ここにおくと良いみたい
-    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

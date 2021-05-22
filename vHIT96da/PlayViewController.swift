@@ -23,6 +23,7 @@ class PlayViewController: UIViewController {
     var currTime:UILabel?
     var timer: Timer!
     var explanationLabel:UILabel?
+    
     @IBOutlet weak var damyBottom: UILabel!
     
     var exitButton: UIButton!

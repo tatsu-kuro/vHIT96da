@@ -359,6 +359,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusNear.isHidden=type
         exitBut.isHidden=type
         cameraChangeButton.isHidden=type
+        if ultrawideCamera==false && telephotoCamera==false{
+            cameraChangeButton.isHidden=true
+        }
     }
     func setButtons(){//type:Bool){
         // recording button
@@ -397,11 +400,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         setLabelProperty(label: LEDLow,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-30-bh*9/4)
         setLabelProperty(label:LEDHigh, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-30-bh*9/4)
         setButtonProperty(button:cameraChangeButton, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-40-bh*11/4)
-        if ultrawideCamera == true || telephotoCamera == true{
-            cameraChangeButton.isHidden=false
-        }else{
-            cameraChangeButton.isHidden=true
-        }
+//        if ultrawideCamera == true || telephotoCamera == true{
+//            cameraChangeButton.isHidden=false
+//        }else{
+//            cameraChangeButton.isHidden=true
+//        }
         focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
         focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*7/4)
         LEDBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
