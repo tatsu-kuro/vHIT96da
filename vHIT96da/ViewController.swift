@@ -1582,7 +1582,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         // Draw a red line
         drawPath.setLineWidth(2.0)
-        drawPath.setStrokeColor(UIColor.black.cgColor)
         var pointListXpos = Array<CGPoint>()
         var pointListXvelo = Array<CGPoint>()
         var pointListYpos = Array<CGPoint>()
@@ -1623,6 +1622,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointListXvelo {
             drawPath.addLine(to: pt)
         }
+        drawPath.setStrokeColor(UIColor.black.cgColor)
+        drawPath.strokePath()
         drawPath.move(to: pointListYpos[0])
         pointListYpos.removeFirst()
         for pt in pointListYpos {
@@ -1635,6 +1636,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
   
         // 線の色
+        drawPath.setStrokeColor(UIColor.red.cgColor)
         drawPath.strokePath()
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -1669,7 +1671,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
         
-        UIColor.black.setStroke()
+//        UIColor.black.setStroke()
         drawPath.lineWidth = 2.0//1.0
         let wI:Int = Int(w)
         var startp=num-240*10
@@ -1726,6 +1728,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointListXvelo {
             drawPath.addLine(to: pt)
         }
+        UIColor.black.setStroke()
+//        drawPath.setStrokeColor(UIColor.red.cgColor)
+//        drawPath.strokePath()
+
+        // 線を描く
+        drawPath.stroke()
         drawPath.move(to: pointListYpos[0])
         pointListYpos.removeFirst()
         for pt in pointListYpos {
@@ -1737,7 +1745,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawPath.addLine(to: pt)
         }
         // 線の色
-        UIColor.black.setStroke()
+        UIColor.red.setStroke()
         // 線を描く
         drawPath.stroke()
         // イメージコンテキストからUIImageを作る
