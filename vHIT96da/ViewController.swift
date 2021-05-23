@@ -1537,6 +1537,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
+ 
     func drawText(width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         // イメージ処理の開始
@@ -1644,13 +1645,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
-    
+//           let dImage = drawText(width:mailWidth,height:mailHeight)
+//    func drawResultVOG()
     func drawVogwaves(timeflag:Bool,num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         // イメージ処理の開始
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         // パスの初期化
-        let drawPath = UIBezierPath()
+//        let drawPath = UIBezierPath()
+         
+        let drawPath = UIGraphicsGetCurrentContext()!
+        
         
         if timeflag==true{
             let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloXOrig.count,CGFloat(eyeVeloXOrig.count)/240.0,videoDura[videoCurrent],timercnt+1)
@@ -1672,7 +1677,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
         
 //        UIColor.black.setStroke()
-        drawPath.lineWidth = 2.0//1.0
+        drawPath.setLineWidth(2.0)
+//        drawPath.lineWidth = 2.0//1.0
         let wI:Int = Int(w)
         var startp=num-240*10
         if num<240*10{
@@ -1687,8 +1693,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawPath.addLine(to: CGPoint(x:w,y:0))
         drawPath.move(to:CGPoint(x:0,y:h-120))
         drawPath.addLine(to: CGPoint(x:w,y:h-120))
-        drawPath.stroke()
-        drawPath.removeAllPoints()
+        
+//        drawPath.move(to: pointListXpos[0])//move to start
+//        pointListXpos.removeFirst()//remove start point
+
+        drawPath.setStrokeColor(UIColor.red.cgColor)
+        drawPath.strokePath()
+//        drawPath.stroke()
+//        drawPath.removeAllPoints()
         var pointListXpos = Array<CGPoint>()
         var pointListXvelo = Array<CGPoint>()
         var pointListYpos = Array<CGPoint>()
@@ -1728,12 +1740,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointListXvelo {
             drawPath.addLine(to: pt)
         }
-        UIColor.black.setStroke()
-//        drawPath.setStrokeColor(UIColor.red.cgColor)
-//        drawPath.strokePath()
+//        UIColor.black.setStroke()
+        drawPath.setStrokeColor(UIColor.black.cgColor)
+        drawPath.strokePath()
 
         // 線を描く
-        drawPath.stroke()
+//        drawPath.stroke()
         drawPath.move(to: pointListYpos[0])
         pointListYpos.removeFirst()
         for pt in pointListYpos {
@@ -1744,10 +1756,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointListYvelo {
             drawPath.addLine(to: pt)
         }
+        drawPath.setStrokeColor(UIColor.red.cgColor)
+        drawPath.strokePath()
         // 線の色
-        UIColor.red.setStroke()
+//        UIColor.red.setStroke()
         // 線を描く
-        drawPath.stroke()
+//        drawPath.stroke()
         // イメージコンテキストからUIImageを作る
         let image = UIGraphicsGetImageFromCurrentImageContext()
         // イメージ処理の終了
@@ -1767,20 +1781,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // 画面に表示する
         view.addSubview(vogLineView!)
     }
-    func drawVog(startcount:Int){//startcountまでのvogを画面に表示
-        if vogLineView != nil{
-            vogLineView?.removeFromSuperview()
-        }
-        if wave3View != nil{
-            wave3View?.removeFromSuperview()
-        }
-        let dImage = drawVogwaves(timeflag:true,num:startcount,width:mailWidth,height:mailHeight)
-        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:vogBoxHeight))
-        vogLineView = UIImageView(image: drawImage)
-        vogLineView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
-        // 画面に表示する
-        view.addSubview(vogLineView!)
-    }
+//    func drawVog(startcount:Int){//startcountまでのvogを画面に表示
+//        if vogLineView != nil{
+//            vogLineView?.removeFromSuperview()
+//        }
+//        if wave3View != nil{
+//            wave3View?.removeFromSuperview()
+//        }
+//        let dImage = drawVogwaves(timeflag:true,num:startcount,width:mailWidth,height:mailHeight)
+//        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:vogBoxHeight))
+//        vogLineView = UIImageView(image: drawImage)
+//        vogLineView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
+//        // 画面に表示する
+//        view.addSubview(vogLineView!)
+//    }
     func drawVHITwaves(){//解析結果のvHITwavesを表示する
         if vhitLineView != nil{
             vhitLineView?.removeFromSuperview()
@@ -2657,15 +2671,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("\(String(describing: textField.text))")
             #endif
             self.idNumber = self.Field2value(field: textField)
+            self.drawVogtext()//ここが無くてもIDはsaveされるが、ないとIDが表示されない。
+
             var cnt = -self.vogCurpoint
             
             cnt=cnt*Int(self.mailWidth)/Int(self.view.bounds.width)
-            
+//            let oneImage = self.makeBox(width: self.mailWidth, height: self.mailHeight)
             let drawImage = self.drawVogwaves(timeflag: false, num:240*10+cnt,width:self.mailWidth,height:self.mailHeight)
-            // イメージビューに設定する
+//            let drawImage = self.addwaveImage(startingImage: oneImage, sn: 0, en: 240*10)
+  // イメージビューに設定する
             UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
             //self.drawVHITwaves()
-            self.drawVogtext()//ここが無くてもIDはsaveされるが、ないとIDが表示されない。
+//            self.drawVogtext()//ここが無くてもIDはsaveされるが、ないとIDが表示されない。
             self.nonsavedFlag = false //解析結果がsaveされたのでfalse
             //           self.calcDrawVHIT()
         }
@@ -2853,6 +2870,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
   
     @IBAction func onPlayButton(_ sender: Any) {
+        showBoxies(f: false)
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
         }else{
