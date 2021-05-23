@@ -123,6 +123,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
     var videoPlayer: AVPlayer!
+//    var vogImageView:UIImageView?
 
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
@@ -166,10 +167,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBAction func onForwardButton(_ sender: Any) {
          videoPlayer.pause()
-        if videoSlider.value>videoSlider.maximumValue-0.02{
+        if videoSlider.value>videoSlider.maximumValue-0.1{
             return
         }
-        videoSlider.value += 0.01
+        videoSlider.value += 0.05
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
         startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
@@ -177,10 +178,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBAction func onBackwardButton(_ sender: Any) {
         videoPlayer.pause()
-        if videoSlider.value < 0.01{
+        if videoSlider.value < 0.1{
             return
         }
-        videoSlider.value -= 0.01
+        videoSlider.value -= 0.05
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
         startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
@@ -710,7 +711,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else{
             lastArraycount=0
             if isVHIT == true{
-                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
             }else{
                 timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
             }
@@ -927,7 +928,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        readGyro(gyroPath: videoDate[videoCurrent] + "-gyro.csv")//gyroDataを読み込む
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
-        
+        startTime=CFAbsoluteTimeGetCurrent()
         timercnt = 0
         
         openCVstopFlag = false
@@ -1396,6 +1397,32 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             view.addSubview(vogBoxView!)
         }
     }
+    func drawVogall_new(end:Int){//すべてのvogを画面に表示
+        if vogLineView != nil{
+            vogLineView?.removeFromSuperview()
+        }
+        if wave3View != nil{
+            wave3View?.removeFromSuperview()
+        }
+        let ww=view.bounds.width
+        let drawImage = vogImage!.resize(size: CGSize(width:ww*18, height:vogBoxHeight))
+        // 画面に表示する
+        wave3View = UIImageView(image: drawImage)
+        view.addSubview(wave3View!)
+        //上手くいかないので、諦めて最初を表示する
+        //        var temp = -vogCurpoint*Int(view.bounds.width)/Int(mailWidth)
+        //
+        //        if temp>0{
+        //            temp = 0
+        //        }
+        //        //print("start:",temp)
+        //        temp=0
+        var endPos = CGFloat(end) - 2400
+        if CGFloat(end) < 2400{
+            endPos=0
+        }
+        wave3View!.frame=CGRect(x:-endPos/8,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+     }
     func drawVogall_new(){//すべてのvogを画面に表示
         if vogLineView != nil{
             vogLineView?.removeFromSuperview()
@@ -1403,7 +1430,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if wave3View != nil{
             wave3View?.removeFromSuperview()
         }
-        
         let drawImage = vogImage!.resize(size: CGSize(width:view.bounds.width*18, height:vogBoxHeight))
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
@@ -1430,12 +1456,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
         view.addSubview(wave3View!)
-        //        var bai:CGFloat=1
-        //        if okpMode==0{//okpModeの時は3分全部を表示
-        //            bai=18
-        //        }
-
-        wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+         wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
      }
 
     func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
@@ -1588,13 +1609,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 pointListXvelo.append(pntXvelo)
                 pointListYpos.append(pntYpos)
                 pointListYvelo.append(pntYvelo)
-  
-//                let py = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/4 + 120
-//                let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*3/4 + 120
-//                let point = CGPoint(x: px, y: py)
-//                let point2 = CGPoint(x: px, y: py2)
-//                pointList.append(point)
-//                pointList2.append(point2)
             }
         }
         
@@ -1830,26 +1844,241 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             setButtons(mode: true)
             UIApplication.shared.isIdleTimerDisabled = false
             vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-200, en: eyeVeloXOrig.count)
-  
             drawVogall_new()
             if vogLineView != nil{
                 vogLineView?.removeFromSuperview()//waveを消して
-                drawVogtext()//文字を表示
             }
+            drawVogtext()//文字を表示
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれない
         }else{
             #if DEBUG
             print("debug-update",timercnt)
             #endif
-            drawVog(startcount: eyeVeloXOrig.count)
+ 
+            elapsedTime=CFAbsoluteTimeGetCurrent()-startTime
+            let cntTemp=eyePosXOrig.count
+//            drawVog(startcount: eyeVeloXOrig.count)
             vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-200, en: eyeVeloXOrig.count)
             //            vogCurpoint=vHITeye.count
             lastArraycount=eyeVeloXOrig.count
+            
+//                drawVogOnePage(count: cntTemp)
+            drawVogall_new(end: cntTemp)
+                        print("update_vog",timercnt,cntTemp)
+
+//            wave3View!.frame=CGRect(x:0/*CGFloat(vogCurpoint)*/,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
         }
     }
    
+     //fushhiki
+//     var timercnt:Int = 0
+//     var lastArraycount:Int = 0
+    var startTime=CFAbsoluteTimeGetCurrent()
+    var elapsedTime:Double=0
+    @objc func update_vog_(tm: Timer) {
+        timercnt += 1
+        if timercnt == 1{//vogImageの背景の白、縦横線を作る
+            vogImage = initVogImage(width:mailWidth*18,height:mailHeight)//枠だけ
+            vogCurpoint=0
+        }
+        if calcFlag == true{
+            elapsedTime=CFAbsoluteTimeGetCurrent()-startTime
+        }
+        //         currTimeLabel.text=String(format:"%.1f/%.1f (%.0f)",seekBar.value + Float(eyePosX.count)/videoFps,videoDuration,elapsedTime)
+        if eyePosXFiltered.count < 5 {
+            return
+        }
+        var calcFlagTemp=true
+        if calcFlag == false {//終わったらここだが取り残しがある
+            calcFlagTemp=false
+        }
+        let cntTemp=eyePosXOrig.count
+        vogImage=addVogWave(startingImage: vogImage!, startn: lastArraycount-1, end:cntTemp)
+//        vogImage=addwaveImage(startingImage: vogImage!, sn: lastArraycount-200, en: eyeVeloXOrig.count)
+        lastArraycount=cntTemp
+        drawVogOnePage(count: cntTemp)
+        //ここでcalcFlagをチェックするとデータを撮り損なうか
+        if calcFlagTemp == false{//timer に入るときに終わっていた
+            UIApplication.shared.isIdleTimerDisabled = false//スリープする
+            drawVogOnePage(count: 0)
+            print("calcend")
+            timer!.invalidate()
+            setButtons(mode: true)
+        }
+    }
+    
+    let fpsXd:Int=2
+    var handlingDataNowFlag = false
+    func addVogWave(startingImage:UIImage,startn:Int,end:Int) ->UIImage{
+        // Create a context of the starting image size and set it as the current one
+        var start=startn
+        if startn<0{
+            start=0
+        }
+        UIGraphicsBeginImageContext(startingImage.size)
+        // Draw the starting image in the current context as background
+        startingImage.draw(at: CGPoint.zero)
+        // Get the current context
+        let context = UIGraphicsGetCurrentContext()!
+        // Draw a red line
+        context.setLineWidth(2.0)
+        context.setStrokeColor(UIColor.black.cgColor)
+        
+        var pointX = Array<CGPoint>()
+        var pointXd = Array<CGPoint>()
+        var pointY = Array<CGPoint>()
+        var pointYd = Array<CGPoint>()
+        let posR=CGFloat(posRatio)/20.0
+        let veloR=CGFloat(veloRatio)
+        let h=startingImage.size.height
+        handlingDataNowFlag=true
+        let dx = 1// xの間隔
+        for i in start..<end {
+         
+            let px = CGFloat(dx * i)
  
-    @objc func update(tm: Timer) {
+            let py1 = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
+            let py2 = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
+            let py3 = eyePosYFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
+            let py4 = eyeVeloYFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
+
+            
+            
+//            let py1 = eyePosXFiltered[i] * posR + (h-240)/5
+//            let py2 = eyeVeloXFiltered[i] * veloR + (h-240)*2/5
+//            let py3 = eyePosYFiltered[i] * posR + (h-240)*3/5
+//            let py4 = eyeVeloYFiltered[i] * veloR + (h-240)*4/5
+            let point1 = CGPoint(x: px, y: py1)
+            let point2 = CGPoint(x: px, y: py2)
+            let point3 = CGPoint(x: px, y: py3)
+            let point4 = CGPoint(x: px, y: py4)
+            pointX.append(point1)
+            pointXd.append(point2)
+            pointY.append(point3)
+            pointYd.append(point4)
+            //            }
+        }
+        handlingDataNowFlag=false
+        // 始点に移動する
+        context.move(to: pointX[0])
+        // 配列から始点の値を取り除く
+        pointX.removeFirst()
+        // 配列から点を取り出して連結していく
+        for pt in pointX {
+            context.addLine(to: pt)
+        }
+        context.move(to: pointXd[0])
+        pointXd.removeFirst()
+        for pt in pointXd {
+            context.addLine(to: pt)
+        }
+        context.move(to: pointY[0])
+        pointY.removeFirst()
+        for pt in pointY {
+            context.addLine(to: pt)
+        }
+        context.move(to: pointYd[0])
+        pointYd.removeFirst()
+        for pt in pointYd {
+            context.addLine(to: pt)
+        }
+        // 線の色
+        context.strokePath()
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+    func drawVogOnePage(count:Int){//countまでの波を表示
+        if vogBoxView != nil{
+            vogBoxView?.removeFromSuperview()
+        }
+        var cnt=count*fpsXd - 2400
+        if cnt<0{
+            cnt=0
+        }
+        let clipRect = CGRect(x:CGFloat(cnt) , y: 0, width: mailWidth, height: mailHeight)
+        let cripImageRef = vogImage?.cgImage!.cropping(to: clipRect)
+        let crippedImage = UIImage(cgImage: cripImageRef!)
+        //        print("clipRect:",cnt,count,clipRect)
+//        let namedImage = getNamedImage(startingImage: crippedImage)
+//        let drawImage = namedImage.resize(size: CGSize(width:view.bounds.width, height:view.bounds.height*4/5))
+//        //        let namedImage =
+//        vogBoxView = UIImageView(image: drawImage)
+        vogBoxView = UIImageView(image:crippedImage)
+        vogBoxView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
+        // 画面に表示する
+        view.addSubview(vogBoxView!)
+    }
+    func getNamedImage(startingImage:UIImage) ->UIImage{
+        // Create a context of the starting image size and set it as the current one
+        UIGraphicsBeginImageContext(startingImage.size)
+        // Draw the starting image in the current context as background
+        startingImage.draw(at: CGPoint.zero)
+        // Get the current context
+        let context = UIGraphicsGetCurrentContext()!
+        // Draw a red line
+        context.setLineWidth(2.0)
+        context.setStrokeColor(UIColor.black.cgColor)
+        // パスの初期化
+        let drawPath = UIBezierPath()
+        let w=startingImage.size.width
+        let h=startingImage.size.height
+        let str1 = calcDate.components(separatedBy: ":")
+        let str2 = "ID:" + String(format: "%08d", idNumber) + "  " + str1[0] + ":" + str1[1]
+        let str3 = "vHIT96da"
+        
+        str2.draw(at: CGPoint(x: 20, y: h-100), withAttributes: [
+                    NSAttributedString.Key.foregroundColor : UIColor.black,
+                    NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
+        str3.draw(at: CGPoint(x: w-360, y: h-100), withAttributes: [
+                    NSAttributedString.Key.foregroundColor : UIColor.black,
+                    NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
+        
+        UIColor.black.setStroke()
+        // イメージコンテキストからUIImageを作る
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        // イメージ処理の終了
+        UIGraphicsEndImageContext()
+        return image!
+    }
+    
+    func initVogImage(width w:CGFloat,height h:CGFloat) -> UIImage {
+        let size = CGSize(width:w, height:h)
+        // イメージ処理の開始
+        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+        let context = UIGraphicsGetCurrentContext()
+        // パスの初期化
+        let drawRect = CGRect(x:0, y:0, width:w, height:h)
+        let drawPath = UIBezierPath(rect:drawRect)
+        
+        context?.setFillColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        drawPath.fill()
+        context?.setStrokeColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        drawPath.stroke()
+        
+        UIColor.black.setStroke()
+        
+        let wid:CGFloat=w/90.0
+        for i in 0..<90 {
+            let xp = CGFloat(i)*wid
+            drawPath.move(to: CGPoint(x:xp,y:0))
+            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
+        }
+        drawPath.move(to:CGPoint(x:0,y:0))
+        drawPath.addLine(to: CGPoint(x:w,y:0))
+        drawPath.move(to:CGPoint(x:0,y:h-120))
+        drawPath.addLine(to: CGPoint(x:w,y:h-120))
+        //UIColor.blue.setStroke()
+        drawPath.lineWidth = 2.0//1.0
+        drawPath.stroke()
+        // イメージコンテキストからUIImageを作る
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        // イメージ処理の終了
+        UIGraphicsEndImageContext()
+        return image!
+    }
+    
+    @objc func update_vHIT(tm: Timer) {
         if eyeVeloXFiltered.count < 5 {
             return
         }
@@ -3185,7 +3414,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }else if vogCurpoint>0{//240*10以下には動けない
                     vogCurpoint = 0
                 }
-                                print("vogcur",vogCurpoint)
+                print("vogcur",vogCurpoint)
                 
                 wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
              }else{//枠 changed
