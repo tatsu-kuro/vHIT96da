@@ -10,7 +10,23 @@ import UIKit
 
 class ParametersViewController: UIViewController, UITextFieldDelegate {
     
-    
+    var topPadding:CGFloat = 0
+    var bottomPadding:CGFloat = 0
+    var leftPadding:CGFloat = 0
+    var rightPadding:CGFloat = 0
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if #available(iOS 11.0, *) {
+            // viewDidLayoutSubviewsではSafeAreaの取得ができている
+            topPadding = self.view.safeAreaInsets.top
+            bottomPadding = self.view.safeAreaInsets.bottom
+            leftPadding = self.view.safeAreaInsets.left
+            rightPadding = self.view.safeAreaInsets.right
+            print("in viewDidLayoutSubviews")
+            print(topPadding,bottomPadding,leftPadding,rightPadding)    // iPhoneXなら44, その他は20.0
+        }
+//        setButtons()
+    }
 //    @IBOutlet weak var markdispSwitch: UISwitch!
 //    @IBOutlet weak var markdispText: UILabel!
     @IBOutlet weak var markText: UILabel!
@@ -200,7 +216,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText4.frame = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
             paraText6.frame = CGRect(x:x2,   y: topY+by+bh1*4 ,width: tw, height: bh)
             paraText7.frame = CGRect(x:x2, y:topY+by+bh1*5,width: tw,height:bh)
-            
             markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*6+3,width:tw,height:bh)
             vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*7+10 ,width: ww, height: ww*9/32)
             gyroText.frame = CGRect(x:5,     y: topY+by+bh1*7+25+ww/5,width:ww-10,height:bh*4)

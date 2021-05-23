@@ -151,15 +151,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var backwardButton: UIButton!
     
     @IBOutlet weak var damyBottom: UILabel!
-  
+    
+    func playTrack()//こんな方法もある
+    {
+        let playerItem = AVPlayerItem(url: videoURL[videoCurrent])
+        videoPlayer.replaceCurrentItem(with:playerItem)
+        videoPlayer.play()
+    }
+    func playTrack(number:Int)//こんな方法もある
+    {
+        videoPlayer.replaceCurrentItem(with:AVPlayerItem(url: videoURL[number]))
+        videoPlayer.play()
+    }
+    
     @IBAction func onForwardButton(_ sender: Any) {
-        videoPlayer.pause()
+         videoPlayer.pause()
         if videoSlider.value>videoSlider.maximumValue-0.02{
             return
         }
         videoSlider.value += 0.01
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
     }
     
     @IBAction func onBackwardButton(_ sender: Any) {
@@ -170,6 +183,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoSlider.value -= 0.01
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
     }
     
     @IBOutlet weak var wakuAll: UIImageView!
@@ -303,12 +317,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let time = CMTimeGetSeconds(self.videoPlayer.currentTime())
             let value = Float(self.videoSlider.maximumValue - self.videoSlider.minimumValue) * Float(time) / Float(duration) + Float(self.videoSlider.minimumValue)
             self.videoSlider.value = value
+            self.startFrame=Int(value*self.getFPS(url: self.videoURL[self.videoCurrent]))
         })
     }
     @objc func onSliderValueChange(){
         videoPlayer.pause()
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        startFrame=Int(videoSlider.value*getFPS(url: videoURL[videoCurrent]))
+        dispWakus()
+        showWakuImages()
      }
     /*
      override func viewDidLoad() {
@@ -567,16 +585,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         showBoxies(f: boxF)
     }
-    
+
     @IBAction func backVideo(_ sender: Any) {
-  
         if vhitLineView?.isHidden == false{
             return
         }
         startFrame=0
-//        let layer = view.layer.sublayers![0]
-//        view.layer.sublayers![0] = view.layer.sublayers![1]
-//        view.layer.sublayers![1] = layer
         showVideoIroiro(num: -1)
     }
    
@@ -593,7 +607,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         playVideoURL(video: videoURL[videoCurrent])
 //        slowImage.isHidden=true
-
 //        slowImage.image=videoImg[videoCurrent]
         currentVideoDate.font=UIFont.monospacedDigitSystemFont(ofSize: 22, weight: .medium)
         currentVideoDate.text=videoDate[videoCurrent] + "(" + (videoCurrent+1).description + ")"
@@ -1229,34 +1242,26 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var sample:CMSampleBuffer!
         sample = readerOutput.copyNextSampleBuffer()
         let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
-        
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-  
         //slowImage.frameを以下のように　view.frame としたところ良くなった。
         //起動時表示が一巡？するまでは　slowImage.frame はちょっと違う値を示す
         let eyeR = resizeR2(wakuE, viewRect:view.frame,image:ciImage)
         let facR = resizeR2(wakuF, viewRect:view.frame, image: ciImage)
-        //        printR(str:"eyeOnscreen:",rct: wakuE)
-        //        printR(str:"eyeOnVideo:",rct: eyeR)
         CGfac = context.createCGImage(ciImage, from: facR)!
         UIfac = UIImage.init(cgImage: CGfac, scale:1.0, orientation:orientation)
         CGeye = context.createCGImage(ciImage, from: eyeR)!
         UIeye = UIImage.init(cgImage: CGeye, scale:1.0, orientation:orientation)
         let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
-//        print(videoFps.frame,wakuY)
         wakuShowEye_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
-//        wakuShowEye_image.layer.borderColor = UIColor.black.cgColor
         wakuShowEye_image.layer.borderWidth = 1.0
         wakuShowEye_image.backgroundColor = UIColor.clear
         wakuShowEye_image.layer.cornerRadius = 3
         wakuShowFace_image.frame=CGRect(x:5,y:wakuY+eyeR.size.height*5.1,width: eyeR.size.width*5,height: eyeR.size.height*5)
-//        wakuShowFace_image.layer.borderColor = UIColor.black.cgColor
         wakuShowFace_image.layer.borderWidth = 1.0
         wakuShowFace_image.backgroundColor = UIColor.clear
         wakuShowFace_image.layer.cornerRadius = 3
         wakuShowEye_image.image=UIeye
         wakuShowFace_image.image=UIfac
-        
         if rectType == 0{
             wakuShowEye_image.layer.borderColor = UIColor.green.cgColor
             wakuShowFace_image.layer.borderColor = UIColor.black.cgColor
@@ -1264,12 +1269,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wakuShowEye_image.layer.borderColor = UIColor.black.cgColor
             wakuShowFace_image.layer.borderColor = UIColor.green.cgColor
         }
-        //        printR(str:"wakuEye:",rct: wakuEye.frame)
-//        if faceF==1 && isVHIT==true{
-//            wakuShowFace_image.isHidden=false
-//        }else{
-//            wakuShowFace_image.isHidden=true
-//        }
     }
 
     func getframeImage(frameNumber:Int)->UIImage{//結果が表示されていない時、画面上部1/4をタップするとWaku表示
@@ -1385,7 +1384,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogBoxYcenter=vh/2
             boxImage = makeBox(width: vw, height:vogBoxHeight)
             vogBoxView = UIImageView(image: boxImage)
-//            box1ys=view.bounds.height/2
             
             vogBoxView?.center = CGPoint(x:vw/2,y:vogBoxYcenter)
             view.addSubview(vogBoxView!)
