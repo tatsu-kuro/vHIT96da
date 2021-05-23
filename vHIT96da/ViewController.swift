@@ -317,7 +317,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let time = CMTimeGetSeconds(self.videoPlayer.currentTime())
             let value = Float(self.videoSlider.maximumValue - self.videoSlider.minimumValue) * Float(time) / Float(duration) + Float(self.videoSlider.minimumValue)
             self.videoSlider.value = value
-            self.startFrame=Int(value*self.getFPS(url: self.videoURL[self.videoCurrent]))
+//            self.startFrame=Int(value*self.getFPS(url: self.videoURL[self.videoCurrent]))
         })
     }
     @objc func onSliderValueChange(){
@@ -325,6 +325,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
         startFrame=Int(videoSlider.value*getFPS(url: videoURL[videoCurrent]))
+        let nsstring : NSString = NSString(string: videoDura[videoCurrent])
+        let num : Float = nsstring.floatValue - 1
+        if startFrame > Int(getFPS(url:videoURL[videoCurrent])*num){
+            startFrame = Int(getFPS(url:videoURL[videoCurrent])*num)
+        }else if startFrame < 0{
+            startFrame=0
+        }
         dispWakus()
         showWakuImages()
      }
@@ -1264,9 +1271,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         wakuShowFace_image.image=UIfac
         if rectType == 0{
             wakuShowEye_image.layer.borderColor = UIColor.green.cgColor
-            wakuShowFace_image.layer.borderColor = UIColor.black.cgColor
+            wakuShowFace_image.layer.borderColor = UIColor.gray.cgColor
         }else{
-            wakuShowEye_image.layer.borderColor = UIColor.black.cgColor
+            wakuShowEye_image.layer.borderColor = UIColor.gray.cgColor
             wakuShowFace_image.layer.borderColor = UIColor.green.cgColor
         }
     }
@@ -2607,11 +2614,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+  
     @IBAction func onPlayButton(_ sender: Any) {
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
         }else{
-        videoPlayer.play()
+            if videoSlider.value>videoSlider.maximumValue-0.5{
+                videoSlider.value=0
+                let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+                videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+            }else{
+                videoPlayer.play()
+            }
         }
     }
     
@@ -2664,8 +2678,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtonProperty(button:stopButton,bw:bw,bh:bh,cx:10+bw/2+bwd*3,cy:bh0)
         stopButton.backgroundColor=UIColor.blue
         setButtonProperty(button:paraButton,bw:bw,bh:bh,cx:10+bw/2+bwd*4,cy:bh0)
-        setButtonProperty(button:cameraButton,bw:bw,bh:bh,cx:10+bw/2+bwd*5,cy:bh0)
-        setButtonProperty(button:helpButton,bw:bw,bh:bh,cx:10+bw/2+bwd*6,cy:bh0)
+        setButtonProperty(button:cameraButton,bw:bw,bh:bh,cx:10+bw/2+bwd*6,cy:bh0)
+        setButtonProperty(button:helpButton,bw:bw,bh:bh,cx:10+bw/2+bwd*5,cy:bh0)
         setButtonProperty(button:backwardButton,bw:bh,bh:bh,cx:10+bw/2+bwd*4,cy:bh1)
         setButtonProperty(button:playButton,bw:bh,bh:bh,cx:10+bw/2+bwd*5,cy:bh1)
         setButtonProperty(button:forwardButton,bw:bh,bh:bh,cx:10+bw/2+bwd*6,cy:bh1)
@@ -2812,13 +2826,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #if DEBUG
             print("prepare para")
             #endif
-        }else if let vc = segue.destination as? PlayViewController{
-            let Controller:PlayViewController = vc
-            if videoCurrent == -1{
-                Controller.playVideoURL = nil
-            }else{
-                Controller.playVideoURL = videoURL[videoCurrent]
-            }
         }else if let vc = segue.destination as? ImagePickerViewController{
             let Controller:ImagePickerViewController = vc
             //            Controller.tateyokoRatio=mailHeight/mailWidth
@@ -2947,22 +2954,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #if DEBUG
             print("TATSUAKI-unwind from para")
             #endif
-        }else if let vc = segue.source as? PlayViewController{
-            let Controller:PlayViewController = vc
-            if !(videoCurrent == -1){
-                let curTime=Controller.seekBarValue
-                let fps = getFPS(url: videoURL[videoCurrent])
-                //Controller.currentFPS
-                print("seek,fps:",Controller.seekBarValue,fps)
-                startFrame=Int(round(curTime*fps))//四捨五入したもの
-//                startFrame=Int(curTime*fps)//四捨五入してない、こちらが近そう
-//                print("round",Int(round(curTime*fps)),Int(curTime*fps),curTime*fps)
-//                slowImage.image=getframeImage(frameNumber: startFrame)
-                videoImg[videoCurrent]=slowImage.image!
-                boxF=false
-                showBoxies(f: false)
-                showWakuImages()
-            }
         }else if let vc = segue.source as? RecordViewController{
             let Controller:RecordViewController = vc
             if Controller.session.isRunning{//何もせず帰ってきた時

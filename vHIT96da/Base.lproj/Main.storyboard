@@ -122,64 +122,6 @@
             </objects>
             <point key="canvasLocation" x="-1804" y="-40"/>
         </scene>
-        <!--Play View Controller-->
-        <scene sceneID="aHC-8S-mxV">
-            <objects>
-                <viewController storyboardIdentifier="playViewID" modalPresentationStyle="fullScreen" id="Ung-pQ-waq" customClass="PlayViewController" customModule="vHIT96da" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleAspectFill" semanticContentAttribute="spatial" id="Z1o-L4-Akr">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ET3-Oy-C8k">
-                                <rect key="frame" x="0.0" y="852" width="414" height="10"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="10" id="LTq-RM-0xA"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view verifyAmbiguity="off" contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="842" translatesAutoresizingMaskIntoConstraints="NO" id="7Jf-4N-vRm">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVg-il-Vw1">
-                                        <rect key="frame" x="167" y="376" width="80" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Exit">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <connections>
-                                            <segue destination="ZO4-aI-WvN" kind="unwind" identifier="mainFromPlay" unwindAction="unwind:" id="ap1-5s-LII"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Jak-Vh-50g"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="ET3-Oy-C8k" firstAttribute="leading" secondItem="Jak-Vh-50g" secondAttribute="leading" id="FrV-VL-SxR"/>
-                            <constraint firstItem="Jak-Vh-50g" firstAttribute="bottom" secondItem="7Jf-4N-vRm" secondAttribute="bottom" id="c31-lB-wPK"/>
-                            <constraint firstAttribute="trailing" secondItem="7Jf-4N-vRm" secondAttribute="trailing" id="jz2-C0-oXl"/>
-                            <constraint firstItem="7Jf-4N-vRm" firstAttribute="leading" secondItem="Jak-Vh-50g" secondAttribute="leading" id="l0X-1k-ZfC"/>
-                            <constraint firstItem="7Jf-4N-vRm" firstAttribute="top" secondItem="Jak-Vh-50g" secondAttribute="top" id="q1e-ye-XOC"/>
-                            <constraint firstItem="ET3-Oy-C8k" firstAttribute="trailing" secondItem="Jak-Vh-50g" secondAttribute="trailing" id="tlb-JJ-qcH"/>
-                            <constraint firstItem="Jak-Vh-50g" firstAttribute="bottom" secondItem="ET3-Oy-C8k" secondAttribute="bottom" id="uHf-98-nWi"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="Wpt-ao-S6q"/>
-                    <connections>
-                        <outlet property="damyBottom" destination="ET3-Oy-C8k" id="4cz-Fi-5W7"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="UoG-Ul-BDr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="ZO4-aI-WvN" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="-1804.3478260869567" y="656.25"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -444,6 +386,8 @@
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="rzY-7a-f2q">
                                 <rect key="frame" x="155" y="673" width="118" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="minimumTrackTintColor" systemColor="systemYellowColor"/>
+                                <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </slider>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NjV-Ob-HQy">
                                 <rect key="frame" x="271" y="775" width="22" height="22"/>
