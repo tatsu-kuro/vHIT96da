@@ -1437,11 +1437,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
      }
 
 //    Int(view.bounds.width)/Int(mailWidth){
-    func trimmingImage(_ image: UIImage, trimmingArea: CGRect) -> UIImage {
-        let imgRef = image.cgImage?.cropping(to: trimmingArea)
-        let trimImage = UIImage(cgImage: imgRef!, scale: image.scale, orientation: image.imageOrientation)
-        return trimImage
-    }
+ 
     func drawVogall(){//すべてのvogを画面に表示
         if vogLineView != nil{
             vogLineView?.removeFromSuperview()
@@ -1461,18 +1457,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vogImage = makeVOGImage(startImg:vogImage!,width:0, height:0, start:2400, end:eyePosXOrig.count)
     }
 
-    func drawText(width w:CGFloat,height h:CGFloat) -> UIImage {
-        let size = CGSize(width:w, height:h)
-        // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        // パスの初期化
+    func drawText(orgImg:UIImage,width w:CGFloat,height h:CGFloat,mail:Bool) -> UIImage {
+         // イメージ処理の開始]
+        if mail{//mailの時は直に貼り付ける
+            UIGraphicsBeginImageContext(orgImg.size)
+            orgImg.draw(at:CGPoint.zero)
+        }else{
+            let size = CGSize(width:w, height:h)
+            UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+        }// パスの初期化
         let drawPath = UIBezierPath()
+        if !mail{//mailの時は時間経過は表示しない
         let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloXOrig.count,CGFloat(eyeVeloXOrig.count)/240.0,videoDura[videoCurrent],timercnt+1)
         //print(timetxt)
+        
         timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        
+        }
         
         let str1 = calcDate.components(separatedBy: ":")
         let str2 = "ID:" + String(format: "%08d", idNumber) + "  " + str1[0] + ":" + str1[1]
@@ -1510,27 +1512,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         let drawPath = UIGraphicsGetCurrentContext()!
         // Draw a red line
-        let w=mailWidth
+//        let w=mailWidth
         let h=mailHeight
-        
-//        let wid:CGFloat=w/90.0
-//        for i in 0..<90 {
-//            let xp = CGFloat(i)*wid
-//            drawPath.move(to: CGPoint(x:xp,y:0))
-//            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
-//        }
-//        drawPath.move(to:CGPoint(x:0,y:0))
-//        drawPath.addLine(to: CGPoint(x:w,y:0))
-//        drawPath.move(to:CGPoint(x:0,y:h-120))
-//        drawPath.addLine(to: CGPoint(x:w,y:h-120))
-//        //UIColor.blue.setStroke()
-////        drawPath.lineWidth = 2.0//1.0
-//        drawPath.strokePath()
-////        drawPath.removeAllPoints()
-//
-        
-        
-        
         drawPath.setLineWidth(2.0)
         var pointListXpos = Array<CGPoint>()
         var pointListXvelo = Array<CGPoint>()
@@ -1541,13 +1524,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        print("height:",h)
         let posR=CGFloat(posRatio)/20.0
         let veloR=CGFloat(veloRatio)/10.0
+        let py1=(h-240)/5+120
+        let py2=(h-240)*2/5+120
+        let py3=(h-240)*3/5+120
+        let py4=(h-240)*4/5+120
         let dx = 1// xの間隔
         for i in startN..<endN {
             let px = CGFloat(dx * i)
-            let pyXpos = eyePosXFiltered[i] * posR + (h-240)/5 + 120
-            let pyXvelo = eyeVeloXFiltered[i] * veloR + (h-240)*2/5 + 120
-            let pyYpos = eyePosYFiltered[i] * posR + (h-240)*3/5 + 120
-            let pyYvelo = eyeVeloYFiltered[i] * veloR + (h-240)*4/5 + 120
+            let pyXpos = eyePosXFiltered[i] * posR + py1//(h-240)/5 + 120
+            let pyXvelo = eyeVeloXFiltered[i] * veloR + py2//(h-240)*2/5 + 120
+            let pyYpos = eyePosYFiltered[i] * posR + py3//(h-240)*3/5 + 120
+            let pyYvelo = eyeVeloYFiltered[i] * veloR + py4//(h-240)*4/5 + 120
             let pntXpos = CGPoint(x: px, y: pyXpos)
             let pntXvelo = CGPoint(x: px, y: pyXvelo)
             let pntYpos = CGPoint(x: px, y: pyYpos)
@@ -1668,6 +1655,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
+    /*
     func drawVogwaves(num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         // イメージ処理の開始
@@ -1779,13 +1767,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
-    
+    */
  
     func drawVogtext(){
         if vogLineView != nil{
             vogLineView?.removeFromSuperview()
         }
-        let dImage = drawText(width:mailWidth,height:mailHeight)
+        let dImage = drawText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
         let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:vogBoxHeight))
         vogLineView = UIImageView(image: drawImage)
         vogLineView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
@@ -2478,33 +2466,44 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         present(alert, animated: true, completion: nil)
         
     }
+    func trimmingImage(_ image: UIImage, trimmingArea: CGRect) -> UIImage {
+        let imgRef = image.cgImage?.cropping(to: trimmingArea)
+        let trimImage = UIImage(cgImage: imgRef!, scale: image.scale, orientation: image.imageOrientation)
+        return trimImage
+    }
     func saveResult_vog(_ sender: Any) {//vog
         if calcFlag == true{
             return
         }
-        let alert = UIAlertController(title: "VOG96da", message: "Input ID number", preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) -> Void in
+        
+        let alert = UIAlertController(title: "VOG96da", message: "Input ID without space", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
+        
+        
+//        let alert = UIAlertController(title: "VOG96da", message: "Input ID number", preferredStyle: .alert)
+//        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
             // 入力したテキストをコンソールに表示
             let textField = alert.textFields![0] as UITextField
             #if DEBUG
             print("\(String(describing: textField.text))")
             #endif
-            self.idNumber = self.Field2value(field: textField)
-            self.drawVogtext()//ここが無くてもIDはsaveされるが、ないとIDが表示されない。
-            var cnt = -self.vogCurpoint
-            cnt=cnt*Int(self.mailWidth)/Int(self.view.bounds.width)
-            let drawImage = self.drawVogwaves( num:240*10+cnt,width:self.mailWidth,height:self.mailHeight)
+            idNumber = Field2value(field: textField)
+            drawVogtext()//ここが無くてもIDはsaveされるが、ないとIDが表示されない。
   // イメージビューに設定する
-            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
-            self.nonsavedFlag = false //解析結果がsaveされたのでfalse
+            let pos = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
+            let drawImage=self.trimmingImage(self.vogImage!, trimmingArea: CGRect(x:pos,y:0,width: self.mailWidth,height: mailHeight))
+            let imgWithText=drawText(orgImg: drawImage, width: mailWidth , height: mailHeight,mail:true)
+            UIImageWriteToSavedPhotosAlbum(imgWithText, nil, nil, nil)
+            nonsavedFlag = false //解析結果がsaveされたのでfalse
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
             self.idNumber = 1//キャンセルしてもここは通らない？
         }
-        
+//idNumberをStringに変更してアルファベットも可能としよう
         // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
+//            textField.keyboardType = UIKeyboardType.default
             textField.keyboardType = UIKeyboardType.numberPad
         }
         alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
@@ -3277,8 +3276,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }else if vogCurpoint>0{//240*10以下には動けない
                     vogCurpoint = 0
                 }
-                print("vogcur",vogCurpoint)
-                
+                let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
+                print(vogCurpoint,view.bounds.width,mailWidth,tmp)
                 wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
              }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
