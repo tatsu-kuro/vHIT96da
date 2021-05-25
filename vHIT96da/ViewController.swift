@@ -1880,6 +1880,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             lastArraycount=eyePosXOrig.count
             drawVOG2endPt(end: cntTemp)
             print("update_vog",timercnt,cntTemp)
+            drawVogtext()
         }
     }
  
@@ -3032,6 +3033,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     if chanF==true{
                         vogCurpoint=0
                         drawVogall()
+                        drawVogtext()
                     }
                 }
             }
