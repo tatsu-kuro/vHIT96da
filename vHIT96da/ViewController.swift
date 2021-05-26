@@ -265,7 +265,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var slowImage: UIImageView!
     @IBOutlet weak var currentVideoDate: UILabel!
     var calcDate:String = ""
-    var idNumber:Int = 0
+    var idString:String = "00000000"
     var vHITtitle:String = ""
     
     var widthRange:Int = 0
@@ -1477,7 +1477,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         
         let str1 = calcDate.components(separatedBy: ":")
-        let str2 = "ID:" + String(format: "%08d", idNumber) + "  " + str1[0] + ":" + str1[1]
+         let str2 = "ID:" + idString + "  " + str1[0] + ":" + str1[1]
         let str3 = "VOG96da"
         str2.draw(at: CGPoint(x: 20, y: h-100), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
@@ -1655,119 +1655,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
-    /*
-    func drawVogwaves(num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
-        let size = CGSize(width:w, height:h)
-        // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        // パスの初期化
-        let drawPath = UIGraphicsGetCurrentContext()!
-        
-
-        let str1 = calcDate.components(separatedBy: ":")
-        let str2 = "ID:" + String(format: "%08d", idNumber) + "  " + str1[0] + ":" + str1[1]
-        let str3 = "VOG96da"
-        
-        str2.draw(at: CGPoint(x: 20, y: h-100), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: w-330, y: h-100), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        
-//        UIColor.black.setStroke()
-        drawPath.setLineWidth(2.0)
-//        drawPath.lineWidth = 2.0//1.0
-        let wI:Int = Int(w)
-        var startp=num-240*10
-        if num<240*10{
-            startp=0
-        }
-        for i in 0...5 {
-            let xp:CGFloat = CGFloat(i*wI/5-startp%(wI/5))
-            drawPath.move(to: CGPoint(x:xp,y:0))
-            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
-        }
-        drawPath.move(to:CGPoint(x:0,y:0))
-        drawPath.addLine(to: CGPoint(x:w,y:0))
-        drawPath.move(to:CGPoint(x:0,y:h-120))
-        drawPath.addLine(to: CGPoint(x:w,y:h-120))
-        
-//        drawPath.move(to: pointListXpos[0])//move to start
-//        pointListXpos.removeFirst()//remove start point
-
-        drawPath.setStrokeColor(UIColor.red.cgColor)
-        drawPath.strokePath()
-//        drawPath.stroke()
-//        drawPath.removeAllPoints()
-        var pointListXpos = Array<CGPoint>()
-        var pointListXvelo = Array<CGPoint>()
-        var pointListYpos = Array<CGPoint>()
-        var pointListYvelo = Array<CGPoint>()
- 
-        let eyeVeloFilteredCnt=eyeVeloXFiltered.count
-        let dx = 1// xの間隔
-        //        print("vogPos5,vHITEye5,vHITeye",vogPos5.count,vHITEye5.count,vHITEye.count)
-        
-        for n in 1..<wI {
-            let start = startp + n
-            if start < eyeVeloFilteredCnt {//-20としてみたがエラー。関係なさそう。
-                let px = CGFloat(dx * n)
-                let pyXpos = eyePosXFiltered[start] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
-                let pyXvelo = eyeVeloXFiltered[start] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
-                let pyYpos = eyePosYFiltered[start] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
-                let pyYvelo = eyeVeloYFiltered[start] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
-                let pntXpos = CGPoint(x: px, y: pyXpos)
-                let pntXvelo = CGPoint(x: px, y: pyXvelo)
-                let pntYpos = CGPoint(x: px, y: pyYpos)
-                let pntYvelo = CGPoint(x: px, y: pyYvelo)
-                pointListYpos.append(pntYpos)
-                pointListYvelo.append(pntYvelo)
-                pointListXpos.append(pntXpos)
-                pointListXvelo.append(pntXvelo)
-            }
-        }
     
-        drawPath.move(to: pointListXpos[0])//move to start
-        pointListXpos.removeFirst()//remove start point
-        for pt in pointListXpos {//add points
-            drawPath.addLine(to: pt)
-        }
-        
-        drawPath.move(to: pointListXvelo[0])
-        pointListXvelo.removeFirst()
-        for pt in pointListXvelo {
-            drawPath.addLine(to: pt)
-        }
-//        UIColor.black.setStroke()
-        drawPath.setStrokeColor(UIColor.black.cgColor)
-        drawPath.strokePath()
-
-        // 線を描く
-//        drawPath.stroke()
-        drawPath.move(to: pointListYpos[0])
-        pointListYpos.removeFirst()
-        for pt in pointListYpos {
-            drawPath.addLine(to: pt)
-        }
-        drawPath.move(to: pointListYvelo[0])
-        pointListYvelo.removeFirst()
-        for pt in pointListYvelo {
-            drawPath.addLine(to: pt)
-        }
-        drawPath.setStrokeColor(UIColor.red.cgColor)
-        drawPath.strokePath()
-        // 線の色
-//        UIColor.red.setStroke()
-        // 線を描く
-//        drawPath.stroke()
-        // イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
-    */
  
     func drawVogtext(){
         if vogLineView != nil{
@@ -1875,40 +1763,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var startTime=CFAbsoluteTimeGetCurrent()
 
 
-    func getNamedImage(startingImage:UIImage) ->UIImage{
-        // Create a context of the starting image size and set it as the current one
-        UIGraphicsBeginImageContext(startingImage.size)
-        // Draw the starting image in the current context as background
-        startingImage.draw(at: CGPoint.zero)
-        // Get the current context
-        let context = UIGraphicsGetCurrentContext()!
-        // Draw a red line
-        context.setLineWidth(2.0)
-        context.setStrokeColor(UIColor.black.cgColor)
-        // パスの初期化
-        let drawPath = UIBezierPath()
-        let w=startingImage.size.width
-        let h=startingImage.size.height
-        let str1 = calcDate.components(separatedBy: ":")
-        let str2 = "ID:" + String(format: "%08d", idNumber) + "  " + str1[0] + ":" + str1[1]
-        let str3 = "vHIT96da"
-        
-        str2.draw(at: CGPoint(x: 20, y: h-100), withAttributes: [
-                    NSAttributedString.Key.foregroundColor : UIColor.black,
-                    NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: w-360, y: h-100), withAttributes: [
-                    NSAttributedString.Key.foregroundColor : UIColor.black,
-                    NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        
-        UIColor.black.setStroke()
-        // イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
-    
-   
     @objc func update_vHIT(tm: Timer) {
         if eyeVeloXFiltered.count < 5 {
             return
@@ -1956,13 +1810,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         calcDrawVHIT()
     }
     
-    func Field2value(field:UITextField) -> Int {
-        if field.text?.count != 0 {
-            return Int(field.text!)!
-        }else{
-            return 0
-        }
-    }
+//    func Field2value(field:UITextField) -> Int {
+//        if field.text?.count != 0 {
+//            return Int(field.text!)!
+//        }else{
+//            return 0
+//        }
+//    }
  /*
     func getVideofns()->String{
         let str=getFsindoc().components(separatedBy: ",")
@@ -2438,28 +2292,29 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vhitBoxView?.isHidden == true{
             showBoxies(f: true)
         }
-        //var idNumber:Int = 0
-        let alert = UIAlertController(title: "vHIT96da", message: "Input ID number", preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) -> Void in
+        
+        let alert = UIAlertController(title: "vHIT96da", message: "Input ID", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
             
             // 入力したテキストをコンソールに表示
             let textField = alert.textFields![0] as UITextField
+            idString = textField.text!
             #if DEBUG
             print("\(String(describing: textField.text))")
             #endif
-            self.idNumber = self.Field2value(field: textField)
-            let drawImage = self.drawvhitWaves(width:500,height:200)
+
+            idString = textField.text!
+            let drawImage = drawvhitWaves(width:500,height:200)
             // イメージビューに設定する
             UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
-            self.nonsavedFlag = false //解析結果がsaveされたのでfalse
+            nonsavedFlag = false //解析結果がsaveされたのでfalse
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
-            self.idNumber = 1//キャンセルしてもここは通らない？
         }
         // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
-            textField.keyboardType = UIKeyboardType.numberPad
+            textField.keyboardType = UIKeyboardType.default//.numberPad
         }
         alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
         alert.addAction(saveAction)
@@ -2475,36 +2330,36 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true{
             return
         }
-        
-        let alert = UIAlertController(title: "VOG96da", message: "Input ID without space", preferredStyle: .alert)
+        if eyePosXOrig.count == 0{
+            return
+        }
+        let alert = UIAlertController(title: "VOG96da", message: "Input ID", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
         
         
-//        let alert = UIAlertController(title: "VOG96da", message: "Input ID number", preferredStyle: .alert)
+//        let alert = UIAlertController(title: "VOG96da", message: "Input ID", preferredStyle: .alert)
 //        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
             // 入力したテキストをコンソールに表示
             let textField = alert.textFields![0] as UITextField
             #if DEBUG
             print("\(String(describing: textField.text))")
             #endif
-            idNumber = Field2value(field: textField)
-            drawVogtext()//ここが無くてもIDはsaveされるが、ないとIDが表示されない。
+            idString = textField.text!
+            drawVogtext()//画面にID表示。
   // イメージビューに設定する
             let pos = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
-            let drawImage=self.trimmingImage(self.vogImage!, trimmingArea: CGRect(x:pos,y:0,width: self.mailWidth,height: mailHeight))
+            let drawImage=trimmingImage(vogImage!, trimmingArea: CGRect(x:pos,y:0,width: mailWidth,height: mailHeight))
             let imgWithText=drawText(orgImg: drawImage, width: mailWidth , height: mailHeight,mail:true)
             UIImageWriteToSavedPhotosAlbum(imgWithText, nil, nil, nil)
             nonsavedFlag = false //解析結果がsaveされたのでfalse
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
-            self.idNumber = 1//キャンセルしてもここは通らない？
         }
-//idNumberをStringに変更してアルファベットも可能としよう
         // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
-//            textField.keyboardType = UIKeyboardType.default
-            textField.keyboardType = UIKeyboardType.numberPad
+            textField.keyboardType = UIKeyboardType.default
+//            textField.keyboardType = UIKeyboardType.numberPad
         }
         alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
         alert.addAction(saveAction)
@@ -2519,7 +2374,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let drawPath = UIBezierPath()
         
         let str1 = calcDate.components(separatedBy: ":")
-        let str2 = "ID:" + String(format: "%08d", idNumber) + "  " + str1[0] + ":" + str1[1]
+        let str2 = "ID:" + idString + "  " + str1[0] + ":" + str1[1]
         let str3 = "vHIT96da"
         str2.draw(at: CGPoint(x: 5, y: 180), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
