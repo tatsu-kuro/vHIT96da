@@ -119,6 +119,8 @@ extension UIImage {
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let openCV = opencvWrapper()
+//    var savingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
+    var gettingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
 //    var isIphone:Bool = true//falseではアラートを出して走らないようにする
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
@@ -1054,7 +1056,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         while reader.status != AVAssetReader.Status.reading {
             sleep(UInt32(0.1))
         }
-        DispatchQueue.global(qos: .default).async {//resizerectのチェックの時はここをコメントアウト下がいいかな？
+        DispatchQueue.global(qos: .default).async { [self] in//resizerectのチェックの時はここをコメントアウト下がいいかな？
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
                 var ex:CGFloat = 0
                 var ey:CGFloat = 0
@@ -1156,7 +1158,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                         context.clearCaches()
                     }
-                    
+                    while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
+                        sleep(UInt32(0.1))
+                    }
                     if self.faceF==1{
                         self.faceVeloOrig.append(fx)
                         self.faceVeloFiltered.append(-12.0*self.Kalman(value: fx,num: 0))
@@ -1178,7 +1182,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     self.eyeVeloYOrig.append(ey)
                     let eye5y = -12.0*self.Kalman(value: ey,num:6)//そのままではずれる
                     self.eyeVeloYFiltered.append(eye5y-self.faceVeloFiltered.last!)
-                    
+//                    savingDataNow=false//--------------------------------
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
                         sleep(UInt32(0.1))
@@ -1529,6 +1533,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let py3=(h-240)*3/5+120
         let py4=(h-240)*4/5+120
         let dx = 1// xの間隔
+//        let cnt=eyePosXFiltered.count
+//        let cnt1=eyePosYFiltered.count
+        gettingDataNow=true
         for i in startN..<endN {
             let px = CGFloat(dx * i)
             let pyXpos = eyePosXFiltered[i] * posR + py1//(h-240)/5 + 120
@@ -1544,6 +1551,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             pointListYpos.append(pntYpos)
             pointListYvelo.append(pntYvelo)
         }
+        gettingDataNow=false
         drawPath.move(to: pointListXpos[0])//move to start
         pointListXpos.removeFirst()//remove start point
         for pt in pointListXpos {//add points
@@ -2305,8 +2313,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
             idString = textField.text!
             let drawImage = drawvhitWaves(width:500,height:200)
+            
+            
+            //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
+            saveImage2path(image: drawImage, path: "temp.png")
+            while existFile(aFile: "temp.png") == false{
+                sleep(UInt32(0.1))
+            }
+            savePath2album(path: "temp.png")
+            
+            
             // イメージビューに設定する
-            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
+//            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
             nonsavedFlag = false //解析結果がsaveされたのでfalse
         }
         
@@ -2350,7 +2368,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let pos = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
             let drawImage=trimmingImage(vogImage!, trimmingArea: CGRect(x:pos,y:0,width: mailWidth,height: mailHeight))
             let imgWithText=drawText(orgImg: drawImage, width: mailWidth , height: mailHeight,mail:true)
-            UIImageWriteToSavedPhotosAlbum(imgWithText, nil, nil, nil)
+            
+            //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
+            saveImage2path(image: imgWithText, path: "temp.png")
+            while existFile(aFile: "temp.png") == false{
+                sleep(UInt32(0.1))
+            }
+            savePath2album(path: "temp.png")
+            
+            
+            
+//            UIImageWriteToSavedPhotosAlbum(imgWithText, nil, nil, nil)
             nonsavedFlag = false //解析結果がsaveされたのでfalse
         }
         
