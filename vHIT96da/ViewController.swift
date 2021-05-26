@@ -2799,10 +2799,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #if DEBUG
             print("prepare para")
             #endif
-        }else if let vc = segue.destination as? ImagePickerViewController{
-            let Controller:ImagePickerViewController = vc
-            //            Controller.tateyokoRatio=mailHeight/mailWidth
-            Controller.isVHIT=isVHIT
+//        }else if let vc = segue.destination as? ImagePickerViewController{
+//            let Controller:ImagePickerViewController = vc
+//            //            Controller.tateyokoRatio=mailHeight/mailWidth
+//            Controller.isVHIT=isVHIT
         }else if let vc = segue.destination as? HelpjViewController{
             let Controller:HelpjViewController = vc
             Controller.isVHIT = isVHIT
