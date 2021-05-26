@@ -13,7 +13,7 @@ import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
     let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
-    let albumName:String = "vHIT_VOG"
+//    let albumName:String = "vHIT_VOG"
     var recordedFlag:Bool = false
     let motionManager = CMMotionManager()
     var session: AVCaptureSession!
@@ -546,8 +546,23 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
+    func setZoom(level:Float){//
+       
+        if let device = videoDevice {
+        do {
+            try device.lockForConfiguration()
+                device.ramp(
+                    toVideoZoomFactor: (device.minAvailableVideoZoomFactor) + CGFloat(level) * ((device.maxAvailableVideoZoomFactor) - (device.minAvailableVideoZoomFactor)),
+                    withRate: 30.0)
+            device.unlockForConfiguration()
+            } catch {
+                print("Failed to change zoom.")
+            }
+        }
+    }
     func setFocus(focus:Float) {//focus 0:最接近　0-1.0
         if cameraType==2{
+            setZoom(level: focus/10)
             return
         }
         if let device = videoDevice{
@@ -603,63 +618,22 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
         }
     }
-    /*
-    func albumCheck(albumTitle:String){//ここでもチェックしないとダメのよう
-        if albumExists(albumTitle: albumTitle)==false{
-            createNewAlbum(albumTitle: albumTitle) { (isSuccess) in
-                if isSuccess{
-                    print(albumTitle," can be made,")
-                } else{
-                    print(albumTitle," can't be made.")
-                }
-            }
-        }else{
-            print(albumTitle," exist already.")
-        }
-    }
-    // アルバムが既にあるか確認し、iCapNYSAlbumに代入
-    func albumExists(albumTitle: String) -> Bool {
+ 
+    func albumExists(albumName:String) -> Bool {
         // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
         // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
         let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
                                                                 PHAssetCollectionSubtype.albumRegular, options: nil)
         for i in 0 ..< albums.count {
             let album = albums.object(at: i)
-            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
-                vHIT96daAlbum = album
-                return true
-            }
-        }
-        return false
-    }
-    
-    //何も返していないが、ここで見つけたor作成したalbumを返したい。そうすればグローバル変数にアクセスせずに済む
-    func createNewAlbum(albumTitle: String, callback: @escaping (Bool) -> Void) {
-        if self.albumExists(albumTitle: albumTitle) {
-            callback(true)
-        } else {
-            PHPhotoLibrary.shared().performChanges({
-                let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
-            }) { (isSuccess, error) in
-                callback(isSuccess)
-            }
-        }
-    }*/
-    func albumExists() -> Bool {
-        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
-        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
-        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
-                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
-        for i in 0 ..< albums.count {
-            let album = albums.object(at: i)
-            if album.localizedTitle != nil && album.localizedTitle == "vHIT_VOG" {
+            if album.localizedTitle != nil && album.localizedTitle == albumName {
 //                vHIT96daAlbum = album
                 return true
             }
         }
         return false
     }
-    func getPHAssetcollection()->PHAssetCollection{
+    func getPHAssetcollection(albumName:String)->PHAssetCollection{
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
@@ -688,12 +662,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         if timer?.isValid == true {
             timer!.invalidate()
         }
-        if albumExists()==true{
+        if albumExists(albumName: "vHIT_VOG")==true{
             recordedFlag=true
             PHPhotoLibrary.shared().performChanges({ [self] in
                 //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
                 let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
-                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection())
+                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: "vHIT_VOG"))
                 let placeHolder = assetRequest.placeholderForCreatedAsset
                 albumChangeRequest?.addAssets([placeHolder!] as NSArray)
                 //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier

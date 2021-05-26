@@ -357,99 +357,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         showWakuImages()
      }
-    /*
-     override func viewDidLoad() {
-         super.viewDidLoad()
-         getUserDefaults()
- //        cameraButton.selectedSegmentIndex = cameraMode
-         //setteiしてなければ、以下
-     
-         let avAsset = AVURLAsset(url: videoURL!)
-         let ww:CGFloat=view.bounds.width
-         let wh:CGFloat=view.bounds.height
-         let sp=ww/120//間隙
-         let bw=(ww-sp*10)/7//ボタン幅
-         let bh=bw*170/440
-         let by = wh - bh - sp
-         let seeky = by - bh
-         
-         videoDuration=Float(CMTimeGetSeconds(avAsset.duration))
-         let playerItem: AVPlayerItem = AVPlayerItem(asset: avAsset)
-         // Create AVPlayer
-         videoPlayer = AVPlayer(playerItem: playerItem)
-         // Add AVPlayer
-         let videoPlayerLayer = AVPlayerLayer()
-         videoPlayerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-         videoPlayerLayer.player = videoPlayer
-         if videoPlayerLayerRect.width==0 {
-             videoPlayerLayerRect=view.bounds
-         }
-         videoPlayerLayer.frame = videoPlayerLayerRect
- //        layer.frame = CGRect(x:-view.bounds.width,y:0,width: view.bounds.width*2,height:view.bounds.height*2)
-         view.layer.addSublayer(videoPlayerLayer)
-         // Create Movie SeekBar
-         seekBar.frame = CGRect(x: sp*2, y:seeky, width: ww - 4*sp, height: bh)
-         seekBar.thumbTintColor=UIColor.orange
-         seekBar.minimumValue = 0
-         seekBar.maximumValue = videoDuration
-         seekBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
-         view.addSubview(seekBar)
-         // Set SeekBar Interval
-         let interval : Double = Double(0.5 * seekBar.maximumValue) / Double(seekBar.bounds.maxX)
-         // ConvertCMTime
-         let time : CMTime = CMTimeMakeWithSeconds(interval, preferredTimescale: Int32(NSEC_PER_SEC))
-         // Observer
-         videoPlayer.addPeriodicTimeObserver(forInterval: time, queue: nil, using: {time in
-             // Change SeekBar Position
-             let duration = CMTimeGetSeconds(self.videoPlayer.currentItem!.duration)
-             let time = CMTimeGetSeconds(self.videoPlayer.currentTime())
-             let value = Float(self.seekBar.maximumValue - self.seekBar.minimumValue) * Float(time) / Float(duration) + Float(self.seekBar.minimumValue)
-             self.seekBar.value = value
-         })
-         currTimeLabel.frame = CGRect(x: sp*2, y: 5, width: bw*2, height: bh)
-         currTimeLabel!.font=UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .medium)
-         view.bringSubviewToFront(currTimeLabel)
-         // Create Movie Start Button
-         mailButton.frame = CGRect(x:sp*2+bw*0,y:by,width:bw,height:bh)
-         setButtonProperty(button: mailButton, color: UIColor.darkGray)
-         view.bringSubviewToFront(mailButton)
-         saveButton.frame = CGRect(x:sp*3+bw*1,y:by,width:bw,height:bh)
-         setButtonProperty(button: saveButton, color: UIColor.darkGray)
-         view.bringSubviewToFront(saveButton)
-         waveButton.frame = CGRect(x:sp*4+bw*2,y:by,width:bw,height:bh)
-         setButtonProperty(button: waveButton, color: UIColor.darkGray)
-         view.bringSubviewToFront(waveButton)
-         calcButton.frame = CGRect(x: sp*5+bw*3, y: by, width: bw, height: bh)
-         setButtonProperty(button: calcButton, color: UIColor.blue)
-         view.bringSubviewToFront(calcButton)
-         playButton.frame = CGRect(x: sp*6+bw*4, y: by, width: bw, height: bh)
-         setButtonProperty(button: playButton, color: UIColor.orange)
-         view.bringSubviewToFront(playButton)
-         album.setButtonProperty(setteiButton,x:sp*7+bw*5,y:by,w:bw,h:bh,UIColor.darkGray)
-         view.bringSubviewToFront(setteiButton)
-         album.setButtonProperty(exitButton,x: sp*8+bw*6,y:by, w:bw,h:bh,UIColor.darkGray)
-         view.bringSubviewToFront(exitButton)
-         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-         videoSize=resolutionSizeOfVideo(url:videoURL!)
-         screenSize=view.bounds.size
-         videoFps=getFPS(url: videoURL!)
-         dispWakus()
-         showWakuImages()
-         fpsLabel.frame=CGRect(x:ww - bw*2,y:5,width: bw*2-sp*2,height: bh)
-         fpsLabel.text = String(format:"fps:%.0f w:%.0f h:%.0f",videoFps,videoSize.width,videoSize.height)
-         fpsLabel!.font=UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .medium)
-         view.bringSubviewToFront(fpsLabel)
-         vogBoxHeight=ww*16/25
-         vogBoxYmin=wh/2-vogBoxHeight/2
-         vogBoxYcenter=wh/2
-         fpsXd=Int((240.0/videoFps).rounded())
- //        mailButton.isEnabled=false
- //        cameraButton.frame = CGRect(x:  sp*7+bw*5, y: by-bh*2, width: bw*2+sp, height:bh)
- //        view.bringSubviewToFront(cameraButton)
- //        cameraButton.isHidden=true//fps<230ならfrontCameraと判定することとした
-     }
-   
-     */
+ 
     func getPHAssetcollection(albumTitle:String)->PHAssetCollection{
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
@@ -494,7 +402,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let date_sub=assets[i].creationDate
                 let date = formatter.string(from:date_sub!)
 //                eraseAssetPngNumber=i+1
-                if videoDate[videoCurrent].contains(date){
+                if videoDate[videoCurrent].contains(date){//
                     if !assets[i].canPerform(.delete) {
                         return
                     }
@@ -2287,6 +2195,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func saveResult(_ sender: Any) {//vhit
+        makeAlbum(albumTitle: "Wave96da")//なければ作る
+        
         if calcFlag == true{
             return
         }
@@ -2320,8 +2230,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             while existFile(aFile: "temp.png") == false{
                 sleep(UInt32(0.1))
             }
-            savePath2album(path: "temp.png")
-            
+            savePath2album(albumName:"Wave96da",path: "temp.png")
             
             // イメージビューに設定する
 //            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
@@ -2374,9 +2283,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             while existFile(aFile: "temp.png") == false{
                 sleep(UInt32(0.1))
             }
-            savePath2album(path: "temp.png")
-            
-            
+            savePath2album(albumName:"Wave96da",path: "temp.png")
             
 //            UIImageWriteToSavedPhotosAlbum(imgWithText, nil, nil, nil)
             nonsavedFlag = false //解析結果がsaveされたのでfalse
@@ -2762,16 +2669,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
    
     func makeAlbum(albumTitle:String){
-        if albumExists(albumTitle: albumName)==false{
-            createNewAlbum(albumTitle: albumName) { [self] (isSuccess) in
+        if albumExists(albumTitle: albumTitle)==false{
+            createNewAlbum(albumTitle: albumTitle) { [self] (isSuccess) in
                 if isSuccess{
-                    print(albumName," can be made,")
+                    print(albumTitle," can be made,")
                 } else{
-                    print(albumName," can't be made.")
+                    print(albumTitle," can't be made.")
                 }
             }
         }else{
-            print(albumName," exist already.")
+            print(albumTitle," exist already.")
         }
     }
     //    var tempCalcflag:Bool = false
@@ -2821,23 +2728,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gyroLineView?.isHidden = true //removeFromSuperview()
     }
     var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為
-    func savePath2album(path:String){
+    func savePath2album(albumName:String,path:String){
         path2albumDoneFlag=false
-        savePath2album_sub(path: path)
+        savePath2album_sub(albumName:albumName,path: path)
         while path2albumDoneFlag==false{
             sleep(UInt32(0.2))
         }
     }
 
-    func savePath2album_sub(path:String){
-        
-//        if albumExists(albumTitle: "vHIT_VOG")==false{
-//            return
-//        }
+    func savePath2album_sub(albumName:String,path:String){
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            
             let fileURL = dir.appendingPathComponent( path )
-            
             PHPhotoLibrary.shared().performChanges({ [self] in
                 let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: fileURL)!
                 let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumTitle: albumName))
@@ -2989,7 +2890,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
-                savePath2album(path: "temp.png")
+                savePath2album(albumName:"vHIT_VOG",path: "temp.png")
                 startFrame=0
                 //                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）

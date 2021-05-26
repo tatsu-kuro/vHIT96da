@@ -45,7 +45,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         ] // Title color
         button = UIButton()
         button.addTarget(self, action: #selector(touchUpInside(_:)), for: UIControl.Event.touchUpInside)
-        let size = view.frame.width * 0.48
+        let size = view.frame.width
         button.setTitle("", for: UIControl.State.normal)
         button.frame.size = CGSize(width: size, height: size)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 28)
@@ -97,7 +97,6 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
         let str="\(formatter.string(from: Date())).jpg"
         self.startMailer(videoView:mailImage,imageName:str)
-
     }
     
     override var prefersHomeIndicatorAutoHidden: Bool {
