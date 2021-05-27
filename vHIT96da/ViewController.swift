@@ -1473,7 +1473,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointListXvelo {
             drawPath.addLine(to: pt)
         }
-        drawPath.setStrokeColor(UIColor.black.cgColor)
+        drawPath.setStrokeColor(UIColor.blue.cgColor)
         drawPath.strokePath()
         drawPath.move(to: pointListYpos[0])
         pointListYpos.removeFirst()
@@ -1674,7 +1674,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: eyePosXOrig.count)
             lastArraycount=eyePosXOrig.count
             drawVOG2endPt(end: cntTemp)
-            print("update_vog",timercnt,cntTemp)
+//            print("update_vog",timercnt,cntTemp)
             drawVogtext()
         }
     }
@@ -3064,7 +3064,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     vogCurpoint = 0
                 }
                 let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
-                print(vogCurpoint,view.bounds.width,mailWidth,tmp)
+//                print(vogCurpoint,view.bounds.width,mailWidth,tmp)
                 wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
              }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
