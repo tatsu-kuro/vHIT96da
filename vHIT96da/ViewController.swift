@@ -126,10 +126,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogCurpoint:Int = 0
     var videoPlayer: AVPlayer!
 //    var vogImageView:UIImageView?
+    let vHIT_VOG:String="vHIT_VOG"
+    let Wave96da:String="Wave96da"
+
 
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
-    let albumName:String = "vHIT_VOG"
+//    let albumName:String = "vHIT_VOG"
     var albumExist:Bool=false
     var videoArrayCount:Int = 0
     var videoDate = Array<String>()
@@ -317,7 +320,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         layer.videoGravity = AVLayerVideoGravity.resize//resizeAspect
         layer.player = videoPlayer
         layer.frame = view.bounds
-        print("layerCount:",view.layer.sublayers?.count)
+//        print("layerCount:",view.layer.sublayers?.count)
         if initialFlag==true{//1回目は一番奥にビデオのlayerを加える。
             view.layer.insertSublayer(layer, at: 0)
             initialFlag = false
@@ -381,7 +384,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT_VOG)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
 //        print("asset:",assetCollections.count)
@@ -454,7 +457,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT_VOG)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         //アルバムが存在しない事もある？
@@ -1340,7 +1343,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         view.addSubview(wave3View!)
         let k=CGFloat(Int(view.bounds.width)/Int(mailWidth))
         let k1:CGFloat=view.bounds.width/mailWidth
-        print("ratio:",ww,mailWidth,k,k1)
+//        print("ratio:",ww,mailWidth,k,k1)
         var endPos = CGFloat(end) - 2400
         if CGFloat(end) < 2400{
             endPos=0
@@ -1814,9 +1817,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     //アルバムの一覧取得
     var gettingAlbumF:Bool=true
-    func getVideosAlbumList(){//最後のvideoを取得するまで待つ
+    func getVideosAlbumList(name:String){//最後のvideoを取得するまで待つ
         gettingAlbumF = true
-        getAlbumList_sub()//videosURL,videosDate,videosDuraをゲット
+        getAlbumList_sub(name:name)//videosURL,videosDate,videosDuraをゲット
         while gettingAlbumF == true{
             sleep(UInt32(0.1))
         }
@@ -1827,7 +1830,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
  
-    func getAlbumList_sub(){
+    func getAlbumList_sub(name:String){
         //     let imgManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
         videoURL.removeAll()
@@ -1843,7 +1846,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", name)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
 //        print("asset:",assetCollections.count)
@@ -2195,7 +2198,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func saveResult(_ sender: Any) {//vhit
-        makeAlbum(albumTitle: "Wave96da")//なければ作る
         
         if calcFlag == true{
             return
@@ -2230,7 +2232,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             while existFile(aFile: "temp.png") == false{
                 sleep(UInt32(0.1))
             }
-            savePath2album(albumName:"Wave96da",path: "temp.png")
+            savePath2album(name:Wave96da,path: "temp.png")
             
             // イメージビューに設定する
 //            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
@@ -2283,7 +2285,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             while existFile(aFile: "temp.png") == false{
                 sleep(UInt32(0.1))
             }
-            savePath2album(albumName:"Wave96da",path: "temp.png")
+            savePath2album(name:Wave96da,path: "temp.png")
             
 //            UIImageWriteToSavedPhotosAlbum(imgWithText, nil, nil, nil)
             nonsavedFlag = false //解析結果がsaveされたのでfalse
@@ -2483,7 +2485,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
 //        camera_alert()
-        getVideosAlbumList()
+        getVideosAlbumList(name:vHIT_VOG)
         videoArrayCount = videoURL.count
         videoCurrent=videoArrayCount-1
         makeBoxies()//three boxies of gyro vHIT vog
@@ -2668,17 +2670,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // Dispose of any resources that can be recreated.
     }
    
-    func makeAlbum(albumTitle:String){
-        if albumExists(albumTitle: albumTitle)==false{
-            createNewAlbum(albumTitle: albumTitle) { [self] (isSuccess) in
+    func makeAlbum(name:String){
+        if albumExists(albumTitle:name )==false{
+            createNewAlbum(albumTitle: name) {  isSuccess in
                 if isSuccess{
-                    print(albumTitle," can be made,")
+                    print(name," can be made,")
                 } else{
-                    print(albumTitle," can't be made.")
+                    print(name," can't be made.")
                 }
             }
         }else{
-            print(albumTitle," exist already.")
+            print(name," exist already.")
         }
     }
     //    var tempCalcflag:Bool = false
@@ -2714,7 +2716,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let Controller:HelpjViewController = vc
             Controller.isVHIT = isVHIT
         }else if segue.destination is RecordViewController{
-            makeAlbum(albumTitle: "vHIT_VOG")//なければ作る
+            makeAlbum(name: vHIT_VOG)//なければ作る
+            makeAlbum(name: Wave96da)//これもなければ作る
         }else{
             #if DEBUG
             print("prepare list")
@@ -2728,20 +2731,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gyroLineView?.isHidden = true //removeFromSuperview()
     }
     var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為
-    func savePath2album(albumName:String,path:String){
+    func savePath2album(name:String,path:String){
         path2albumDoneFlag=false
-        savePath2album_sub(albumName:albumName,path: path)
+        savePath2album_sub(name:name,path: path)
         while path2albumDoneFlag==false{
             sleep(UInt32(0.2))
         }
     }
 
-    func savePath2album_sub(albumName:String,path:String){
+    func savePath2album_sub(name:String,path:String){
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let fileURL = dir.appendingPathComponent( path )
             PHPhotoLibrary.shared().performChanges({ [self] in
                 let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: fileURL)!
-                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumTitle: albumName))
+                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumTitle: name))
                 let placeHolder = assetRequest.placeholderForCreatedAsset
                 albumChangeRequest?.addAssets([placeHolder!] as NSArray)
             }) { (isSuccess, error) in
@@ -2859,7 +2862,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     sleep(UInt32(0.1))
                 }
                 removeFile(delFile: "temp.png")
-                getVideosAlbumList()
+                getVideosAlbumList(name: vHIT_VOG)
                 while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
@@ -2890,13 +2893,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
-                savePath2album(albumName:"vHIT_VOG",path: "temp.png")
+                savePath2album(name:vHIT_VOG,path: "temp.png")
                 startFrame=0
                 //                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
-                    getVideosAlbumList()
+                    getVideosAlbumList(name: vHIT_VOG)
                     slowImage.image=UIImage(named:"vhittop")
                     playButton.isEnabled=false
                     print("アルバムを消されていたので、録画を保存しなかった。")

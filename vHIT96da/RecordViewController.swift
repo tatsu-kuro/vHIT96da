@@ -13,7 +13,7 @@ import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
     let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
-//    let albumName:String = "vHIT_VOG"
+    let vHIT_VOG:String="vHIT_VOG"
     var recordedFlag:Bool = false
     let motionManager = CMMotionManager()
     var session: AVCaptureSession!
@@ -584,7 +584,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
   
     var soundIdx:SystemSoundID = 0
     func Record_or_Stop() {
-//        albumCheck(albumTitle:albumName)
         if self.fileOutput.isRecording {
             // stop recording
             print("ストップボタンを押した。")
@@ -662,12 +661,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         if timer?.isValid == true {
             timer!.invalidate()
         }
-        if albumExists(albumName: "vHIT_VOG")==true{
+        if albumExists(albumName: vHIT_VOG)==true{
             recordedFlag=true
             PHPhotoLibrary.shared().performChanges({ [self] in
                 //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
                 let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
-                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: "vHIT_VOG"))
+                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: vHIT_VOG))
                 let placeHolder = assetRequest.placeholderForCreatedAsset
                 albumChangeRequest?.addAssets([placeHolder!] as NSArray)
                 //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier

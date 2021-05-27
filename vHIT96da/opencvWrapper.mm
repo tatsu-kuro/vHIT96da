@@ -94,7 +94,7 @@
             break;
         }
     }
-    putText(inputMat,"GyroData",cvPoint(10,cols*3/5),cv::FONT_HERSHEY_SIMPLEX,4,cvScalar(0,0,0),15,CV_AA);
+    putText(inputMat,"GyroDataOnTop",cvPoint(10,cols*3/5),cv::FONT_HERSHEY_SIMPLEX,3,cvScalar(0,0,0),15,CV_AA);
     inputImg = MatToUIImage(inputMat);
     return inputImg;
 }
