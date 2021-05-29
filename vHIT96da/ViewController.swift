@@ -536,11 +536,30 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
    
     func showVideoIroiro(num:Int){//videosCurrentを移動して、諸々表示
         if videoDura.count == 0{
-            slowImage.image=UIImage(named:"vhittop")
+            print("ないですよ！！！！！！")
+            videoSlider.isHidden=true
+            eraseButton.isHidden=true
+//            slowImage.image=UIImage(named:"vhittop")
+            currentVideoDate.text="tap right-bottom button to record"
+            videoFps.text="tap right-bottom button to record"
+//            slowImage.image?.size=CGSize(width: 100, height: 200)// frame=CGRect(x:0,y:0,width: 100,height: 100)
+//            //            let topImage=UIImage(named:"vhittop")
+//            let sample = UIImageView()
+//            sample.image=UIImage(named: "vhittop")
+//            let screenW:CGFloat = view.frame.size.width
+//            let screenH:CGFloat = view.frame.size.height
+//            sample.frame = CGRect(x:0, y:0, width:736/4, height:1084/4)
+//            // 画像を中央に設定
+//            sample.center = CGPoint(x:screenW/2, y:screenH/2)
+//            // 設定した画像をスクリーンに表示する
+//            self.view.addSubview(sample)
             return
-        }else{
-            slowImage.alpha=0
+//        }else{
+//            slowImage.alpha=0
         }
+        slowImage.alpha=0
+        videoSlider.isHidden=false
+        eraseButton.isHidden=false
         videoCurrent += num
         if videoCurrent>videoArrayCount-1{
             videoCurrent=0
