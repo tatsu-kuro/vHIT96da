@@ -75,9 +75,6 @@
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Q7-F1-xlh">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="dvP-Cv-tWK" appends="YES" id="dCE-0O-rR8"/>
-                                </connections>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldV-kl-ghp">
                                 <rect key="frame" x="97" y="829" width="47.5" height="43"/>
@@ -370,6 +367,7 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="YPr-Ux-hO9" appends="YES" id="iz5-0Y-8f7"/>
+                            <outletCollection property="gestureRecognizers" destination="dvP-Cv-tWK" appends="YES" id="DQp-EF-jh3"/>
                         </connections>
                     </view>
                     <connections>

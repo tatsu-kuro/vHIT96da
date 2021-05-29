@@ -654,6 +654,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
 
         print("終了ボタン、最大を超えた時もここを通る")
+        UIApplication.shared.isIdleTimerDisabled = false//スリープする
+
         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
         //        recordedFPS=getFPS(url: outputFileURL)
         //        topImage=getThumb(url: outputFileURL)

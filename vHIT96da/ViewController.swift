@@ -864,7 +864,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         timercnt = 0
         
         openCVstopFlag = false
-        UIApplication.shared.isIdleTimerDisabled = true
+        UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
         //        print("eyeborder:",eyeBorder,faceF)
         startTimer()//resizerectのチェックの時はここをコメントアウト*********************
@@ -1657,7 +1657,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == false {//終わったらここ
             timer.invalidate()
             setButtons(mode: true)
-            UIApplication.shared.isIdleTimerDisabled = false
+            UIApplication.shared.isIdleTimerDisabled = false//do sleep
             vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: eyePosXOrig.count)
             drawVOG2endPt(end: 0)
             if vogLineView != nil{
@@ -3133,8 +3133,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawVHITwaves()
 //                return
             }
-        }else{
+        }else if vhitBoxView?.isHidden==true{
             if sender.location(in:self.view).y>view.bounds.height*3/4{
+                //video slide bar と被らないように
                 return
             }
             if faceF==1 && isVHIT==true{

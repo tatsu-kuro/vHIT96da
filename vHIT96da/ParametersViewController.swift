@@ -231,6 +231,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+//         print(versionNumber)
+        
         widthRangeinput.delegate = self
         waveWidthinput.delegate = self
         eyeBinput.delegate = self
