@@ -175,7 +175,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let bw:CGFloat=45
         let bh:CGFloat=25
         let bh1=bh+7
-  
+        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+//         print(versionNumber)
+//        gyroText.text! += "\n\nvHIT96da Version " + versionNumber
+
         let tw:CGFloat=ww-bw-10
 //        let vhit_h:CGFloat=ww/4
         var by:CGFloat=20//vhit_h+20
@@ -197,7 +200,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             ratio1input.isHidden = false
             ratio2input.isHidden = false
             paraText7.isHidden = true
-            gyroText.isHidden = true
+//            gyroText.isHidden = true
             paraText2.text = "VOG 波形表示高さの調整"
             paraText3.text = "眼球偏位位置表示の高さ％"
             paraText4.text = "眼球偏位速度表示の高さ％"
@@ -206,6 +209,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText3.frame   = CGRect(x:x2,   y: topY+by+bh1*1,width: tw, height: bh)
             paraText4.frame   = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
             paraText6.frame   = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
+            gyroText.frame = CGRect(x:5,y:topY+by+bh1*4,width:ww-10,height: bh*3 )
+            
+            gyroText.text! = "vHIT96da Version " + versionNumber
+
             ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*1 ,width: bw, height: bh)
             ratio2input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
             eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
@@ -218,7 +225,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText7.frame = CGRect(x:x2, y:topY+by+bh1*5,width: tw,height:bh)
             markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*6+3,width:tw,height:bh)
             vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*7+10 ,width: ww, height: ww*9/32)
-            gyroText.frame = CGRect(x:5,     y: topY+by+bh1*7+25+ww/5,width:ww-10,height:bh*4)
+            gyroText.frame = CGRect(x:5,     y: topY+by+bh1*7+25+ww/5,width:ww-10,height:bh*6)
+            gyroText.text! += "\n\nvHIT96da Version " + versionNumber
             waveWidthinput.frame = CGRect(x:x1,y: topY+by,width: bw, height: bh)
             widthRangeinput.frame = CGRect(x:x1,y:topY+by+bh1 ,width: bw, height: bh)
             ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
@@ -231,9 +239,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
-//         print(versionNumber)
-        
+//        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+////         print(versionNumber)
+//        gyroText.text! += "\n\nvHIT96da Version " + versionNumber
         widthRangeinput.delegate = self
         waveWidthinput.delegate = self
         eyeBinput.delegate = self
