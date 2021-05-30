@@ -986,7 +986,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var maxEyeV:Double = 0
         var maxFaceV:Double = 0
         while reader.status != AVAssetReader.Status.reading {
-            sleep(UInt32(0.1))
+//            sleep(UInt32(0.1))
+            usleep(1000)//0.001sec
         }
         DispatchQueue.global(qos: .default).async { [self] in//resizerectのチェックの時はここをコメントアウト下がいいかな？
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
@@ -1091,7 +1092,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         context.clearCaches()
                     }
                     while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
-                        sleep(UInt32(0.1))
+//                        sleep(UInt32(0.1))
+                        usleep(1000)//0.001sec
+
                     }
                     if self.faceF==1{
                         self.faceVeloOrig.append(fx)
@@ -1117,7 +1120,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                    savingDataNow=false//--------------------------------
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
-                        sleep(UInt32(0.1))
+                        usleep(1000)//0.001sec
+//                        sleep(UInt32(0.1))
                     }
                     self.fps120(is120: fpsIs120)
                     //eyeのみでチェックしているが。。。。
@@ -1131,7 +1135,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 //マッチングデバッグ用スリープ、デバッグが終わったら削除
                 #if DEBUG
-                usleep(200)
+                usleep(20000)
                 #endif
             }
             //            print("time:",CFAbsoluteTimeGetCurrent()-st)
