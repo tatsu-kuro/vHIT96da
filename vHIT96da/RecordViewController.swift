@@ -527,6 +527,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var timerCnt:Int=0
     @objc func update(tm: Timer) {
         timerCnt += 1
+        if timerCnt>1{
+            stopButton.isHidden=false
+        }
+        
         if fileOutput.isRecording{
 //            timerCnt += 1
             currentTime.text=String(format:"%02d",timerCnt/60) + ":" + String(format: "%02d",timerCnt%60)
@@ -590,9 +594,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func Record_or_Stop() {
         if self.fileOutput.isRecording {
             // stop recording
-            if timerCnt<2{
-                return
-            }
+//            if timerCnt<2{
+//                return
+//            }
             print("ストップボタンを押した。")
             fileOutput.stopRecording()
         } else {
@@ -600,7 +604,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             timerCnt=0
             setMotion()
             hideButtons(type: true)
-            stopButton.isHidden=false
+            stopButton.isHidden=true
             currentTime.isHidden=false
         
             UIApplication.shared.isIdleTimerDisabled = true//スリープしない
