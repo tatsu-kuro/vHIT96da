@@ -97,6 +97,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     
     @IBOutlet weak var damyBottom: UILabel!
     @IBAction func onClickStopButton(_ sender: Any) {
+        if CFAbsoluteTimeGetCurrent()-self.recStart < 1{//1byou
+            return
+        }
+
         Record_or_Stop()
     }
  
@@ -586,6 +590,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func Record_or_Stop() {
         if self.fileOutput.isRecording {
             // stop recording
+            if timerCnt<2{
+                return
+            }
             print("ストップボタンを押した。")
             fileOutput.stopRecording()
         } else {
@@ -655,6 +662,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
         print("終了ボタン、最大を超えた時もここを通る")
         UIApplication.shared.isIdleTimerDisabled = false//スリープする
+        
+//        for _ in 0...20{
+//            self.gyro.append(CFAbsoluteTimeGetCurrent()-self.recStart)
+//            self.gyro.append(0)//
+//        }
 
         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
         //        recordedFPS=getFPS(url: outputFileURL)

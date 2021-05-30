@@ -267,7 +267,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var wakuE = CGRect(x:300.0,y:100.0,width:5.0,height:5.0)
     var wakuF = CGRect(x:300.0,y:200.0,width:5.0,height:5.0)
     
-    @IBOutlet weak var slowImage: UIImageView!
+//    @IBOutlet weak var slowImage: UIImageView!
     @IBOutlet weak var currentVideoDate: UILabel!
     var calcDate:String = ""
     var idString:String = "00000000"
@@ -533,15 +533,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         startFrame=0
         showVideoIroiro(num: -1)
     }
-   
+    func setVideoButtons(mode:Bool){
+        videoSlider.isEnabled=mode
+        backwardButton.isEnabled=mode
+        forwardButton.isEnabled=mode
+        playButton.isEnabled=mode
+        eraseButton.isHidden = !mode
+    }
     func showVideoIroiro(num:Int){//videosCurrentを移動して、諸々表示
         if videoDura.count == 0{
             print("ないですよ！！！！！！")
-            videoSlider.isHidden=true
-            eraseButton.isHidden=true
+            setVideoButtons(mode: false)
+//            videoSlider.isEnabled=false
+//            eraseButton.isHidden=true
 //            slowImage.image=UIImage(named:"vhittop")
             currentVideoDate.text="tap right-bottom button to record"
             videoFps.text="tap right-bottom button to record"
+//            setButtons(mode: false)
 //            slowImage.image?.size=CGSize(width: 100, height: 200)// frame=CGRect(x:0,y:0,width: 100,height: 100)
 //            //            let topImage=UIImage(named:"vhittop")
 //            let sample = UIImageView()
@@ -557,9 +565,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        }else{
 //            slowImage.alpha=0
         }
-        slowImage.alpha=0
-        videoSlider.isHidden=false
-        eraseButton.isHidden=false
+//        slowImage.alpha=0
+ setVideoButtons(mode: true)
         videoCurrent += num
         if videoCurrent>videoArrayCount-1{
             videoCurrent=0
@@ -747,8 +754,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = true
             helpButton.isEnabled = true
             playButton.isEnabled = true
-//            faceButton.isEnabled = true
-//            eyeButton.isEnabled = true
             vogButton.isEnabled = true
             vhitButton.isEnabled = true
             cameraButton.isEnabled = true
@@ -760,8 +765,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                  vogButton.backgroundColor=UIColor.blue
             }
             cameraButton.backgroundColor=UIColor.orange
-//            eyeButton.backgroundColor=UIColor.darkGray
-//            faceButton.backgroundColor=UIColor.darkGray
         }else{
             calcButton.isHidden = true
             stopButton.isHidden = false
@@ -772,8 +775,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             playButton.isEnabled = false
-//            faceButton.isEnabled = false
-//            eyeButton.isEnabled = false
             vogButton.isEnabled = false
             vhitButton.isEnabled = false
             cameraButton.isEnabled = false
@@ -785,10 +786,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 vogButton.backgroundColor=UIColor.systemBlue
             }
-            
-//            eyeButton.backgroundColor=UIColor.gray
-//            faceButton.backgroundColor=UIColor.gray
-        }
+         }
     }
     @IBAction func vHITcalc(_ sender: Any) {
         if videoImg.count==0{
@@ -2870,6 +2868,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 gyroFiltered.removeAll()
                 showBoxies(f: false)
                 playButton.isEnabled=true
+//                print("gyrocount",Controller.gyro.count)
                 for i in 0...Controller.gyro.count/2-4{//-2でエラーなので、-5としてみた
                     gyroTime.append(Controller.gyro[i*2])
                     d=Double(Kalman(value:CGFloat(Controller.gyro[i*2+1]*10),num:3))
@@ -2919,7 +2918,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
                     getVideosAlbumList(name: vHIT_VOG)
-                    slowImage.image=UIImage(named:"vhittop")
+//                    slowImage.image=UIImage(named:"vhittop")
                     playButton.isEnabled=false
                     print("アルバムを消されていたので、録画を保存しなかった。")
                 }else{
