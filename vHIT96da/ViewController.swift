@@ -754,6 +754,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = true
             helpButton.isEnabled = true
             playButton.isEnabled = true
+            forwardButton.isEnabled=true
+            backwardButton.isEnabled=true
             vogButton.isEnabled = true
             vhitButton.isEnabled = true
             cameraButton.isEnabled = true
@@ -775,6 +777,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             playButton.isEnabled = false
+            forwardButton.isEnabled = false
+            backwardButton.isEnabled = false
             vogButton.isEnabled = false
             vhitButton.isEnabled = false
             cameraButton.isEnabled = false
