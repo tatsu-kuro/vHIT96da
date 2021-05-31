@@ -50,6 +50,19 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     
     @IBOutlet weak var cameraChangeButton: UIButton!
     
+    func setBars(){
+        if cameraType==2{
+            focusBar.value=getUserDefault(str: "zoomValue", ret: 0)
+            setZoom(level: focusBar.value/10)
+            focusFar.text = "ZOOM"
+            focusNear.text = "zoom"
+        }else{
+            focusBar.value=getUserDefault(str: "focusValue", ret: 0)
+            setFocus(focus: focusBar.value)
+            focusFar.text = "far"//false
+            focusNear.text = "near"//isHidden=false
+        }
+    }
     @IBAction func onCameraChange(_ sender: Any) {//camera>1
         cameraType=UserDefaults.standard.integer(forKey:"cameraType")
         if cameraType==0{
@@ -69,70 +82,54 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         print("cameraType",cameraType)
         UserDefaults.standard.set(cameraType, forKey: "cameraType")
-        
-        if session.isRunning{
+         if session.isRunning{
         // セッションが始動中なら止める
             print("isrunning")
             session.stopRunning()
         }
         initSession(fps: fps_non_120_240)
-    }
-    
-    @IBAction func startRecord(_ sender: Any) {
-//        if ( UIDevice.current.model.range(of: "iPad") != nil){//universalized
-////            print("iPad")
-//            let alert: UIAlertController = UIAlertController(title: "Not available on iPad.", message: "This application captures eye movements using goggles that fix the iPhone to the face, as shown on the usage page.", preferredStyle:  UIAlertController.Style.alert)
-//            
-//            let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{
-//                // ボタンが押された時の処理を書く（クロージャ実装）
-//                (action: UIAlertAction!) -> Void in
-//                print("OK")
-//            })
-//            alert.addAction(defaultAction)
-//            present(alert, animated: true, completion: nil)
-//            return
-//        }
-        Record_or_Stop()
+        setBars()
     }
     
     @IBOutlet weak var damyBottom: UILabel!
     @IBAction func onClickStopButton(_ sender: Any) {
-        if CFAbsoluteTimeGetCurrent()-self.recStart < 1{//1byou
-            return
+        
+        if self.fileOutput.isRecording {
+            print("ストップボタンを押した。")
+            fileOutput.stopRecording()
         }
 
-        Record_or_Stop()
     }
  
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
-        if cameraType==2{
-            return
-        }
-        let screenSize=cameraView.bounds.size
-        let x0 = sender.location(in: self.view).x
-        let y0 = sender.location(in: self.view).y
-        print("tap:",x0,y0,screenSize.height)
-        
-        if y0>view.bounds.height*3/5{//screenSize.height*3/4{
-            return
-        }
-        let x = y0/screenSize.height
-        let y = 1.0 - x0/screenSize.width
-        let focusPoint = CGPoint(x:x,y:y)
-        if let device = videoDevice{
-            do {
-                try device.lockForConfiguration()
-                
-                device.focusPointOfInterest = focusPoint
-//                                device.focusMode = .continuousAutoFocus
-                device.focusMode = .autoFocus
-                
-                device.unlockForConfiguration()
-            }
-            catch {
-                // just ignore
-            }
-        }
+//        if cameraType==2{
+//            return
+//        }
+//        let screenSize=cameraView.bounds.size
+//        let x0 = sender.location(in: self.view).x
+//        let y0 = sender.location(in: self.view).y
+//        print("tap:",x0,y0,screenSize.height)
+//
+//        if y0>view.bounds.height*3/5{//screenSize.height*3/4{
+//            return
+//        }
+//        let x = y0/screenSize.height
+//        let y = 1.0 - x0/screenSize.width
+//        let focusPoint = CGPoint(x:x,y:y)
+//        if let device = videoDevice{
+//            do {
+//                try device.lockForConfiguration()
+//
+//                device.focusPointOfInterest = focusPoint
+////                                device.focusMode = .continuousAutoFocus
+//                device.focusMode = .autoFocus
+//
+//                device.unlockForConfiguration()
+//            }
+//            catch {
+//                // just ignore
+//            }
+//        }
     }
     // 指定の FPS のフォーマットに切り替える (その FPS で最大解像度のフォーマットを選ぶ)
     //
@@ -227,6 +224,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         if (UserDefaults.standard.object(forKey: "cameraType") != nil){//keyが設定してなければretをセット
             cameraType=UserDefaults.standard.integer(forKey:"cameraType")
         }else{
+            cameraType=0
             UserDefaults.standard.set(cameraType, forKey: "cameraType")
         }
         print("cameraType",cameraType)
@@ -257,9 +255,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusBar.minimumValue = 0
         focusBar.maximumValue = 1.0
         focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
-        focusBar.value=getUserDefault(str: "focusValue", ret: 0)
-        setFocus(focus: focusBar.value)
-        
+        setBars()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
     }
     
@@ -302,22 +298,23 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             return ret
         }
     }
+    
     @objc func onLEDValueChange(){
         //        setFocus(focus:focusBar.value)
         setFlashlevel(level: LEDBar.value)
         UserDefaults.standard.set(LEDBar.value, forKey: "LEDValue")
     }
     @objc func onSliderValueChange(){
-        setFocus(focus:focusBar.value)
-        UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
+        if cameraType==2{//ultrawide
+            setZoom(level:focusBar.value/10)
+            UserDefaults.standard.set(focusBar.value,forKey: "zoomValue")
+        }else{
+            setFocus(focus:focusBar.value)
+            UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
+        }
     }
-//    override func view
-//    override func viewWillAppear(_ animated: Bool) {
-//        setButtons()
-//        hideButtons(type: false)
-//    }
+
     override func viewDidAppear(_ animated: Bool) {
-//        hideButtons(type: false)
         setButtons()//type: true)
         hideButtons(type:false)
         stopButton.isHidden=true
@@ -548,16 +545,18 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         if timerCnt > 60*5{
             timer!.invalidate()
             if self.fileOutput.isRecording{
-                Record_or_Stop()
+                onClickStopButton(0)
+//                Record_or_Stop()
             }else{
                 performSegue(withIdentifier: "fromRecordToMain", sender: self)
             }
         }
     }
     func setZoom(level:Float){//
-       
+       print("zoom:::::",level)
         if let device = videoDevice {
         do {
+            print("zoom:::::",level)
             try device.lockForConfiguration()
                 device.ramp(
                     toVideoZoomFactor: (device.minAvailableVideoZoomFactor) + CGFloat(level) * ((device.maxAvailableVideoZoomFactor) - (device.minAvailableVideoZoomFactor)),
@@ -569,66 +568,49 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     func setFocus(focus:Float) {//focus 0:最接近　0-1.0
-        if cameraType==2{
-            setZoom(level: focus/10)
-            return
-        }
         if let device = videoDevice{
-            do {
-                try device.lockForConfiguration()
-                device.focusMode = .locked
-                device.setFocusModeLocked(lensPosition: focus, completionHandler: { _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                        device.unlockForConfiguration()
+            if device.isFocusModeSupported(.autoFocus) && device.isFocusPointOfInterestSupported {
+                do {
+                    try device.lockForConfiguration()
+                    device.focusMode = .locked
+                    device.setFocusModeLocked(lensPosition: focus, completionHandler: { _ in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                            device.unlockForConfiguration()
+                        })
                     })
-                })
-                device.unlockForConfiguration()
-            }
-            catch {
-                // just ignore
+                    device.unlockForConfiguration()
+                }
+                catch {
+                    // just ignore
+                    print("focuserror")
+                }
             }
         }
     }
   
     var soundIdx:SystemSoundID = 0
-    func Record_or_Stop() {
-        if self.fileOutput.isRecording {
-            // stop recording
-//            if timerCnt<2{
-//                return
-//            }
-            print("ストップボタンを押した。")
-            fileOutput.stopRecording()
-        } else {
-            //start recording
-            timerCnt=0
-            setMotion()
-            hideButtons(type: true)
-            stopButton.isHidden=true
-            currentTime.isHidden=false
-        
-            UIApplication.shared.isIdleTimerDisabled = true//スリープしない
-            
-            if let soundUrl = URL(string:
-                              "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
-                AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
-                AudioServicesPlaySystemSound(soundIdx)
-            }
-            
-            
-            
-//            if let soundUrl = CFBundleCopyResourceURL(CFBundleGetMainBundle(), nil, nil, nil){
-//                AudioServicesCreateSystemSoundID(soundUrl, &soundIdstart)
-//                AudioServicesPlaySystemSound(soundIdstart)
-//            }
-            try? FileManager.default.removeItem(atPath: TempFilePath)
-
-            let fileURL = NSURL(fileURLWithPath: TempFilePath)
- 
-            fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
+    
+    @IBAction func onClickStartButton(_ sender: Any) {
+        //start recording
+        timerCnt=0
+        setMotion()
+        hideButtons(type: true)
+        stopButton.isHidden=true
+        currentTime.isHidden=false
+        UIApplication.shared.isIdleTimerDisabled = true//スリープしない
+        if let soundUrl = URL(string:
+                                "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+            AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+            AudioServicesPlaySystemSound(soundIdx)
         }
+        try? FileManager.default.removeItem(atPath: TempFilePath)
+        
+        let fileURL = NSURL(fileURLWithPath: TempFilePath)
+        
+        fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
+        
     }
- 
+    
     func albumExists(albumName:String) -> Bool {
         // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
         // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""

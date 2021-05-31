@@ -449,7 +449,7 @@
                                 <color key="tintColor" systemColor="systemRedColor"/>
                                 <state key="normal" image="largecircle.fill.circle" catalog="system"/>
                                 <connections>
-                                    <action selector="startRecord:" destination="eZj-22-ehM" eventType="touchUpInside" id="JuQ-Pd-Fs9"/>
+                                    <action selector="onClickStartButton:" destination="eZj-22-ehM" eventType="touchUpInside" id="JuQ-Pd-Fs9"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JIC-Av-JhT">
