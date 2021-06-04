@@ -606,9 +606,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         try? FileManager.default.removeItem(atPath: TempFilePath)
         
         let fileURL = NSURL(fileURLWithPath: TempFilePath)
-        //下３行の様にしたら、ビデオとジャイロのズレが安定した。zure:7
-        sleep(UInt32(1.0))
+        //下３行の様にしたら、ビデオとジャイロのズレが安定した。zure:10
         setMotion()
+        sleep(UInt32(1.0))
         fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
         timerCnt=0
     }

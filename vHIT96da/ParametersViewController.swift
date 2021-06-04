@@ -172,7 +172,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let ww:CGFloat=view.bounds.width
         let wh:CGFloat=view.bounds.height
 //        print("windowHeight",wh)//8:667 x:812 se:568
-        let bw:CGFloat=45
+        let bw:CGFloat=50
         let bh:CGFloat=25
         let bh1=bh+7
         let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
@@ -201,7 +201,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             ratio2input.isHidden = false
             paraText7.isHidden = true
 //            gyroText.isHidden = true
-            paraText2.text = "VOG 波形表示高さの調整"
+            paraText2.text = " ** VOG 波形表示高さの調整 **"
             paraText3.text = "眼球偏位位置表示の高さ％"
             paraText4.text = "眼球偏位速度表示の高さ％"
             paraText6.text="角膜上反射光源の移動（検出）幅"
