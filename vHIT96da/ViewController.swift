@@ -1467,7 +1467,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        let h=drawPath.height
 //        let h=mailHeight
 //        print("height:",h)
-        let posR=CGFloat(posRatio)/20.0
+        let posR=CGFloat(posRatio)/30.0
         let veloR=CGFloat(veloRatio)/10.0
         let py1=(h-240)/5+120
         let py2=(h-240)*2/5+120
@@ -1479,10 +1479,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gettingDataNow=true
         for i in startN..<endN {
             let px = CGFloat(dx * i)
-            let pyXpos = eyePosXFiltered[i] * posR + py1//(h-240)/5 + 120
-            let pyXvelo = eyeVeloXFiltered[i] * veloR + py2//(h-240)*2/5 + 120
-            let pyYpos = eyePosYFiltered[i] * posR + py3//(h-240)*3/5 + 120
-            let pyYvelo = eyeVeloYFiltered[i] * veloR + py4//(h-240)*4/5 + 120
+            let pyXpos = eyePosXFiltered[i] * posR + py1
+            let pyXvelo = eyeVeloXFiltered[i] * veloR + py2
+            let pyYpos = eyePosYFiltered[i] * posR + py3
+            let pyYvelo = eyeVeloYFiltered[i] * veloR + py4
             let pntXpos = CGPoint(x: px, y: pyXpos)
             let pntXvelo = CGPoint(x: px, y: pyXvelo)
             let pntYpos = CGPoint(x: px, y: pyYpos)
