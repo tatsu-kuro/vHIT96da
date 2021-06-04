@@ -592,8 +592,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     
     @IBAction func onClickStartButton(_ sender: Any) {
         //start recording
-        timerCnt=0
-        setMotion()
+//        timerCnt=0
+//        setMotion()
         hideButtons(type: true)
         stopButton.isHidden=true
         currentTime.isHidden=false
@@ -606,9 +606,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         try? FileManager.default.removeItem(atPath: TempFilePath)
         
         let fileURL = NSURL(fileURLWithPath: TempFilePath)
-        
+        //下３行の様にしたら、ビデオとジャイロのズレが安定した。zure:7
+        sleep(UInt32(1.0))
+        setMotion()
         fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
-        
+        timerCnt=0
     }
     
     func albumExists(albumName:String) -> Bool {
@@ -696,7 +698,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
-        print("録画開始")
+//        print("録画開始")
         //fileOutput.stopRecording()
     }
 }

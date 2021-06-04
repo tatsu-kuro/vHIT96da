@@ -189,6 +189,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoURL.count == 0{
             return
         }
+        showBoxies(f: false)
         videoPlayer.pause()
         if videoSlider.value>videoSlider.maximumValue-0.1{
             return
@@ -203,7 +204,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoURL.count == 0{
             return
         }
-       videoPlayer.pause()
+        showBoxies(f: false)
+        videoPlayer.pause()
         if videoSlider.value < 0.1{
             return
         }
@@ -411,8 +413,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     var delAssets=Array<PHAsset>()
                     delAssets.append(assets[i])
-                    if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
-                        delAssets.append(assets[i+1])//pngはその次に入っているはず
+                    if i != assets.count-1{//最後でなければ
+                        if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
+                            delAssets.append(assets[i+1])//pngはその次に入っているはず
+                        }
                     }
                     PHPhotoLibrary.shared().performChanges({
                         PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
@@ -470,9 +474,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            for i in 0..<assets.count{
+            for i in 0..<assets.count-1{//最後はvideoでは無いはずなので
                 let date = formatter.string(from:assets[i].creationDate!)
                 if videoDate.contains(date){//find currentVideo
+                    
                     if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
                         //currentVideoの次がpngならそれを選択
                         let width=assets[i+1].pixelWidth
@@ -547,8 +552,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            videoSlider.isEnabled=false
 //            eraseButton.isHidden=true
 //            slowImage.image=UIImage(named:"vhittop")
-            currentVideoDate.text="tap right-bottom button to record"
-            videoFps.text="tap right-bottom button to record"
+            currentVideoDate.text="tap button in lower right corner"
+            videoFps.text="to record the video of the eye"
 //            setButtons(mode: false)
 //            slowImage.image?.size=CGSize(width: 100, height: 200)// frame=CGRect(x:0,y:0,width: 100,height: 100)
 //            //            let topImage=UIImage(named:"vhittop")
@@ -1813,21 +1818,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if UserDefaults.standard.object(forKey:"videoGyroZure") != nil{
             videoGyroZure=UserDefaults.standard.integer(forKey: "videoGyroZure")
         }else{
-            let vw=view.bounds.width
-            let vh=view.bounds.height
-            if UIDevice.self.current.model.contains("touch"){//Touch7:320x568->30:120fps
-                videoGyroZure=30
-            }else if vw==414 && vh==736{//7plus:414x736->15(15:120)
-                videoGyroZure=15
-            }else if vw==320 && vh==568{//se:320x568->25(25:120)
-                videoGyroZure=25
-            }else if vw==375 && vh==667{//8:375x667->22(15:120)
-                videoGyroZure=15
-            }else if vw==414 && vh==896{//11:414x896->10(10:120fps)
-                videoGyroZure=10
-            }else{
-                videoGyroZure=10
-            }
+//            let vw=view.bounds.width
+//            let vh=view.bounds.height
+//            if UIDevice.self.current.model.contains("touch"){//Touch7:320x568->30:120fps
+//                videoGyroZure=25
+//            }else if vw==414 && vh==736{//7plus:414x736->15(15:120)
+//                videoGyroZure=15
+//            }else if vw==320 && vh==568{//se:320x568->25(25:120)
+//                videoGyroZure=10
+//            }else if vw==375 && vh==667{//8:375x667->22(15:120)
+//                videoGyroZure=20
+//            }else if vw==414 && vh==896{//11:414x896->10(10:120fps)
+//                videoGyroZure=10
+//            }else{
+//                videoGyroZure=10
+//            }
+            videoGyroZure=10
             UserDefaults.standard.set(videoGyroZure, forKey: "videoGyroZure")
             print("videoGyroZure",videoGyroZure)
         }
@@ -2017,15 +2023,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let dx:CGFloat = 1//Int(w)/pointCount
         let eyeVeloFilteredCnt=eyeVeloXFiltered.count
         let gyroMovedCnt=gyroMoved.count
-        
+        let y0=gyroBoxHeight*2/6
+        let y1=gyroBoxHeight*3/6
+        let y2=gyroBoxHeight*4/6
         for n in 1...(pointCount) {
             if num + n < eyeVeloFilteredCnt && num + n < gyroMovedCnt {
                 let px = dx * CGFloat(n)
-                let py0 = eyeVeloXFiltered[num + n] * CGFloat(eyeRatio)/230.0 + gyroBoxHeight*2/6
+                let py0 = eyeVeloXFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y0
                 if faceF==1{
-                    py1 = faceVeloFiltered[num + n] * CGFloat(eyeRatio)/230.0 + gyroBoxHeight*3/6
+                    py1 = faceVeloFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y1
                 }
-                let py2 = gyroMoved[num + n] * CGFloat(gyroRatio)/300.0 + gyroBoxHeight*4/6
+                let py2 = gyroMoved[num + n] * CGFloat(gyroRatio)/150.0 + y2
                 let point0 = CGPoint(x: px, y: py0)
                 if faceF==1{
                     point1 = CGPoint(x: px, y: py1!)
@@ -2877,7 +2885,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 showBoxies(f: false)
                 playButton.isEnabled=true
 //                print("gyrocount",Controller.gyro.count)
-                for i in 0...Controller.gyro.count/2-4{//-2でエラーなので、-5としてみた
+                for i in 0...Controller.gyro.count/2-5{//-2でエラーなので、-5としてみた
                     gyroTime.append(Controller.gyro[i*2])
                     d=Double(Kalman(value:CGFloat(Controller.gyro[i*2+1]*10),num:3))
                     gyro.append(-d)
@@ -3236,7 +3244,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveTuple.append((t,ws,1,0))//L/R,frameNumber,disp,current)
             let num=waveTuple.count-1
             for k1 in ws..<ws + 120{
-                eyeWs[num][k1 - ws] = Int(eyeVeloXFiltered[k1]*CGFloat(eyeRatio)/100.0)
+                eyeWs[num][k1 - ws] = Int(eyeVeloXFiltered[k1]*CGFloat(eyeRatio)/300.0)
             }
             for k2 in ws..<ws + 120{
                 gyroWs[num][k2 - ws] = Int(gyroMoved[k2]*CGFloat(gyroRatio)/100.0)
