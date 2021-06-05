@@ -172,10 +172,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let ww:CGFloat=view.bounds.width
         let wh:CGFloat=view.bounds.height
 //        print("windowHeight",wh)//8:667 x:812 se:568
-        let bw:CGFloat=50
+        let bw:CGFloat=55
         let bh:CGFloat=25
         let bh1=bh+7
-        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+//        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
 //         print(versionNumber)
 //        gyroText.text! += "\n\nvHIT96da Version " + versionNumber
 
@@ -211,7 +211,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText6.frame   = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
             gyroText.frame = CGRect(x:5,y:topY+by+bh1*4,width:ww-10,height: bh*3 )
             
-            gyroText.text! = "vHIT96da Version " + versionNumber
+//            gyroText.text! = "vHIT96da Version " + versionNumber
 
             ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*1 ,width: bw, height: bh)
             ratio2input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
@@ -226,7 +226,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*6+3,width:tw,height:bh)
             vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*7+10 ,width: ww, height: ww*9/32)
             gyroText.frame = CGRect(x:5,     y: topY+by+bh1*7+25+ww/5,width:ww-10,height:bh*6)
-            gyroText.text! += "\n\nvHIT96da Version " + versionNumber
+//            gyroText.text! += "\n\nvHIT96da Version " + versionNumber
             waveWidthinput.frame = CGRect(x:x1,y: topY+by,width: bw, height: bh)
             widthRangeinput.frame = CGRect(x:x1,y:topY+by+bh1 ,width: bw, height: bh)
             ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
