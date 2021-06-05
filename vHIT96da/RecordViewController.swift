@@ -374,7 +374,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let bpos=wh-bh/2-10
         
         currentTime.frame   = CGRect(x:0,   y: 0 ,width: bw*1.5, height: bh/2)
-        currentTime.layer.position=CGPoint(x:ww/2,y:wh-bh*3)
+        currentTime.layer.position=CGPoint(x:ww/2,y:wh-bh*4)
 
         currentTime.layer.masksToBounds = true
         currentTime.layer.cornerRadius = 5
@@ -396,20 +396,20 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         //startButton
 
-        setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*7/4)
-        setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-20-bh*7/4)
-        setLabelProperty(label: LEDLow,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-30-bh*9/4)
-        setLabelProperty(label:LEDHigh, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-30-bh*9/4)
-        setButtonProperty(button:cameraChangeButton, bw: bw, bh:bh/2, cx:ww-10-bw/2, cy:bpos-40-bh*11/4)
+        setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*11/4)
+        setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-20-bh*11/4)
+        setLabelProperty(label: LEDLow,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-30-bh*13/4)
+        setLabelProperty(label:LEDHigh, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-30-bh*13/4)
+        setButtonProperty(button:cameraChangeButton, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-40-bh*15/4)
         focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
-        focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*7/4)
+        focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*11/4)
         LEDBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
-        LEDBar.layer.position=CGPoint(x:ww/2,y:bpos-30-bh*9/4)
+        LEDBar.layer.position=CGPoint(x:ww/2,y:bpos-30-bh*13/4)
         
-        startButton.frame=CGRect(x:0,y:0,width:bh*3.5,height:bh*2.5)
-        startButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh/2)
-        stopButton.frame=CGRect(x:0,y:0,width:bh*3.5,height:bh*2.5)
-        stopButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh/2)
+        startButton.frame=CGRect(x:0,y:0,width:bh*3.5,height:bh*3.5)
+        startButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
+        stopButton.frame=CGRect(x:0,y:0,width:bh*3.5,height:bh*3.5)
+        stopButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
         startButton.isHidden=true
         stopButton.isHidden=true
         stopButton.tintColor=UIColor.orange
