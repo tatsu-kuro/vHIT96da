@@ -406,9 +406,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
         LEDBar.layer.position=CGPoint(x:ww/2,y:bpos-30-bh*13/4)
         
-        startButton.frame=CGRect(x:0,y:0,width:bh*3.5,height:bh*3.5)
+        startButton.frame=CGRect(x:0,y:0,width:bh*3.2,height:bh*3.2)
         startButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
-        stopButton.frame=CGRect(x:0,y:0,width:bh*3.5,height:bh*3.5)
+        stopButton.frame=CGRect(x:0,y:0,width:bh*3.2,height:bh*3.2)
         stopButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
         startButton.isHidden=true
         stopButton.isHidden=true
