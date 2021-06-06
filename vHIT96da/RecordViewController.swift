@@ -95,6 +95,18 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBAction func onClickStopButton(_ sender: Any) {
         
         if self.fileOutput.isRecording {
+             motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
+            //        recordedFPS=getFPS(url: outputFileURL)
+            //        topImage=getThumb(url: outputFileURL)
+            
+            if timer?.isValid == true {
+                timer!.invalidate()
+            }
+            if let soundUrl = URL(string:
+                               "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+                 AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+                 AudioServicesPlaySystemSound(soundIdx)
+             }
             print("ストップボタンを押した。")
             fileOutput.stopRecording()
         }
@@ -541,7 +553,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             timer!.invalidate()
             if self.fileOutput.isRecording{
                 onClickStopButton(0)
-//                Record_or_Stop()
             }else{
                 performSegue(withIdentifier: "fromRecordToMain", sender: self)
             }
@@ -637,13 +648,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         return assetCollections.object(at:0)
     }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        if let soundUrl = URL(string:
-                          "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
-            AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
-            AudioServicesPlaySystemSound(soundIdx)
-        }
+//        if let soundUrl = URL(string:
+//                          "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+//            AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+//            AudioServicesPlaySystemSound(soundIdx)
+//        }
 
-        print("終了ボタン、最大を超えた時もここを通る")
+//        print("終了ボタン、最大を超えた時もここを通る")
         UIApplication.shared.isIdleTimerDisabled = false//スリープする
         
 //        for _ in 0...20{
@@ -651,13 +662,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //            self.gyro.append(0)//
 //        }
 
-        motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
-        //        recordedFPS=getFPS(url: outputFileURL)
-        //        topImage=getThumb(url: outputFileURL)
-        
-        if timer?.isValid == true {
-            timer!.invalidate()
-        }
+//        motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
+//        //        recordedFPS=getFPS(url: outputFileURL)
+//        //        topImage=getThumb(url: outputFileURL)
+//
+//        if timer?.isValid == true {
+//            timer!.invalidate()
+//        }
         if albumExists(albumName: vHIT_VOG)==true{
             recordedFlag=true
             PHPhotoLibrary.shared().performChanges({ [self] in
@@ -694,6 +705,5 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
 //        print("録画開始")
-        //fileOutput.stopRecording()
     }
 }
