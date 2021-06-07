@@ -34,6 +34,8 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         picker = UIImagePickerController()
         picker.delegate = self
         picker.sourceType = UIImagePickerController.SourceType.photoLibrary
+//        picker.sourceType = UIImagePickerController.SourceType.savedPhotosAlbum
+
         picker.allowsEditing = false // Whether to make it possible to edit the size etc after selecting the image
         // set picker's navigationBar appearance
         picker.view.backgroundColor = .white
@@ -45,9 +47,9 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         ] // Title color
         button = UIButton()
         button.addTarget(self, action: #selector(touchUpInside(_:)), for: UIControl.Event.touchUpInside)
-        let size = view.frame.width
+        let width = view.frame.width
         button.setTitle("", for: UIControl.State.normal)
-        button.frame.size = CGSize(width: size, height: size)
+        button.frame.size = CGSize(width: width, height: width*8/15)//vog:2/3 vhit:2/5の平均
         button.titleLabel?.font = UIFont.systemFont(ofSize: 28)
         button.center = view.center
         button.backgroundColor = .clear
@@ -67,7 +69,8 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         if let editedImage:UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             button.setBackgroundImage(editedImage, for: .normal)
             mailImage=editedImage
-            print("1:kkohadocchi")//sentaku no toki koko wo tooru
+//            mailButton.isEnabled=true
+            print("1:kkohadocchi-sentakusitatoki")//sentaku no toki koko wo tooru
         } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             button.setBackgroundImage(originalImage, for: .normal)
             print("2:korehadocchi")//dokokawakaranai
@@ -78,6 +81,9 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
     // called when cancel select image
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         // close picker modal
+        print("cancel")
+//        mailButton.isEnabled=false//cancel の時はmailbuttonは効かなくする
+        dismiss(animated: true, completion: nil)
         dismiss(animated: true, completion: nil)
     }
     
