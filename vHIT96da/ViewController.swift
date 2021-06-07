@@ -1402,8 +1402,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vogImage = makeVOGImage(startImg:vogImage!,width:0, height:0, start:2400, end:eyePosXOrig.count)
     }
 
-    func drawText(orgImg:UIImage,width w:CGFloat,height h:CGFloat,mail:Bool) -> UIImage {
-         // イメージ処理の開始]
+    func getVOGText(orgImg:UIImage,width w:CGFloat,height h:CGFloat,mail:Bool) -> UIImage {
+        // イメージ処理の開始]
         if mail{//mailの時は直に貼り付ける
             UIGraphicsBeginImageContext(orgImg.size)
             orgImg.draw(at:CGPoint.zero)
@@ -1413,23 +1413,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }// パスの初期化
         let drawPath = UIBezierPath()
         if !mail{//mailの時は時間経過は表示しない
-        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloXOrig.count,CGFloat(eyeVeloXOrig.count)/240.0,videoDura[videoCurrent],timercnt+1)
-        //print(timetxt)
-        
-        timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
+            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",eyeVeloXOrig.count,CGFloat(eyeVeloXOrig.count)/240.0,videoDura[videoCurrent],timercnt+1)
+            //print(timetxt)
+            
+            timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
+                            NSAttributedString.Key.foregroundColor : UIColor.black,
+                            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
         }
         
         let str1 = calcDate.components(separatedBy: ":")
-         let str2 = "ID:" + idString + "  " + str1[0] + ":" + str1[1]
+        let str2 = "ID:" + idString + "  " + str1[0] + ":" + str1[1]
         let str3 = "VOG96da"
         str2.draw(at: CGPoint(x: 20, y: h-100), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
+                    NSAttributedString.Key.foregroundColor : UIColor.black,
+                    NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
         str3.draw(at: CGPoint(x: w-330, y: h-100), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
+                    NSAttributedString.Key.foregroundColor : UIColor.black,
+                    NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
         drawPath.stroke()
         // イメージコンテキストからUIImageを作る
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -1610,7 +1610,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vogLineView != nil{
             vogLineView?.removeFromSuperview()
         }
-        let dImage = drawText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
+        let dImage = getVOGText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
         let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:vogBoxHeight))
         vogLineView = UIImageView(image: drawImage)
         vogLineView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
@@ -2248,17 +2248,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let alert = UIAlertController(title: "vHIT96da", message: "Input ID", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
-            
             // 入力したテキストをコンソールに表示
             let textField = alert.textFields![0] as UITextField
             idString = textField.text!
             #if DEBUG
             print("\(String(describing: textField.text))")
             #endif
-
             idString = textField.text!
             let drawImage = drawvhitWaves(width:500,height:200)
-            
             
             //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
             saveImage2path(image: drawImage, path: "temp.png")
@@ -2266,7 +2263,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 sleep(UInt32(0.1))
             }
             savePath2album(name:Wave96da,path: "temp.png")
-            
+            calcDrawVHIT()//idnumber表示のため
             // イメージビューに設定する
 //            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
             nonsavedFlag = false //解析結果がsaveされたのでfalse
@@ -2311,7 +2308,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
   // イメージビューに設定する
             let pos = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
             let drawImage=trimmingImage(vogImage!, trimmingArea: CGRect(x:pos,y:0,width: mailWidth,height: mailHeight))
-            let imgWithText=drawText(orgImg: drawImage, width: mailWidth , height: mailHeight,mail:true)
+            let imgWithText=getVOGText(orgImg: drawImage, width: mailWidth , height: mailHeight,mail:true)
             
             //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
             saveImage2path(image: imgWithText, path: "temp.png")
