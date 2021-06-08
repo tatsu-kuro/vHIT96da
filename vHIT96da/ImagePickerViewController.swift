@@ -33,8 +33,8 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
 
         picker = UIImagePickerController()
         picker.delegate = self
-        picker.sourceType = UIImagePickerController.SourceType.photoLibrary
-//        picker.sourceType = UIImagePickerController.SourceType.savedPhotosAlbum
+//        picker.sourceType = UIImagePickerController.SourceType.photoLibrary
+        picker.sourceType = UIImagePickerController.SourceType.savedPhotosAlbum
 
         picker.allowsEditing = false // Whether to make it possible to edit the size etc after selecting the image
         // set picker's navigationBar appearance
@@ -49,7 +49,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         button.addTarget(self, action: #selector(touchUpInside(_:)), for: UIControl.Event.touchUpInside)
         let width = view.frame.width
         button.setTitle("", for: UIControl.State.normal)
-        button.frame.size = CGSize(width: width, height: width*8/15)//vog:2/3 vhit:2/5の平均
+        button.frame.size = CGSize(width: width, height: width*2/3)//vog:1600/2400 vhit:200/500
         button.titleLabel?.font = UIFont.systemFont(ofSize: 28)
         button.center = view.center
         button.backgroundColor = .clear
@@ -65,9 +65,26 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
 
     // MARK: ImageVicker Delegate Methods
     // called when image picked
+
+    func get500x200(image:UIImage) ->UIImage{//vhit は　vogに合わせる
+      // Create a context of the starting image size and set it as the current one
+        let size=CGSize(width: 500, height: 500*2/3)
+        UIGraphicsBeginImageContext(size)
+        image.draw(at: CGPoint(x:0,y:500/6))//.zero)
+      let image1 = UIGraphicsGetImageFromCurrentImageContext()
+      // イメージ処理の終了
+      UIGraphicsEndImageContext()
+      return image1!
+  }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let editedImage:UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            button.setBackgroundImage(editedImage, for: .normal)
+//            print(editedImage.size)
+            if editedImage.size.width==500 && editedImage.size.height==200
+            {
+                button.setBackgroundImage(get500x200(image: editedImage), for: .normal)
+            }else{
+                button.setBackgroundImage(editedImage, for: .normal)
+            }
             mailImage=editedImage
 //            mailButton.isEnabled=true
             print("1:kkohadocchi-sentakusitatoki")//sentaku no toki koko wo tooru
