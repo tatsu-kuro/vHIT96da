@@ -49,7 +49,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         button.addTarget(self, action: #selector(touchUpInside(_:)), for: UIControl.Event.touchUpInside)
         let width = view.frame.width
         button.setTitle("", for: UIControl.State.normal)
-        button.frame.size = CGSize(width: width, height: width*2/3)//vog:1600/2400 vhit:200/500
+        button.frame.size = CGSize(width: width, height: width*2/3)//vog:1600/2400 vhit:800/2000
         button.titleLabel?.font = UIFont.systemFont(ofSize: 28)
         button.center = view.center
         button.backgroundColor = .clear
@@ -68,9 +68,9 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
 
     func get500x200(image:UIImage) ->UIImage{//vhit は　vogに合わせる
       // Create a context of the starting image size and set it as the current one
-        let size=CGSize(width: 500, height: 500*2/3)
+        let size=CGSize(width: 2000, height: 2000*2/3)
         UIGraphicsBeginImageContext(size)
-        image.draw(at: CGPoint(x:0,y:500/6))//.zero)
+        image.draw(at: CGPoint(x:0,y:2000/6))//.zero)
       let image1 = UIGraphicsGetImageFromCurrentImageContext()
       // イメージ処理の終了
       UIGraphicsEndImageContext()
@@ -79,7 +79,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let editedImage:UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
 //            print(editedImage.size)
-            if editedImage.size.width==500 && editedImage.size.height==200
+            if editedImage.size.width==2000 && editedImage.size.height==800
             {
                 button.setBackgroundImage(get500x200(image: editedImage), for: .normal)
             }else{

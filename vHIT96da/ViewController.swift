@@ -2102,18 +2102,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return image!
     }
     
-    func draw1wave(){//just vHIT
+    func draw1wave(r:CGFloat){//just vHIT
         var pointList = Array<CGPoint>()
         let drawPath = UIBezierPath()
-        var rlPt:Int = 0
+        var rlPt:CGFloat = 0
         for i in 0..<waveTuple.count{//右のvHIT
             if waveTuple[i].2 == 0 || waveTuple[i].0 == 0{
                 continue
             }
             for n in 0..<120 {
-                let px = CGFloat(260 + n*2)//260 or 0
+                let px = 260*r + CGFloat(n)*2*r//260 or 0
                 var py:CGFloat = 0
-                py = CGFloat(eyeWs[i][n] + 90)
+                py = CGFloat(eyeWs[i][n])*r + 90*r
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2128,7 +2128,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             // 線の色
             UIColor.red.setStroke()
             // 線幅
-            drawPath.lineWidth = 0.3
+            drawPath.lineWidth = 0.3*r
             pointList.removeAll()
         }
         drawPath.stroke()
@@ -2138,9 +2138,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 continue
             }
             for n in 0..<120 {
-                let px = CGFloat(n*2)//260 or 0
+                let px = CGFloat(n*2)*r//260 or 0
                 var py:CGFloat = 0
-                py = CGFloat(eyeWs[i][n] + 90)
+                py = CGFloat(eyeWs[i][n])*r + 90*r
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2155,7 +2155,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             // 線の色
             UIColor.blue.setStroke()
             // 線幅
-            drawPath.lineWidth = 0.3
+            drawPath.lineWidth = 0.3*r
             pointList.removeAll()
         }
         drawPath.stroke()
@@ -2170,8 +2170,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 rlPt=260
             }
             for n in 0..<120 {
-                let px = CGFloat(rlPt + n*2)
-                let py = CGFloat(gyroWs[i][n] + 90)
+                let px = rlPt*r + CGFloat(n*2)*r
+                let py = CGFloat(gyroWs[i][n])*r + 90*r
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2181,7 +2181,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawPath.addLine(to: pt)
             }
             UIColor.black.setStroke()
-            drawPath.lineWidth = 0.3
+            drawPath.lineWidth = 0.3*r
             pointList.removeAll()
         }
         drawPath.stroke()
@@ -2194,8 +2194,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     rlPt=260
                 }
                 for n in 0..<120 {
-                    let px = CGFloat(rlPt + n*2)
-                    let py = CGFloat(gyroWs[i][n] + 90)
+                    let px = rlPt*r + CGFloat( n*2)*r
+                    let py = CGFloat(gyroWs[i][n])*r + 90*r
                     let point = CGPoint(x:px,y:py)
                     pointList.append(point)
                 }
@@ -2205,12 +2205,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     drawPath.addLine(to: pt)
                 }
                 UIColor.black.setStroke()
-                drawPath.lineWidth = 1.0
+                drawPath.lineWidth = 1.0*r
                 pointList.removeAll()
                 for n in 0..<120 {
-                    let px = CGFloat(rlPt + n*2)
+                    let px = rlPt*r + CGFloat(n*2)*r
                     var py:CGFloat = 0
-                    py = CGFloat(eyeWs[i][n] + 90)
+                    py = CGFloat(eyeWs[i][n])*r + 90*r
                     let point = CGPoint(x:px,y:py)
                     pointList.append(point)
                 }
@@ -2220,7 +2220,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     drawPath.addLine(to: pt)
                 }
                 UIColor.black.setStroke()
-                drawPath.lineWidth = 1.0
+                drawPath.lineWidth = 1.0*r
                 pointList.removeAll()
             }
         }
@@ -2255,7 +2255,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("\(String(describing: textField.text))")
             #endif
             idString = textField.text!
-            let drawImage = drawvhitWaves(width:500,height:200)
+            let drawImage = drawvhitWaves(width:500*4,height:200*4)
             
             //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
             saveImage2path(image: drawImage, path: "temp.png")
@@ -2335,6 +2335,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func drawvhitWaves(width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
+        var r:CGFloat=1
+        if w==500*4{
+           r=4
+        }
         // イメージ処理の開始
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         // パスの初期化
@@ -2343,24 +2347,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let str1 = calcDate.components(separatedBy: ":")
         let str2 = "ID:" + idString + "  " + str1[0] + ":" + str1[1]
         let str3 = "vHIT96da"
-        str2.draw(at: CGPoint(x: 5, y: 180), withAttributes: [
+        str2.draw(at: CGPoint(x: 5*r, y: 180*r), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: 428, y: 180), withAttributes: [
+            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
+        str3.draw(at: CGPoint(x: 428*r, y: 180*4), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.regular)])
+            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
         
         UIColor.black.setStroke()
         var pList = Array<CGPoint>()
         pList.append(CGPoint(x:0,y:0))
-        pList.append(CGPoint(x:0,y:180))
-        pList.append(CGPoint(x:240,y:180))
-        pList.append(CGPoint(x:240,y:0))
-        pList.append(CGPoint(x:260,y:0))
-        pList.append(CGPoint(x:260,y:180))
-        pList.append(CGPoint(x:500,y:180))
-        pList.append(CGPoint(x:500,y:0))
-        drawPath.lineWidth = 0.1
+        pList.append(CGPoint(x:0,y:180*r))
+        pList.append(CGPoint(x:240*r,y:180*r))
+        pList.append(CGPoint(x:240*r,y:0))
+        pList.append(CGPoint(x:260*r,y:0))
+        pList.append(CGPoint(x:260*r,y:180*r))
+        pList.append(CGPoint(x:500*r,y:180*r))
+        pList.append(CGPoint(x:500*r,y:0))
+        drawPath.lineWidth = 0.1*r
         drawPath.move(to:pList[0])
         drawPath.addLine(to:pList[1])
         drawPath.addLine(to:pList[2])
@@ -2372,14 +2376,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawPath.addLine(to:pList[7])
         drawPath.addLine(to:pList[4])
         for i in 0...4 {
-            drawPath.move(to: CGPoint(x:30 + i*48,y:0))
-            drawPath.addLine(to: CGPoint(x:30 + i*48,y:180))
-            drawPath.move(to: CGPoint(x:290 + i*48,y:0))
-            drawPath.addLine(to: CGPoint(x:290 + i*48,y:180))
+            drawPath.move(to: CGPoint(x:30*r + CGFloat(i)*48*r,y:0))
+            drawPath.addLine(to: CGPoint(x:30*r + CGFloat(i)*48*r,y:180*r))
+            drawPath.move(to: CGPoint(x:290*r + CGFloat(i)*48*r,y:0))
+            drawPath.addLine(to: CGPoint(x:290*r + CGFloat(i)*48*r,y:180*r))
         }
         drawPath.stroke()
         drawPath.removeAllPoints()
-        draw1wave()//just vHIT
+        draw1wave(r: r)//just vHIT
         var riln:Int = 0
         var leln:Int = 0
         for i in 0..<waveTuple.count{
@@ -2391,12 +2395,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }
-        "\(riln)".draw(at: CGPoint(x: 3, y: 0), withAttributes: [
+        "\(riln)".draw(at: CGPoint(x: 3*r, y: 0), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.regular)])
-        "\(leln)".draw(at: CGPoint(x: 263, y: 0), withAttributes: [
+            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
+        "\(leln)".draw(at: CGPoint(x: 263*r, y: 0), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15, weight: UIFont.Weight.regular)])
+            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
         // イメージコンテキストからUIImageを作る
         let image = UIGraphicsGetImageFromCurrentImageContext()
         // イメージ処理の終了
