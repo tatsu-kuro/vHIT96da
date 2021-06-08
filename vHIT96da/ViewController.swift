@@ -284,7 +284,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var veloRatio:Int = 100//vog
     var isVHIT:Bool?//true-vhit false-vog
     var faceF:Int = 0
-    var videoGyroZure:Int = 40
+    var videoGyroZure:Int = 20
     //解析結果保存用配列
     
     var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
@@ -1833,7 +1833,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            }else{
 //                videoGyroZure=10
 //            }
-            videoGyroZure=10
+            videoGyroZure=20
             UserDefaults.standard.set(videoGyroZure, forKey: "videoGyroZure")
             print("videoGyroZure",videoGyroZure)
         }
@@ -2916,6 +2916,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     gyroFiltered.append(Kalman(value:CGFloat(gyro[getj]),num:4))
                 }
+                //ipod touchでセンサーの方が遅れることがあったので、
+                for _ in 0...5{
+                    gyroFiltered.remove(at: 0)
+                }
+                for _ in 0...5{
+                    gyroFiltered.append(0)
+                }
+                
                 let gyroCSV=getGyroCSV()//csv文字列
                 //pixel2imageで240*60*6の配列を作るので,増やすときは注意
                 let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)

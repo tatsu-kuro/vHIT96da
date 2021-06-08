@@ -103,7 +103,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             faceF=0
 //            markdispSwitch.isOn=false
 //            gyroDelta = 50
-            videoGyroZure = 10
+            videoGyroZure = 20
             ratio1 = 100
             ratio2 = 100
         }else{
