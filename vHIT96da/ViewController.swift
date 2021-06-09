@@ -300,8 +300,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
 
     
-    var faceVeloOrig = Array<CGFloat>()//faceVeloOrig
-    var faceVeloFiltered = Array<CGFloat>()//faceVeloFiltered
+    var faceVeloXOrig = Array<CGFloat>()//faceVeloOrig
+    var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroFiltered = Array<CGFloat>()//gyroFiltered
     var gyroMoved = Array<CGFloat>()//gyroVeloFilterd
     
@@ -856,8 +856,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func vHITcalc(){
         var cvError:Int = 0
         calcFlag = true
-        faceVeloOrig.removeAll()
-        faceVeloFiltered.removeAll()
+        faceVeloXOrig.removeAll()
+        faceVeloXFiltered.removeAll()
         eyePosXOrig.removeAll()
         eyePosXFiltered.removeAll()
         eyeVeloXOrig.removeAll()
@@ -1102,11 +1102,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
                     }
                     if self.faceF==1{
-                        self.faceVeloOrig.append(fx)
-                        self.faceVeloFiltered.append(-12.0*self.Kalman(value: fx,num: 0))
+                        self.faceVeloXOrig.append(fx)
+                        self.faceVeloXFiltered.append(-12.0*self.Kalman(value: fx,num: 0))
                     }else{
-                        self.faceVeloOrig.append(0)
-                        self.faceVeloFiltered.append(0)
+                        self.faceVeloXOrig.append(0)
+                        self.faceVeloXFiltered.append(0)
                     }
                     // eyePos, ey, fyをそれぞれ配列に追加
                     // vogをkalmanにかけ配列に追加
@@ -1117,18 +1117,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     
                     self.eyeVeloXOrig.append(ex)
                     let eye5x = -12.0*self.Kalman(value: ex,num:2)//そのままではずれる
-                    self.eyeVeloXFiltered.append(eye5x-self.faceVeloFiltered.last!)
+                    self.eyeVeloXFiltered.append(eye5x-self.faceVeloXFiltered.last!)
                     
                     self.eyeVeloYOrig.append(ey)
                     let eye5y = -12.0*self.Kalman(value: ey,num:6)//そのままではずれる
-                    self.eyeVeloYFiltered.append(eye5y-self.faceVeloFiltered.last!)
+                    self.eyeVeloYFiltered.append(eye5y-self.faceVeloXFiltered.last!)
 //                    savingDataNow=false//--------------------------------
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
                         usleep(1000)//0.001sec
 //                        sleep(UInt32(0.1))
                     }
-                    self.fps120(is120: fpsIs120)
+                    while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
+//                        sleep(UInt32(0.1))
+                        usleep(1000)//0.001sec
+
+                    }
+                    if fpsIs120==true{
+                        self.fps120()
+                    }
                     //eyeのみでチェックしているが。。。。
                     if eyeWithBorderRect.origin.x < 5 ||
                         eyeWithBorderRect.origin.x > maxWidthWithBorder ||
@@ -1151,19 +1158,40 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     //    func average5(
-    func fps120(is120:Bool){
-        if is120==true{
-            self.faceVeloOrig.append(self.faceVeloFiltered.last!)
-            self.faceVeloFiltered.append(self.faceVeloFiltered.last!)
-            self.eyePosXOrig.append(self.eyePosXOrig.last!)
-            self.eyePosXFiltered.append(self.eyePosXFiltered.last!)
-            self.eyeVeloXOrig.append(self.eyeVeloXOrig.last!)
-            self.eyeVeloXFiltered.append(self.eyeVeloXFiltered.last!)
-            self.eyePosYOrig.append(self.eyePosYOrig.last!)
-            self.eyePosYFiltered.append(self.eyePosYFiltered.last!)
-            self.eyeVeloYOrig.append(self.eyeVeloYOrig.last!)
-            self.eyeVeloYFiltered.append(self.eyeVeloYFiltered.last!)
+    func fps120(){
+        self.faceVeloXOrig.append(0)//self.faceVeloFiltered.last!)
+        self.faceVeloXFiltered.append(0)//self.faceVeloFiltered.last!)
+        self.eyePosXOrig.append(0)//self.eyePosXOrig.last!)
+        self.eyePosXFiltered.append(0)//self.eyePosXFiltered.last!)
+        self.eyeVeloXOrig.append(0)//self.eyeVeloXOrig.last!)
+        self.eyeVeloXFiltered.append(0)//self.eyeVeloXFiltered.last!)
+        self.eyePosYOrig.append(0)//self.eyePosYloOrig.last!)
+        self.eyePosYFiltered.append(0)//self.eyePosYFiltered.last!)
+        self.eyeVeloYOrig.append(0)//self.eyeVeloYOrig.last!)
+        self.eyeVeloYFiltered.append(0)//self.eyeVeloYFiltered.last!)
+        let i=faceVeloXOrig.count
+        if i>3{
+            let n1=i-2
+            let n2=i-3
+            let n3=i-4
+            self.faceVeloXOrig[n2]=self.faceVeloXOrig[n1]/2+self.faceVeloXOrig[n3]/2
+            self.faceVeloXFiltered[n2]=self.faceVeloXFiltered[n1]/2+self.faceVeloXFiltered[n3]/2
+            
+            self.eyePosXOrig[n2]=self.eyePosXOrig[n1]/2+self.eyePosXOrig[n3]/2
+            self.eyePosXFiltered[n2]=self.eyePosXFiltered[n1]/2+self.eyePosXFiltered[n3]/2
+            
+            self.eyeVeloXOrig[n2]=self.eyeVeloXOrig[n1]/2+self.eyeVeloXOrig[n3]/2
+            self.eyeVeloXFiltered[n2]=self.eyeVeloXFiltered[n1]/2+self.eyeVeloXFiltered[n3]/2
+ 
+            self.eyePosYOrig[n2]=self.eyePosYOrig[n1]/2+self.eyePosYOrig[n3]/2
+            self.eyePosYFiltered[n2]=self.eyePosYFiltered[n1]/2+self.eyePosYFiltered[n3]/2
+            
+            self.eyeVeloYOrig[n2]=self.eyeVeloYOrig[n1]/2+self.eyeVeloYOrig[n3]/2
+            self.eyeVeloYFiltered[n2]=self.eyeVeloYFiltered[n1]/2+self.eyeVeloYFiltered[n3]/2
+
+       
         }
+ 
     }
     func showWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
         if videoDura.count<1 {
@@ -2031,7 +2059,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let px = dx * CGFloat(n)
                 let py0 = eyeVeloXFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y0
                 if faceF==1{
-                    py1 = faceVeloFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y1
+                    py1 = faceVeloXFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y1
                 }
                 let py2 = gyroMoved[num + n] * CGFloat(gyroRatio)/150.0 + y2
                 let point0 = CGPoint(x: px, y: py0)
