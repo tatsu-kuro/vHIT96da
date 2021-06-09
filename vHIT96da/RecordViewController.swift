@@ -344,6 +344,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             self.fps240Button.backgroundColor = UIColor.darkGray
             initSession(fps: fps_non_120_240)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
+            setFlashlevel(level: LEDBar.value)
         }
     }
     @IBAction func onClick240fps(_ sender: Any) {
@@ -356,6 +357,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             
             initSession(fps: fps_non_120_240)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
+            setFlashlevel(level: LEDBar.value)
         }
     }
     func hideButtons(type:Bool){

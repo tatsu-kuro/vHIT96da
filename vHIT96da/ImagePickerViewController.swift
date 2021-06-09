@@ -60,6 +60,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
     }
     @objc func touchUpInside(_ sender: UIButton) {
         // show picker modal
+        print("touchupinside")
         present(picker, animated: true, completion: nil)
     }
 
@@ -78,7 +79,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
   }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let editedImage:UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-//            print(editedImage.size)
+            print(editedImage.size)
             if editedImage.size.width==2000 && editedImage.size.height==800
             {
                 button.setBackgroundImage(get500x200(image: editedImage), for: .normal)
@@ -92,6 +93,8 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
             button.setBackgroundImage(originalImage, for: .normal)
             print("2:korehadocchi")//dokokawakaranai
         }
+        print("3:korehadocchi")//dokokawakaranai
+
         dismiss(animated: true, completion: nil)
     }
 
@@ -115,10 +118,13 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
     }
     
     @IBAction func mailOne(_ sender: Any) {
-        print("mailButton")
+        print("mailoneButton")
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd_HH:mm:ss"
         let str="\(formatter.string(from: Date())).jpg"
+        if mailImage == nil{
+            return
+        }
         self.startMailer(videoView:mailImage,imageName:str)
     }
     
