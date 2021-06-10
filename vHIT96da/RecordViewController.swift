@@ -615,7 +615,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
         let fileURL = NSURL(fileURLWithPath: TempFilePath)
         //下３行の様にしたら、ビデオとジャイロのズレが安定した。zure:10
-        setMotion()
+//        setMotion()
         sleep(UInt32(1.0))
         fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
         timerCnt=0
@@ -706,6 +706,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
+        setMotion()
 //        print("録画開始")
     }
 }
