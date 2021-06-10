@@ -119,7 +119,7 @@ extension UIImage {
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let openCV = opencvWrapper()
-//    var savingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
+    var appendingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
     var gettingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
 //    var isIphone:Bool = true//falseではアラートを出して走らないようにする
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
@@ -245,7 +245,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var startFrame:Int=0
     var calcFlag:Bool = false//calc中かどうか
     var nonsavedFlag:Bool = false //calcしてなければfalse, calcしたらtrue, saveしたらfalse
-    var openCVstopFlag:Bool = false//calcdrawVHITの時は止めないとvHITeye
+//    var openCVstopFlag:Bool = false//calcdrawVHITの時は止めないとvHITeye
     //vHITeyeがちゃんと読めない瞬間が生じるようだ
     @IBOutlet weak var videoDuration: UILabel!
     @IBOutlet weak var videoFps: UILabel!
@@ -889,7 +889,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         startTime=CFAbsoluteTimeGetCurrent()
         timercnt = 0
         
-        openCVstopFlag = false
+//        openCVstopFlag = false
         UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
         //        print("eyeborder:",eyeBorder,faceF)
@@ -1101,6 +1101,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         usleep(1000)//0.001sec
 
                     }
+                    appendingDataNow=true
                     if self.faceF==1{
                         self.faceVeloXOrig.append(fx)
                         self.faceVeloXFiltered.append(-12.0*self.Kalman(value: fx,num: 0))
@@ -1122,7 +1123,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     self.eyeVeloYOrig.append(ey)
                     let eye5y = -12.0*self.Kalman(value: ey,num:6)//そのままではずれる
                     self.eyeVeloYFiltered.append(eye5y-self.faceVeloXFiltered.last!)
-//                    savingDataNow=false//--------------------------------
+                    appendingDataNow=false//--------------------------------
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
                         usleep(1000)//0.001sec
@@ -1134,7 +1135,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
                     }
                     if fpsIs120==true{
-                        self.fps120()
+                        appendingDataNow=true
+                        self.fps120()//
+                        appendingDataNow=false
                     }
                     //eyeのみでチェックしているが。。。。
                     if eyeWithBorderRect.origin.x < 5 ||
@@ -1147,7 +1150,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 //マッチングデバッグ用スリープ、デバッグが終わったら削除
                 #if DEBUG
-                usleep(20000)
+                usleep(1000)
                 #endif
             }
             //            print("time:",CFAbsoluteTimeGetCurrent()-st)
@@ -1159,16 +1162,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     //    func average5(
     func fps120(){
-        self.faceVeloXOrig.append(0)//self.faceVeloFiltered.last!)
-        self.faceVeloXFiltered.append(0)//self.faceVeloFiltered.last!)
-        self.eyePosXOrig.append(0)//self.eyePosXOrig.last!)
-        self.eyePosXFiltered.append(0)//self.eyePosXFiltered.last!)
-        self.eyeVeloXOrig.append(0)//self.eyeVeloXOrig.last!)
-        self.eyeVeloXFiltered.append(0)//self.eyeVeloXFiltered.last!)
-        self.eyePosYOrig.append(0)//self.eyePosYloOrig.last!)
-        self.eyePosYFiltered.append(0)//self.eyePosYFiltered.last!)
-        self.eyeVeloYOrig.append(0)//self.eyeVeloYOrig.last!)
-        self.eyeVeloYFiltered.append(0)//self.eyeVeloYFiltered.last!)
+        self.faceVeloXOrig.append(0)
+        self.faceVeloXFiltered.append(0)
+        self.eyePosXOrig.append(0)
+        self.eyePosXFiltered.append(0)
+        self.eyeVeloXOrig.append(0)
+        self.eyeVeloXFiltered.append(0)
+        self.eyePosYOrig.append(0)
+        self.eyePosYFiltered.append(0)
+        self.eyeVeloYOrig.append(0)
+        self.eyeVeloYFiltered.append(0)
         let i=faceVeloXOrig.count
         if i>3{
             let n1=i-2
@@ -1176,7 +1179,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let n3=i-4
             self.faceVeloXOrig[n2]=self.faceVeloXOrig[n1]/2+self.faceVeloXOrig[n3]/2
             self.faceVeloXFiltered[n2]=self.faceVeloXFiltered[n1]/2+self.faceVeloXFiltered[n3]/2
-            
+
             self.eyePosXOrig[n2]=self.eyePosXOrig[n1]/2+self.eyePosXOrig[n3]/2
             self.eyePosXFiltered[n2]=self.eyePosXFiltered[n1]/2+self.eyePosXFiltered[n3]/2
             
@@ -1188,10 +1191,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             
             self.eyeVeloYOrig[n2]=self.eyeVeloYOrig[n1]/2+self.eyeVeloYOrig[n3]/2
             self.eyeVeloYFiltered[n2]=self.eyeVeloYFiltered[n1]/2+self.eyeVeloYFiltered[n3]/2
-
-       
         }
- 
     }
     func showWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
         if videoDura.count<1 {
@@ -1505,6 +1505,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        let cnt=eyePosXFiltered.count
 //        let cnt1=eyePosYFiltered.count
         gettingDataNow=true
+        while appendingDataNow==true{//--------の間はアレイデータを書き込まない？
+            usleep(1000)//0.001sec
+        }
         for i in startN..<endN {
             let px = CGFloat(dx * i)
             let pyXpos = eyePosXFiltered[i] * posR + py1
@@ -3293,21 +3296,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func calcDrawVHIT(){
         waveTuple.removeAll()
         //       print("calcdrawvhit*****")
-        openCVstopFlag = true//計算中はvHITeyeへの書き込みを止める。
+        while appendingDataNow==true{//--------の間はアレイデータを書き込まない？
+            usleep(1000)//0.001sec
+        }
         let vHITcnt = eyeVeloXFiltered.count
         if vHITcnt < 400 {
-            openCVstopFlag = false
             return
         }
         var skipCnt:Int = 0
+        gettingDataNow=true
         for vcnt in 50..<(vHITcnt - 130) {// flatwidth + 120 までを表示する。実在しないvHITeyeをアクセスしないように！
+            
             if skipCnt > 0{
                 skipCnt -= 1
             }else if SetWave2wP(number:vcnt) > -1{
                 skipCnt = 30
             }
         }
-        openCVstopFlag = false
+        gettingDataNow = false
         drawVHITwaves()
     }
 }
