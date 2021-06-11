@@ -57,7 +57,7 @@
     // 変換用Matの宣言
     int rows=inputImg.size.width;
     int cols=inputImg.size.height;
-    int rgb[240*60*6];
+    int rgb[240*60*5*2];//5min
     int cnt=0;
 
     NSArray *arr = [gyroCSV componentsSeparatedByString:@","];

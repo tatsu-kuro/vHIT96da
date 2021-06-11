@@ -187,18 +187,15 @@
                                     <segue destination="eZj-22-ehM" kind="show" id="G0I-9n-edA"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3A-xm-U7g">
+                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3A-xm-U7g">
                                 <rect key="frame" x="97" y="771" width="76" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="VOG">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="vHIT horizontal">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
-                                <connections>
-                                    <action selector="vogGo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sCq-LV-WSb"/>
-                                </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k50-f5-jh1">
                                 <rect key="frame" x="130" y="155" width="59" height="58"/>
@@ -223,14 +220,14 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-eE-NWD">
                                 <rect key="frame" x="48" y="785" width="42" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="vHIT">
+                                <state key="normal" title="MODE">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="vhitGo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="x0X-HV-bkV"/>
+                                    <action selector="onChangeModeButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="x0X-HV-bkV"/>
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ac1-F6-YXh">
@@ -367,6 +364,7 @@
                         <outlet property="backwardButton" destination="NjV-Ob-HQy" id="Rph-oU-hig"/>
                         <outlet property="calcButton" destination="sZn-CJ-Yxe" id="hF7-9w-d0q"/>
                         <outlet property="cameraButton" destination="w2G-cJ-1fV" id="bJm-SI-8sf"/>
+                        <outlet property="changeModeButton" destination="XhS-eE-NWD" id="sXQ-mD-lpc"/>
                         <outlet property="currentVideoDate" destination="0q7-O3-Ich" id="Lv3-7t-LiK"/>
                         <outlet property="damyBottom" destination="jL1-T4-URC" id="KLc-ZX-cis"/>
                         <outlet property="eraseButton" destination="WVy-FW-eP4" id="1mR-HG-0Sd"/>
@@ -375,15 +373,14 @@
                         <outlet property="forwardButton" destination="hru-fB-bbG" id="4o4-De-TdZ"/>
                         <outlet property="helpButton" destination="7OA-cL-B3S" id="YzF-8f-1r2"/>
                         <outlet property="listButton" destination="Afb-7h-V8u" id="hfI-Hx-H2E"/>
+                        <outlet property="modeDispButton" destination="O3A-xm-U7g" id="5il-Ju-r1z"/>
                         <outlet property="nextButton" destination="fee-9L-VIg" id="Dl0-G1-Z6x"/>
                         <outlet property="paraButton" destination="nHY-L8-P6Q" id="Sqr-vl-7wU"/>
                         <outlet property="playButton" destination="4bc-dn-f4s" id="bzE-g7-4XG"/>
                         <outlet property="saveButton" destination="ldV-kl-ghp" id="ocV-PC-sYh"/>
                         <outlet property="stopButton" destination="sqt-I0-fRF" id="uIR-70-WpH"/>
-                        <outlet property="vhitButton" destination="XhS-eE-NWD" id="sXQ-mD-lpc"/>
                         <outlet property="videoFps" destination="6oH-Ur-nDk" id="EUJ-xJ-mml"/>
                         <outlet property="videoSlider" destination="rzY-7a-f2q" id="ge5-Op-ylX"/>
-                        <outlet property="vogButton" destination="O3A-xm-U7g" id="5il-Ju-r1z"/>
                         <outlet property="wakuAll" destination="Iqh-4c-2st" id="IGY-sR-TIm"/>
                         <outlet property="wakuEye" destination="jhl-W2-Rd7" id="La3-kk-kYg"/>
                         <outlet property="wakuEyeb" destination="k50-f5-jh1" id="BGH-eT-L8b"/>

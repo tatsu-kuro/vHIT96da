@@ -46,7 +46,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var videoGyroZure:Int = 0
     var ratio1:Int = 0
     var ratio2:Int = 0
-    var isVHIT:Bool?
+    var calcMode:Int?
     @IBOutlet weak var gyroText: UILabel!
     @IBOutlet weak var paraText1: UILabel!
     @IBOutlet weak var paraText2: UILabel!
@@ -94,15 +94,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func setDefault(_ sender: Any) {
-        if isVHIT==true{
+        if calcMode != 2{
             widthRange = 30
             waveWidth = 80
             eyeBorder=10
             okpMode=0
             faceFbutton.isOn=false
             faceF=0
-//            markdispSwitch.isOn=false
-//            gyroDelta = 50
             videoGyroZure = 10
             ratio1 = 100
             ratio2 = 100
@@ -110,7 +108,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBorder=10
             okpMode=0
             faceFbutton.isOn=false
-//            markdispSwitch.isOn=false
             ratio1 = 100
             ratio2 = 100
         }
@@ -187,7 +184,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
         let x1:CGFloat=3
         let x2=x1+bw+5
-        if isVHIT==false{
+        if calcMode==2{
             markText.isHidden = true
             faceFbutton.isHidden = true
             vhitpng.isHidden=true

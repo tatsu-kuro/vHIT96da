@@ -217,6 +217,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 self.gyro.append(CFAbsoluteTimeGetCurrent()-self.recStart)
             }
             self.gyro.append(motion.rotationRate.y)//
+            self.gyro.append(motion.rotationRate.x)//
         })
     }
     var telephotoCamera:Bool=false
