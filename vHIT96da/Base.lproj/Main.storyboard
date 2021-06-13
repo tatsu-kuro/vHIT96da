@@ -191,7 +191,7 @@
                                 <rect key="frame" x="97" y="771" width="76" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="vHIT horizontal">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -218,12 +218,12 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-eE-NWD">
-                                <rect key="frame" x="42" y="794" width="56" height="19"/>
+                                <rect key="frame" x="45" y="794" width="54" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="MODE" image="tray.circle" catalog="system">
+                                <state key="normal" title=" MODE" image="rotate.3d" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -914,11 +914,11 @@
         <image name="largecircle.fill.circle" catalog="system" width="128" height="121"/>
         <image name="playpause.fill" catalog="system" width="128" height="70"/>
         <image name="questionmark.circle" catalog="system" width="128" height="121"/>
+        <image name="rotate.3d" catalog="system" width="128" height="121"/>
         <image name="stop.circle" catalog="system" width="128" height="121"/>
         <image name="trash.circle" catalog="system" width="128" height="121"/>
         <image name="tray.and.arrow.down" catalog="system" width="128" height="109"/>
         <image name="tray.and.arrow.up" catalog="system" width="128" height="114"/>
-        <image name="tray.circle" catalog="system" width="128" height="121"/>
         <image name="vhitpara" width="960" height="270"/>
         <image name="waveform.path.ecg" catalog="system" width="128" height="124"/>
         <systemColor name="darkTextColor">
