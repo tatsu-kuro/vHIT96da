@@ -357,6 +357,7 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="YPr-Ux-hO9" appends="YES" id="iz5-0Y-8f7"/>
                             <outletCollection property="gestureRecognizers" destination="dvP-Cv-tWK" appends="YES" id="DQp-EF-jh3"/>
+                            <outletCollection property="gestureRecognizers" destination="9xT-P1-SOl" appends="YES" id="3Wu-gR-xwN"/>
                         </connections>
                     </view>
                     <connections>
@@ -402,6 +403,11 @@
                         <action selector="tapFrame:" destination="BYZ-38-t0r" id="RkR-3H-IcK"/>
                     </connections>
                 </tapGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="9xT-P1-SOl">
+                    <connections>
+                        <action selector="longPress:" destination="BYZ-38-t0r" id="DHL-sU-4gn"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1120.2898550724638" y="-40.178571428571423"/>
         </scene>
