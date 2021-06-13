@@ -218,12 +218,12 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-eE-NWD">
-                                <rect key="frame" x="48" y="785" width="42" height="36"/>
+                                <rect key="frame" x="42" y="794" width="56" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="MODE">
+                                <state key="normal" title="MODE" image="tray.circle" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -918,6 +918,7 @@
         <image name="trash.circle" catalog="system" width="128" height="121"/>
         <image name="tray.and.arrow.down" catalog="system" width="128" height="109"/>
         <image name="tray.and.arrow.up" catalog="system" width="128" height="114"/>
+        <image name="tray.circle" catalog="system" width="128" height="121"/>
         <image name="vhitpara" width="960" height="270"/>
         <image name="waveform.path.ecg" catalog="system" width="128" height="124"/>
         <systemColor name="darkTextColor">

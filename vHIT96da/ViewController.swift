@@ -1117,7 +1117,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
 //                        sleep(UInt32(0.1))
                         usleep(1000)//0.001sec
-
                     }
                     if fpsIs120==true{
                         appendingDataNow=true
