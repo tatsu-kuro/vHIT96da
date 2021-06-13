@@ -3031,6 +3031,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }else{
                 gyroHFiltered.append(CGFloat(rgb)/100.0)
+                gyroVFiltered.append(CGFloat(rgb)/100.0)
             }
         }
 //        print(gyroVFiltered.count)
