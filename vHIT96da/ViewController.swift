@@ -3031,6 +3031,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }else{
                 gyroHFiltered.append(CGFloat(rgb)/100.0)
+                gyroVFiltered.append(CGFloat(rgb)/100.0)
             }
         }
 //        print(gyroVFiltered.count)
@@ -3056,13 +3057,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         print(str)
     }*/
     func moveWakus
-        (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect) -> CGRect{
+    (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect,moveWidth:Int) -> CGRect{
         var r:CGRect
         r = rect//2種類の枠を代入、変更してreturnで返す
         let dx:CGFloat = movePo.x
         let dy:CGFloat = movePo.y
-        r.origin.x = stRect.origin.x + dx;
-        r.origin.y = stRect.origin.y + dy;
+        r.origin.x = stRect.origin.x + dx/CGFloat(moveWidth);
+        r.origin.y = stRect.origin.y + dy/CGFloat(moveWidth);
         //r.size.width = stRect.size
         if r.origin.x < hani.origin.x{
             r.origin.x = hani.origin.x
@@ -3077,7 +3078,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return r
     }
-    
+    var lastPanTime = CFAbsoluteTimeGetCurrent()
+    var moveWidth:Int = 1
     var leftrightFlag:Bool = false
     var rectType:Int = 0//0:eye 1:face 2:outer -1:何も選択されていない
     var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
@@ -3096,6 +3098,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
         if sender.state == .began {
+            moveWidth += 4
+            if moveWidth>5{
+                moveWidth=1
+            }
+            if CFAbsoluteTimeGetCurrent()-lastPanTime>2{
+               moveWidth=1
+            }
+            print("moveWidth:",moveWidth)
             stPo = sender.location(in: self.view)
             if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
                 //タップして動かすと、ここに来る
@@ -3179,16 +3189,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     if rectType == 0 {
                         if faceF==0 || calcMode==2{//EyeRect
                             let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et)
+                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et,moveWidth: moveWidth)
                         }else{//vHIT && faceF==true FaceRect
                             let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani:et)
+                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani:et,moveWidth: moveWidth)
                         }
                     }else{
                         //let xt=wakuE.origin.x
                         //let w12=view.bounds.width/12
                         let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                        wakuF = moveWakus(rect:wakuF,stRect:stRect, stPo: stPo,movePo: move,hani:et)
+                        wakuF = moveWakus(rect:wakuF,stRect:stRect, stPo: stPo,movePo: move,hani:et,moveWidth: moveWidth)
                     }
                     dispWakus()
                     showWakuImages()
@@ -3196,7 +3206,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }else if sender.state == .ended{
-            
+            lastPanTime=CFAbsoluteTimeGetCurrent()
             setUserDefaults()
             if vhitBoxView?.isHidden == false{//結果が表示されている時
                 if waveTuple.count>0 {
@@ -3236,7 +3246,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                return
             }
         }else if vhitBoxView?.isHidden==true{
-            if sender.location(in:self.view).y>view.bounds.height*3/4{
+            let locationX=sender.location(in: self.view).x
+            let locationY=sender.location(in: self.view).y
+            if locationY>view.bounds.height*3/4{
                 //video slide bar と被らないように
                 return
             }
@@ -3249,6 +3261,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 dispWakus()
                 showWakuImages()
+//            }else{
+//                if wakuE.origin.x<locationX-wakuE.width*5 {
+//                    wakuE.origin.x += 0.5
+//                }else if wakuE.origin.x>locationX+wakuE.width*4{
+//                    wakuE.origin.x -= 0.5
+//                }
+//                if wakuE.origin.y<locationY-wakuE.height*5{
+//                    wakuE.origin.y += 0.5
+//                }else if wakuE.origin.y>locationY+wakuE.height*4{
+//                    wakuE.origin.y -= 0.5
+//                }
+//                dispWakus()
+//                showWakuImages()
             }
         }
     }
@@ -3351,7 +3376,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gettingDataNow = false
         drawVHITwaves()
     }
- 
+ /*
     //longPressでeye(sikaku),face(maru)を探して、そこに枠を近づける。２〜３回繰り返すと良いか。
     var faceMarkType:Int = 0
     @IBAction func longPress(_ sender: UILongPressGestureRecognizer) {
@@ -3392,7 +3417,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
         reader.startReading()
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
-        let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border:20)
+        let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border:10)
 
         let context:CIContext = CIContext.init(options: nil)
 //        let orientation = UIImage.Orientation.up//right
@@ -3407,7 +3432,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
         let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
 
-        let eyeImage=UIImage(named: "maru")
+        let eyeImage=UIImage(named: "marus")
       
         let osEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeImage!.size.width) / 2.0//上下方向への差
         let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeImage!.size.height) / 2.0//左右方向への差
@@ -3423,12 +3448,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         ex = CGFloat(eX.pointee) - osEyeX
         ey = CGFloat(eY.pointee) - osEyeY
         print(maxEyeV,ex,ey)
-        if maxEyeV>0.98{
-            wakuE.origin.x += ex/2
-            wakuE.origin.y += ey/2
+        if maxEyeV>0.950{
+            wakuE.origin.x += ex/3
+            wakuE.origin.y += ey/3
             dispWakus()
             showWakuImages()
         }
     }
- 
+ */
 }
