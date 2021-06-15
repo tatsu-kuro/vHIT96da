@@ -2942,7 +2942,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 removeFile(delFile: "temp.png")
                 getVideosAlbumList(name: vHIT_VOG)
                 print("rewind***3")
-
+                //ビデオが出来るまで待つ
                 while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
@@ -2954,12 +2954,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     fps *= 2.0
                 }
                 let framecount=Int(Float(gyroH.count)*(fps)/100.0)
-                for i in 0...framecount+70{//70を尻に付けないとgyrodataが変な値になる
+                var lastJ:Int=0
+//                let t1=CFAbsoluteTimeGetCurrent()
+                for i in 0...framecount+500{//100を尻に付けないとgyrodataが変な値になる
                     let gn=Double(i)/Double(fps)//iフレーム目の秒数
                     var getj:Int=0
-                    for j in 0...gyroH.count-1{
+                    for j in lastJ...gyroH.count-1{
                         if gyroTime[j] >= gn{//secondの値が入っている。
                             getj=j//越えるところを見つける
+                            lastJ=j
                             break
                         }
                     }
