@@ -884,9 +884,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         calcDate = currentVideoDate.text!
         //        print("calcdate:",calcDate)
         var fpsIs120:Bool=false
-        if getFPS(url: videoURL[videoCurrent])<200.0{
+        let fps=getFPS(url: videoURL[videoCurrent])
+        var realframeRatio:Float=fps/240
+        //これを設定すると頭出ししてもあまりずれない。どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
+         if fps<200.0{
             fpsIs120=true
+            realframeRatio=fps/120.0
         }
+//        print("fps:",getFPS(url: videoURL[videoCurrent]))
         var reader: AVAssetReader! = nil
         do {
             reader = try AVAssetReader(asset: avAsset)
@@ -909,7 +914,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         reader.add(readerOutput)
         let frameRate = videoTrack.nominalFrameRate
         //let startframe=startPoints[vhitVideocurrent]
-        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
+        let startTime = CMTime(value: CMTimeValue(Float(startFrame)*realframeRatio), timescale: CMTimeScale(frameRate))
         let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
         //print("time",timeRange)
         reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
@@ -2966,7 +2971,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 
                 let gyroCSV=getGyroCSV()//csv文字列
 //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
-                //pixel2imageで240*60*5*2の配列を作るので,増やすときは注意
+                //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
                 let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
                 //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
                 saveImage2path(image: gyroImage!, path: "temp.png")
@@ -2987,6 +2992,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     print("Exitで抜けた。")
                 }
             }
+            UIApplication.shared.isIdleTimerDisabled = false//スリープする
         }else{
             #if DEBUG
             print("tatsuaki-unwind from list")
@@ -3024,12 +3030,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 rgb = -Int(rgb8![i*4+1])*256 - Int(rgb8![i*4+2])
             }
             if newVersion==true{
+//                print("newVersion")
                 if i%2==0{
                     gyroHFiltered.append(CGFloat(rgb)/100.0)
                 }else{
                     gyroVFiltered.append(CGFloat(rgb)/100.0)
                 }
             }else{
+//                print("oldversion")
                 gyroHFiltered.append(CGFloat(rgb)/100.0)
                 gyroVFiltered.append(CGFloat(rgb)/100.0)
             }
@@ -3057,13 +3065,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         print(str)
     }*/
     func moveWakus
-    (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect,moveWidth:Int) -> CGRect{
+    (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect) -> CGRect{
         var r:CGRect
         r = rect//2種類の枠を代入、変更してreturnで返す
         let dx:CGFloat = movePo.x
         let dy:CGFloat = movePo.y
-        r.origin.x = stRect.origin.x + dx/CGFloat(moveWidth);
-        r.origin.y = stRect.origin.y + dy/CGFloat(moveWidth);
+     
+        r.origin.x = stRect.origin.x + dx/3//CGFloat(moveWidth);
+        r.origin.y = stRect.origin.y + dy/3//CGFloat(moveWidth);
         //r.size.width = stRect.size
         if r.origin.x < hani.origin.x{
             r.origin.x = hani.origin.x
@@ -3078,8 +3087,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return r
     }
-    var lastPanTime = CFAbsoluteTimeGetCurrent()
-    var moveWidth:Int = 1
+
     var leftrightFlag:Bool = false
     var rectType:Int = 0//0:eye 1:face 2:outer -1:何も選択されていない
     var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
@@ -3098,14 +3106,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
         if sender.state == .began {
-            moveWidth += 4
-            if moveWidth>5{
-                moveWidth=1
-            }
-            if CFAbsoluteTimeGetCurrent()-lastPanTime>2{
-               moveWidth=1
-            }
-            print("moveWidth:",moveWidth)
+
             stPo = sender.location(in: self.view)
             if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
                 //タップして動かすと、ここに来る
@@ -3189,16 +3190,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     if rectType == 0 {
                         if faceF==0 || calcMode==2{//EyeRect
                             let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et,moveWidth: moveWidth)
+                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et)
                         }else{//vHIT && faceF==true FaceRect
                             let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani:et,moveWidth: moveWidth)
+                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani:et)
                         }
                     }else{
                         //let xt=wakuE.origin.x
                         //let w12=view.bounds.width/12
                         let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                        wakuF = moveWakus(rect:wakuF,stRect:stRect, stPo: stPo,movePo: move,hani:et,moveWidth: moveWidth)
+                        wakuF = moveWakus(rect:wakuF,stRect:stRect, stPo: stPo,movePo: move,hani:et)
                     }
                     dispWakus()
                     showWakuImages()
@@ -3206,7 +3207,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }else if sender.state == .ended{
-            lastPanTime=CFAbsoluteTimeGetCurrent()
             setUserDefaults()
             if vhitBoxView?.isHidden == false{//結果が表示されている時
                 if waveTuple.count>0 {

@@ -658,7 +658,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //        }
 
 //        print("終了ボタン、最大を超えた時もここを通る")
-        UIApplication.shared.isIdleTimerDisabled = false//スリープする
+//        UIApplication.shared.isIdleTimerDisabled = false//スリープする
         
 //        for _ in 0...20{
 //            self.gyro.append(CFAbsoluteTimeGetCurrent()-self.recStart)
@@ -707,7 +707,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
-        setMotion()
+        setMotion()//ここにしても安定したような
 //        print("録画開始")
     }
 }
