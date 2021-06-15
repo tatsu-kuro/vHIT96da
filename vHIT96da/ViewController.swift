@@ -2924,7 +2924,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 showBoxies(f: false)
                 playButton.isEnabled=true
 //                print("gyrocount",Controller.gyro.count)
-                for i in 0...Controller.gyro.count/3-2{//-2でエラーなので、-5としてみた
+                print("rewind***1")
+                for i in 0...Controller.gyro.count/3-3{//-2でエラーなので、-3としてみた
                     gyroTime.append(Controller.gyro[i*3])
                     dH=Double(Kalman(value:CGFloat(Controller.gyro[i*3+1]*10),num:0))
                     dV=Double(Kalman(value:CGFloat(Controller.gyro[i*3+2]*10),num:1))
@@ -2936,8 +2937,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while Controller.saved2album == false{//fileができるまで待つ
                     sleep(UInt32(0.1))
                 }
+                print("rewind***2")
+
                 removeFile(delFile: "temp.png")
                 getVideosAlbumList(name: vHIT_VOG)
+                print("rewind***3")
+
                 while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
@@ -2968,7 +2973,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                for _ in 0...5{
 //                    gyroFiltered.append(0)
 //                }
-                
+                print("rewind***4")
+
                 let gyroCSV=getGyroCSV()//csv文字列
 //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
                 //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
@@ -2978,6 +2984,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
+                print("rewind***5")
+
                 savePath2album(name:vHIT_VOG,path: "temp.png")
                 startFrame=0
                 //                getPngsAlbumList()
