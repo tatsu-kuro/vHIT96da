@@ -172,60 +172,41 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBAction func onPlayButton(_ sender: Any) {
         showBoxies(f: false)
         videoPlayMode=0
+        stopTimerVideo()
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
-//            onForwardButton(0)
         }else{
-//            if videoSlider.value>videoSlider.maximumValue-0.1{
-//                videoSlider.value=0
-//                let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
-//                videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-//                startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
-//            }else{
-                videoPlayer.play()
-//            }
+            videoPlayer.play()
         }
     }
     @IBAction func onForwardButton(_ sender: Any) {
+        stopTimerVideo()
+        startTimerVideo()
         if videoURL.count == 0{
             return
         }
         if videoPlayMode==2{
             videoPlayMode=0
+            return
         }
         showBoxies(f: false)
         videoPlayer.pause()
         videoPlayMode=2
-        startVideoTimer()
-        return
-        if videoSlider.value>videoSlider.maximumValue-0.1{
-            return
-        }
-        videoSlider.value += 0.05
-        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
-        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
     }
     
     @IBAction func onBackwardButton(_ sender: Any) {
+        stopTimerVideo()
+        startTimerVideo()
         if videoURL.count == 0{
             return
         }
         if videoPlayMode==1{
             videoPlayMode=0
+            return
         }
         showBoxies(f: false)
         videoPlayer.pause()
         videoPlayMode=1
-        startVideoTimer()
-        return
-        if videoSlider.value < 0.1{
-            return
-        }
-        videoSlider.value -= 0.05
-        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
-        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
     }
     
     @IBOutlet weak var wakuAll: UIImageView!
@@ -677,14 +658,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             kalVs[i][4]=0
         }
     }
-    func stopVideoTimer(){
+    func stopTimerVideo(){
         if timerVideo?.isValid == true {
             timerVideo!.invalidate()
         }
     }
-    func startVideoTimer() {
-        stopVideoTimer()
-        timerCalc = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.update_video), userInfo: nil, repeats: true)
+    func startTimerVideo() {
+        stopTimerVideo()
+        timerVideo = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.update_video), userInfo: nil, repeats: true)
     }
     @objc func update_video(tm: Timer) {
         if videoPlayMode==0 {
@@ -710,15 +691,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
         startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
         //            dispWakus()
-        showWakuImages()
+        if videoSlider.value == 0{
+            showWakuImages()
+        }
     }
-    func stopCalcTimer(){
+    func stopTimerCalc(){
         if timerCalc?.isValid == true {
             timerCalc!.invalidate()
         }
     }
-    func startCalcTimer() {
-        stopCalcTimer()
+    func startTimerCalc() {
+        stopTimerCalc()
         lastArraycount=0
         if calcMode != 2{
             timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
@@ -776,10 +759,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         if vhitBoxView?.isHidden==false || vogBoxView?.isHidden==false{
             showBoxies(f: false)
-            //    playButton.isEnabled = true
         }else{
             showBoxies(f: true)
-            //  playButton.isEnabled = false
         }
     }
     func setBacknext(f:Bool){//back and next button
@@ -933,7 +914,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
         //        print("eyeborder:",eyeBorder,faceF)
-        startCalcTimer()//resizerectのチェックの時はここをコメントアウト*********************
+        startTimerCalc()//resizerectのチェックの時はここをコメントアウト*********************
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
         calcDate = currentVideoDate.text!
@@ -2625,7 +2606,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             forwardButton.isEnabled=false
             backwardButton.isEnabled=false
         }else{
-            startVideoTimer()
+            startTimerVideo()
         }
     }
     func setButtons_first(){
