@@ -129,6 +129,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let vHIT_VOG:String="vHIT_VOG"
     let Wave96da:String="Wave96da"
     
+    @IBOutlet weak var waveSlider: UISlider!
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
 //    let albumName:String = "vHIT_VOG"
@@ -157,22 +158,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBOutlet weak var damyBottom: UILabel!
     
-    func playTrack()//こんな方法もある
-    {
-        let playerItem = AVPlayerItem(url: videoURL[videoCurrent])
-        videoPlayer.replaceCurrentItem(with:playerItem)
-        videoPlayer.play()
-    }
-    func playTrack(number:Int)//こんな方法もある
-    {
-        videoPlayer.replaceCurrentItem(with:AVPlayerItem(url: videoURL[number]))
-        videoPlayer.play()
-    }
+//    func playTrack()//こんな方法もある
+//    {
+//        let playerItem = AVPlayerItem(url: videoURL[videoCurrent])
+//        videoPlayer.replaceCurrentItem(with:playerItem)
+//        videoPlayer.play()
+//    }
+//    func playTrack(number:Int)//こんな方法もある
+//    {
+//        videoPlayer.replaceCurrentItem(with:AVPlayerItem(url: videoURL[number]))
+//        videoPlayer.play()
+//    }
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
         showBoxies(f: false)
         videoPlayMode=0
-        stopTimerVideo()
+//        stopTimerVideo()
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
         }else{
@@ -2608,6 +2609,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else{
             startTimerVideo()
         }
+        waveSlider.isHidden=true
     }
     func setButtons_first(){
         let ww=view.bounds.width
@@ -2623,7 +2625,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         nextButton.layer.cornerRadius = 5
         videoSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
         videoSlider.thumbTintColor=UIColor.systemYellow
-
+        waveSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
+        waveSlider.thumbTintColor=UIColor.systemBlue
         bw=bh//bhは冒頭で決めている。上２段のボタンの高さと同じ。
         let bwd=bw+distance
         let bh0=bottomY-bh//wh-10-bw/2
@@ -2650,9 +2653,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         button.layer.cornerRadius = 5
     }
 
-    @objc func onEyeFaceButton(sender: UIButton) {
-        showWave(0)
-    }
+//    @objc func onEyeFaceButton(sender: UIButton) {
+//        showWave(0)
+//    }
     
     override var prefersHomeIndicatorAutoHidden: Bool {
         get {
