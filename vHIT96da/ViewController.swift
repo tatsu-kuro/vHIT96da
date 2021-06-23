@@ -168,28 +168,36 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoPlayer.replaceCurrentItem(with:AVPlayerItem(url: videoURL[number]))
         videoPlayer.play()
     }
+    var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
         showBoxies(f: false)
+        videoPlayMode=0
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
-            onForwardButton(0)
+//            onForwardButton(0)
         }else{
-            if videoSlider.value>videoSlider.maximumValue-0.5{
-                videoSlider.value=0
-                let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
-                videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-                startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
-            }else{
+//            if videoSlider.value>videoSlider.maximumValue-0.1{
+//                videoSlider.value=0
+//                let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+//                videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+//                startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
+//            }else{
                 videoPlayer.play()
-            }
+//            }
         }
     }
     @IBAction func onForwardButton(_ sender: Any) {
         if videoURL.count == 0{
             return
         }
+        if videoPlayMode==2{
+            videoPlayMode=0
+        }
         showBoxies(f: false)
         videoPlayer.pause()
+        videoPlayMode=2
+        startVideoTimer()
+        return
         if videoSlider.value>videoSlider.maximumValue-0.1{
             return
         }
@@ -203,8 +211,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoURL.count == 0{
             return
         }
+        if videoPlayMode==1{
+            videoPlayMode=0
+        }
         showBoxies(f: false)
         videoPlayer.pause()
+        videoPlayMode=1
+        startVideoTimer()
+        return
         if videoSlider.value < 0.1{
             return
         }
@@ -308,7 +322,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var gyroVFiltered = Array<CGFloat>()//gyroFiltered
     var gyroMoved = Array<CGFloat>()//gyroVeloFilterd
     
-    var timer: Timer!
+    var timerCalc: Timer!
+    var timerVideo:Timer!
     
     var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
@@ -352,6 +367,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     @objc func onSliderValueChange(){
         videoPlayer.pause()
+        videoPlayMode=0
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
         startFrame=Int(videoSlider.value*getFPS(url: videoURL[videoCurrent]))
@@ -548,7 +564,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         startFrame=0
+        videoPlayMode=0
         showVideoIroiro(num: -1)
+    }
+    @IBAction func nextVideo(_ sender: Any) {
+        if vhitLineView?.isHidden == false{
+            return
+        }
+        startFrame=0
+        videoPlayMode=0
+        showVideoIroiro(num: 1)
     }
     func setVideoButtons(mode:Bool){
         videoSlider.isEnabled=mode
@@ -579,15 +604,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoFps.text=videoDura[videoCurrent] + "/" + String(format: "%dfps",roundFps)
         showWakuImages()
         setBacknext(f:true)
-    }
-
-    @IBAction func nextVideo(_ sender: Any) {//
-           
-        if vhitLineView?.isHidden == false{
-            return
-        }
-        startFrame=0
-        showVideoIroiro(num: 1)
     }
     
     func resizeR2(_ targetRect:CGRect, viewRect:CGRect, image:CIImage) -> CGRect {
@@ -661,17 +677,53 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             kalVs[i][4]=0
         }
     }
-    
-    func startTimer() {
-        if timer?.isValid == true {
-            timer.invalidate()
-        }else{
-            lastArraycount=0
-            if calcMode != 2{
-                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
+    func stopVideoTimer(){
+        if timerVideo?.isValid == true {
+            timerVideo!.invalidate()
+        }
+    }
+    func startVideoTimer() {
+        stopVideoTimer()
+        timerCalc = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.update_video), userInfo: nil, repeats: true)
+    }
+    @objc func update_video(tm: Timer) {
+        if videoPlayMode==0 {
+            if !((videoPlayer.rate != 0) && (videoPlayer.error == nil)) {//notplaying
+                if videoSlider.value>videoSlider.maximumValue-0.01{
+                    videoSlider.value=0
+                }else{
+                    return
+                }
             }else{
-                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
+                return
             }
+        }else if videoPlayMode == 1{
+            videoSlider.value -= 0.02
+        }else if videoPlayMode==2{
+            videoSlider.value += 0.02
+        }
+        if videoSlider.value < 0 || videoSlider.value > videoSlider.maximumValue - 0.1{
+            videoSlider.value = 0
+            videoPlayMode=0
+        }
+        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
+        //            dispWakus()
+        showWakuImages()
+    }
+    func stopCalcTimer(){
+        if timerCalc?.isValid == true {
+            timerCalc!.invalidate()
+        }
+    }
+    func startCalcTimer() {
+        stopCalcTimer()
+        lastArraycount=0
+        if calcMode != 2{
+            timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
+        }else{
+            timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
         }
     }
     func showBoxies(f:Bool){
@@ -753,6 +805,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = true
             helpButton.isEnabled = true
             playButton.isEnabled = true
+            videoSlider.isHidden = false
             forwardButton.isEnabled=true
             backwardButton.isEnabled=true
             modeDispButton.isEnabled = true
@@ -769,6 +822,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             playButton.isEnabled = false
+            videoSlider.isHidden = true
             forwardButton.isEnabled = false
             backwardButton.isEnabled = false
             modeDispButton.isEnabled = false
@@ -846,6 +900,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func vHITcalc(){
+//        timer_video.invalidate()
         var cvError:Int = 0
         calcFlag = true
         faceVeloXOrig.removeAll()
@@ -878,7 +933,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
         //        print("eyeborder:",eyeBorder,faceF)
-        startTimer()//resizerectのチェックの時はここをコメントアウト*********************
+        startCalcTimer()//resizerectのチェックの時はここをコメントアウト*********************
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
         calcDate = currentVideoDate.text!
@@ -1328,8 +1383,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        if timer?.isValid == true {
-            timer.invalidate()
+        if timerCalc?.isValid == true {
+            timerCalc.invalidate()
         }
         //       print("willdisappear")
     }
@@ -1709,7 +1764,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         if calcFlag == false {//終わったらここ
-            timer.invalidate()
+            timerCalc.invalidate()
             setButtons(mode: true)
             UIApplication.shared.isIdleTimerDisabled = false//do sleep
             vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: eyePosXOrig.count)
@@ -1743,7 +1798,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == false {
             vhitCurpoint=0
             //if timer?.isValid == true {
-            timer.invalidate()
+            timerCalc.invalidate()
             setButtons(mode: true)
             //  }
             UIApplication.shared.isIdleTimerDisabled = false
@@ -2567,6 +2622,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showVideoIroiro(num:0)
         if videoImg.count==0{
             playButton.isEnabled=false
+            forwardButton.isEnabled=false
+            backwardButton.isEnabled=false
+        }else{
+            startVideoTimer()
         }
     }
     func setButtons_first(){
@@ -2923,6 +2982,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 gyroVFiltered.removeAll()
                 showBoxies(f: false)
                 playButton.isEnabled=true
+                backwardButton.isEnabled=true
+                forwardButton.isEnabled=true
 //                print("gyrocount",Controller.gyro.count)
                 print("rewind***1")
                 for i in 0...Controller.gyro.count/3-3{//-2でエラーなので、-3としてみた
