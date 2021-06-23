@@ -1438,8 +1438,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
         view.addSubview(wave3View!)
-        let k=CGFloat(Int(view.bounds.width)/Int(mailWidth))
-        let k1:CGFloat=view.bounds.width/mailWidth
+//        let k=CGFloat(Int(view.bounds.width)/Int(mailWidth))
+//        let k1:CGFloat=view.bounds.width/mailWidth
 //        print("ratio:",ww,mailWidth,k,k1)
         var endPos = CGFloat(end) - 2400
         if CGFloat(end) < 2400{
@@ -1791,7 +1791,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawVHITwaves()
             }
         }else if mode==2{//vog
+            let temp=Int(240*10-Int(waveSlider.value))
+
+            if vogCurpoint < temp*Int(view.bounds.width)/Int(mailWidth){
+                vogCurpoint = temp*Int(view.bounds.width)/Int(mailWidth)
+            }else if vogCurpoint>0{//240*10以下には動けない
+                vogCurpoint = 0
+            }
+            let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
+            print("vogcurpo:",vogCurpoint,view.bounds.width,mailWidth,tmp)
+            wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
             
+            
+            
+            
+            
+//            if Int(waveSlider.value)>lastVogpoint+100||Int(waveSlider.value)<lastVogpoint-100{
+//            drawVOG2endPt(end:Int(waveSlider.value))
+//            lastVogpoint=Int(waveSlider.value)
+//            }
         }
         print(waveSlider.value)
      }
@@ -3245,27 +3263,27 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //
 //                }
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
-                if eyePosXFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
-                    return
-                }
-                let dd:Int=1
-                if Int(move.x) > lastmoveX + dd{
-                    vogCurpoint += dd*10
-                    lastmoveX = Int(move.x)
-                }else if Int(move.x) < lastmoveX - dd{
-                    vogCurpoint -= dd*10
-                    lastmoveX = Int(move.x)
-                }
-                let temp=Int(240*10-eyePosXFiltered.count)
-                
-                if vogCurpoint < temp*Int(view.bounds.width)/Int(mailWidth){
-                    vogCurpoint = temp*Int(view.bounds.width)/Int(mailWidth)
-                }else if vogCurpoint>0{//240*10以下には動けない
-                    vogCurpoint = 0
-                }
-                let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
-                print("vogcurpo:",vogCurpoint,view.bounds.width,mailWidth,tmp)
-                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+//                if eyePosXFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
+//                    return
+//                }
+//                let dd:Int=1
+//                if Int(move.x) > lastmoveX + dd{
+//                    vogCurpoint += dd*10
+//                    lastmoveX = Int(move.x)
+//                }else if Int(move.x) < lastmoveX - dd{
+//                    vogCurpoint -= dd*10
+//                    lastmoveX = Int(move.x)
+//                }
+//                let temp=Int(240*10-eyePosXFiltered.count)
+//
+//                if vogCurpoint < temp*Int(view.bounds.width)/Int(mailWidth){
+//                    vogCurpoint = temp*Int(view.bounds.width)/Int(mailWidth)
+//                }else if vogCurpoint>0{//240*10以下には動けない
+//                    vogCurpoint = 0
+//                }
+//                let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
+//                print("vogcurpo:",vogCurpoint,view.bounds.width,mailWidth,tmp)
+//                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
              }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
                    return
