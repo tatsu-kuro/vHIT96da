@@ -315,6 +315,12 @@
                                 <rect key="frame" x="63" y="69" width="40" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="9Yc-Dg-y1f">
+                                <rect key="frame" x="153" y="617" width="118" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="minimumTrackTintColor" systemColor="systemBlueColor"/>
+                                <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </slider>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="rzY-7a-f2q">
                                 <rect key="frame" x="155" y="673" width="118" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -357,7 +363,6 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="YPr-Ux-hO9" appends="YES" id="iz5-0Y-8f7"/>
                             <outletCollection property="gestureRecognizers" destination="dvP-Cv-tWK" appends="YES" id="DQp-EF-jh3"/>
-                            <outletCollection property="gestureRecognizers" destination="9xT-P1-SOl" appends="YES" id="3Wu-gR-xwN"/>
                         </connections>
                     </view>
                     <connections>
@@ -390,6 +395,7 @@
                         <outlet property="wakuShowEye_image" destination="ac1-F6-YXh" id="xbD-VV-AMd"/>
                         <outlet property="wakuShowFace_image" destination="dKd-kY-X4M" id="e6q-bn-W00"/>
                         <outlet property="waveButton" destination="Q2m-D3-Mdm" id="hsZ-Du-slr"/>
+                        <outlet property="waveSlider" destination="9Yc-Dg-y1f" id="NE6-av-baw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -403,11 +409,6 @@
                         <action selector="tapFrame:" destination="BYZ-38-t0r" id="RkR-3H-IcK"/>
                     </connections>
                 </tapGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="9xT-P1-SOl">
-                    <connections>
-                        <action selector="longPress:" destination="BYZ-38-t0r" id="DHL-sU-4gn"/>
-                    </connections>
-                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1120.2898550724638" y="-40.178571428571423"/>
         </scene>

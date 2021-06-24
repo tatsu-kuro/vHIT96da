@@ -129,6 +129,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let vHIT_VOG:String="vHIT_VOG"
     let Wave96da:String="Wave96da"
     
+    @IBOutlet weak var waveSlider: UISlider!
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
 //    let albumName:String = "vHIT_VOG"
@@ -157,61 +158,53 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBOutlet weak var damyBottom: UILabel!
     
-    func playTrack()//こんな方法もある
-    {
-        let playerItem = AVPlayerItem(url: videoURL[videoCurrent])
-        videoPlayer.replaceCurrentItem(with:playerItem)
-        videoPlayer.play()
-    }
-    func playTrack(number:Int)//こんな方法もある
-    {
-        videoPlayer.replaceCurrentItem(with:AVPlayerItem(url: videoURL[number]))
-        videoPlayer.play()
-    }
+//    func playTrack()//こんな方法もある
+//    {
+//        let playerItem = AVPlayerItem(url: videoURL[videoCurrent])
+//        videoPlayer.replaceCurrentItem(with:playerItem)
+//        videoPlayer.play()
+//    }
+//    func playTrack(number:Int)//こんな方法もある
+//    {
+//        videoPlayer.replaceCurrentItem(with:AVPlayerItem(url: videoURL[number]))
+//        videoPlayer.play()
+//    }
+    var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
+        if checkDispMode() != 0{
+            return
+        }
         showBoxies(f: false)
+        videoPlayMode=0
+//        stopTimerVideo()
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
-            onForwardButton(0)
         }else{
-            if videoSlider.value>videoSlider.maximumValue-0.5{
-                videoSlider.value=0
-                let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
-                videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-                startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
-            }else{
-                videoPlayer.play()
-            }
+            videoPlayer.play()
         }
     }
     @IBAction func onForwardButton(_ sender: Any) {
-        if videoURL.count == 0{
-            return
-        }
-        showBoxies(f: false)
-        videoPlayer.pause()
-        if videoSlider.value>videoSlider.maximumValue-0.1{
-            return
-        }
-        videoSlider.value += 0.05
-        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
-        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
+        forwardBackwardButton(mode: 2)
     }
-    
-    @IBAction func onBackwardButton(_ sender: Any) {
+    func forwardBackwardButton(mode:Int){
+        if checkDispMode() != 0{
+            return
+        }
+        stopTimerVideo()
+        startTimerVideo()
         if videoURL.count == 0{
+            return
+        }
+        if videoPlayMode==mode{
+            videoPlayMode=0
             return
         }
         showBoxies(f: false)
         videoPlayer.pause()
-        if videoSlider.value < 0.1{
-            return
-        }
-        videoSlider.value -= 0.05
-        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
-        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
+        videoPlayMode=mode
+    }
+    @IBAction func onBackwardButton(_ sender: Any) {
+        forwardBackwardButton(mode: 1)
     }
     
     @IBOutlet weak var wakuAll: UIImageView!
@@ -281,8 +274,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var gyroRatio:Int = 100//vhit
     var posRatio:Int = 100//vog
     var veloRatio:Int = 100//vog
-    var calcMode:Int?//true-vhit false-vog
-//    var calcMode:Int=0//0:HIThorizontal 1:HITvertical 2:VOG
+    var calcMode:Int?//0:HIThorizontal 1:HITvertical 2:VOG
     var faceF:Int = 0
     var videoGyroZure:Int = 10
     //解析結果保存用配列
@@ -308,7 +300,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var gyroVFiltered = Array<CGFloat>()//gyroFiltered
     var gyroMoved = Array<CGFloat>()//gyroVeloFilterd
     
-    var timer: Timer!
+    var timerCalc: Timer!
+    var timerVideo:Timer!
     
     var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
@@ -335,7 +328,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoSlider.minimumValue = 0
         videoSlider.maximumValue = videoDuration
         videoSlider.value=0
-        videoSlider.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
+        videoSlider.addTarget(self, action: #selector(onVideoSliderValueChange), for: UIControl.Event.valueChanged)
         // Set SeekBar Interval
         let interval : Double = Double(0.5 * videoSlider.maximumValue) / Double(videoSlider.bounds.maxX)
         // ConvertCMTime
@@ -350,8 +343,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            self.startFrame=Int(value*self.getFPS(url: self.videoURL[self.videoCurrent]))
         })
     }
-    @objc func onSliderValueChange(){
+    @objc func onVideoSliderValueChange(){
         videoPlayer.pause()
+        videoPlayMode=0
         let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
         videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
         startFrame=Int(videoSlider.value*getFPS(url: videoURL[videoCurrent]))
@@ -548,7 +542,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         startFrame=0
+        videoPlayMode=0
         showVideoIroiro(num: -1)
+    }
+    @IBAction func nextVideo(_ sender: Any) {
+        if vhitLineView?.isHidden == false{
+            return
+        }
+        startFrame=0
+        videoPlayMode=0
+        showVideoIroiro(num: 1)
     }
     func setVideoButtons(mode:Bool){
         videoSlider.isEnabled=mode
@@ -579,15 +582,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoFps.text=videoDura[videoCurrent] + "/" + String(format: "%dfps",roundFps)
         showWakuImages()
         setBacknext(f:true)
-    }
-
-    @IBAction func nextVideo(_ sender: Any) {//
-           
-        if vhitLineView?.isHidden == false{
-            return
-        }
-        startFrame=0
-        showVideoIroiro(num: 1)
     }
     
     func resizeR2(_ targetRect:CGRect, viewRect:CGRect, image:CIImage) -> CGRect {
@@ -661,17 +655,55 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             kalVs[i][4]=0
         }
     }
-    
-    func startTimer() {
-        if timer?.isValid == true {
-            timer.invalidate()
-        }else{
-            lastArraycount=0
-            if calcMode != 2{
-                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
+    func stopTimerVideo(){
+        if timerVideo?.isValid == true {
+            timerVideo!.invalidate()
+        }
+    }
+    func startTimerVideo() {
+        stopTimerVideo()
+        timerVideo = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.update_video), userInfo: nil, repeats: true)
+    }
+    @objc func update_video(tm: Timer) {
+        if videoPlayMode==0 {
+            if !((videoPlayer.rate != 0) && (videoPlayer.error == nil)) {//notplaying
+                if videoSlider.value>videoSlider.maximumValue-0.01{
+                    videoSlider.value=0
+                }else{
+                    return
+                }
             }else{
-                timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
+                return
             }
+        }else if videoPlayMode == 1{
+            videoSlider.value -= 0.02
+        }else if videoPlayMode==2{
+            videoSlider.value += 0.02
+        }
+        if videoSlider.value < 0 || videoSlider.value > videoSlider.maximumValue - 0.1{
+            videoSlider.value = 0
+            videoPlayMode=0
+        }
+        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        startFrame=Int(videoSlider.value*getFPS(url: videoURL[self.videoCurrent]))
+        //            dispWakus()
+        if videoSlider.value == 0{
+            showWakuImages()
+        }
+    }
+    func stopTimerCalc(){
+        if timerCalc?.isValid == true {
+            timerCalc!.invalidate()
+        }
+    }
+    func startTimerCalc() {
+        stopTimerCalc()
+        lastArraycount=0
+        if calcMode != 2{
+            timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
+        }else{
+            timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
         }
     }
     func showBoxies(f:Bool){
@@ -718,17 +750,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            eraseButton.isHidden=true//とりあえず
         }
     }
+    func checkDispMode()->Int{
+        if vhitBoxView?.isHidden==false {//vHIT on
+            return 1
+        }else if vogBoxView?.isHidden==false{//VOG on
+            return 2
+        }else{//off
+            return 0
+        }
+    }
     @IBAction func showWave(_ sender: Any) {//saveresult record-unwind の２箇所
-        if calcFlag == true{
-            return
-        }
-        if vhitBoxView?.isHidden==false || vogBoxView?.isHidden==false{
-            showBoxies(f: false)
-            //    playButton.isEnabled = true
-        }else{
+        if checkDispMode()==0{
             showBoxies(f: true)
-            //  playButton.isEnabled = false
-        }
+            videoSlider.isHidden=true
+            waveSlider.isHidden=false
+        }else{
+            showBoxies(f: false)
+            videoSlider.isHidden=false
+            waveSlider.isHidden=true
+       }
     }
     func setBacknext(f:Bool){//back and next button
         nextButton.isHidden = !f
@@ -753,7 +793,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = true
             helpButton.isEnabled = true
             playButton.isEnabled = true
-            forwardButton.isEnabled=true
+            videoSlider.isEnabled = true
+//            forwardButton.isEnabled=true
             backwardButton.isEnabled=true
             modeDispButton.isEnabled = true
             changeModeButton.isEnabled = true
@@ -769,6 +810,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             playButton.isEnabled = false
+//            videoSlider.isEnabled = false
             forwardButton.isEnabled = false
             backwardButton.isEnabled = false
             modeDispButton.isEnabled = false
@@ -778,6 +820,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          }
     }
     @IBAction func vHITcalc(_ sender: Any) {
+        if checkDispMode() != 0{
+            return
+        }
         if videoImg.count==0{
             return
         }
@@ -846,6 +891,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func vHITcalc(){
+//        timer_video.invalidate()
         var cvError:Int = 0
         calcFlag = true
         faceVeloXOrig.removeAll()
@@ -864,6 +910,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
         KalmanInit()
         showBoxies(f: true)
+        waveSlider.isHidden=false
+        waveSlider.isEnabled=false
+        videoSlider.isHidden=true
         vogImage = makeVOGimgWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
         //vHITlinewViewだけは消しておく。その他波は１秒後には消えるので、そのまま。
         if vhitLineView != nil{
@@ -878,15 +927,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
         //        print("eyeborder:",eyeBorder,faceF)
-        startTimer()//resizerectのチェックの時はここをコメントアウト*********************
+        startTimerCalc()//resizerectのチェックの時はここをコメントアウト*********************
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
         calcDate = currentVideoDate.text!
         //        print("calcdate:",calcDate)
         var fpsIs120:Bool=false
-        if getFPS(url: videoURL[videoCurrent])<200.0{
+        let fps=getFPS(url: videoURL[videoCurrent])
+        var realframeRatio:Float=fps/240
+        //これを設定すると頭出ししてもあまりずれない。どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
+         if fps<200.0{
             fpsIs120=true
+            realframeRatio=fps/120.0
         }
+//        print("fps:",getFPS(url: videoURL[videoCurrent]))
         var reader: AVAssetReader! = nil
         do {
             reader = try AVAssetReader(asset: avAsset)
@@ -909,7 +963,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         reader.add(readerOutput)
         let frameRate = videoTrack.nominalFrameRate
         //let startframe=startPoints[vhitVideocurrent]
-        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
+        let startTime = CMTime(value: CMTimeValue(Float(startFrame)*realframeRatio), timescale: CMTimeScale(frameRate))
         let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
         //print("time",timeRange)
         reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
@@ -1323,8 +1377,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        if timer?.isValid == true {
-            timer.invalidate()
+        if timerCalc?.isValid == true {
+            timerCalc.invalidate()
         }
         //       print("willdisappear")
     }
@@ -1387,8 +1441,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
         view.addSubview(wave3View!)
-        let k=CGFloat(Int(view.bounds.width)/Int(mailWidth))
-        let k1:CGFloat=view.bounds.width/mailWidth
+//        let k=CGFloat(Int(view.bounds.width)/Int(mailWidth))
+//        let k1:CGFloat=view.bounds.width/mailWidth
 //        print("ratio:",ww,mailWidth,k,k1)
         var endPos = CGFloat(end) - 2400
         if CGFloat(end) < 2400{
@@ -1704,7 +1758,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         if calcFlag == false {//終わったらここ
-            timer.invalidate()
+            timerCalc.invalidate()
             setButtons(mode: true)
             UIApplication.shared.isIdleTimerDisabled = false//do sleep
             vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: eyePosXOrig.count)
@@ -1713,6 +1767,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 vogLineView?.removeFromSuperview()//waveを消して
             }
             drawVogtext()//文字を表示
+            setWaveSlider()
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれない
         }else{
             #if DEBUG
@@ -1727,9 +1782,35 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawVogtext()
         }
     }
- 
+    @objc func onWaveSliderValueChange(){
+        let mode=checkDispMode()
+//        print("modes:",mode,calcMode)
+        if mode==1{//vhit
+            vhitCurpoint=Int(waveSlider.value)
+            drawOnewave(startcount: vhitCurpoint)
+            lastVhitpoint = vhitCurpoint
+            if waveTuple.count>0{
+                checksetPos(pos: lastVhitpoint + Int(self.view.bounds.width/2), mode:1)
+                drawVHITwaves()
+            }
+        }else if mode==2{//vog
+            if eyePosXFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
+                return
+            }
+            let r = view.bounds.width/CGFloat(mailWidth)
+            vogCurpoint = -Int(Float(r)*waveSlider.value*Float(eyePosXFiltered.count-2400))/eyePosXFiltered.count
+            wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+        }
+    }
+    func setWaveSlider(){
+        waveSlider.isEnabled=true
+        waveSlider.minimumValue = 0
+        //count==0の時もエラーにならないのでそのまま
+        waveSlider.maximumValue = Float(eyePosXFiltered.count)
+        waveSlider.value=0
+        waveSlider.addTarget(self, action: #selector(onWaveSliderValueChange), for: UIControl.Event.valueChanged)
+    }
     var startTime=CFAbsoluteTimeGetCurrent()
-
 
     @objc func update_vHIT(tm: Timer) {
         if eyeVeloXFiltered.count < 5 {
@@ -1738,7 +1819,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == false {
             vhitCurpoint=0
             //if timer?.isValid == true {
-            timer.invalidate()
+            timerCalc.invalidate()
             setButtons(mode: true)
             //  }
             UIApplication.shared.isIdleTimerDisabled = false
@@ -1748,6 +1829,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if self.waveTuple.count > 0{
                 self.nonsavedFlag = true
             }
+            setWaveSlider()
         }
         vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: eyeVeloXOrig.count)
         lastArraycount=eyeVeloXOrig.count
@@ -1967,7 +2049,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         faceF = getUserDefault(str: "faceF", ret:0)
         getVideoGyryoZureDefault()
         calcMode = getUserDefault(str: "calcMode", ret: 0)
-//        calcMode = getUserDefault(str: "calcMode", ret: 0)
         
         let width=Int(view.bounds.width/2)
         let height=Int(view.bounds.height/3)
@@ -2000,8 +2081,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UserDefaults.standard.set(Int(wakuF.origin.x), forKey: "wakuF_x")
         UserDefaults.standard.set(Int(wakuF.origin.y), forKey: "wakuF_y")
         UserDefaults.standard.set(calcMode,forKey: "calcMode")
-//        UserDefaults.standard.set(calcMode,forKey: "calcMode")
-
     }
     
     func dispWakus(){
@@ -2562,7 +2641,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showVideoIroiro(num:0)
         if videoImg.count==0{
             playButton.isEnabled=false
+            forwardButton.isEnabled=false
+            backwardButton.isEnabled=false
+        }else{
+            startTimerVideo()
         }
+        waveSlider.isHidden=true
     }
     func setButtons_first(){
         let ww=view.bounds.width
@@ -2573,12 +2657,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
         let bh:CGFloat=(ww-20-6*distance)/7//最下段のボタンの高さ、幅と同じ
         let bh1=bottomY-5-bh-bh//2段目
-        let bh2=bottomY-10-2.8*bh//videoSlider
+        let bh2=bottomY-10-2.9*bh//videoSlider
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
         videoSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
         videoSlider.thumbTintColor=UIColor.systemYellow
-
+        waveSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
+        waveSlider.thumbTintColor=UIColor.systemBlue
         bw=bh//bhは冒頭で決めている。上２段のボタンの高さと同じ。
         let bwd=bw+distance
         let bh0=bottomY-bh//wh-10-bw/2
@@ -2605,9 +2690,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         button.layer.cornerRadius = 5
     }
 
-    @objc func onEyeFaceButton(sender: UIButton) {
-        showWave(0)
-    }
+//    @objc func onEyeFaceButton(sender: UIButton) {
+//        showWave(0)
+//    }
     
     override var prefersHomeIndicatorAutoHidden: Bool {
         get {
@@ -2918,8 +3003,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 gyroVFiltered.removeAll()
                 showBoxies(f: false)
                 playButton.isEnabled=true
+                backwardButton.isEnabled=true
+                forwardButton.isEnabled=true
 //                print("gyrocount",Controller.gyro.count)
-                for i in 0...Controller.gyro.count/3-2{//-2でエラーなので、-5としてみた
+                print("rewind***1")
+                for i in 0...Controller.gyro.count/3-3{//-2でエラーなので、-3としてみた
                     gyroTime.append(Controller.gyro[i*3])
                     dH=Double(Kalman(value:CGFloat(Controller.gyro[i*3+1]*10),num:0))
                     dV=Double(Kalman(value:CGFloat(Controller.gyro[i*3+2]*10),num:1))
@@ -2931,8 +3019,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 while Controller.saved2album == false{//fileができるまで待つ
                     sleep(UInt32(0.1))
                 }
+                print("rewind***2")
+
                 removeFile(delFile: "temp.png")
                 getVideosAlbumList(name: vHIT_VOG)
+                print("rewind***3")
+                //ビデオが出来るまで待つ
                 while videoDura.count==videoArrayCount{
                     sleep(UInt32(0.5))
                 }
@@ -2944,12 +3036,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     fps *= 2.0
                 }
                 let framecount=Int(Float(gyroH.count)*(fps)/100.0)
-                for i in 0...framecount+70{//70を尻に付けないとgyrodataが変な値になる
+                var lastJ:Int=0
+//                let t1=CFAbsoluteTimeGetCurrent()
+                for i in 0...framecount+500{//100を尻に付けないとgyrodataが変な値になる
                     let gn=Double(i)/Double(fps)//iフレーム目の秒数
                     var getj:Int=0
-                    for j in 0...gyroH.count-1{
+                    for j in lastJ...gyroH.count-1{
                         if gyroTime[j] >= gn{//secondの値が入っている。
                             getj=j//越えるところを見つける
+                            lastJ=j
                             break
                         }
                     }
@@ -2963,16 +3058,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                for _ in 0...5{
 //                    gyroFiltered.append(0)
 //                }
-                
+                print("rewind***4")
+
                 let gyroCSV=getGyroCSV()//csv文字列
 //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
-                //pixel2imageで240*60*5*2の配列を作るので,増やすときは注意
+                //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
                 let gyroImage=openCV.pixel2image(videoImg[videoCurrent], csv: gyroCSV as String)
                 //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
                 saveImage2path(image: gyroImage!, path: "temp.png")
                 while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
+                print("rewind***5")
+
                 savePath2album(name:vHIT_VOG,path: "temp.png")
                 startFrame=0
                 //                getPngsAlbumList()
@@ -2987,6 +3085,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     print("Exitで抜けた。")
                 }
             }
+            UIApplication.shared.isIdleTimerDisabled = false//スリープする
         }else{
             #if DEBUG
             print("tatsuaki-unwind from list")
@@ -3004,7 +3103,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let str1=videoDate[num].components(separatedBy: " ")
         let str=str1[0].components(separatedBy: "-")
         let date=Int(str[0])!*10000+Int(str[1])!*100+Int(str[2])!
-        print("date",date)
+//        print("date",date)
         if date>20210609{//
             return true
         }
@@ -3024,12 +3123,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 rgb = -Int(rgb8![i*4+1])*256 - Int(rgb8![i*4+2])
             }
             if newVersion==true{
+//                print("newVersion")
                 if i%2==0{
                     gyroHFiltered.append(CGFloat(rgb)/100.0)
                 }else{
                     gyroVFiltered.append(CGFloat(rgb)/100.0)
                 }
             }else{
+//                print("oldversion")
                 gyroHFiltered.append(CGFloat(rgb)/100.0)
                 gyroVFiltered.append(CGFloat(rgb)/100.0)
             }
@@ -3057,13 +3158,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         print(str)
     }*/
     func moveWakus
-        (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect) -> CGRect{
+    (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect) -> CGRect{
         var r:CGRect
         r = rect//2種類の枠を代入、変更してreturnで返す
         let dx:CGFloat = movePo.x
         let dy:CGFloat = movePo.y
-        r.origin.x = stRect.origin.x + dx;
-        r.origin.y = stRect.origin.y + dy;
+     
+        r.origin.x = stRect.origin.x + dx/3//CGFloat(moveWidth);
+        r.origin.y = stRect.origin.y + dy/3//CGFloat(moveWidth);
         //r.size.width = stRect.size
         if r.origin.x < hani.origin.x{
             r.origin.x = hani.origin.x
@@ -3078,7 +3180,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return r
     }
-    
+
     var leftrightFlag:Bool = false
     var rectType:Int = 0//0:eye 1:face 2:outer -1:何も選択されていない
     var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
@@ -3097,6 +3199,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
         if sender.state == .began {
+            
             stPo = sender.location(in: self.view)
             if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
                 //タップして動かすと、ここに来る
@@ -3112,66 +3215,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
-                let h=self.view.bounds.height
-                //let hI=Int(h)
-                //let posyI=Int(pos.y)
-                //                if isVHIT == true{//vhit
-                if pos.y > h/2{//下半分の時
-                    var dd=Int(10)
-                    if pos.y < h/2 + h/6{//dd < 10{
-                        dd = 2
-                    }else if pos.y > h/2 + h*2/6{
-                        dd = 20
-                    }
-                    if Int(move.x) > lastmoveX + dd{
-                        vhitCurpoint -= dd*4
-                        lastmoveX = Int(move.x)
-                    }else if Int(move.x) < lastmoveX - dd{
-                        vhitCurpoint += dd*4
-                        lastmoveX = Int(move.x)
-                    }
-                    //print("all",dd,Int(move.x),lastmoveX,vhitCurpoint)// Int(move.x/10.0),movex)
-                    if vhitCurpoint<0{
-                        vhitCurpoint = 0
-                    }else if vhitCurpoint > eyeVeloXFiltered.count - Int(self.view.bounds.width){
-                        vhitCurpoint = eyeVeloXFiltered.count - Int(self.view.bounds.width)
-                    }
-                    if vhitCurpoint != lastVhitpoint{
-                        drawOnewave(startcount: vhitCurpoint)
-                        lastVhitpoint = vhitCurpoint
-                        if waveTuple.count>0{
-                            checksetPos(pos: lastVhitpoint + Int(self.view.bounds.width/2), mode:1)
-                            drawVHITwaves()
-                        }
-                    }
-                }else{
-                    
-                }
-            }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
-                if eyePosXFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
-                    return
-                }
-                let dd:Int=1
-                if Int(move.x) > lastmoveX + dd{
-                    vogCurpoint += dd*10
-                    lastmoveX = Int(move.x)
-                }else if Int(move.x) < lastmoveX - dd{
-                    vogCurpoint -= dd*10
-                    lastmoveX = Int(move.x)
-                }
-                let temp=Int(240*10-eyePosXFiltered.count)
                 
-                if vogCurpoint < temp*Int(view.bounds.width)/Int(mailWidth){
-                    vogCurpoint = temp*Int(view.bounds.width)/Int(mailWidth)
-                }else if vogCurpoint>0{//240*10以下には動けない
-                    vogCurpoint = 0
-                }
-                let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
-//                print(vogCurpoint,view.bounds.width,mailWidth,tmp)
-                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
-             }else{//枠 changed
+                
+            }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
+                
+            }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
-                   return
+                    return
                 }
                 if rectType > -1 {//枠の設定の場合
                     //                    let w3=view.bounds.width/3
@@ -3197,7 +3247,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }else if sender.state == .ended{
-            
             setUserDefaults()
             if vhitBoxView?.isHidden == false{//結果が表示されている時
                 if waveTuple.count>0 {
@@ -3217,13 +3266,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true {
             return
         }
-//        if sender.location(in: self.view).y>view.bounds.height*2/3{
-//            showWave(0)
-//            return
-//        }
+        //        if sender.location(in: self.view).y>view.bounds.height*2/3{
+        //            showWave(0)
+        //            return
+        //        }
         if vhitBoxView?.isHidden==false && waveTuple.count>0{
             if sender.location(in: self.view).y > self.view.bounds.width/5 + 160{
-            //上に中央vHITwaveをタップで表示させるタップ範囲を設定
+                //上に中央vHITwaveをタップで表示させるタップ範囲を設定
                 let temp = checksetPos(pos:lastVhitpoint + Int(sender.location(in: self.view).x),mode: 2)
                 if temp >= 0{
                     if waveTuple[temp].2 == 1{
@@ -3234,10 +3283,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 
                 drawVHITwaves()
-//                return
+                //                return
             }
         }else if vhitBoxView?.isHidden==true{
-            if sender.location(in:self.view).y>view.bounds.height*3/4{
+            let locationX=sender.location(in: self.view).x
+            let locationY=sender.location(in: self.view).y
+            if locationY>view.bounds.height*3/4{
                 //video slide bar と被らないように
                 return
             }
@@ -3250,6 +3301,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 dispWakus()
                 showWakuImages()
+//            }else{
+//                if wakuE.origin.x<locationX-wakuE.width*5 {
+//                    wakuE.origin.x += 0.5
+//                }else if wakuE.origin.x>locationX+wakuE.width*4{
+//                    wakuE.origin.x -= 0.5
+//                }
+//                if wakuE.origin.y<locationY-wakuE.height*5{
+//                    wakuE.origin.y += 0.5
+//                }else if wakuE.origin.y>locationY+wakuE.height*4{
+//                    wakuE.origin.y -= 0.5
+//                }
+//                dispWakus()
+//                showWakuImages()
             }
         }
     }
@@ -3352,7 +3416,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gettingDataNow = false
         drawVHITwaves()
     }
- 
+ /*
     //longPressでeye(sikaku),face(maru)を探して、そこに枠を近づける。２〜３回繰り返すと良いか。
     var faceMarkType:Int = 0
     @IBAction func longPress(_ sender: UILongPressGestureRecognizer) {
@@ -3393,7 +3457,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
         reader.startReading()
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
-        let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border:20)
+        let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border:10)
 
         let context:CIContext = CIContext.init(options: nil)
 //        let orientation = UIImage.Orientation.up//right
@@ -3408,7 +3472,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
         let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
 
-        let eyeImage=UIImage(named: "maru")
+        let eyeImage=UIImage(named: "marus")
       
         let osEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeImage!.size.width) / 2.0//上下方向への差
         let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeImage!.size.height) / 2.0//左右方向への差
@@ -3424,12 +3488,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         ex = CGFloat(eX.pointee) - osEyeX
         ey = CGFloat(eY.pointee) - osEyeY
         print(maxEyeV,ex,ey)
-        if maxEyeV>0.98{
-            wakuE.origin.x += ex/2
-            wakuE.origin.y += ey/2
+        if maxEyeV>0.950{
+            wakuE.origin.x += ex/3
+            wakuE.origin.y += ey/3
             dispWakus()
             showWakuImages()
         }
     }
- 
+ */
 }
