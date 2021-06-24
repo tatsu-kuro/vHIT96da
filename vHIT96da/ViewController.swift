@@ -340,7 +340,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let time = CMTimeGetSeconds(self.videoPlayer.currentTime())
             let value = Float(self.videoSlider.maximumValue - self.videoSlider.minimumValue) * Float(time) / Float(duration) + Float(self.videoSlider.minimumValue)
             self.videoSlider.value = value
-//            self.startFrame=Int(value*self.getFPS(url: self.videoURL[self.videoCurrent]))
         })
     }
     @objc func onVideoSliderValueChange(){
@@ -553,8 +552,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoPlayMode=0
         showVideoIroiro(num: 1)
     }
+    
     func setVideoButtons(mode:Bool){
-        videoSlider.isEnabled=mode
+//        videoSlider.isEnabled=mode
+//        waveSlider.isEnabled = !mode
         backwardButton.isEnabled=mode
         forwardButton.isEnabled=mode
         playButton.isEnabled=mode
@@ -764,10 +765,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             showBoxies(f: true)
             videoSlider.isHidden=true
             waveSlider.isHidden=false
+            backwardButton.isEnabled=false
+            playButton.isEnabled=false
+            forwardButton.isEnabled=false
         }else{
             showBoxies(f: false)
             videoSlider.isHidden=false
             waveSlider.isHidden=true
+            backwardButton.isEnabled=true
+            playButton.isEnabled=true
+            forwardButton.isEnabled=true
        }
     }
     func setBacknext(f:Bool){//back and next button
@@ -793,9 +800,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = true
             helpButton.isEnabled = true
             playButton.isEnabled = true
-            videoSlider.isEnabled = true
-//            forwardButton.isEnabled=true
-            backwardButton.isEnabled=true
+//            videoSlider.isEnabled = true
+            backwardButton.isEnabled = true
             modeDispButton.isEnabled = true
             changeModeButton.isEnabled = true
             cameraButton.isEnabled = true
@@ -810,7 +816,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             playButton.isEnabled = false
-//            videoSlider.isEnabled = false
             forwardButton.isEnabled = false
             backwardButton.isEnabled = false
             modeDispButton.isEnabled = false
@@ -820,9 +825,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          }
     }
     @IBAction func vHITcalc(_ sender: Any) {
-        if checkDispMode() != 0{
-            return
-        }
+//        if checkDispMode() != 0{
+//            return
+//        }
+        videoPlayer.pause()
         if videoImg.count==0{
             return
         }
@@ -911,7 +917,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         KalmanInit()
         showBoxies(f: true)
         waveSlider.isHidden=false
-        waveSlider.isEnabled=false
+//        waveSlider.isEnabled=false
         videoSlider.isHidden=true
         vogImage = makeVOGimgWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
         //vHITlinewViewだけは消しておく。その他波は１秒後には消えるので、そのまま。
@@ -1786,7 +1792,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let mode=checkDispMode()
 //        print("modes:",mode,calcMode)
         if mode==1{//vhit
-            vhitCurpoint=Int(waveSlider.value)
+            vhitCurpoint=Int(waveSlider.value*(waveSlider.maximumValue-Float(view.bounds.width))/waveSlider.maximumValue)
+//            print(vhitCurpoint)p
             drawOnewave(startcount: vhitCurpoint)
             lastVhitpoint = vhitCurpoint
             if waveTuple.count>0{
@@ -1803,12 +1810,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func setWaveSlider(){
-        waveSlider.isEnabled=true
+//        waveSlider.isEnabled=true
+        setVideoButtons(mode: false)
         waveSlider.minimumValue = 0
         //count==0の時もエラーにならないのでそのまま
         waveSlider.maximumValue = Float(eyePosXFiltered.count)
         waveSlider.value=0
         waveSlider.addTarget(self, action: #selector(onWaveSliderValueChange), for: UIControl.Event.valueChanged)
+        
     }
     var startTime=CFAbsoluteTimeGetCurrent()
 
@@ -2867,6 +2876,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if segue.destination is RecordViewController{
             makeAlbum(name: vHIT_VOG)//なければ作る
             makeAlbum(name: Wave96da)//これもなければ作る
+            
+            videoPlayer!.pause()
+//            videoPlayer = nil
+//               playerLayer.removefromsuperlayer()
         }else{
             #if DEBUG
             print("prepare list")
