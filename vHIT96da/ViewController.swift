@@ -1791,28 +1791,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawVHITwaves()
             }
         }else if mode==2{//vog
-            let temp=Int(240*10-Int(waveSlider.value))
-
-            if vogCurpoint < temp*Int(view.bounds.width)/Int(mailWidth){
-                vogCurpoint = temp*Int(view.bounds.width)/Int(mailWidth)
-            }else if vogCurpoint>0{//240*10以下には動けない
-                vogCurpoint = 0
+            if eyePosXFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
+                return
             }
-            let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
-            print("vogcurpo:",vogCurpoint,view.bounds.width,mailWidth,tmp)
+            let r = view.bounds.width/CGFloat(mailWidth)
+            vogCurpoint = -Int(Float(r)*waveSlider.value*Float(eyePosXFiltered.count-2400))/eyePosXFiltered.count
             wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
-            
-            
-            
-            
-            
-//            if Int(waveSlider.value)>lastVogpoint+100||Int(waveSlider.value)<lastVogpoint-100{
-//            drawVOG2endPt(end:Int(waveSlider.value))
-//            lastVogpoint=Int(waveSlider.value)
-//            }
         }
-        print(waveSlider.value)
-     }
+    }
     func setWaveSlider(){
         waveSlider.isEnabled=true
         waveSlider.minimumValue = 0
@@ -2668,7 +2654,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
         let bh:CGFloat=(ww-20-6*distance)/7//最下段のボタンの高さ、幅と同じ
         let bh1=bottomY-5-bh-bh//2段目
-        let bh2=bottomY-10-2.8*bh//videoSlider
+        let bh2=bottomY-10-2.9*bh//videoSlider
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
         videoSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
@@ -3210,7 +3196,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
         if sender.state == .began {
-
+            
             stPo = sender.location(in: self.view)
             if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
                 //タップして動かすと、ここに来る
@@ -3226,67 +3212,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
-//                let h=self.view.bounds.height
-//                //let hI=Int(h)
-//                //let posyI=Int(pos.y)
-//                //                if isVHIT == true{//vhit
-//                if pos.y > h/2{//下半分の時
-//                    var dd=Int(10)
-//                    if pos.y < h/2 + h/6{//dd < 10{
-//                        dd = 2
-//                    }else if pos.y > h/2 + h*2/6{
-//                        dd = 20
-//                    }
-//                    if Int(move.x) > lastmoveX + dd{
-//                        vhitCurpoint -= dd*4
-//                        lastmoveX = Int(move.x)
-//                    }else if Int(move.x) < lastmoveX - dd{
-//                        vhitCurpoint += dd*4
-//                        lastmoveX = Int(move.x)
-//                    }
-//                    //print("all",dd,Int(move.x),lastmoveX,vhitCurpoint)// Int(move.x/10.0),movex)
-//                    if vhitCurpoint<0{
-//                        vhitCurpoint = 0
-//                    }else if vhitCurpoint > eyeVeloXFiltered.count - Int(self.view.bounds.width){
-//                        vhitCurpoint = eyeVeloXFiltered.count - Int(self.view.bounds.width)
-//                    }
-//                    if vhitCurpoint != lastVhitpoint{
-//                        print("vhitcurpo:",vhitCurpoint)
-//                        drawOnewave(startcount: vhitCurpoint)
-//                        lastVhitpoint = vhitCurpoint
-//                        if waveTuple.count>0{
-//                            checksetPos(pos: lastVhitpoint + Int(self.view.bounds.width/2), mode:1)
-//                            drawVHITwaves()
-//                        }
-//                    }
-//                }else{
-//
-//                }
+                
+                
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
-//                if eyePosXFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
-//                    return
-//                }
-//                let dd:Int=1
-//                if Int(move.x) > lastmoveX + dd{
-//                    vogCurpoint += dd*10
-//                    lastmoveX = Int(move.x)
-//                }else if Int(move.x) < lastmoveX - dd{
-//                    vogCurpoint -= dd*10
-//                    lastmoveX = Int(move.x)
-//                }
-//                let temp=Int(240*10-eyePosXFiltered.count)
-//
-//                if vogCurpoint < temp*Int(view.bounds.width)/Int(mailWidth){
-//                    vogCurpoint = temp*Int(view.bounds.width)/Int(mailWidth)
-//                }else if vogCurpoint>0{//240*10以下には動けない
-//                    vogCurpoint = 0
-//                }
-//                let tmp = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
-//                print("vogcurpo:",vogCurpoint,view.bounds.width,mailWidth,tmp)
-//                wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
-             }else{//枠 changed
+                
+            }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
-                   return
+                    return
                 }
                 if rectType > -1 {//枠の設定の場合
                     //                    let w3=view.bounds.width/3
@@ -3331,13 +3263,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true {
             return
         }
-//        if sender.location(in: self.view).y>view.bounds.height*2/3{
-//            showWave(0)
-//            return
-//        }
+        //        if sender.location(in: self.view).y>view.bounds.height*2/3{
+        //            showWave(0)
+        //            return
+        //        }
         if vhitBoxView?.isHidden==false && waveTuple.count>0{
             if sender.location(in: self.view).y > self.view.bounds.width/5 + 160{
-            //上に中央vHITwaveをタップで表示させるタップ範囲を設定
+                //上に中央vHITwaveをタップで表示させるタップ範囲を設定
                 let temp = checksetPos(pos:lastVhitpoint + Int(sender.location(in: self.view).x),mode: 2)
                 if temp >= 0{
                     if waveTuple[temp].2 == 1{
@@ -3348,7 +3280,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 
                 drawVHITwaves()
-//                return
+                //                return
             }
         }else if vhitBoxView?.isHidden==true{
             let locationX=sender.location(in: self.view).x
