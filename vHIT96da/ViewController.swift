@@ -820,6 +820,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          }
     }
     @IBAction func vHITcalc(_ sender: Any) {
+        if checkDispMode() != 0{
+            return
+        }
         if videoImg.count==0{
             return
         }
@@ -1781,7 +1784,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     @objc func onWaveSliderValueChange(){
         let mode=checkDispMode()
-        print("modes:",mode,calcMode)
+//        print("modes:",mode,calcMode)
         if mode==1{//vhit
             vhitCurpoint=Int(waveSlider.value)
             drawOnewave(startcount: vhitCurpoint)
@@ -3100,7 +3103,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let str1=videoDate[num].components(separatedBy: " ")
         let str=str1[0].components(separatedBy: "-")
         let date=Int(str[0])!*10000+Int(str[1])!*100+Int(str[2])!
-        print("date",date)
+//        print("date",date)
         if date>20210609{//
             return true
         }
