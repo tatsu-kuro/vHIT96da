@@ -516,14 +516,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         showModeText()
         setButtons(mode: true)
-        dispWakus()
-        showWakuImages()
+//        dispWakus()
+//        showWakuImages()
         if calcMode != 2{
-        if eyeVeloXOrig.count>0 && videoCurrent != -1{
-            vhitCurpoint=0
-            drawOnewave(startcount: 0)
-            calcDrawVHIT()
-        }
+            if eyeVeloXOrig.count>0 && videoCurrent != -1{
+                vhitCurpoint=0
+                drawOnewave(startcount: 0)
+                calcDrawVHIT()
+            }
         }else{
             rectType=0
             if eyeVeloXOrig.count>0  && videoCurrent != -1{
@@ -799,9 +799,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             saveButton.isEnabled = true
             waveButton.isEnabled = true
             helpButton.isEnabled = true
-            playButton.isEnabled = true
-//            videoSlider.isEnabled = true
-            backwardButton.isEnabled = true
+            if checkDispMode()==0{
+                playButton.isEnabled = true
+                forwardButton.isEnabled = true
+                backwardButton.isEnabled = true
+            }else{
+                playButton.isEnabled = false
+                forwardButton.isEnabled = false
+                backwardButton.isEnabled = false
+            }
             modeDispButton.isEnabled = true
             changeModeButton.isEnabled = true
             cameraButton.isEnabled = true
@@ -2876,8 +2882,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if segue.destination is RecordViewController{
             makeAlbum(name: vHIT_VOG)//なければ作る
             makeAlbum(name: Wave96da)//これもなければ作る
-            
-            videoPlayer!.pause()
+//            videoPlayer!.pause()
 //            videoPlayer = nil
 //               playerLayer.removefromsuperlayer()
         }else{
