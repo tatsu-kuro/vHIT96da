@@ -817,7 +817,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             modeDispButton.isEnabled = true
             changeModeButton.isEnabled = true
             cameraButton.isEnabled = true
-            cameraButton.backgroundColor=UIColor.orange
+//            cameraButton.backgroundColor=UIColor.orange
         }else{
             calcButton.isHidden = true
             stopButton.isHidden = false
@@ -834,7 +834,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             modeDispButton.isEnabled = false
             changeModeButton.isEnabled = false
             cameraButton.isEnabled = false
-            cameraButton.backgroundColor=UIColor.gray
+            cameraButton.isEnabled = false// backgroundColor=UIColor.gray
          }
     }
     @IBAction func vHITcalc(_ sender: Any) {
@@ -2694,9 +2694,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtonProperty(button:saveButton,bw:bw,bh:bh,x:10+bwd*1,y:bh0)
         setButtonProperty(button:waveButton,bw:bw,bh:bh,x:10+bwd*2,y:bh0)
         setButtonProperty(button:calcButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0)
-        calcButton.backgroundColor=UIColor.blue
+//        calcButton.backgroundColor=UIColor.blue
         setButtonProperty(button:stopButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0)
-        stopButton.backgroundColor=UIColor.blue
+//        stopButton.backgroundColor=UIColor.blue
         setButtonProperty(button:paraButton,bw:bw,bh:bh,x:10+bwd*4,y:bh0)
         setButtonProperty(button:cameraButton,bw:bw,bh:bh,x:10+bwd*6,y:bh0)
         setButtonProperty(button:helpButton,bw:bw,bh:bh,x:10+bwd*5,y:bh0)
