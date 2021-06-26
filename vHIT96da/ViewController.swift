@@ -177,6 +177,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showBoxies(f: false)
         videoPlayMode=0
 //        stopTimerVideo()
+        startTimerVideo()
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
         }else{
@@ -190,7 +191,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if checkDispMode() != 0{
             return
         }
-        stopTimerVideo()
+//        stopTimerVideo()
         startTimerVideo()
         if videoURL.count == 0{
             return
@@ -3192,8 +3193,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let dx:CGFloat = movePo.x
         let dy:CGFloat = movePo.y
      
-        r.origin.x = stRect.origin.x + dx/3//CGFloat(moveWidth);
-        r.origin.y = stRect.origin.y + dy/3//CGFloat(moveWidth);
+        r.origin.x = stRect.origin.x + dx/5//3->5
+        r.origin.y = stRect.origin.y + dy/5
         //r.size.width = stRect.size
         if r.origin.x < hani.origin.x{
             r.origin.x = hani.origin.x
