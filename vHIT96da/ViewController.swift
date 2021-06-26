@@ -441,7 +441,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoCurrent -= 1
             showVideoIroiro(num: 0)
             if videoImg.count==0{
-                playButton.isEnabled=false
+                setVideoButtons(mode: false)
+//                playButton.isEnabled=false
             }
         }
     }
@@ -554,8 +555,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func setVideoButtons(mode:Bool){
-//        videoSlider.isEnabled=mode
-//        waveSlider.isEnabled = !mode
+        videoSlider.isHidden = !mode
+        waveSlider.isHidden = mode
         backwardButton.isEnabled=mode
         forwardButton.isEnabled=mode
         playButton.isEnabled=mode
@@ -763,18 +764,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBAction func showWave(_ sender: Any) {//saveresult record-unwind の２箇所
         if checkDispMode()==0{
             showBoxies(f: true)
-            videoSlider.isHidden=true
-            waveSlider.isHidden=false
-            backwardButton.isEnabled=false
-            playButton.isEnabled=false
-            forwardButton.isEnabled=false
+//            videoSlider.isHidden=true
+//            waveSlider.isHidden=false
+//            backwardButton.isEnabled=false
+//            playButton.isEnabled=false
+//            forwardButton.isEnabled=false
+            setVideoButtons(mode: false)
         }else{
             showBoxies(f: false)
-            videoSlider.isHidden=false
-            waveSlider.isHidden=true
-            backwardButton.isEnabled=true
-            playButton.isEnabled=true
-            forwardButton.isEnabled=true
+//            videoSlider.isHidden=false
+//            waveSlider.isHidden=true
+//            backwardButton.isEnabled=true
+//            playButton.isEnabled=true
+//            forwardButton.isEnabled=true
+            setVideoButtons(mode: true)
        }
     }
     func setBacknext(f:Bool){//back and next button
@@ -800,13 +803,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = true
             helpButton.isEnabled = true
             if checkDispMode()==0{
-                playButton.isEnabled = true
-                forwardButton.isEnabled = true
-                backwardButton.isEnabled = true
+//                playButton.isEnabled = true
+//                forwardButton.isEnabled = true
+//                backwardButton.isEnabled = true
+                setVideoButtons(mode: true)
             }else{
-                playButton.isEnabled = false
-                forwardButton.isEnabled = false
-                backwardButton.isEnabled = false
+//                playButton.isEnabled = false
+//                forwardButton.isEnabled = false
+//                backwardButton.isEnabled = false
+                setVideoButtons(mode: false)
             }
             modeDispButton.isEnabled = true
             changeModeButton.isEnabled = true
@@ -821,9 +826,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             saveButton.isEnabled = false
             waveButton.isEnabled = false
             helpButton.isEnabled = false
-            playButton.isEnabled = false
-            forwardButton.isEnabled = false
-            backwardButton.isEnabled = false
+            setVideoButtons(mode: false)
+//            playButton.isEnabled = false
+//            forwardButton.isEnabled = false
+//            backwardButton.isEnabled = false
             modeDispButton.isEnabled = false
             changeModeButton.isEnabled = false
             cameraButton.isEnabled = false
@@ -2655,9 +2661,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         showVideoIroiro(num:0)
         if videoImg.count==0{
-            playButton.isEnabled=false
-            forwardButton.isEnabled=false
-            backwardButton.isEnabled=false
+            setVideoButtons(mode: false)
+//            playButton.isEnabled=false
+//            forwardButton.isEnabled=false
+//            backwardButton.isEnabled=false
         }else{
             startTimerVideo()
         }
@@ -3020,9 +3027,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 gyroHFiltered.removeAll()
                 gyroVFiltered.removeAll()
                 showBoxies(f: false)
-                playButton.isEnabled=true
-                backwardButton.isEnabled=true
-                forwardButton.isEnabled=true
+                setVideoButtons(mode: false)
+//                playButton.isEnabled=true
+//                backwardButton.isEnabled=true
+//                forwardButton.isEnabled=true
+//                videoSlider.isHidden=false
+//                waveSlider.isHidden=true
 //                print("gyrocount",Controller.gyro.count)
                 print("rewind***1")
                 for i in 0...Controller.gyro.count/3-3{//-2でエラーなので、-3としてみた
@@ -3097,7 +3107,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
                     getVideosAlbumList(name: vHIT_VOG)
 //                    slowImage.image=UIImage(named:"vhittop")
-                    playButton.isEnabled=false
+//                    playButton.isEnabled=false
                     print("アルバムを消されていたので、録画を保存しなかった。")
                 }else{
                     print("Exitで抜けた。")
