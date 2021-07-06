@@ -238,7 +238,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var nonsavedFlag:Bool = false //calcしてなければfalse, calcしたらtrue, saveしたらfalse
 //    var openCVstopFlag:Bool = false//calcdrawVHITの時は止めないとvHITeye
     //vHITeyeがちゃんと読めない瞬間が生じるようだ
-    @IBOutlet weak var videoDuration: UILabel!
+//    @IBOutlet weak var videoDuration: UILabel!
     @IBOutlet weak var videoFps: UILabel!
 //    @IBOutlet weak var buttonsWaku: UIStackView!
     @IBOutlet weak var playButton: UIButton!
@@ -3314,7 +3314,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //                return
             }
         }else if vhitBoxView?.isHidden==true{
-            let locationX=sender.location(in: self.view).x
+//            let locationX=sender.location(in: self.view).x
             let locationY=sender.location(in: self.view).y
             if locationY>view.bounds.height*3/4{
                 //video slide bar と被らないように
