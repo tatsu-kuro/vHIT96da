@@ -204,10 +204,6 @@
                                 <rect key="frame" x="130" y="155" width="59" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iqh-4c-2st">
-                                <rect key="frame" x="131" y="271" width="59" height="58"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhl-W2-Rd7">
                                 <rect key="frame" x="131" y="39" width="59" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -390,11 +386,10 @@
                         <outlet property="stopButton" destination="sqt-I0-fRF" id="uIR-70-WpH"/>
                         <outlet property="videoFps" destination="6oH-Ur-nDk" id="EUJ-xJ-mml"/>
                         <outlet property="videoSlider" destination="rzY-7a-f2q" id="ge5-Op-ylX"/>
-                        <outlet property="wakuAll" destination="Iqh-4c-2st" id="IGY-sR-TIm"/>
                         <outlet property="wakuEye" destination="jhl-W2-Rd7" id="La3-kk-kYg"/>
                         <outlet property="wakuEyeb" destination="k50-f5-jh1" id="BGH-eT-L8b"/>
-                        <outlet property="wakuFac" destination="tQh-go-BDj" id="pz4-mk-m61"/>
-                        <outlet property="wakuFacb" destination="i5c-dW-a9a" id="1wZ-Uk-56k"/>
+                        <outlet property="wakuFace" destination="tQh-go-BDj" id="pz4-mk-m61"/>
+                        <outlet property="wakuFaceb" destination="i5c-dW-a9a" id="1wZ-Uk-56k"/>
                         <outlet property="wakuShowEye_image" destination="ac1-F6-YXh" id="xbD-VV-AMd"/>
                         <outlet property="wakuShowFace_image" destination="dKd-kY-X4M" id="e6q-bn-W00"/>
                         <outlet property="waveButton" destination="Q2m-D3-Mdm" id="hsZ-Du-slr"/>
