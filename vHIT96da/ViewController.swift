@@ -1249,8 +1249,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             self.eyeVeloYFiltered[n2]=self.eyeVeloYFiltered[n1]/2+self.eyeVeloYFiltered[n3]/2
         }
     }
+    #if DEBUG
     var debugDisplayX:CGFloat=0
     var debugDisplayY:CGFloat=0
+    #endif
     func showWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
         if videoDura.count<1 {
             return
@@ -1309,8 +1311,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIeye = UIImage.init(cgImage: CGeye, scale:1.0, orientation:orientation)
         let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
         wakuShowEye_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
+        #if DEBUG
         debugDisplayX=wakuShowEye_image.frame.maxX
         debugDisplayY=wakuShowEye_image.frame.minY
+        #endif
         wakuShowEye_image.layer.borderWidth = 1.0
         wakuShowEye_image.backgroundColor = UIColor.clear
         wakuShowEye_image.layer.cornerRadius = 3
