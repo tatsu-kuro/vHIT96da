@@ -1885,46 +1885,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         calcDrawVHIT()
     }
     
-//    func Field2value(field:UITextField) -> Int {
-//        if field.text?.count != 0 {
-//            return Int(field.text!)!
-//        }else{
-//            return 0
-//        }
-//    }
- /*
-    func getVideofns()->String{
-        let str=getFsindoc().components(separatedBy: ",")
-        
-        if !str[0].contains("vHIT96da"){
-            return ""
-        }
-        var retStr:String=""
-        for i in 0..<str.count{
-            if str[i].contains(".MOV"){
-                retStr += str[i] + ","
-            }
-        }
-        //ifretStr += str[str.count-1]
-        let retStr2=retStr.dropLast()
-        return String(retStr2)
-    }
- 
-    func getfileURL(path:String)->URL{
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0] as String
-        let vidpath = documentsDirectory + "/" + path
-        return URL(fileURLWithPath: vidpath)
-    }
-  
-    func getdocumentPath(path:String)->String{
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0] as String
-        let vidpath = documentsDirectory + "/" + path
-        return vidpath
-    }
-    
-*/
     func getFPS(url:URL) -> Float{
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: url, options: options)
@@ -2716,58 +2676,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         button.layer.cornerRadius = 5
     }
 
-//    @objc func onEyeFaceButton(sender: UIButton) {
-//        showWave(0)
-//    }
-    
     override var prefersHomeIndicatorAutoHidden: Bool {
         get {
             return true
         }
     }
-    //    override func prefersHomeIndicatorAutoHidden() -> Bool {
-    //        return true
-    //    }
+
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    /*
-    func initVogImage(width w:CGFloat,height h:CGFloat) -> UIImage {
-        let size = CGSize(width:w, height:h)
-        // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        let context = UIGraphicsGetCurrentContext()
-        // パスの初期化
-        let drawRect = CGRect(x:0, y:0, width:w, height:h)
-        let drawPath = UIBezierPath(rect:drawRect)
-        
-        context?.setFillColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        drawPath.fill()
-        context?.setStrokeColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-        drawPath.stroke()
-        
-        UIColor.black.setStroke()
-        
-        let wid:CGFloat=w/90.0
-        for i in 0..<90 {
-            let xp = CGFloat(i)*wid
-            drawPath.move(to: CGPoint(x:xp,y:0))
-            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
-        }
-        drawPath.move(to:CGPoint(x:0,y:0))
-        drawPath.addLine(to: CGPoint(x:w,y:0))
-        drawPath.move(to:CGPoint(x:0,y:h-120))
-        drawPath.addLine(to: CGPoint(x:w,y:h-120))
-        //UIColor.blue.setStroke()
-        drawPath.lineWidth = 2.0//1.0
-        drawPath.stroke()
-        // イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
-    */
+ 
     func makeVOGimgWakulines(width w:CGFloat,height h:CGFloat) ->UIImage{
         let size = CGSize(width:w, height:h)
         // イメージ処理の開始
@@ -3293,7 +3211,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     
-    @IBAction func tapFrame(_ sender: UITapGestureRecognizer) {
+    @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
         print("tapFrame****before")
         if calcFlag == true {
             return
@@ -3448,84 +3366,4 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gettingDataNow = false
         drawVHITwaves()
     }
- /*
-    //longPressでeye(sikaku),face(maru)を探して、そこに枠を近づける。２〜３回繰り返すと良いか。
-    var faceMarkType:Int = 0
-    @IBAction func longPress(_ sender: UILongPressGestureRecognizer) {
-        if sender.state != .began {//.ended .changed etc?
-            return
-        }
-        if rectType==1 || videoDura.count<1 || vhitBoxView?.isHidden==false || vogBoxView?.isHidden==false{
-            return
-        }
-     
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
-        calcDate = currentVideoDate.text!
-        var reader: AVAssetReader! = nil
-        do {
-            reader = try AVAssetReader(asset: avAsset)
-        } catch {
-            #if DEBUG
-            print("could not initialize reader.")
-            #endif
-            return
-        }
-        guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).last else {
-            #if DEBUG
-            print("could not retrieve the video track.")
-            #endif
-            return
-        }
-        
-        let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
-        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
-        
-        reader.add(readerOutput)
-        let frameRate = videoTrack.nominalFrameRate
-
-        let startTime = CMTime(value: CMTimeValue(startFrame), timescale: CMTimeScale(frameRate))
-        let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
-        reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
-        reader.startReading()
-        let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
-        let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border:10)
-
-        let context:CIContext = CIContext.init(options: nil)
-//        let orientation = UIImage.Orientation.up//right
-        var sample:CMSampleBuffer!
-        sample = readerOutput.copyNextSampleBuffer()
-        
-        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-        let eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
-
-
-        let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
-        let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
-
-        let eyeImage=UIImage(named: "marus")
-      
-        let osEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeImage!.size.width) / 2.0//上下方向への差
-        let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeImage!.size.height) / 2.0//左右方向への差
-
-        var ex:CGFloat = 0
-        var ey:CGFloat = 0
-        let eyeWithBorderCGImage = context.createCGImage(ciImage, from: eyeWithBorderRect)!
-        let eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
-        let maxEyeV=openCV.matching(eyeWithBorderUIImage,
-                                    narrow: eyeImage,
-                                    x: eX,
-                                    y: eY)
-        ex = CGFloat(eX.pointee) - osEyeX
-        ey = CGFloat(eY.pointee) - osEyeY
-        print(maxEyeV,ex,ey)
-        if maxEyeV>0.950{
-            wakuE.origin.x += ex/3
-            wakuE.origin.y += ey/3
-            dispWakus()
-            showWakuImages()
-        }
-    }
- */
 }
