@@ -25,7 +25,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             print("in viewDidLayoutSubviews")
             print(topPadding,bottomPadding,leftPadding,rightPadding)    // iPhoneXなら44, その他は20.0
         }
-//        setButtons()
+ //        setButtons()
     }
 //    @IBOutlet weak var markdispSwitch: UISwitch!
 //    @IBOutlet weak var markdispText: UILabel!
@@ -46,6 +46,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var videoGyroZure:Int = 0
     var ratio1:Int = 0
     var ratio2:Int = 0
+    var wakuLength:Int = 0
     var calcMode:Int?
     @IBOutlet weak var gyroText: UILabel!
     @IBOutlet weak var paraText1: UILabel!
@@ -53,7 +54,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var paraText3: UILabel!
     @IBOutlet weak var paraText4: UILabel!
 
+    @IBOutlet weak var paraText5: UILabel!
     @IBOutlet weak var paraText6: UILabel!
+    @IBOutlet weak var wakuLengthInput: UITextField!
     
     @IBOutlet weak var videoGyroZureinput: UITextField!
     @IBOutlet weak var paraText7: UILabel!
@@ -65,6 +68,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var ratio1input: UITextField!
     @IBOutlet weak var ratio2input: UITextField!
+    @IBAction func wakuLengthAction(_ sender: Any) {
+        wakuLength = Field2value(field: wakuLengthInput)
+        if wakuLength<3{
+            wakuLength=3
+        }
+        UserDefaults.standard.set(wakuLength, forKey: "wakuLength")
+    }
     
     @IBAction func faceFchan(_ sender: UISwitch) {
         if sender.isOn{
@@ -83,7 +93,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func numpadOff(_ sender: Any) {
- 
+        wakuLengthInput.endEditing(true)
         widthRangeinput.endEditing(true)
         waveWidthinput.endEditing(true)
         eyeBinput.endEditing(true)
@@ -104,12 +114,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             videoGyroZure = 10
             ratio1 = 100
             ratio2 = 100
+            wakuLength = 3
         }else{
             eyeBorder=10
             okpMode=0
             faceFbutton.isOn=false
             ratio1 = 100
             ratio2 = 100
+            wakuLength = 3
         }
         dispParam()
     }
@@ -158,6 +170,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.videoGyroZureinput.text = "\(videoGyroZure)"
         self.ratio1input.text = "\(ratio1)"
         self.ratio2input.text = "\(ratio2)"
+        self.wakuLengthInput.text = "\(wakuLength)"
         if faceF==0{
             self.faceFbutton.isOn=false
         }else{
@@ -184,6 +197,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
         let x1:CGFloat=3
         let x2=x1+bw+5
+        paraText3.text = "眼球偏位位置表示の高さ％"
+        paraText4.text = "眼球偏位速度表示の高さ％"
+        paraText5.text = "角膜反射光源枠の幅"
+        paraText6.text="角膜上反射光源の移動（検出）幅"
+
         if calcMode==2{
             markText.isHidden = true
             faceFbutton.isHidden = true
@@ -199,38 +217,43 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText7.isHidden = true
 //            gyroText.isHidden = true
             paraText2.text = " ** VOG 波形表示高さの調整 **"
-            paraText3.text = "眼球偏位位置表示の高さ％"
-            paraText4.text = "眼球偏位速度表示の高さ％"
-            paraText6.text="角膜上反射光源の移動（検出）幅"
+//            paraText3.text = "眼球偏位位置表示の高さ％"
+//            paraText4.text = "眼球偏位速度表示の高さ％"
+//            paraText5.text = "角膜反射光源枠の幅"
+//            paraText6.text="角膜上反射光源の移動（検出）幅"
             paraText2.frame   = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
             paraText3.frame   = CGRect(x:x2,   y: topY+by+bh1*1,width: tw, height: bh)
             paraText4.frame   = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
-            paraText6.frame   = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
-            gyroText.frame = CGRect(x:5,y:topY+by+bh1*4,width:ww-10,height: bh*3 )
+            paraText5.frame   = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
+            paraText6.frame   = CGRect(x:x2,   y: topY+by+bh1*4 ,width: tw, height: bh)
+            gyroText.frame = CGRect(x:5,y:topY+by+bh1*5,width:ww-10,height: bh*3 )
             
 //            gyroText.text! = "vHIT96da Version " + versionNumber
 
             ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*1 ,width: bw, height: bh)
             ratio2input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
-            eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
+            eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
+            wakuLengthInput.frame = CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
         }else{//vhit
             paraText1.frame = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
             paraText2.frame = CGRect(x:x2,   y: topY+by+bh1 ,width: tw, height: bh)
             paraText3.frame = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
             paraText4.frame = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
-            paraText6.frame = CGRect(x:x2,   y: topY+by+bh1*4 ,width: tw, height: bh)
-            paraText7.frame = CGRect(x:x2, y:topY+by+bh1*5,width: tw,height:bh)
-            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*6+3,width:tw,height:bh)
-            vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*7+10 ,width: ww, height: ww*9/32)
-            gyroText.frame = CGRect(x:5,     y: topY+by+bh1*7+25+ww/5,width:ww-10,height:bh*6)
+            paraText5.frame = CGRect(x:x2,   y: topY+by+bh1*4 ,width: tw, height: bh)
+            paraText6.frame = CGRect(x:x2,   y: topY+by+bh1*5 ,width: tw, height: bh)
+            paraText7.frame = CGRect(x:x2,   y: topY+by+bh1*6,width: tw,height:bh)
+            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*7+3,width:tw,height:bh)
+            vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*8+10 ,width: ww, height: ww*9/32)
+            gyroText.frame  = CGRect(x:5,    y: topY+by+bh1*8+25+ww/5,width:ww-10,height:bh*6)
 //            gyroText.text! += "\n\nvHIT96da Version " + versionNumber
-            waveWidthinput.frame = CGRect(x:x1,y: topY+by,width: bw, height: bh)
+            waveWidthinput.frame =  CGRect(x:x1,y: topY+by,width: bw, height: bh)
             widthRangeinput.frame = CGRect(x:x1,y:topY+by+bh1 ,width: bw, height: bh)
-            ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
-            ratio2input.frame = CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
-            eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
-            videoGyroZureinput.frame = CGRect(x:x1,y: topY+by+bh1*5 ,width: bw, height: bh)
-            faceFbutton.frame =  CGRect(x:x1,y: topY+by+bh1*6 ,width: bw, height: bh)
+            ratio1input.frame =     CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
+            ratio2input.frame =     CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
+            wakuLengthInput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
+            eyeBinput.frame =       CGRect(x:x1,y: topY+by+bh1*5 ,width: bw, height: bh)
+            videoGyroZureinput.frame = CGRect(x:x1,y: topY+by+bh1*6 ,width: bw, height: bh)
+            faceFbutton.frame =     CGRect(x:x1,y: topY+by+bh1*7 ,width: bw, height: bh)
         }
         keyDown.frame = CGRect(x:ww-80-10, y: topY+by,width: 80, height: 40)
     }
@@ -239,17 +262,20 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 //        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
 ////         print(versionNumber)
 //        gyroText.text! += "\n\nvHIT96da Version " + versionNumber
+//        UserDefaults.standard.set(wakuLength, forKey: "wakuLength")
+//print("wakulength:",wakuLength)
         widthRangeinput.delegate = self
         waveWidthinput.delegate = self
         eyeBinput.delegate = self
         videoGyroZureinput.delegate = self
         ratio1input.delegate = self
         ratio2input.delegate = self
+        wakuLengthInput.delegate = self
 
         self.widthRangeinput.keyboardType = UIKeyboardType.numberPad
         self.waveWidthinput.keyboardType = UIKeyboardType.numberPad
         self.eyeBinput.keyboardType = UIKeyboardType.numberPad
-
+        self.wakuLengthInput.keyboardType = UIKeyboardType.numberPad
         self.ratio1input.keyboardType = UIKeyboardType.numberPad
         self.ratio2input.keyboardType = UIKeyboardType.numberPad
         self.videoGyroZureinput.keyboardType = UIKeyboardType.numberPad

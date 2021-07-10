@@ -784,6 +784,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yGy-kJ-89F">
+                                <rect key="frame" x="20" y="525" width="97" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="wakuLengthAction:" destination="jFt-gZ-HXu" eventType="editingDidEnd" id="t3E-ra-FX0"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HbG-UI-ZsL">
+                                <rect key="frame" x="176" y="538" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
@@ -818,12 +834,14 @@
                         <outlet property="paraText2" destination="9oE-gN-h2Z" id="cr5-4C-3Jp"/>
                         <outlet property="paraText3" destination="tWF-A9-5II" id="8r4-49-JPz"/>
                         <outlet property="paraText4" destination="Wre-qf-59d" id="8WU-o2-e4F"/>
+                        <outlet property="paraText5" destination="HbG-UI-ZsL" id="fZW-2n-cud"/>
                         <outlet property="paraText6" destination="NMH-1D-eWf" id="3bC-Vb-aGc"/>
                         <outlet property="paraText7" destination="69E-lo-wOt" id="25e-FT-cVH"/>
                         <outlet property="ratio1input" destination="2b1-ge-IVn" id="sOA-1O-Bl3"/>
                         <outlet property="ratio2input" destination="PBe-Ga-pXd" id="PGy-ii-8Mc"/>
                         <outlet property="vhitpng" destination="EJg-35-yLr" id="juY-rW-Ebq"/>
                         <outlet property="videoGyroZureinput" destination="FYu-Qu-Gex" id="MPg-6E-bbA"/>
+                        <outlet property="wakuLengthInput" destination="yGy-kJ-89F" id="jVb-91-XuR"/>
                         <outlet property="waveWidthinput" destination="yIp-mP-SHA" id="EgU-x1-BK1"/>
                         <outlet property="widthRangeinput" destination="O7P-AP-fl8" id="9dw-E5-Jqf"/>
                     </connections>
