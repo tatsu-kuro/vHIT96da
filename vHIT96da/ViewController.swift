@@ -1002,7 +1002,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0//左右方向
         let osFacX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0//上下方向
         let osFacY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0//左右方向
-        
+        let xDiffer=faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
+        let yDiffer=faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
         var maxEyeV:Double = 0
         var maxFaceV:Double = 0
         while reader.status != AVAssetReader.Status.reading {
@@ -1019,10 +1020,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var fx:CGFloat = 0
                 var fy:CGFloat = 0
                 
-                #if DEBUG //for test display
-                var x:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
-                let y:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
-                #endif
                 autoreleasepool{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
@@ -1032,42 +1029,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
                         eyeWithBorderCGImage = context.createCGImage(ciImage, from: eyeWithBorderRect)!
                         eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
-                        
-                        #if DEBUG
-                        //                        画面表示はmain threadで行う
-                        let eye0CGImage = context.createCGImage(ciImage, from:eyebR0)!
-                        // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
-                        let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
-                        
-                        DispatchQueue.main.async {
-                            wakuEye.frame=CGRect(x:x,y:y,width:eyeRect.size.width*2,height:eyeRect.size.height*2)
-                            wakuEye.image=eyeUIImage
-                            x += eyeRect.size.width*2
-                            
-                            wakuEyeb.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width*2,height:eyeWithBorderRect.size.height*2)
-                            wakuEyeb.image=eyeWithBorderUIImage
-                            x += eyeWithBorderRect.size.width*2
-                            if faceF==0 || calcMode==2{
-                                wakuFaceb.frame=CGRect(x:x,y:y,width:eyebR0.size.width*2,height:eyebR0.size.height*2)
-                                wakuFaceb.image=eye0UIImage
-                            }
-                        }
-                        #endif
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,
-                                                     narrow: eyeUIImage,
-                                                     x: eX,
-                                                     y: eY)
-                        if maxEyeV < 0.7{//errorもここに来るぞ!!　ey=0で戻ってくる
-                            cvError=5//10/240secはcontinue
-                            eyeWithBorderRect=eyebR0//初期位置に戻す
-                            faceWithBorderRect=facbR0
+                                                narrow: eyeUIImage,
+                                                x: eX,
+                                                y: eY)
+                        if maxEyeV < 0.9{//errorもここに来るぞ!!　ey=0で戻ってくる
+//                            cvError=5//240secはcontinue
+//                            eyeWithBorderRect=eyebR0//初期位置に戻す
+//                            faceWithBorderRect=facbR0
+                            ex=0
+                            ey=0
                         }else{//検出できた時
                             //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
                             //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
                             ex = CGFloat(eX.pointee) - osEyeX
                             ey = borderRectDiffer - CGFloat(eY.pointee) - osEyeY
-                            //                            ey = eyeWithBorderRect.height - CGFloat(eY.pointee) - eyeRect.height - osEyeY
-                            eyeWithBorderRect.origin.x += ex
+                        
+                        eyeWithBorderRect.origin.x += ex
                             eyeWithBorderRect.origin.y += ey
                             eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + ex
                             eyePosY = eyeWithBorderRect.origin.y - eyebR0.origin.y + ey
@@ -1075,22 +1053,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             if faceF==1 && calcMode != 2{
                                 faceWithBorderCGImage = context.createCGImage(ciImage, from:faceWithBorderRect)!
                                 faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
-                                #if DEBUG
-                                DispatchQueue.main.async {
-                                    if faceF==1&&calcMode != 2{
-                                        wakuFace.frame=CGRect(x:x,y:y,width:faceRect.size.width*2,height:faceRect.size.height*2)
-                                        wakuFace.image=faceUIImage
-                                        x += faceRect.size.width*2
-                                        wakuFaceb.frame=CGRect(x:x,y:y,width:faceWithBorderRect.size.width*2,height:faceWithBorderRect.size.height*2)
-                                        wakuFaceb.image=faceWithBorderUIImage
-                                    }
-                                }
-                                #endif
                                 
                                 maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
-                                //     while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
-                                //             usleep(1)
-                                //     }
+                                
                                 if maxFaceV<0.7{
                                     cvError=5
                                     faceWithBorderRect=facbR0
@@ -1106,7 +1071,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         context.clearCaches()
                     }
                     while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
-//                        sleep(UInt32(0.1))
                         usleep(1000)//0.001sec
                     }
                     appendingDataNow=true
@@ -1130,7 +1094,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeVeloXOrig.append(ex)
                     let eye5x = -2.0*Kalman(value: ex,num:4)//そのままではずれる
                     eyeVeloXFiltered.append(eye5x-faceVeloXFiltered.last!)
-
+                    
                     eyeVeloYOrig.append(ey)
                     let eye5y = -2.0*Kalman(value: ey,num:5)//そのままではずれる
                     eyeVeloYFiltered.append(eye5y-faceVeloYFiltered.last!)//?
@@ -1138,10 +1102,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
                         usleep(1000)//0.001sec
-//                        sleep(UInt32(0.1))
                     }
                     while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
-//                        sleep(UInt32(0.1))
                         usleep(1000)//0.001sec
                     }
                     if fpsIs120==true{
