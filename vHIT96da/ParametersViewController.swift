@@ -197,12 +197,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
         let x1:CGFloat=3
         let x2=x1+bw+5
-        paraText3.text = "眼球偏位位置表示の高さ％"
-        paraText4.text = "眼球偏位速度表示の高さ％"
-        paraText5.text = "角膜反射光源枠の幅"
-        paraText6.text="角膜上反射光源の移動（検出）幅"
+//        paraText5.text = "角膜反射光源枠の幅"
+//        paraText6.text="角膜上反射光源の移動（検出）幅"
 
         if calcMode==2{
+            paraText3.text = "眼球偏位位置表示の高さ％"
+            paraText4.text = "眼球偏位速度表示の高さ％"
             markText.isHidden = true
             faceFbutton.isHidden = true
             vhitpng.isHidden=true
@@ -220,7 +220,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 //            paraText3.text = "眼球偏位位置表示の高さ％"
 //            paraText4.text = "眼球偏位速度表示の高さ％"
 //            paraText5.text = "角膜反射光源枠の幅"
-//            paraText6.text="角膜上反射光源の移動（検出）幅"
+//            paraText6.text="角膜反射光源の移動（検出）幅"
             paraText2.frame   = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
             paraText3.frame   = CGRect(x:x2,   y: topY+by+bh1*1,width: tw, height: bh)
             paraText4.frame   = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
@@ -235,6 +235,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
         }else{//vhit
+            paraText3.text = "眼球回転速度表示の高さ％"
+            paraText4.text = "頭位回転速度表示の高さ％"
             paraText1.frame = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
             paraText2.frame = CGRect(x:x2,   y: topY+by+bh1 ,width: tw, height: bh)
             paraText3.frame = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
