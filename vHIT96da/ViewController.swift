@@ -504,14 +504,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        dispWakus()
 //        showWakuImages()
         if calcMode != 2{
-            if eyeVeloXOrig.count>0 && videoCurrent != -1{
+            if eyePosXOrig.count>0 && videoCurrent != -1{
                 vhitCurpoint=0
                 drawOnewave(startcount: 0)
                 calcDrawVHIT()
             }
         }else{
             rectType=0
-            if eyeVeloXOrig.count>0  && videoCurrent != -1{
+            if eyePosXOrig.count>0  && videoCurrent != -1{
                 vogCurpoint=0
                 drawVOG2endPt(end: 0)
                 drawVogtext()
@@ -1023,7 +1023,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             usleep(1000)//0.001sec
         }
         
-        DispatchQueue.global(qos: .default).async { [self] in
+   /*     DispatchQueue.global(qos: .default).async { [self] in
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
                 var ex:CGFloat = 0
                 var ey:CGFloat = 0
@@ -1167,6 +1167,178 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         eyeWithBorderRect.maxX>videoWidth ||
                         eyeWithBorderRect.minY<0 ||
                         eyeWithBorderRect.maxY>videoHeight
+                    {
+                        calcFlag=false//quit
+                    }
+                }
+                //マッチングデバッグ用スリープ、デバッグが終わったら削除
+                #if DEBUG
+                usleep(1000)
+                #endif
+            }*/
+        DispatchQueue.global(qos: .default).async { [self] in
+            while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
+                var ex:CGFloat = 0
+                var ey:CGFloat = 0
+                var eyePosX:CGFloat = 0
+                var eyePosY:CGFloat = 0
+                var fx:CGFloat = 0
+                var fy:CGFloat = 0
+                
+                #if DEBUG //for test display
+                var x:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
+                let y:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
+                #endif
+                autoreleasepool{
+                    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
+                    cvError -= 1
+                    if cvError < 0{
+                        //orientation.upとrightは所要時間同じ
+                        let ciImage: CIImage =
+                            CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
+                        eyeWithBorderCGImage = context.createCGImage(ciImage, from: eyeWithBorderRect)!
+                        eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
+                        
+                        #if DEBUG
+                        //                        画面表示はmain threadで行う
+                        let eye0CGImage = context.createCGImage(ciImage, from:eyebR0)!
+                        // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
+                        let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
+                        
+                        DispatchQueue.main.async {
+                            wakuEye.frame=CGRect(x:x,y:y,width:eyeRect.size.width*2,height:eyeRect.size.height*2)
+                            wakuEye.image=eyeUIImage
+                            x += eyeRect.size.width*2
+                            
+                            wakuEyeb.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width*2,height:eyeWithBorderRect.size.height*2)
+                            wakuEyeb.image=eyeWithBorderUIImage
+                            x += eyeWithBorderRect.size.width*2
+                            if faceF==0 || calcMode==2{
+                                wakuFaceb.frame=CGRect(x:x,y:y,width:eyebR0.size.width*2,height:eyebR0.size.height*2)
+                                wakuFaceb.image=eye0UIImage
+                            }
+                        }
+                        #endif
+                        maxEyeV=openCV.matching(eyeWithBorderUIImage,
+                                                narrow: eyeUIImage,
+                                                x: eX,
+                                                y: eY)
+                        //       while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
+                        //              usleep(1)
+                        //       }
+                        if maxEyeV < 0.7{//errorもここに来るぞ!!　ey=0で戻ってくる
+                            cvError=5//10/240secはcontinue
+                            eyeWithBorderRect=eyebR0//初期位置に戻す
+                            faceWithBorderRect=facbR0
+                            ex=0
+                            ey=0
+                            eyePosX=0
+                            eyePosY=0
+                        }else{//検出できた時
+                            //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
+                            //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
+                            ex = CGFloat(eX.pointee) - osEyeX
+                            ey = borderRectDiffer - CGFloat(eY.pointee) - osEyeY
+                            //                            ey = eyeWithBorderRect.height - CGFloat(eY.pointee) - eyeRect.height - osEyeY
+                            eyeWithBorderRect.origin.x += ex
+                            eyeWithBorderRect.origin.y += ey
+                            eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + ex
+                            eyePosY = eyeWithBorderRect.origin.y - eyebR0.origin.y + ey
+                            
+                            if faceF==1 && calcMode != 2{
+                                faceWithBorderCGImage = context.createCGImage(ciImage, from:faceWithBorderRect)!
+                                faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
+                                #if DEBUG
+                                DispatchQueue.main.async {
+                                    if faceF==1&&calcMode != 2{
+                                        wakuFace.frame=CGRect(x:x,y:y,width:faceRect.size.width*1,height:faceRect.size.height*1)
+                                        wakuFace.image=faceUIImage
+                                        x += faceRect.size.width*1
+                                        wakuFaceb.frame=CGRect(x:x,y:y,width:faceWithBorderRect.size.width*1,height:faceWithBorderRect.size.height*1)
+                                        wakuFaceb.image=faceWithBorderUIImage
+                                    }
+                                }
+                                #endif
+                                
+                                maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
+                                //     while self.openCVstopFlag == true{//vHITeyeを使用中なら待つ
+                                //             usleep(1)
+                                //     }
+                                if maxFaceV<0.7{
+                                    cvError=5
+                                    faceWithBorderRect=facbR0
+                                    eyeWithBorderRect=eyebR0
+                                }else{
+                                    fx = CGFloat(fX.pointee) - osFacX
+                                    fy = -CGFloat(fY.pointee) + osFacY
+                                    faceWithBorderRect.origin.x += fx
+                                    faceWithBorderRect.origin.y += fy
+                                }
+                            }
+                        }//ここまでがeyeできた時
+                        context.clearCaches()
+                    }//ここまでがerror<0の時
+                    while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
+                        //                        sleep(UInt32(0.1))
+                        usleep(1000)//0.001sec
+                    }
+                    appendingDataNow=true
+                    if faceF==1{
+                        faceVeloXOrig.append(fx)
+                        faceVeloXFiltered.append(-12.0*Kalman(value: fx,num: 0))
+                        faceVeloYOrig.append(fy)
+                        faceVeloYFiltered.append(-12.0*Kalman(value: fy,num: 1))
+                    }else{
+                        faceVeloXOrig.append(0)
+                        faceVeloXFiltered.append(0)
+                        faceVeloYOrig.append(0)
+                        faceVeloYFiltered.append(0)
+                    }
+                    // eyePos, ey, fyをそれぞれ配列に追加
+                    // vogをkalmanにかけ配列に追加
+//                    eyePosXOrig.append(eyePosX)
+//                    eyePosXFiltered.append( -1.0*Kalman(value:eyePosX,num:2))
+//                    eyePosYOrig.append(eyePosY)
+//                    eyePosYFiltered.append( -1.0*Kalman(value:eyePosY,num:3))
+                   
+                    
+                    eyePosXOrig.append(eyePosX)
+                    eyePosYOrig.append(eyePosY)
+                    eyePosXFiltered.append(-1.0*Kalman(value: eyePosX,num: 2))
+                    eyePosYFiltered.append(-1.0*Kalman(value: eyePosY,num: 3))
+                    let cnt=eyePosXOrig.count
+                    eyeVeloXFiltered.append(10*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+                    eyeVeloYFiltered.append(10*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+                    
+                    
+                    
+//                    eyeVeloXOrig.append(ex)
+//                    let eye5x = -12.0*Kalman(value: ex,num:4)//そのままではずれる
+//                    eyeVeloXFiltered.append(eye5x-faceVeloXFiltered.last!)
+//
+//                    eyeVeloYOrig.append(ey)
+//                    let eye5y = -12.0*Kalman(value: ey,num:5)//そのままではずれる
+//                    eyeVeloYFiltered.append(eye5y-faceVeloYFiltered.last!)//?
+                    appendingDataNow=false//--------------------------------
+                    vHITcnt += 1
+                    while reader.status != AVAssetReader.Status.reading {
+                        usleep(1000)//0.001sec
+                        //                        sleep(UInt32(0.1))
+                    }
+                    while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
+                        //                        sleep(UInt32(0.1))
+                        usleep(1000)//0.001sec
+                    }
+                    if fpsIs120==true{
+                        appendingDataNow=true
+                        fps120()//
+                        appendingDataNow=false
+                    }
+                    //eyeのみでチェックしているが。。。。
+                    if eyeWithBorderRect.origin.x < 5 ||
+                        eyeWithBorderRect.origin.x > maxWidthWithBorder ||
+                        eyeWithBorderRect.origin.y < 5 ||
+                        eyeWithBorderRect.origin.y > maxHeightWithBorder
                     {
                         calcFlag=false//quit
                     }
@@ -1611,7 +1783,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let dx = 1// xの間隔
         
         for i in 0..<Int(w) {
-            if i < eyeVeloXOrig.count - 4{
+            if i < eyePosXOrig.count - 4{
                 let px = CGFloat(dx * i)
                 let pyXpos = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
                 let pyXvelo = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
@@ -1816,8 +1988,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             setWaveSlider()
         }
-        vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: eyeVeloXOrig.count)
-        lastArraycount=eyeVeloXOrig.count
+        vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: eyePosXOrig.count)
+        lastArraycount=eyePosXOrig.count
         drawRealwave()
         timercnt += 1
         #if DEBUG
