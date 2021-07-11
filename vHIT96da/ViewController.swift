@@ -980,7 +980,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
         let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
-        
+        print("waku,border:",wakuE.width,eyeborder)
         let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
         let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
         
@@ -1160,9 +1160,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeVeloXFiltered.append(10*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
                     eyeVeloYFiltered.append(10*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
                     
-//                    eyeVeloXOrig.append(eyeVeloXFiltered.last!)
-//                    eyeVeloYOrig.append(eyeVeloYFiltered.last!)
-                    
 //                    eyeVeloXOrig.append(ex)
 //                    let eye5x = -12.0*Kalman(value: ex,num:4)//そのままではずれる
 //                    eyeVeloXFiltered.append(eye5x-faceVeloXFiltered.last!)
@@ -1182,7 +1179,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     if fpsIs120==true{
                         appendingDataNow=true
-                        fps120()//
+//                        fps120()//
+                        eyePosXFiltered.append(eyePosXFiltered.last!)
+                        eyePosYFiltered.append(eyePosYFiltered.last!)
+                        eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
+                        eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                         appendingDataNow=false
                     }
                     //eyeのみでチェックしているが。。。。
