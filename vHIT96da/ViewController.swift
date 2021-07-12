@@ -870,6 +870,33 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+    /*
+     erroCnt = 0
+     while (get frame_data)
+     errorCnt -= 1
+     if errorCnt > 0{
+      continue
+      don't set position
+      don't set velocity
+     }else if errooCnt == 0{
+      waku_big から eye を探す
+      set position
+      don't set velocity <- 直前のpositionが分からない
+      waku_small を設定
+     }else{
+      waku_small から　eye を探す
+      if 見つからなかった時{
+       errorCnt=5
+       don't set position
+       don't set velocity
+      }else{
+       set position
+       set velocity
+       waku_smallの位置をpositon分動かす
+      }
+        
+        
+     */
     
     func vHITcalc(){
 //        timer_video.invalidate()
@@ -890,18 +917,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gyroMoved.removeAll()
         
 //        faceVeloXOrig.append(0)
-        faceVeloXFiltered.append(0)
+//        faceVeloXFiltered.append(0)
 //        faceVeloYOrig.append(0)
-        faceVeloYFiltered.append(0)
+//        faceVeloYFiltered.append(0)
 //        eyePosXOrig.append(0)
-        eyePosXFiltered.append(0)
+//        eyePosXFiltered.append(0)
 //        eyeVeloXOrig.append(0)
-        eyeVeloXFiltered.append(0)
+//        eyeVeloXFiltered.append(0)
 //        eyePosYOrig.append(0)
-        eyePosYFiltered.append(0)
+//        eyePosYFiltered.append(0)
 //        eyeVeloYOrig.append(0)
-        eyeVeloYFiltered.append(0)
-        gyroMoved.append(0)
+//        eyeVeloYFiltered.append(0)
+//        gyroMoved.append(0)
 
         KalmanInit()
         showBoxies(f: true)
@@ -980,6 +1007,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
         let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
+        let eyeWithBigBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder*3)
+
         print("waku,border:",wakuE.width,eyeborder)
         let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
         let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
@@ -996,7 +1025,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let videoHeight=ciImage.extent.size.height
         let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
         var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
-        
+        let eyeWithBigBorderRect = resizeR2(eyeWithBigBorderRectOnScreen, viewRect:view.frame, image:ciImage)
+ 
         let maxWidthWithBorder=videoWidth-eyeWithBorderRect.width-5
         let maxHeightWithBorder=videoHeight-eyeWithBorderRect.height-5
         let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:ciImage)
@@ -1012,17 +1042,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         faceUIImage = UIImage.init(cgImage:faceCGImage)
         
-        let borderRectDiffer=faceWithBorderRect.width-faceRect.width
-        
-        let osEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0//上下方向
-        let osEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0//左右方向
-        let osFacX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0//上下方向
-        let osFacY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0//左右方向
-        
+        let offsetBorder:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
+        let offsetBigBorder:CGFloat = (eyeWithBigBorderRect.size.width - eyeRect.size.width) / 2.0
+ 
         var maxEyeV:Double = 0
         var maxFaceV:Double = 0
         while reader.status != AVAssetReader.Status.reading {
-//            sleep(UInt32(0.1))
             usleep(1000)//0.001sec
         }
         
@@ -1087,9 +1112,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }else{//検出できた時
                             //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
                             //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
-                            ex = CGFloat(eX.pointee) - osEyeX
-                            ey = borderRectDiffer - CGFloat(eY.pointee) - osEyeY
-                            //                            ey = eyeWithBorderRect.height - CGFloat(eY.pointee) - eyeRect.height - osEyeY
+                            ex = CGFloat(eX.pointee) - offsetBorder
+                            ey = -CGFloat(eY.pointee) + offsetBorder
+                           
                             eyeWithBorderRect.origin.x += ex
                             eyeWithBorderRect.origin.y += ey
                             eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + ex
@@ -1119,8 +1144,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                     faceWithBorderRect=facbR0
                                     eyeWithBorderRect=eyebR0
                                 }else{
-                                    fx = CGFloat(fX.pointee) - osFacX
-                                    fy = -CGFloat(fY.pointee) + osFacY
+                                    fx = CGFloat(fX.pointee) - offsetBorder
+                                    fy = -CGFloat(fY.pointee) + offsetBorder
                                     faceWithBorderRect.origin.x += fx
                                     faceWithBorderRect.origin.y += fy
                                 }
@@ -1156,15 +1181,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                    eyePosYOrig.append(eyePosY)
                     eyePosXFiltered.append(-1.0*Kalman(value: eyePosX,num: 2))
                     eyePosYFiltered.append(-1.0*Kalman(value: eyePosY,num: 3))
-                    let cnt=eyePosXFiltered.count
-                    eyeVeloXFiltered.append(10*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
-                    eyeVeloYFiltered.append(10*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+//                    let cnt=eyePosXFiltered.count
+//                    eyeVeloXFiltered.append(10*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+//                    eyeVeloYFiltered.append(10*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
                     
-//                    eyeVeloXOrig.append(ex)
+                    eyeVeloXFiltered.append(-12*Kalman(value: ex, num: 4))
 //                    let eye5x = -12.0*Kalman(value: ex,num:4)//そのままではずれる
 //                    eyeVeloXFiltered.append(eye5x-faceVeloXFiltered.last!)
 //
-//                    eyeVeloYOrig.append(ey)
+                    eyeVeloYFiltered.append(-12*Kalman(value: ey, num: 5))
 //                    let eye5y = -12.0*Kalman(value: ey,num:5)//そのままではずれる
 //                    eyeVeloYFiltered.append(eye5y-faceVeloYFiltered.last!)//?
                     appendingDataNow=false//--------------------------------
