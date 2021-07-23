@@ -166,9 +166,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    }
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
-        if checkDispMode() != 0{
-            return
-        }
+//        if checkDispMode() != 0{
+//            return
+//        }
+//        if checkDispMode()==0{
+//            showBoxies(f: true)
+            setVideoButtons(mode: true)
+//        }
         showBoxies(f: false)
         videoPlayMode=0
 //        stopTimerVideo()
@@ -543,7 +547,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         waveSlider.isHidden = mode
         backwardButton.isEnabled=mode
         forwardButton.isEnabled=mode
-        playButton.isEnabled=mode
+//        playButton.isEnabled=mode
         eraseButton.isHidden = !mode
     }
     func showVideoIroiro(num:Int){//videosCurrentを移動して、諸々表示
@@ -806,7 +810,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          }
     }
     @IBAction func vHITcalc(_ sender: Any) {
-        videoPlayer.pause()
+        if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
+            return
+        }
+//        videoPlayer.pause()
         if videoImg.count==0{
             return
         }
