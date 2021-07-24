@@ -288,9 +288,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
 
     
-//    var faceVeloXOrig = Array<CGFloat>()//faceVeloOrig
+    var faceVeloXOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
-//    var faceVeloYOrig = Array<CGFloat>()//faceVeloOrig
+    var faceVeloYOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloYFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroHFiltered = Array<CGFloat>()//gyroFiltered
     var gyroVFiltered = Array<CGFloat>()//gyroFiltered
@@ -912,9 +912,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        timer_video.invalidate()
         var cvError:Int = 0
         calcFlag = true
-//        faceVeloXOrig.removeAll()
+        faceVeloXOrig.removeAll()
         faceVeloXFiltered.removeAll()
-//        faceVeloYOrig.removeAll()
+        faceVeloYOrig.removeAll()
         faceVeloYFiltered.removeAll()
         eyePosXOrig.removeAll()
         eyePosXFiltered.removeAll()
@@ -930,9 +930,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var veloXLast:CGFloat=0
         var veloYLast:CGFloat=0
         
-//        faceVeloXOrig.append(0)
+        faceVeloXOrig.append(0)
         faceVeloXFiltered.append(0)
-//        faceVeloYOrig.append(0)
+        faceVeloYOrig.append(0)
         faceVeloYFiltered.append(0)
         eyePosXOrig.append(0)
         eyePosXFiltered.append(0)
@@ -1080,7 +1080,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var lastVeloX:CGFloat=0
         var lastVeloY:CGFloat=0
         initSum5XY()
-        /*
+ 
         DispatchQueue.global(qos: .default).async { [self] in
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
                 var eyeVeloX:CGFloat = 0
@@ -1097,192 +1097,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 autoreleasepool{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
-                    if cvError == 0{//大きいBigBorderで検出
-                        let ciImage: CIImage =
-                        CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-                        
-                        eyeWithBigBorderRect=expandRectWithBorderWide(rect: eyeWithBorderRect, border:eyeborder*2)
-                        eyeWithBigBorderCGImage = context.createCGImage(ciImage, from: eyeWithBigBorderRect)!
-                        eyeWithBigBorderUIImage = UIImage.init(cgImage: eyeWithBigBorderCGImage)
-                   
-                        maxEyeBigV=openCV.matching(eyeWithBigBorderUIImage,
-                                                narrow: eyeUIImage,
-                                                x: eX,
-                                                y: eY)
-                        if maxEyeBigV < 0.92{//これでもだめならもう一回待つ
-                            cvError=4
-                        }else{
-                            eyeVeloX = CGFloat(eX.pointee) - offsetBigBorder
-                            eyeVeloY = -CGFloat(eY.pointee) + offsetBigBorder
-                           
-                            eyeWithBorderRect.origin.x += eyeVeloX//移動する
-                            eyeWithBorderRect.origin.y += eyeVeloY
-                            eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + eyeVeloX
-                            eyePosY = eyeWithBorderRect.origin.y - eyebR0.origin.y + eyeVeloY
-                                                    }
-//                        #if DEBUG
-//                        //画面表示はmain threadで行う
-//                        DispatchQueue.main.async {
-////                            let eye0CGImage = context.createCGImage(ciImage, from:eyebR0)!
-////                            let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
-//                            wakuEyeb.frame=CGRect(x:debugX,y:debugY,width:eyeWithBorderRect.size.width*2,height:eyeWithBorderRect.size.height*2)
-//                            wakuEyeb.image=eyeWithBorderUIImage
-//                            debugX += eyeWithBorderRect.size.width*2
-//                            if faceF==0 || calcMode==2{
-//                                wakuFaceb.frame=CGRect(x:debugX,y:debugY,width:eyebR0.size.width*2,height:eyebR0.size.height*2)
-//                                wakuFaceb.image=eyeWithBigBorderUIImage
-//                            }
-//                        }
-//                        #endif
-                    }else if cvError < 0{//小さいBorderで検出
-                        let ciImage: CIImage =
-                            CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-                        eyeWithBorderCGImage = context.createCGImage(ciImage, from: eyeWithBorderRect)!
-                        eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
-//                        #if DEBUG
-//                        //画面表示はmain threadで行う
-//                        DispatchQueue.main.async {
-//                            let eye0CGImage = context.createCGImage(ciImage, from:eyebR0)!
-//                            let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
-//                            wakuEyeb.frame=CGRect(x:debugX,y:debugY,width:eyeWithBorderRect.size.width*2,height:eyeWithBorderRect.size.height*2)
-//                            wakuEyeb.image=eyeWithBorderUIImage
-//                            debugX += eyeWithBorderRect.size.width*2
-//                            if faceF==0 || calcMode==2{
-//                                wakuFaceb.frame=CGRect(x:debugX,y:debugY,width:eyebR0.size.width*2,height:eyebR0.size.height*2)
-//                                wakuFaceb.image=eye0UIImage
-//                            }
-//                        }
-//                        #endif
-                        maxEyeV=openCV.matching(eyeWithBorderUIImage,
-                                                narrow: eyeUIImage,
-                                                x: eX,
-                                                y: eY)
-                        if maxEyeV < 0.9{//瞬きとして、その後この回数だけ検出しない
-                            cvError=4//10/240secはcontinue
-                        }else{//検出できた時
-                            //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
-                            //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
-                            eyeVeloX = CGFloat(eX.pointee) - offsetBorder//移動距離
-                            eyeVeloY = -CGFloat(eY.pointee) + offsetBorder
-                           
-                            eyeWithBorderRect.origin.x += eyeVeloX//移動する
-                            eyeWithBorderRect.origin.y += eyeVeloY
-                            eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + eyeVeloX
-                            eyePosY = eyeWithBorderRect.origin.y - eyebR0.origin.y + eyeVeloY
-                        }
-                    }
-                    context.clearCaches()
-                    
-                    while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
-                        //                        sleep(UInt32(0.1))
-                        usleep(1000)//0.001sec
-                    }
-                    appendingDataNow=true
 
-                    if cvError>0{
-                        eyePosXFiltered.append(-1.0*Kalman(value: posXLast,num: 2))
-                        eyePosYFiltered.append(-1.0*Kalman(value: posYLast,num: 3))
-                        eyeVeloXFiltered.append(-12*Kalman(value: veloXLast, num: 4))
-                        eyeVeloYFiltered.append(-12*Kalman(value: veloYLast, num: 5))
-                        print("cvErr+:",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
-                    }else if cvError==0{
-                        eyePosXFiltered.append(-1.0*Kalman(value: eyePosX,num: 2))
-                        eyePosYFiltered.append(-1.0*Kalman(value: eyePosY,num: 3))
-                        eyeVeloXFiltered.append(-12*Kalman(value: veloXLast, num: 4))
-                        eyeVeloYFiltered.append(-12*Kalman(value: veloYLast, num: 5))
-                        print("cvErr0",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
-                  }else{
-                        eyePosXFiltered.append(-1.0*Kalman(value: eyePosX,num: 2))
-                        eyePosYFiltered.append(-1.0*Kalman(value: eyePosY,num: 3))
-                        eyeVeloXFiltered.append(-12*Kalman(value: eyeVeloX, num: 4))
-                        eyeVeloYFiltered.append(-12*Kalman(value: eyeVeloY, num: 5))
-                        posXLast=eyePosX
-                        posYLast=eyePosY
-                        veloXLast=eyeVeloX
-                        veloYLast=eyeVeloY
-                        print("cvErr-",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
-
-                    }
-
-                    appendingDataNow=false//--------------------------------
-                    vHITcnt += 1
-                    while reader.status != AVAssetReader.Status.reading {
-                        usleep(1000)//0.001sec
-                        //                        sleep(UInt32(0.1))
-                    }
-                    while gettingDataNow==true{//--------の間はアレイデータを書き込まない？
-                        //                        sleep(UInt32(0.1))
-                        usleep(1000)//0.001sec
-                    }
-                    if fpsIs120==true{
-                        appendingDataNow=true
-//                        fps120()//
-                        eyePosXFiltered.append(eyePosXFiltered.last!)
-                        eyePosYFiltered.append(eyePosYFiltered.last!)
-                        eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
-                        eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
-                        appendingDataNow=false
-                    }
-                    //eyeのみでチェックしているが。。。。
-                    if eyeWithBorderRect.minX < 0 ||
-                        eyeWithBorderRect.maxX > videoWidth ||
-                        eyeWithBorderRect.minY < 0 ||
-                        eyeWithBorderRect.maxY > videoHeight
-                    {
-                        calcFlag=false//quit
-                    }
-                }//------autoreleasepool{
-                //マッチングデバッグ用スリープ、デバッグが終わったら削除
-//                #if DEBUG
-//                usleep(1000)
-//                #endif
-            }
-            //            print("time:",CFAbsoluteTimeGetCurrent()-st)
-            calcFlag = false
-            if waveTuple.count > 0{
-                nonsavedFlag = true
-            }
-        }*/
-        DispatchQueue.global(qos: .default).async { [self] in
-            while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
-                var eyeVeloX:CGFloat = 0
-                var eyeVeloY:CGFloat = 0
-                var eyePosX:CGFloat = 0
-                var eyePosY:CGFloat = 0
-//                var fx:CGFloat = 0
-//                var fy:CGFloat = 0
-                
-                #if DEBUG //for test display
-                var debugX:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
-                let debugY:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
-                #endif
-                autoreleasepool{
-                    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
-                    cvError -= 1
-//                    if cvError == 0{//大きいBigBorderで検出
-//                        let ciImage: CIImage =
-//                        CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-//                        eyeWithBigBorderRect=expandRectWithBorderWide(rect: eyeWithBorderRect, border:eyeborder*2)
-//                        eyeWithBigBorderCGImage = context.createCGImage(ciImage, from: eyeWithBigBorderRect)!
-//                        eyeWithBigBorderUIImage = UIImage.init(cgImage: eyeWithBigBorderCGImage)
-//
-//                        maxEyeBigV=openCV.matching(eyeWithBigBorderUIImage,
-//                                                narrow: eyeUIImage,
-//                                                x: eX,
-//                                                y: eY)
-//                        if maxEyeBigV < 0.92{//これでもだめならもう一回待つ
-//                            cvError=4
-//                        }else{
-//                            eyeVeloX = CGFloat(eX.pointee) - offsetBigBorder
-//                            eyeVeloY = -CGFloat(eY.pointee) + offsetBigBorder
-//
-//                            eyeWithBorderRect.origin.x += eyeVeloX//移動する
-//                            eyeWithBorderRect.origin.y += eyeVeloY
-//                            eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x + eyeVeloX
-//                            eyePosY = eyeWithBorderRect.origin.y - eyebR0.origin.y + eyeVeloY
-//                                                    }
-//
-//                    }else if cvError < 0{//小さいBorderで検出
                     if cvError < 1{
                         let ciImage: CIImage =
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
@@ -1353,49 +1168,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                    eyeVeloYFiltered.append(-12*Kalman(value: eyeVeloYOrig.last!, num: 5))
                     print("cvErr+:",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
 
-//                    if cvError>0{
-//                        getLastX5(eyePosXOrig.count)
-//                        getLastY5(eyePosYOrig.count)
-//                        eyePosXFiltered.append(-1.0*Kalman(value: posXLast,num: 2))
-//                        eyePosYFiltered.append(-1.0*Kalman(value: posYLast,num: 3))
-//                        eyeVeloXFiltered.append(-12*Kalman(value: veloXLast, num: 4))
-//                        eyeVeloYFiltered.append(-12*Kalman(value: veloYLast, num: 5))
-//                        print("cvErr+:",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
-//                    }else if cvError==0{
-//                        eyePosXFiltered.append(-1.0*Kalman(value: eyePosX,num: 2))
-//                        eyePosYFiltered.append(-1.0*Kalman(value: eyePosY,num: 3))
-//                        eyeVeloXFiltered.append(-12*Kalman(value: veloXLast, num: 4))
-//                        eyeVeloYFiltered.append(-12*Kalman(value: veloYLast, num: 5))
-//                        print("cvErr0",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
-//                  }else{
-//                        eyePosXFiltered.append(-1.0*Kalman(value: eyePosX,num: 2))
-//                        eyePosYFiltered.append(-1.0*Kalman(value: eyePosY,num: 3))
-//                        eyeVeloXFiltered.append(-12*Kalman(value: eyeVeloX, num: 4))
-//                        eyeVeloYFiltered.append(-12*Kalman(value: eyeVeloY, num: 5))
-//                        posXLast=0//eyePosX
-//                        posYLast=0//eyePosY
-//                        veloXLast=eyeVeloX
-//                        veloYLast=eyeVeloY
-//                        print("cvErr-",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
-//
-//                    }
                     writingDataNow=false//--------------------------------
                     vHITcnt += 1
                     while reader.status != AVAssetReader.Status.reading {
                         usleep(1000)//0.001sec
                     }
-//                    if fpsIs120==true{
-//                        while readingDataNow==true{//--------の間はデータを書き込まない？
-//                            usleep(1000)//0.001sec
-//                        }
-//                        writingDataNow=true
-////                        fps120()//
-//                        eyePosXFiltered.append(eyePosXFiltered.last!)
-//                        eyePosYFiltered.append(eyePosYFiltered.last!)
-//                        eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
-//                        eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
-//                        writingDataNow=false
-//                    }
+
                     //eyeのみでチェックしているが。。。。
                     if eyeWithBorderRect.minX < 0 ||
                         eyeWithBorderRect.maxX > videoWidth ||
