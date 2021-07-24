@@ -925,10 +925,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         eyeVeloYOrig.removeAll()
         eyeVeloYFiltered.removeAll()
         gyroMoved.removeAll()
-        var posXLast:CGFloat=0
-        var posYLast:CGFloat=0
-        var veloXLast:CGFloat=0
-        var veloYLast:CGFloat=0
+//        var posXLast:CGFloat=0
+//        var posYLast:CGFloat=0
+//        var veloXLast:CGFloat=0
+//        var veloYLast:CGFloat=0
         
         faceVeloXOrig.append(0)
         faceVeloXFiltered.append(0)
@@ -1010,21 +1010,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
         let fX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
         let fY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
-        var eyeCGImage:CGImage!
+//        var eyeCGImage:CGImage!
 //        var eyeUIImage:UIImage!
 //        let eyeUIImage0:UIImage!
-        var eyeWithBorderCGImage:CGImage!
-        var eyeWithBorderUIImage:UIImage!
-        var eyeWithBigBorderCGImage:CGImage!
-        var eyeWithBigBorderUIImage:UIImage!
-        var faceCGImage:CGImage!
-        var faceUIImage:UIImage!
-        var faceWithBorderCGImage:CGImage!
-        var faceWithBorderUIImage:UIImage!
+//        var eyeWithBorderCGImage:CGImage!
+//        var eyeWithBorderUIImage:UIImage!
+//        var eyeWithBigBorderCGImage:CGImage!
+//        var eyeWithBigBorderUIImage:UIImage!
+//        var faceCGImage:CGImage!
+//        var faceUIImage:UIImage!
+//        var faceWithBorderCGImage:CGImage!
+//        var faceWithBorderUIImage:UIImage!
         
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
-        var eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
-        var eyeWithBigBorderRectOnScreen = expandRectWithBorderWide(rect: eyeWithBorderRectOnScreen, border: eyeborder*2)
+        let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
+        let eyeWithBigBorderRectOnScreen = expandRectWithBorderWide(rect: eyeWithBorderRectOnScreen, border: eyeborder*2)
         //差はeyeborder*3
 
         print("waku,border:",wakuE.width,eyeborder)
@@ -1032,7 +1032,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
         
         let context:CIContext = CIContext.init(options: nil)
-        //            let up = UIImage.Orientation.right
         var sample:CMSampleBuffer!
         stopButton.isEnabled = true
         sample = readerOutput.copyNextSampleBuffer()
@@ -1041,11 +1040,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let ciImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
         let videoWidth=ciImage.extent.size.width
         let videoHeight=ciImage.extent.size.height
-        var eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
-        let eyeRect0 = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
+        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
+//        let eyeRect0 = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
 //        printR(str: "eyerect", rct1: eyeRectOnScreen, rct2: eyeRect)
         var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
-        var eyeWithBigBorderRect = resizeR2(eyeWithBigBorderRectOnScreen, viewRect:view.frame, image:ciImage)
+//        var eyeWithBigBorderRect = resizeR2(eyeWithBigBorderRectOnScreen, viewRect:view.frame, image:ciImage)
  
 //        let maxWidthWithBorder=videoWidth-eyeWithBorderRect.width-5
 //        let maxHeightWithBorder=videoHeight-eyeWithBorderRect.height-5
@@ -1053,32 +1052,31 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
         
         let eyebR0 = eyeWithBorderRect
-        let facbR0 = faceWithBorderRect
+//        let facbR0 = faceWithBorderRect
         printR(str: "eyebR0", rct: eyeWithBorderRect)
-        eyeCGImage = context.createCGImage(ciImage, from: eyeRect)!
-        
-        var eyeUIImage = UIImage.init(cgImage: eyeCGImage)
-        let eyeUIImage0 = UIImage.init(cgImage: eyeCGImage)
-        faceCGImage = context.createCGImage(ciImage, from: faceRect)!
-        
-        faceUIImage = UIImage.init(cgImage:faceCGImage)
-        
-        let offsetBorder:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
-        let offsetBigBorder:CGFloat = (eyeWithBigBorderRect.size.width - eyeRect.size.width) / 2.0
- print("offsets:",eyeWithBorderRect.size.width,eyeRect.size.width)
-        print("offsets:",offsetBorder,offsetBigBorder)
+        let eyeCGImage = context.createCGImage(ciImage, from: eyeRect)!
+        let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
+//        let eyeUIImage0 = UIImage.init(cgImage: eyeCGImage)
+        let faceCGImage = context.createCGImage(ciImage, from: faceRect)!
+        let faceUIImage = UIImage.init(cgImage:faceCGImage)
+        let offsetEyeBorder:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
+        let offsetFaceBorder:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0
+//        let offsetBigBorder:CGFloat = (eyeWithBigBorderRect.size.width - eyeRect.size.width) / 2.0
+// print("offsets:",eyeWithBorderRect.size.width,eyeRect.size.width)
+//        print("offsets:",offsetEyeBorder,offsetBigBorder)
 
         var maxEyeV:Double = 0
-        var maxEyeBigV:Double = 0
+//        var maxEyeBigV:Double = 0
         var maxFaceV:Double = 0
+        var frameCIImage: CIImage!
         while reader.status != AVAssetReader.Status.reading {
             usleep(1000)//0.001sec
         }
         cvError=0
-        var lastEx:CGFloat=0
-        var lastEy:CGFloat=0
-        var lastVeloX:CGFloat=0
-        var lastVeloY:CGFloat=0
+//        var lastEx:CGFloat=0
+//        var lastEy:CGFloat=0
+//        var lastVeloX:CGFloat=0
+//        var lastVeloY:CGFloat=0
         initSum5XY()
  
         DispatchQueue.global(qos: .default).async { [self] in
@@ -1087,8 +1085,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var eyeVeloY:CGFloat = 0
                 var eyePosX:CGFloat = 0
                 var eyePosY:CGFloat = 0
-//                var fx:CGFloat = 0
-//                var fy:CGFloat = 0
+                var faceVeloX:CGFloat = 0
+                var faceVeloY:CGFloat = 0
                 
                 #if DEBUG //for test display
                 var debugX:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
@@ -1099,10 +1097,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     cvError -= 1
 
                     if cvError < 1{
-                        let ciImage: CIImage =
+                        frameCIImage =
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-                        eyeWithBorderCGImage = context.createCGImage(ciImage, from: eyeWithBorderRect)!
-                        eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
+                        let eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
+                        let eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
                         
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,
                                                 narrow: eyeUIImage,
@@ -1117,8 +1115,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }else{//検出できた時
                             //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
                             //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
-                            eyeVeloX = CGFloat(eX.pointee) - offsetBorder//移動距離
-                            eyeVeloY = -CGFloat(eY.pointee) + offsetBorder
+                            eyeVeloX = CGFloat(eX.pointee) - offsetEyeBorder//移動距離
+                            eyeVeloY = -CGFloat(eY.pointee) + offsetEyeBorder
                             
                             eyeWithBorderRect.origin.x += eyeVeloX//移動する
                             eyeWithBorderRect.origin.y += eyeVeloY
@@ -1136,7 +1134,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 eyePosYOrig.append(eyePosY)
                             }
                         }
-                    }else{//空回し
+                    }else{//cvError>0の時は空回り
                         eyeVeloXOrig.append(eyeVeloXOrig.last!)
                         eyeVeloYOrig.append(eyeVeloYOrig.last!)
                         eyePosXOrig.append(eyePosXOrig.last!)
@@ -1147,6 +1145,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         eyeVeloYOrig.append(eyeVeloYOrig.last!)
                         eyePosXOrig.append(eyePosXOrig.last!)
                         eyePosYOrig.append(eyePosYOrig.last!)
+                    }
+                    if faceF==1 && calcMode != 2{
+                        let faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
+                        let faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
+                        maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
+                        if maxFaceV<0.7{
+                            calcFlag=false//quit
+                        }else{
+                            faceVeloX = CGFloat(fX.pointee) - offsetFaceBorder
+                            faceVeloY = -CGFloat(fY.pointee) + offsetFaceBorder
+                            faceWithBorderRect.origin.x += faceVeloX
+                            faceWithBorderRect.origin.y += faceVeloY
+                            faceVeloXFiltered.append(-12*Kalman(value:faceVeloX,num:0))
+                            faceVeloYFiltered.append(-12*Kalman(value:faceVeloY,num:1))
+                            if fpsIs120==true{
+                                faceVeloXFiltered.append(-12*Kalman(value:faceVeloX,num:0))
+                                faceVeloYFiltered.append(-12*Kalman(value:faceVeloY,num:1))
+                            }
+//                            print("fx,fy:",maxFaceV,faceVeloX,faceVeloY)
+                            eyeWithBorderRect.origin.x += faceVeloX
+                            eyeWithBorderRect.origin.y += faceVeloY
+                        }
                     }
                     context.clearCaches()
                     
@@ -1164,9 +1184,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyePosYFiltered.append(-1.0*Kalman(value: eyePosYOrig.last!,num: 3))
                     eyeVeloXFiltered.append(-12*Kalman(value: getLast5VeloX(), num: 4))
                     eyeVeloYFiltered.append(-12*Kalman(value: getLast5VeloY(), num: 5))
-//                    eyeVeloXFiltered.append(-12*Kalman(value: eyeVeloXOrig.last!, num: 4))
-//                    eyeVeloYFiltered.append(-12*Kalman(value: eyeVeloYOrig.last!, num: 5))
-                    print("cvErr+:",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
+//                    print("cvErr+:",String(format:"%.2f",maxEyeV),cvError, eyeWithBorderRect.origin.x,eyeWithBorderRect.origin.y)
 
                     writingDataNow=false//--------------------------------
                     vHITcnt += 1
