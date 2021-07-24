@@ -1157,12 +1157,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             faceVeloY = -CGFloat(fY.pointee) + offsetFaceBorder
                             faceWithBorderRect.origin.x += faceVeloX
                             faceWithBorderRect.origin.y += faceVeloY
+                            while readingDataNow==true{//--------の間はアレイデータを書き込まない？
+                                usleep(1000)//0.001sec
+                            }
+                            writingDataNow=true
                             faceVeloXFiltered.append(-12*Kalman(value:faceVeloX,num:0))
                             faceVeloYFiltered.append(-12*Kalman(value:faceVeloY,num:1))
                             if fpsIs120==true{
                                 faceVeloXFiltered.append(-12*Kalman(value:faceVeloX,num:0))
                                 faceVeloYFiltered.append(-12*Kalman(value:faceVeloY,num:1))
                             }
+                            writingDataNow=false
 //                            print("fx,fy:",maxFaceV,faceVeloX,faceVeloY)
                             eyeWithBorderRect.origin.x += faceVeloX
                             eyeWithBorderRect.origin.y += faceVeloY
@@ -2151,6 +2156,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for n in 1...(pointCount) {
             if num + n < posXCount && num + n < gyroMovedCnt {
                 let px = dx * CGFloat(n)
+                while writingDataNow==true{
+                    usleep(100)
+                }
                 readingDataNow=true
                 if calcMode==0{
                     py0 = eyeVeloXFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y0
