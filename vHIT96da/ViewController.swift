@@ -958,7 +958,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
         moveGyroData()//gyroDeltastartframe分をズラして
         var vHITcnt:Int = 0
-        startTime=CFAbsoluteTimeGetCurrent()
+        calcStartTime=CFAbsoluteTimeGetCurrent()
         timercnt = 0
         UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
@@ -1040,7 +1040,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let ciImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
         let videoWidth=ciImage.extent.size.width
         let videoHeight=ciImage.extent.size.height
-        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
+        var eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
 //        let eyeRect0 = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:ciImage)
 //        printR(str: "eyerect", rct1: eyeRectOnScreen, rct2: eyeRect)
         var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:ciImage)
@@ -1056,7 +1056,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         printR(str: "eyebR0", rct: eyeWithBorderRect)
         let eyeCGImage = context.createCGImage(ciImage, from: eyeRect)!
         let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
-//        let eyeUIImage0 = UIImage.init(cgImage: eyeCGImage)
+//        var eyeUIImage0 = UIImage.init(cgImage: eyeCGImage)
+//        var eyeUIImage1 = UIImage.init(cgImage: eyeCGImage)
         let faceCGImage = context.createCGImage(ciImage, from: faceRect)!
         let faceUIImage = UIImage.init(cgImage:faceCGImage)
         let offsetEyeBorder:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
@@ -1140,12 +1141,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         eyePosXOrig.append(eyePosXOrig.last!)
                         eyePosYOrig.append(eyePosYOrig.last!)
                     }
-//                    if fpsIs120==true{
-//                        eyeVeloXOrig.append(eyeVeloXOrig.last!)
-//                        eyeVeloYOrig.append(eyeVeloYOrig.last!)
-//                        eyePosXOrig.append(eyePosXOrig.last!)
-//                        eyePosYOrig.append(eyePosYOrig.last!)
-//                    }
                     if faceF==1 && calcMode != 2{
                         let faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
                         let faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
@@ -1164,9 +1159,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                     }
                     context.clearCaches()
-                    
+//                    if maxEyeV<0.9{//うまくいかない
+//                        eyeUIImage=eyeUIImage0
+//                    }else{
+//                        eyeRect.origin.x=eyeWithBorderRect.origin.x+offsetEyeBorder
+//                        eyeRect.origin.y=eyeWithBorderRect.origin.y+offsetEyeBorder
+//                        eyeCGImage = context.createCGImage(frameCIImage, from: eyeRect)!
+//                        eyeUIImage = UIImage.init(cgImage: eyeCGImage)
+//                    }
                     while readingDataNow==true{//の間はアレイデータを書き込まない？
-                        usleep(1000)//0.001sec
+                        usleep(100)//0.0001sec
                     }
                     writingDataNow=true//の間はupdateの中でアレイデータを読まない
                     if fpsIs120==true{
@@ -1523,7 +1525,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let drawPath = UIBezierPath()
         let posXCount=getPosXFilteredCount()
         if !mail{//mailの時は時間経過は表示しない
-            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",posXCount,CGFloat(posXCount)/240.0,videoDura[videoCurrent],timercnt+1)
+            let time=Int(CFAbsoluteTimeGetCurrent()-calcStartTime)+1
+            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",posXCount,CGFloat(posXCount)/240.0,videoDura[videoCurrent],time)
             //print(timetxt)
             
             timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
@@ -1861,7 +1864,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         waveSlider.value=0
         waveSlider.addTarget(self, action: #selector(onWaveSliderValueChange), for: UIControl.Event.valueChanged)
     }
-    var startTime=CFAbsoluteTimeGetCurrent()
+    var calcStartTime=CFAbsoluteTimeGetCurrent()
 
     @objc func update_vHIT(tm: Timer) {
         if eyeVeloXFiltered.count < 5 {
