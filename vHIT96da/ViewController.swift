@@ -1053,7 +1053,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let eyebR0 = eyeWithBorderRect
 //        let facbR0 = faceWithBorderRect
-        printR(str: "eyebR0", rct: eyeWithBorderRect)
+//        printR(str: "eyebR0", rct: eyeWithBorderRect)
         let eyeCGImage = context.createCGImage(ciImage, from: eyeRect)!
         let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
 //        var eyeUIImage0 = UIImage.init(cgImage: eyeCGImage)
@@ -1102,7 +1102,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
                         let eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
                         let eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
-                        
+//                        printR(str: "rect:", rct: eyeWithBorderRect)
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,
                                                 narrow: eyeUIImage,
                                                 x: eX,
@@ -1402,7 +1402,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func printR(str:String,rct:CGRect){
-        print("\(str)",String(format: "%.1f %.1f %.1f %.1f",rct.origin.x,rct.origin.y,rct.width,rct.height))
+        print("\(str)",String(format: "%.2f %.2f %.2f %.2f",rct.origin.x,rct.origin.y,rct.width,rct.height))
     }
     func printR(str:String,rct1:CGRect,rct2:CGRect){
         print("\(str)",String(format: "%.1f,%.1f,%.1f  %.1f,%.1f,%.1f",rct1.origin.x,rct1.origin.y,rct1.width,rct2.origin.x,rct2.origin.y,rct2.width))
