@@ -1090,13 +1090,35 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var faceVeloY:CGFloat = 0
                 
 //                #if DEBUG //for test display
-//                var debugX:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
-//                let debugY:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
+                var debugX:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
+                let debugY:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
 //                #endif
                 autoreleasepool{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
 
+                    #if DEBUG
+                    //                        画面表示はmain threadで行う
+                    let eye0CGImage = context.createCGImage(ciImage, from:eyebR0)!
+                    // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
+                    let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
+                    
+                    DispatchQueue.main.async {
+                        wakuEye.frame=CGRect(x:x,y:y,width:eyeRect.size.width*2,height:eyeRect.size.height*2)
+                        wakuEye.image=eyeUIImage
+                        x += eyeRect.size.width*2
+                        
+                        wakuEyeb.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width*2,height:eyeWithBorderRect.size.height*2)
+                        wakuEyeb.image=eyeWithBorderUIImage
+                        x += eyeWithBorderRect.size.width*2
+                        
+                            wakuFaceb.frame=CGRect(x:x,y:y,width:eyebR0.size.width*2,height:eyebR0.size.height*2)
+                            wakuFaceb.image=eye0UIImage
+                        
+                    }
+                    #endif
+                    
+                    
                     if cvError < 1{
                         frameCIImage =
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
