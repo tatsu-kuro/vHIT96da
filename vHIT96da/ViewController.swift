@@ -286,8 +286,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyePosYFiltered = Array<CGFloat>()//eyePosFiltered
     var eyeVeloYOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
-
-    
+//update(timer)では、まずcalc threadを止めてデータをもらってcalc thread再開し、もらったデータを処理する
+    //calcとtimerでデータを同時に扱うとエラーが出るようだ
+    var faceVeloXFiltered4update = Array<CGFloat>()
+    var faceVeloYFiltered4update = Array<CGFloat>()
+    var eyePosXFiltered4update = Array<CGFloat>()
+    var eyeVeloXFiltered4update = Array<CGFloat>()
+    var eyePosYFiltered4update = Array<CGFloat>()
+    var eyeVeloYFiltered4update = Array<CGFloat>()
     var faceVeloXOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
     var faceVeloYOrig = Array<CGFloat>()//faceVeloOrig
@@ -697,7 +703,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcMode != 2{
             timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
         }else{
-            timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
+            timerCalc = Timer.scheduledTimer(timeInterval: 0.25, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
         }
     }
     func showBoxies(f:Bool){
@@ -925,6 +931,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         eyeVeloYOrig.removeAll()
         eyeVeloYFiltered.removeAll()
         gyroMoved.removeAll()
+        
+        faceVeloXFiltered4update.removeAll()
+        faceVeloYFiltered4update.removeAll()
+        eyePosXFiltered4update.removeAll()
+        eyeVeloXFiltered4update.removeAll()
+        eyePosYFiltered4update.removeAll()
+        eyeVeloYFiltered4update.removeAll()
+        
 //        var posXLast:CGFloat=0
 //        var posYLast:CGFloat=0
 //        var veloXLast:CGFloat=0
@@ -1079,7 +1093,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        var lastVeloX:CGFloat=0
 //        var lastVeloY:CGFloat=0
         initSum5XY()
- 
+        var debugEyeRect=eyeRect
         DispatchQueue.global(qos: .default).async { [self] in
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
                 var eyeVeloX:CGFloat = 0
@@ -1097,40 +1111,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
 
-                    #if DEBUG
-                    //                        画面表示はmain threadで行う
-                    let eye0CGImage = context.createCGImage(ciImage, from:eyebR0)!
-                    // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
-                    let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
-                    
-                    DispatchQueue.main.async {
-                        wakuEye.frame=CGRect(x:x,y:y,width:eyeRect.size.width*2,height:eyeRect.size.height*2)
-                        wakuEye.image=eyeUIImage
-                        x += eyeRect.size.width*2
-                        
-                        wakuEyeb.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width*2,height:eyeWithBorderRect.size.height*2)
-                        wakuEyeb.image=eyeWithBorderUIImage
-                        x += eyeWithBorderRect.size.width*2
-                        
-                            wakuFaceb.frame=CGRect(x:x,y:y,width:eyebR0.size.width*2,height:eyebR0.size.height*2)
-                            wakuFaceb.image=eye0UIImage
-                        
-                    }
-                    #endif
-                    
-                    
                     if cvError < 1{
                         frameCIImage =
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
                         let eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
                         let eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
 //                        printR(str: "rect:", rct: eyeWithBorderRect)
+                        debugEyeRect=eyeWithBorderRect
+                        debugEyeRect.origin.x=eyeWithBorderRect.origin.x+offsetEyeBorder
+                        debugEyeRect.origin.y=eyeWithBorderRect.origin.y+offsetEyeBorder
+
+                        
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,
                                                 narrow: eyeUIImage,
                                                 x: eX,
                                                 y: eY)
                         if maxEyeV < 0.9{//瞬きとして、その後この回数だけ検出しない
                             cvError=4//10/240secはcontinue
+                            eyeWithBorderRect=eyebR0
                             eyeVeloXOrig.append(eyeVeloXOrig.last!)
                             eyeVeloYOrig.append(eyeVeloYOrig.last!)
                             eyePosXOrig.append(eyePosXOrig.last!)
@@ -1138,6 +1136,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }else{//検出できた時
                             //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
                             //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
+//                            print("pointee",CGFloat(eX.pointee),CGFloat(eY.pointee))
                             eyeVeloX = CGFloat(eX.pointee) - offsetEyeBorder//移動距離
                             eyeVeloY = -CGFloat(eY.pointee) + offsetEyeBorder
                             
@@ -1145,7 +1144,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyeWithBorderRect.origin.y += eyeVeloY
                             eyePosX = eyeWithBorderRect.origin.x - eyebR0.origin.x// + eyeVeloX
                             eyePosY = eyeWithBorderRect.origin.y - eyebR0.origin.y// + eyeVeloY
-                            if cvError==0{//error後初めて検出できた
+//                            print("veloXY",eyeVeloX,eyeVeloY)
+                            if eyeVeloX<offsetEyeBorder*3 && eyeVeloX > -offsetEyeBorder*3 &&
+                                eyeVeloY<offsetEyeBorder*3 && eyeVeloY > -offsetEyeBorder*3{
+                            if cvError==0{//error後初めて検出。位置は正しいが、直前からの偏位は無意味
                                 eyeVeloXOrig.append(eyeVeloXOrig.last!)
                                 eyeVeloYOrig.append(eyeVeloYOrig.last!)
                                 eyePosXOrig.append(eyePosX)
@@ -1156,6 +1158,50 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 eyePosXOrig.append(eyePosX)
                                 eyePosYOrig.append(eyePosY)
                             }
+                            }else{
+                                eyeVeloXOrig.append(eyeVeloXOrig.last!)
+                                eyeVeloYOrig.append(eyeVeloYOrig.last!)
+                                eyePosXOrig.append(eyePosXOrig.last!)
+                                eyePosYOrig.append(eyePosYOrig.last!)
+                                eyeWithBorderRect=eyebR0
+                                cvError=3
+                            }
+                            
+                            
+                            //                        #if DEBUG
+                            //                        画面表示はmain threadで行う
+//                            debugEyeRect=eyeWithBorderRect
+//                            debugEyeRect.origin.x=eyeWithBorderRect.origin.x+offsetEyeBorder-eyeVeloX
+//                            debugEyeRect.origin.y=eyeWithBorderRect.origin.y+offsetEyeBorder-eyeVeloY
+                            //                        let width=eyeWithBorderRect.width-offsetEyeBorder*2
+                            //                        let height=eyeWithBorderRect.width-offsetEyeBorder*2
+                            //                        debugEyeRect.origin.x
+                            //                        let eyeDRect=CGRect(x:x,y:y,width: width,height: height)
+                            let debugEyeCGImage = context.createCGImage(frameCIImage, from:debugEyeRect)!
+                            // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
+                            let debugEyeUIImage = UIImage.init(cgImage: debugEyeCGImage)
+                            
+                            DispatchQueue.main.async {
+                                wakuEye.frame=debugEyeRect//CGRect(x:debugX,y:debugY,width:debugey width*2,height:height*2)
+                                wakuEye.frame.origin.x=debugX
+                                wakuEye.frame.origin.y=debugY
+                                wakuEye.image=debugEyeUIImage
+                                debugX += debugEyeRect.width
+                                
+                                wakuEyeb.frame=CGRect(x:debugX,y:debugY,width:eyeWithBorderRect.size.width,height:eyeWithBorderRect.size.height)
+                                wakuEyeb.image=eyeWithBorderUIImage
+                                debugX += eyeWithBorderRect.size.width
+                                
+                                //                            wakuFaceb.frame=CGRect(x:debugX,y:debugY,width:eyebR0.size.width,height:eyebR0.size.height)
+                                //                            wakuFaceb.image=eye0UIImage
+                            }
+                            //                        #endif
+                            
+                            
+                            
+                            
+                            
+                            
                         }
                     }else{//cvError>0の時は空回り
                         eyeVeloXOrig.append(eyeVeloXOrig.last!)
@@ -1194,12 +1240,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     writingDataNow=true//の間はupdateの中でアレイデータを読まない
                     if fpsIs120==true{
+                        eyePosXOrig.append(eyePosXOrig.last!)
+                        eyePosYOrig.append(eyePosYOrig.last!)
+                        eyeVeloXOrig.append(eyeVeloXOrig.last!)
+                        eyeVeloYOrig.append(eyeVeloYOrig.last!)
                         faceVeloXFiltered.append(-12*Kalman(value:faceVeloXOrig.last!,num:0))
                         faceVeloYFiltered.append(-12*Kalman(value:faceVeloYOrig.last!,num:1))
                         eyePosXFiltered.append(-1.0*Kalman(value: eyePosXOrig.last!,num: 2))
                         eyePosYFiltered.append(-1.0*Kalman(value: eyePosYOrig.last!,num: 3))
                         eyeVeloXFiltered.append(-12*Kalman(value: getLast5VeloX(), num: 4))
                         eyeVeloYFiltered.append(-12*Kalman(value: getLast5VeloY(), num: 5))
+                     
                     }
                     faceVeloXFiltered.append(-12*Kalman(value:faceVeloXOrig.last!,num:0))
                     faceVeloYFiltered.append(-12*Kalman(value:faceVeloYOrig.last!,num:1))
@@ -1225,7 +1276,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }//------autoreleasepool{
                 //マッチングデバッグ用スリープ、デバッグが終わったら削除
 //                #if DEBUG
-//                usleep(1000)
+//                usleep(5000)
 //                #endif
             }
             //            print("time:",CFAbsoluteTimeGetCurrent()-st)
@@ -1545,10 +1596,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         }// パスの初期化
         let drawPath = UIBezierPath()
-        let posXCount=getPosXFilteredCount()
+//        let posXCount=getPosXFilteredCount()
         if !mail{//mailの時は時間経過は表示しない
             let time=Int(CFAbsoluteTimeGetCurrent()-calcStartTime)+1
-            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",posXCount,CGFloat(posXCount)/240.0,videoDura[videoCurrent],time)
+            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",arrayDataCount,CGFloat(arrayDataCount)/240.0,videoDura[videoCurrent],time)
             //print(timetxt)
             
             timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
@@ -1607,20 +1658,32 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let py4=(h-240)*4/5+120
         let dx = 1// xの間隔
         var endN=end
-        let posXCount=getPosXFilteredCount()
-        if end>posXCount-1{
-            endN=posXCount-1
-        }
-        readingDataNow=true
-        while writingDataNow==true{
-            usleep(100)//0.0001sec
+//        let posXCount=arrayDataCount// getPosXFilteredCount()
+        if end>arrayDataCount-1{
+            endN=arrayDataCount-1
         }
         for i in startN..<endN {
             let px = CGFloat(dx * i)
-            let pyXpos = eyePosXFiltered[i] * posR + py1
-            let pyXvelo = eyeVeloXFiltered[i] * veloR + py2
-            let pyYpos = eyePosYFiltered[i] * posR + py3
-            let pyYvelo = eyeVeloYFiltered[i] * veloR + py4
+//            if eyePosXOrig[i]>99{
+//                print("eyeposorig:",eyePosXOrig[i])
+//
+//                let pyXpos = py1
+//                let pyXvelo = py2
+//                let pyYpos = py3
+//                let pyYvelo = py4
+//                let pntXpos = CGPoint(x: px, y: pyXpos)
+//                let pntXvelo = CGPoint(x: px, y: pyXvelo)
+//                let pntYpos = CGPoint(x: px, y: pyYpos)
+//                let pntYvelo = CGPoint(x: px, y: pyYvelo)
+//                pointListXpos.append(pntXpos)
+//                pointListXvelo.append(pntXvelo)
+//                pointListYpos.append(pntYpos)
+//                pointListYvelo.append(pntYvelo)
+//            }else{
+            let pyXpos = eyePosXFiltered4update[i] * posR + py1
+            let pyXvelo = eyeVeloXFiltered4update[i] * veloR + py2
+            let pyYpos = eyePosYFiltered4update[i] * posR + py3
+            let pyYvelo = eyeVeloYFiltered4update[i] * veloR + py4
             let pntXpos = CGPoint(x: px, y: pyXpos)
             let pntXvelo = CGPoint(x: px, y: pyXvelo)
             let pntYpos = CGPoint(x: px, y: pyYpos)
@@ -1629,13 +1692,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             pointListXvelo.append(pntXvelo)
             pointListYpos.append(pntYpos)
             pointListYvelo.append(pntYvelo)
+//            }
         }
-        readingDataNow=false
         drawPath.move(to: pointListXpos[0])//move to start
         pointListXpos.removeFirst()//remove start point
         for pt in pointListXpos {//add points
             drawPath.addLine(to: pt)
         }
+        
         drawPath.move(to: pointListXvelo[0])
         pointListXvelo.removeFirst()
         for pt in pointListXvelo {
@@ -1664,84 +1728,84 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
 //           let dImage = drawText(width:mailWidth,height:mailHeight)
 //    func drawResultVOG()
-    func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
-        //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
-        let size = CGSize(width:w, height:h)
-        // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        // パスの初期化
-        let drawPath = UIBezierPath()
-        
-        //let wI:Int = Int(w)//2400*18
-        let wid:CGFloat=w/90.0
-        for i in 0..<90 {
-            let xp = CGFloat(i)*wid
-            drawPath.move(to: CGPoint(x:xp,y:0))
-            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
-        }
-        drawPath.move(to:CGPoint(x:0,y:0))
-        drawPath.addLine(to: CGPoint(x:w,y:0))
-        drawPath.move(to:CGPoint(x:0,y:h-120))
-        drawPath.addLine(to: CGPoint(x:w,y:h-120))
-        //UIColor.blue.setStroke()
-        drawPath.lineWidth = 2.0//1.0
-        drawPath.stroke()
-        drawPath.removeAllPoints()
-        var pntListXpos = Array<CGPoint>()
-        var pntListXvelo = Array<CGPoint>()
-        var pntListYpos = Array<CGPoint>()
-        var pntListYvelo = Array<CGPoint>()
-        let dx = 1// xの間隔
-        
-        for i in 0..<Int(w) {
-            if i < eyePosXFiltered.count - 4{
-                let px = CGFloat(dx * i)
-                let pyXpos = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
-                let pyXvelo = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
-                let pyYpos = eyePosYFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
-                let pyYvelo = eyeVeloYFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
-                let pntXpos = CGPoint(x: px, y: pyXpos)
-                let pntXvelo = CGPoint(x: px, y: pyXvelo)
-                let pntYpos = CGPoint(x: px, y: pyYpos)
-                let pntYvelo = CGPoint(x: px, y: pyYvelo)
-                pntListYpos.append(pntYpos)
-                pntListYvelo.append(pntYvelo)
-                pntListXpos.append(pntXpos)
-                pntListXvelo.append(pntXvelo)
-            }
-        }
-        
-        drawPath.move(to: pntListXpos[0])//move to start
-        pntListXpos.removeFirst()//remove start point
-        for pt in pntListXpos {//add points
-            drawPath.addLine(to: pt)
-        }
-        
-        drawPath.move(to: pntListXvelo[0])
-        pntListXvelo.removeFirst()
-        for pt in pntListXvelo {
-            drawPath.addLine(to: pt)
-        }
-        drawPath.move(to: pntListYpos[0])
-        pntListYpos.removeFirst()
-        for pt in pntListYpos {
-            drawPath.addLine(to: pt)
-        }
-        drawPath.move(to: pntListYvelo[0])
-        pntListYvelo.removeFirst()
-        for pt in pntListYvelo {
-            drawPath.addLine(to: pt)
-        }
-        // 線の色
-        UIColor.black.setStroke()
-        // 線を描く
-        drawPath.stroke()
-        // イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
+//    func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
+//        //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
+//        let size = CGSize(width:w, height:h)
+//        // イメージ処理の開始
+//        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+//        // パスの初期化
+//        let drawPath = UIBezierPath()
+//
+//        //let wI:Int = Int(w)//2400*18
+//        let wid:CGFloat=w/90.0
+//        for i in 0..<90 {
+//            let xp = CGFloat(i)*wid
+//            drawPath.move(to: CGPoint(x:xp,y:0))
+//            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
+//        }
+//        drawPath.move(to:CGPoint(x:0,y:0))
+//        drawPath.addLine(to: CGPoint(x:w,y:0))
+//        drawPath.move(to:CGPoint(x:0,y:h-120))
+//        drawPath.addLine(to: CGPoint(x:w,y:h-120))
+//        //UIColor.blue.setStroke()
+//        drawPath.lineWidth = 2.0//1.0
+//        drawPath.stroke()
+//        drawPath.removeAllPoints()
+//        var pntListXpos = Array<CGPoint>()
+//        var pntListXvelo = Array<CGPoint>()
+//        var pntListYpos = Array<CGPoint>()
+//        var pntListYvelo = Array<CGPoint>()
+//        let dx = 1// xの間隔
+//
+//        for i in 0..<Int(w) {
+//            if i < eyePosXFiltered.count - 4{
+//                let px = CGFloat(dx * i)
+//                let pyXpos = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
+//                let pyXvelo = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
+//                let pyYpos = eyePosYFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
+//                let pyYvelo = eyeVeloYFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
+//                let pntXpos = CGPoint(x: px, y: pyXpos)
+//                let pntXvelo = CGPoint(x: px, y: pyXvelo)
+//                let pntYpos = CGPoint(x: px, y: pyYpos)
+//                let pntYvelo = CGPoint(x: px, y: pyYvelo)
+//                pntListYpos.append(pntYpos)
+//                pntListYvelo.append(pntYvelo)
+//                pntListXpos.append(pntXpos)
+//                pntListXvelo.append(pntXvelo)
+//            }
+//        }
+//
+//        drawPath.move(to: pntListXpos[0])//move to start
+//        pntListXpos.removeFirst()//remove start point
+//        for pt in pntListXpos {//add points
+//            drawPath.addLine(to: pt)
+//        }
+//
+//        drawPath.move(to: pntListXvelo[0])
+//        pntListXvelo.removeFirst()
+//        for pt in pntListXvelo {
+//            drawPath.addLine(to: pt)
+//        }
+//        drawPath.move(to: pntListYpos[0])
+//        pntListYpos.removeFirst()
+//        for pt in pntListYpos {
+//            drawPath.addLine(to: pt)
+//        }
+//        drawPath.move(to: pntListYvelo[0])
+//        pntListYvelo.removeFirst()
+//        for pt in pntListYvelo {
+//            drawPath.addLine(to: pt)
+//        }
+//        // 線の色
+//        UIColor.black.setStroke()
+//        // 線を描く
+//        drawPath.stroke()
+//        // イメージコンテキストからUIImageを作る
+//        let image = UIGraphicsGetImageFromCurrentImageContext()
+//        // イメージ処理の終了
+//        UIGraphicsEndImageContext()
+//        return image!
+//    }
     
  
     func drawVogtext(){
@@ -1774,12 +1838,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroLineView?.removeFromSuperview()
             //            lineView?.isHidden = false
         }
-        var startcnt = 0
-        let posXCount=getPosXFilteredCount()
-        if posXCount < Int(self.view.bounds.width){//横幅以内なら０からそこまで表示
+        var startcnt:Int
+        if arrayDataCount < Int(self.view.bounds.width){//横幅以内なら０からそこまで表示
             startcnt = 0
         }else{//横幅超えたら、新しい横幅分を表示
-            startcnt = posXCount - Int(self.view.bounds.width)
+            startcnt = arrayDataCount - Int(self.view.bounds.width)
         }
         //波形を時間軸で表示
         let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:gyroBoxHeight)//180)
@@ -1801,11 +1864,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroLineView?.removeFromSuperview()
             //            lineView?.isHidden = false
         }
-        let posXCount=getPosXFilteredCount()
-        if posXCount < Int(self.view.bounds.width){//横幅以内なら０からそこまで表示
+//        let posXCount=getPosXFilteredCount()
+        if arrayDataCount < Int(self.view.bounds.width){//横幅以内なら０からそこまで表示
             startcnt = 0
-        }else if startcnt > posXCount - Int(self.view.bounds.width){
-            startcnt = posXCount - Int(self.view.bounds.width)
+        }else if startcnt > arrayDataCount - Int(self.view.bounds.width){
+            startcnt = arrayDataCount - Int(self.view.bounds.width)
         }
         //波形を時間軸で表示
         let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:gyroBoxHeight)// 180)
@@ -1817,18 +1880,39 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         view.addSubview(gyroLineView!)
         //        print("count----" + "\(view.subviews.count)")
     }
+    var arrayDataCount:Int=0
+    func getArrayData()->Int{
+        while writingDataNow==true{
+            usleep(100)
+        }
+        readingDataNow=true
+        let n1=eyePosXFiltered4update.count
+        let n2=eyePosXFiltered.count
+        for i in n1..<n2{
+            eyePosXFiltered4update.append(eyePosXFiltered[i])
+            eyePosYFiltered4update.append(eyePosYFiltered[i])
+            eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
+            eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
+            faceVeloXFiltered4update.append(faceVeloXFiltered[i])
+            faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+         }
+        readingDataNow=false
+        return eyePosXFiltered4update.count
+    }
     var timercnt:Int = 0
     var lastArraycount:Int = 0
     @objc func update_vog(tm: Timer) {
         timercnt += 1
-        if getPosXFilteredCount() < 5 {
+        arrayDataCount = getArrayData()
+        if arrayDataCount < 5 {
             return
-        }
+         }
         if calcFlag == false {//終わったらここ
+            arrayDataCount = getArrayData()//念の為
             timerCalc.invalidate()
             setButtons(mode: true)
             UIApplication.shared.isIdleTimerDisabled = false//do sleep
-            vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: getPosXFilteredCount())
+            vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: arrayDataCount)
             drawVOG2endPt(end: 0)
             if vogLineView != nil{
                 vogLineView?.removeFromSuperview()//waveを消して
@@ -1841,22 +1925,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("debug-update",timercnt)
             #endif
  
-            let cntTemp=getPosXFilteredCount()// eyePosXFiltered.count
-            vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: cntTemp)
-            lastArraycount=getPosXFilteredCount()
-            drawVOG2endPt(end: cntTemp)
+//            let cntTemp=getPosXFilteredCount()// eyePosXFiltered.count
+            vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
+            lastArraycount=arrayDataCount
+            drawVOG2endPt(end: arrayDataCount)
             drawVogtext()
         }
     }
-    func getPosXFilteredCount()->Int{//読み込みを宣言し、書き込みが終わるのを待って、個数を読む
-        readingDataNow=true
-        while writingDataNow==true{//--------の間はアレイデータを読まない？
-            usleep(100)//0.0001sec
-        }
-        let ret=eyePosXFiltered.count
-        readingDataNow=false
-        return ret
-    }
+//    func getPosXFilteredCount()->Int{//読み込みを宣言し、書き込みが終わるのを待って、個数を読む
+//        readingDataNow=true
+//        while writingDataNow==true{//--------の間はアレイデータを読まない？
+//            usleep(100)//0.0001sec
+//        }
+//        let ret=eyePosXFiltered.count
+//        readingDataNow=false
+//        return ret
+//    }
     @objc func onWaveSliderValueChange(){
         let mode=checkDispMode()
 //        print("modes:",mode,calcMode)
@@ -1882,14 +1966,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setVideoButtons(mode: false)
         waveSlider.minimumValue = 0
         //count==0の時もエラーにならないのでそのまま
-        waveSlider.maximumValue = Float(getPosXFilteredCount())
+        waveSlider.maximumValue = Float(arrayDataCount)
         waveSlider.value=0
         waveSlider.addTarget(self, action: #selector(onWaveSliderValueChange), for: UIControl.Event.valueChanged)
     }
     var calcStartTime=CFAbsoluteTimeGetCurrent()
 
     @objc func update_vHIT(tm: Timer) {
-        if eyeVeloXFiltered.count < 5 {
+        arrayDataCount=getArrayData()
+        if arrayDataCount < 5 {
             return
         }
         if calcFlag == false {
@@ -1907,9 +1992,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             setWaveSlider()
         }
-        let tmpCount=getPosXFilteredCount()
-        vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: tmpCount)
-        lastArraycount=getPosXFilteredCount()
+//        let tmpCount=getPosXFilteredCount()
+        vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
+        lastArraycount=arrayDataCount
         drawRealwave()
         timercnt += 1
         #if DEBUG
@@ -1921,22 +2006,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     
-    func update_gyrodelta() {
-        if getPosXFilteredCount() < 5{//} eyeVeloXFiltered.count < 5 {
-            return
-        }
-        if calcFlag == false {
-            //           makeBoxies()
-            calcDrawVHIT()
-            //終わり直前で認識されたvhitdataが認識されないこともあるかもしれないので、駄目押し。だめ押し用のcalcdrawvhitは別に作る必要があるかもしれない。
-            if waveTuple.count > 0{
-                nonsavedFlag = true
-            }
-        }
-        drawRealwave()
-        calcDrawVHIT()
-    }
-    
+//    func update_gyrodelta() {
+//        if getPosXFilteredCount() < 5{//} eyeVeloXFiltered.count < 5 {
+//            return
+//        }
+//        if calcFlag == false {
+//            //           makeBoxies()
+//            calcDrawVHIT()
+//            //終わり直前で認識されたvhitdataが認識されないこともあるかもしれないので、駄目押し。だめ押し用のcalcdrawvhitは別に作る必要があるかもしれない。
+//            if waveTuple.count > 0{
+//                nonsavedFlag = true
+//            }
+//        }
+//        drawRealwave()
+//        calcDrawVHIT()
+//    }
+//
     func getFPS(url:URL) -> Float{
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: url, options: options)
@@ -2164,7 +2249,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let pointCount = Int(w) // 点の個数
         // xの間隔
         let dx:CGFloat = 1//Int(w)/pointCount
-        let posXCount=getPosXFilteredCount()// eyeVeloXFiltered.count
+//        let posXCount=getPosXFilteredCount()// eyeVeloXFiltered.count
         let gyroMovedCnt=gyroMoved.count
         let y0=gyroBoxHeight*2/6
         let y1=gyroBoxHeight*3/6
@@ -2172,25 +2257,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var py0:CGFloat=0
         
         for n in 1...(pointCount) {
-            if num + n < posXCount && num + n < gyroMovedCnt {
+            if num + n < arrayDataCount && num + n < gyroMovedCnt {
                 let px = dx * CGFloat(n)
-                while writingDataNow==true{
-                    usleep(100)
-                }
-                readingDataNow=true
-                if calcMode==0{
-                    py0 = eyeVeloXFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y0
+                 if calcMode==0{
+                    py0 = eyeVeloXFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y0
                 }else{
-                    py0 = eyeVeloYFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y0
+                    py0 = eyeVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y0
                 }
                 if faceF==1{
                     if calcMode==0{
-                        py1 = faceVeloXFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y1
+                        py1 = faceVeloXFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y1
                     }else{
-                        py1 = faceVeloYFiltered[num + n] * CGFloat(eyeRatio)/450.0 + y1
+                        py1 = faceVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y1
                     }
                 }
-                readingDataNow=false
                 let py2 = gyroMoved[num + n] * CGFloat(gyroRatio)/150.0 + y2
                 let point0 = CGPoint(x: px, y: py0)
                 if faceF==1{
@@ -2247,7 +2327,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawPath1.stroke()
         }
         drawPath2.stroke()
-        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",posXCount,CGFloat(posXCount)/240.0,videoDura[videoCurrent],timercnt+1)
+        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",arrayDataCount,CGFloat(arrayDataCount)/240.0,videoDura[videoCurrent],timercnt+1)
         //print(timetxt)
         timetxt.draw(at: CGPoint(x: 3, y: 3), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
@@ -2447,7 +2527,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true{
             return
         }
-        if getPosXFilteredCount()==0{//} eyePosXFiltered.count == 0{
+        if eyePosXFiltered.count == 0{
             return
         }
         let alert = UIAlertController(title: "VOG96da", message: "Input ID", preferredStyle: .alert)
@@ -3328,20 +3408,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let ws = number// - flatwidth + 12;//波表示開始位置 wavestartpoint
             waveTuple.append((t,ws,1,0))//L/R,frameNumber,disp,current)
             let num=waveTuple.count-1
-            while writingDataNow==true{//--------の間はアレイデータを書き込まない？
-                usleep(100)//0.0001sec
-            }
-            readingDataNow=true
+//            while writingDataNow==true{//--------の間はアレイデータを書き込まない？
+//                usleep(100)//0.0001sec
+//            }
+//            readingDataNow=true
             if calcMode==0{
                 for k1 in ws..<ws + 120{
-                    eyeWs[num][k1 - ws] = Int(eyeVeloXFiltered[k1]*CGFloat(eyeRatio)/300.0)
+                    eyeWs[num][k1 - ws] = Int(eyeVeloXFiltered4update[k1]*CGFloat(eyeRatio)/300.0)
                 }
             }else{
                 for k1 in ws..<ws + 120{
-                    eyeWs[num][k1 - ws] = Int(eyeVeloYFiltered[k1]*CGFloat(eyeRatio)/300.0)
+                    eyeWs[num][k1 - ws] = Int(eyeVeloYFiltered4update[k1]*CGFloat(eyeRatio)/300.0)
                 }
             }
-            readingDataNow=false
+//            readingDataNow=false
             for k2 in ws..<ws + 120{
                 gyroWs[num][k2 - ws] = Int(gyroMoved[k2]*CGFloat(gyroRatio)/100.0)
             }//ここでエラーが出るようだ？
@@ -3356,13 +3436,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        while writingDataNow==true{//--------の間はアレイデータを書き込まない？
 //            usleep(1000)//0.001sec
 //        }
-        let vHITcnt = getPosXFilteredCount()// eyeVeloXFiltered.count
-        if vHITcnt < 400 {
+//        let vHITcnt = getPosXFilteredCount()// eyeVeloXFiltered.count
+        if arrayDataCount < 400 {
             return
         }
         var skipCnt:Int = 0
 //        readingDataNow=true
-        for vcnt in 50..<(vHITcnt - 130) {// flatwidth + 120 までを表示する。実在しないvHITeyeをアクセスしないように！
+        for vcnt in 50..<(arrayDataCount - 130) {// flatwidth + 120 までを表示する。実在しないvHITeyeをアクセスしないように！
             
             if skipCnt > 0{
                 skipCnt -= 1
