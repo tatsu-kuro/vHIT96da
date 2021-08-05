@@ -126,7 +126,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoPlayer: AVPlayer!
     let vHIT_VOG:String="vHIT_VOG"
     let Wave96da:String="Wave96da"
-    
+    var debugMode:Bool=false
     @IBOutlet weak var waveSlider: UISlider!
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
@@ -1748,10 +1748,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var faceVeloX:CGFloat = 0
                 var faceVeloY:CGFloat = 0
                 
-                #if DEBUG //for test display
+//                #if DEBUG //for test display
                 var x:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
                 let y:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
-                #endif
+//                #endif
                 autoreleasepool{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
@@ -1761,27 +1761,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
                         eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
                         eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
-                      
-                        #if DEBUG
+                        if debugMode == true {
+//                        #if DEBUG
                         //                        画面表示はmain threadで行う
                         let eye0CGImage = context.createCGImage(frameCIImage, from:eyeWithBorderRect0)!
                         // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
                         let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
 
                         DispatchQueue.main.async {
-                            wakuImg1.frame=CGRect(x:x,y:y,width:eyeRect.size.width*2,height:eyeRect.size.height*2)
+                            wakuImg1.frame=CGRect(x:x,y:y,width:eyeRect.size.width,height:eyeRect.size.height)
                             wakuImg1.image=eyeUIImage
-                            x += eyeRect.size.width*2
-
-                            wakuImg2.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width*2,height:eyeWithBorderRect.size.height*2)
+                            x += eyeRect.size.width
+                            wakuImg2.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width,height:eyeWithBorderRect.size.height)
                             wakuImg2.image=eyeWithBorderUIImage
-                            x += eyeWithBorderRect.size.width*2
-                            if faceF==0 || calcMode==2{
-                                wakuImg4.frame=CGRect(x:x,y:y,width:eyeWithBorderRect0.size.width*2,height:eyeWithBorderRect0.size.height*2)
-                                wakuImg4.image=eye0UIImage
-                            }
+                            x += eyeWithBorderRect.size.width
+                            wakuImg3.frame=CGRect(x:x,y:y,width:eyeWithBorderRect0.size.width,height:eyeWithBorderRect0.size.height)
+                            wakuImg3.image=eye0UIImage
                         }
-                        #endif
+//                        #endif
+                        }
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,
                                                 narrow: eyeUIImage,
                                                 x: eX,
@@ -1908,12 +1906,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                    }
                 }
                 //マッチングデバッグ用スリープ、デバッグが終わったら削除
-                #if DEBUG
-                usleep(1000)//0.005sec
-                #endif
+                if debugMode == true{
+//                #if DEBUG
+                usleep(5000)//0.005sec
+//                #endif
+                }
             }
             //            print("time:",CFAbsoluteTimeGetCurrent()-st)
             calcFlag = false
+//            debugMode=false
             if waveTuple.count > 0{
                 nonsavedFlag = true
             }
@@ -2998,6 +2999,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var lastArraycount:Int = 0
     @objc func update_vog(tm: Timer) {
         timercnt += 1
+        if debugMode==true{
+//        #if DEBUG
+        if calcFlag == false{
+            timerCalc.invalidate()
+            setButtons(mode: true)
+            setWaveSlider()
+            debugMode=false
+        }
+        return
+//        #endif
+        }
         arrayDataCount = getArrayData()
         if arrayDataCount < 5 {
             return
@@ -4403,6 +4415,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
         print("tapFrame****before")
+        if currentVideoDate.frame.maxY>sender.location(in: view).y{
+//            if debugMode==true{
+//                debugMode=false
+//            }else{
+                debugMode=true
+//            }
+            vHITcalc(0)
+            return
+        }
         if calcFlag == true {
             return
         }
