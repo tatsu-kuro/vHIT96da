@@ -944,6 +944,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         eyePosYFiltered.append(0)
         eyeVeloYOrig.append(0)
         eyeVeloYFiltered.append(0)
+        eyePosXFiltered4update.append(0)
+        eyePosYFiltered4update.append(0)
+        eyeVeloXFiltered4update.append(0)
+        eyeVeloYFiltered4update.append(0)
+        faceVeloXFiltered4update.append(0)
+        faceVeloYFiltered4update.append(0)
+
+        
+        
+        
         gyroMoved.append(0)
         errArray.append(false)
 
@@ -1172,16 +1182,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         context.clearCaches()
                     }
                  
-                    if cvError<0{
+                    if cvError < 0{
                         eyePosXOrig.append(eyePosX)
                         eyePosYOrig.append(eyePosY)
                         eyeVeloXOrig.append(eyeVeloX)
                         eyeVeloYOrig.append(eyeVeloY)
-//                    }else if cvError==0{
-//                        eyePosXOrig.append(eyePosX)
-//                        eyePosYOrig.append(eyePosY)
-//                        eyeVeloXOrig.append(eyeVeloXOrig.last!)
-//                        eyeVeloYOrig.append(eyeVeloYOrig.last!)
+                    }else if cvError==0{
+                        eyePosXOrig.append(eyePosX)
+                        eyePosYOrig.append(eyePosY)
+                        eyeVeloXOrig.append(eyeVeloXOrig.last!)
+                        eyeVeloYOrig.append(eyeVeloYOrig.last!)
                     }else{
                         eyePosXOrig.append(eyePosXOrig.last!)
                         eyePosYOrig.append(eyePosYOrig.last!)
@@ -1219,6 +1229,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                        eyeVeloYFiltered.append(-12*Kalman(value: getLast5VeloY(), num: 5))
                     }else{
                         errArray.append(false)
+                        KalmanInit()
                         eyePosXFiltered.append( -1.0*eyePosXOrig.last!)
                         eyePosYFiltered.append( -1.0*eyePosYOrig.last!)
                         eyeVeloXFiltered.append(-12.0*eyeVeloXOrig.last!)
@@ -1891,10 +1902,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 faceVeloXFiltered4update.append(faceVeloXFiltered[i])
                 faceVeloYFiltered4update.append(faceVeloYFiltered[i])
             }else{
-                eyePosXFiltered4update.append(0)
-                eyePosYFiltered4update.append(0)//eyePosYFiltered[i])
-                eyeVeloXFiltered4update.append(0)//eyeVeloXFiltered[i])
-                eyeVeloYFiltered4update.append(0)//eyeVeloYFiltered[i])
+                eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
+                eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
+                eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
+                eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
                 faceVeloXFiltered4update.append(0)//faceVeloXFiltered[i])
                 faceVeloYFiltered4update.append(0)//faceVeloYFiltered[i])
             }
