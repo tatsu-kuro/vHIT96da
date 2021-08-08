@@ -1298,9 +1298,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     while reader.status != AVAssetReader.Status.reading {
                         usleep(1000)//0.001sec
                     }
-//                    while writingDataNow==true{//--------の間はアレイデータを書き込まない？
-//                        usleep(1000)//0.001sec
-//                    }
                 }
                 //マッチングデバッグ用スリープ、デバッグが終わったら削除
                 if debugMode == true{
@@ -3405,12 +3402,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
         print("tapFrame****before")
         if currentVideoDate.frame.maxY>sender.location(in: view).y{
-            debugMode=true
-            wakuImg1.isHidden=false
-            wakuImg2.isHidden=false
-            wakuImg3.isHidden=false
-            wakuImg4.isHidden=false
-            vHITcalc(0)
+            if calcFlag==true {//&& debugMode==true{
+                calcFlag=false
+            }else{
+                debugMode=true
+                wakuImg1.isHidden=false
+                wakuImg2.isHidden=false
+                wakuImg3.isHidden=false
+                wakuImg4.isHidden=false
+                vHITcalc(0)
+            }
             return
         }
         if calcFlag == true {
