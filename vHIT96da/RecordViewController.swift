@@ -20,7 +20,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var videoDevice: AVCaptureDevice?
     var filePath:String?
     var timer:Timer?
-   
+    var videoURLCount:Int?
     var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     var fpsMax:Int?
     var fps_non_120_240:Int=2

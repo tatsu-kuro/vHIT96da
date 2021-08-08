@@ -131,7 +131,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
     var albumExist:Bool=false
-    var videoArrayCount:Int = 0
+//    var videoURLCount:Int = 0
     var videoDate = Array<String>()
     var videoDateTime = Array<Date>()//creationDate+durationより１−２秒遅れるpngdate
     var videoURL = Array<URL>()
@@ -439,7 +439,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoURL.remove(at: videoCurrent)
             videoImg.remove(at: videoCurrent)
             videoDura.remove(at: videoCurrent)
-            videoArrayCount -= 1
+//            videoURLCount -= 1
             videoCurrent -= 1
             showVideoIroiro(num: 0)
             if videoImg.count==0{
@@ -2841,9 +2841,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
         showModeText()
-
         getVideosAlbumList(name:vHIT_VOG)
-        videoArrayCount = videoURL.count
+//        videoURLCount = videoURL.count
         //videcurrentは前回終了時のものを利用する
         videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
         if videoCurrent>videoURL.count-1{
@@ -3032,10 +3031,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if let vc = segue.destination as? HelpjViewController{
             let Controller:HelpjViewController = vc
             Controller.calcMode = calcMode
-        }else if segue.destination is RecordViewController{
+        }else if let vc = segue.destination as? RecordViewController{
+            let Controller:RecordViewController = vc
             makeAlbum(name: vHIT_VOG)//なければ作る
             makeAlbum(name: Wave96da)//これもなければ作る
-
+            Controller.videoURLCount=videoURL.count
         }else{
             #if DEBUG
             print("prepare list")
@@ -3195,11 +3195,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 removeFile(delFile: "temp.png")
                 getVideosAlbumList(name: vHIT_VOG)
                 print("rewind***3")
+                let videoCount=Controller.videoURLCount
                 //ビデオが出来るまで待つ
-                while videoDura.count==videoArrayCount{
+                while videoDura.count==videoCount{//videoURLCount{
                     sleep(UInt32(0.5))
                 }
-                videoArrayCount=videoDura.count
+//                videoURLCount=videoDura.count
                 videoCurrent=videoDura.count-1
                 showVideoIroiro(num:0)
                 var fps=getFPS(url: videoURL[videoCurrent])
