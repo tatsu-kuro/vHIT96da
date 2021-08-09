@@ -127,6 +127,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let vHIT_VOG:String="vHIT_VOG"
     let Wave96da:String="Wave96da"
     var debugMode:Bool=false
+    var fpsIs120:Bool=false
+
     @IBOutlet weak var waveSlider: UISlider!
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
@@ -279,12 +281,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var eyePosXOrig = Array<CGFloat>()//eyePosOrig
     var eyePosXFiltered = Array<CGFloat>()//eyePosFiltered
-    var eyeVeloXOrig = Array<CGFloat>()//eyeVeloOrig
+//    var eyeVeloXOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloXFiltered = Array<CGFloat>()//eyeVeloFiltered
  
     var eyePosYOrig = Array<CGFloat>()//eyePosOrig
     var eyePosYFiltered = Array<CGFloat>()//eyePosFiltered
-    var eyeVeloYOrig = Array<CGFloat>()//eyeVeloOrig
+//    var eyeVeloYOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
 //update(timer)では、まずcalc threadを止めてデータをもらってcalc thread再開し、もらったデータを処理する
     //calcとtimerでデータを同時に扱うとエラーが出るようだ
@@ -294,9 +296,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeVeloXFiltered4update = Array<CGFloat>()
     var eyePosYFiltered4update = Array<CGFloat>()
     var eyeVeloYFiltered4update = Array<CGFloat>()
-    var faceVeloXOrig = Array<CGFloat>()//faceVeloOrig
+//    var faceVeloXOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
-    var faceVeloYOrig = Array<CGFloat>()//faceVeloOrig
+//    var faceVeloYOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloYFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroHFiltered = Array<CGFloat>()//gyroFiltered
     var gyroVFiltered = Array<CGFloat>()//gyroFiltered
@@ -916,17 +918,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func setArraysData(type:Int){
         if type==0{//removeAll
-            faceVeloXOrig.removeAll()
+//            faceVeloXOrig.removeAll()
             faceVeloXFiltered.removeAll()
-            faceVeloYOrig.removeAll()
+//            faceVeloYOrig.removeAll()
             faceVeloYFiltered.removeAll()
             eyePosXOrig.removeAll()
             eyePosXFiltered.removeAll()
-            eyeVeloXOrig.removeAll()
+//            eyeVeloXOrig.removeAll()
             eyeVeloXFiltered.removeAll()
             eyePosYOrig.removeAll()
             eyePosYFiltered.removeAll()
-            eyeVeloYOrig.removeAll()
+//            eyeVeloYOrig.removeAll()
             eyeVeloYFiltered.removeAll()
             gyroMoved.removeAll()
             errArray.removeAll()
@@ -939,17 +941,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             eyeVeloYFiltered4update.removeAll()
 
         }else if type==1{//append(0)
-            faceVeloXOrig.append(0)
+//            faceVeloXOrig.append(0)
             faceVeloXFiltered.append(0)
-            faceVeloYOrig.append(0)
+//            faceVeloYOrig.append(0)
             faceVeloYFiltered.append(0)
             eyePosXOrig.append(0)
             eyePosXFiltered.append(0)
-            eyeVeloXOrig.append(0)
+//            eyeVeloXOrig.append(0)
             eyeVeloXFiltered.append(0)
             eyePosYOrig.append(0)
             eyePosYFiltered.append(0)
-            eyeVeloYOrig.append(0)
+//            eyeVeloYOrig.append(0)
             eyeVeloYFiltered.append(0)
             eyePosXFiltered4update.append(0)
             eyePosYFiltered4update.append(0)
@@ -963,6 +965,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             
         }
     }
+ 
     func vHITcalc(){
         var cvError:Int = 0
         calcFlag = true
@@ -972,6 +975,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if debugMode==false{
             setArraysData(type: 0)//removeAll
             setArraysData(type: 1)//append(0)
+//            setArraysData(type: 1)
             showBoxies(f: true)
             setWakuImgs(mode: false)
             waveSlider.isHidden=false
@@ -992,6 +996,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveSlider.isHidden=true
             videoSlider.isHidden=false
         }
+//        print("count:",eyePosXFiltered.count)
  //        var vHITcnt:Int = 0
         //        var startTime=CFAbsoluteTimeGetCurrent()
         timercnt = 0
@@ -1003,13 +1008,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let avAsset = AVURLAsset(url: videoURL[videoCurrent], options: options)
         calcDate = currentVideoDate.text!
         //        print("calcdate:",calcDate)
-        var fpsIs120:Bool=false
         let fps=getFPS(url: videoURL[videoCurrent])
         var realframeRatio:Float=fps/240
         //これを設定すると頭出ししてもあまりずれない。どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
         if fps<200.0{
             fpsIs120=true
             realframeRatio=fps/120.0
+        }else{
+            fpsIs120=false
         }
         //        print("fps:",getFPS(url: videoURL[videoCurrent]))
         var reader: AVAssetReader! = nil
@@ -1210,65 +1216,72 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         if cvError < 0{
                             eyePosXOrig.append(eyePosX)
                             eyePosYOrig.append(eyePosY)
-                            eyeVeloXOrig.append(eyeVeloX)
-                            eyeVeloYOrig.append(eyeVeloY)
+//                            eyeVeloXOrig.append(eyeVeloX)
+//                            eyeVeloYOrig.append(eyeVeloY)
                         }else if cvError==0{
                             eyePosXOrig.append(eyePosX)
                             eyePosYOrig.append(eyePosY)
-                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
-                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
+//                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
+//                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
                         }else{
                             eyePosXOrig.append(eyePosXOrig.last!)
                             eyePosYOrig.append(eyePosYOrig.last!)
-                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
-                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
+//                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
+//                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
                         }
-                        if fpsIs120==true{
-                            eyePosXOrig.append(eyePosXOrig.last!)
-                            eyePosYOrig.append(eyePosYOrig.last!)
-                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
-                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
-                        }
+//                        if fpsIs120==true{
+//                            eyePosXOrig.append(eyePosXOrig.last!)
+//                            eyePosYOrig.append(eyePosYOrig.last!)
+////                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
+////                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
+//                        }
                         while readingDataNow==true{//--------の間はアレイデータを書き込まない？
                             usleep(1000)//0.001sec
                         }
                         writingDataNow=true
                         if faceF==1{
-                            faceVeloXOrig.append(faceVeloX)
+//                            faceVeloXOrig.append(faceVeloX)
                             faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
-                            faceVeloYOrig.append(faceVeloY)
+//                            faceVeloYOrig.append(faceVeloY)
                             faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
                         }else{
-                            faceVeloXOrig.append(0)
+//                            faceVeloXOrig.append(0)
                             faceVeloXFiltered.append(0)
-                            faceVeloYOrig.append(0)
+//                            faceVeloYOrig.append(0)
                             faceVeloYFiltered.append(0)
                         }
+                        
                         if cvError<0{
                             errArray.append(true)
-                            eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
+                             eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
                             eyePosYFiltered.append( -1.0*Kalman(value:eyePosYOrig.last!,num:3))
-                            eyeVeloXFiltered.append(-12.0*Kalman(value: eyeVeloXOrig.last!,num:4))
-                            eyeVeloYFiltered.append(-12.0*Kalman(value: eyeVeloYOrig.last!, num: 5))
-                            //                        eyeVeloXFiltered.append(-12*Kalman(value: getLast5VeloX(), num: 4))
-                            //                        eyeVeloYFiltered.append(-12*Kalman(value: getLast5VeloY(), num: 5))
+                            let cnt=eyePosXFiltered.count
+//                            eyeVeloXFiltered.append(-12.0*Kalman(value: eyeVeloXOrig.last!,num:4))
+//                            eyeVeloYFiltered.append(-12.0*Kalman(value: eyeVeloYOrig.last!, num: 5))
+//                            if fpsIs120==true{
+//                            eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-3],num:4))
+//                            eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-3],num:5))
+//                            }else{
+                                eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+                                eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+//                            }
                         }else{
                             errArray.append(false)
                             KalmanInit()
                             eyePosXFiltered.append( -1.0*eyePosXOrig.last!)
                             eyePosYFiltered.append( -1.0*eyePosYOrig.last!)
-                            eyeVeloXFiltered.append(-12.0*eyeVeloXOrig.last!)
-                            eyeVeloYFiltered.append(-12.0*eyeVeloYOrig.last!)
+                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)//(-12.0*eyeVeloXOrig.last!)
+                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)//-12.0*eyeVeloYOrig.last!)
                         }
-                        if fpsIs120==true{
-                            errArray.append(errArray.last!)
-                            eyePosXFiltered.append(eyePosXFiltered.last!)
-                            eyePosYFiltered.append(eyePosYFiltered.last!)
-                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
-                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
-                            faceVeloXFiltered.append(eyeVeloXFiltered.last!)
-                            faceVeloYFiltered.append(eyeVeloYFiltered.last!)
-                        }
+//                        if fpsIs120==true{
+//                            errArray.append(errArray.last!)
+//                            eyePosXFiltered.append(eyePosXFiltered.last!)
+//                            eyePosYFiltered.append(eyePosYFiltered.last!)
+//                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
+//                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
+//                            faceVeloXFiltered.append(eyeVeloXFiltered.last!)
+//                            faceVeloYFiltered.append(eyeVeloYFiltered.last!)
+//                        }
                         writingDataNow=false
                     }
                     while reader.status != AVAssetReader.Status.reading {
@@ -1296,79 +1309,79 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         sum5X=0
         sum5Y=0
     }
-    func getLast5VeloX()->CGFloat{
-        let n=eyeVeloXOrig.count-1
-        sum5X += eyeVeloXOrig[n]
-        if n>4{
-            sum5X -= eyeVeloXOrig[n-5]
-        }
-        return sum5X/5
-//        return eyePosXOrig.last!
-    }
-    func getLast5VeloY()->CGFloat{
-        let n=eyeVeloYOrig.count-1
-        sum5Y += eyeVeloYOrig[n]
-        if n>4{
-            sum5Y -= eyeVeloYOrig[n-5]
-        }
-        return sum5Y/5
-//        return eyePosYOrig.last!
-    }
-    func getLast5X()->CGFloat{
-        let n=eyeVeloXFiltered.count-1
-        sum5X += eyeVeloXFiltered[n]
-        if n>4{
-            sum5X -= eyeVeloXFiltered[n-5]
-        }
-        return sum5X/5
-//        return eyePosXOrig.last!
-    }
-    func getLast5Y()->CGFloat{
-        let n=eyeVeloYFiltered.count-1
-        sum5Y += eyeVeloYFiltered[n]
-        if n>4{
-            sum5Y -= eyeVeloYFiltered[n-5]
-        }
-        return sum5Y/5
-//        return eyePosYOrig.last!
-    }
+//    func getLast5VeloX()->CGFloat{
+//        let n=eyeVeloXOrig.count-1
+//        sum5X += eyeVeloXOrig[n]
+//        if n>4{
+//            sum5X -= eyeVeloXOrig[n-5]
+//        }
+//        return sum5X/5
+////        return eyePosXOrig.last!
+//    }
+//    func getLast5VeloY()->CGFloat{
+//        let n=eyeVeloYOrig.count-1
+//        sum5Y += eyeVeloYOrig[n]
+//        if n>4{
+//            sum5Y -= eyeVeloYOrig[n-5]
+//        }
+//        return sum5Y/5
+////        return eyePosYOrig.last!
+//    }
+//    func getLast5X()->CGFloat{
+//        let n=eyeVeloXFiltered.count-1
+//        sum5X += eyeVeloXFiltered[n]
+//        if n>4{
+//            sum5X -= eyeVeloXFiltered[n-5]
+//        }
+//        return sum5X/5
+////        return eyePosXOrig.last!
+//    }
+//    func getLast5Y()->CGFloat{
+//        let n=eyeVeloYFiltered.count-1
+//        sum5Y += eyeVeloYFiltered[n]
+//        if n>4{
+//            sum5Y -= eyeVeloYFiltered[n-5]
+//        }
+//        return sum5Y/5
+////        return eyePosYOrig.last!
+//    }
     //    func average5(
-    func fps120(){
-//        self.faceVeloXOrig.append(0)
-        self.faceVeloXFiltered.append(0)
-//        self.faceVeloYOrig.append(0)
-        self.faceVeloYFiltered.append(0)
-//        self.eyePosXOrig.append(0)
-        self.eyePosXFiltered.append(0)
-//        self.eyeVeloXOrig.append(0)
-        self.eyeVeloXFiltered.append(0)
-//        self.eyePosYOrig.append(0)
-        self.eyePosYFiltered.append(0)
-//        self.eyeVeloYOrig.append(0)
-        self.eyeVeloYFiltered.append(0)
-        let i=eyePosXFiltered.count
-        if i>3{
-            let n1=i-2
-            let n2=i-3
-            let n3=i-4
-//            self.faceVeloXOrig[n2]=self.faceVeloXOrig[n1]/2+self.faceVeloXOrig[n3]/2
-            self.faceVeloXFiltered[n2]=self.faceVeloXFiltered[n1]/2+self.faceVeloXFiltered[n3]/2
-//            self.faceVeloYOrig[n2]=self.faceVeloYOrig[n1]/2+self.faceVeloYOrig[n3]/2
-            self.faceVeloYFiltered[n2]=self.faceVeloYFiltered[n1]/2+self.faceVeloYFiltered[n3]/2
-
-//            self.eyePosXOrig[n2]=self.eyePosXOrig[n1]/2+self.eyePosXOrig[n3]/2
-            self.eyePosXFiltered[n2]=self.eyePosXFiltered[n1]/2+self.eyePosXFiltered[n3]/2
-            
-//            self.eyeVeloXOrig[n2]=self.eyeVeloXOrig[n1]/2+self.eyeVeloXOrig[n3]/2
-            self.eyeVeloXFiltered[n2]=self.eyeVeloXFiltered[n1]/2+self.eyeVeloXFiltered[n3]/2
- 
-//            self.eyePosYOrig[n2]=self.eyePosYOrig[n1]/2+self.eyePosYOrig[n3]/2
-            self.eyePosYFiltered[n2]=self.eyePosYFiltered[n1]/2+self.eyePosYFiltered[n3]/2
-            
-//            self.eyeVeloYOrig[n2]=self.eyeVeloYOrig[n1]/2+self.eyeVeloYOrig[n3]/2
-            self.eyeVeloYFiltered[n2]=self.eyeVeloYFiltered[n1]/2+self.eyeVeloYFiltered[n3]/2
-        }
-    }
+//    func fps120(){
+////        self.faceVeloXOrig.append(0)
+//        self.faceVeloXFiltered.append(0)
+////        self.faceVeloYOrig.append(0)
+//        self.faceVeloYFiltered.append(0)
+////        self.eyePosXOrig.append(0)
+//        self.eyePosXFiltered.append(0)
+////        self.eyeVeloXOrig.append(0)
+//        self.eyeVeloXFiltered.append(0)
+////        self.eyePosYOrig.append(0)
+//        self.eyePosYFiltered.append(0)
+////        self.eyeVeloYOrig.append(0)
+//        self.eyeVeloYFiltered.append(0)
+//        let i=eyePosXFiltered.count
+//        if i>3{
+//            let n1=i-2
+//            let n2=i-3
+//            let n3=i-4
+////            self.faceVeloXOrig[n2]=self.faceVeloXOrig[n1]/2+self.faceVeloXOrig[n3]/2
+//            self.faceVeloXFiltered[n2]=self.faceVeloXFiltered[n1]/2+self.faceVeloXFiltered[n3]/2
+////            self.faceVeloYOrig[n2]=self.faceVeloYOrig[n1]/2+self.faceVeloYOrig[n3]/2
+//            self.faceVeloYFiltered[n2]=self.faceVeloYFiltered[n1]/2+self.faceVeloYFiltered[n3]/2
+//
+////            self.eyePosXOrig[n2]=self.eyePosXOrig[n1]/2+self.eyePosXOrig[n3]/2
+//            self.eyePosXFiltered[n2]=self.eyePosXFiltered[n1]/2+self.eyePosXFiltered[n3]/2
+//
+////            self.eyeVeloXOrig[n2]=self.eyeVeloXOrig[n1]/2+self.eyeVeloXOrig[n3]/2
+//            self.eyeVeloXFiltered[n2]=self.eyeVeloXFiltered[n1]/2+self.eyeVeloXFiltered[n3]/2
+//
+////            self.eyePosYOrig[n2]=self.eyePosYOrig[n1]/2+self.eyePosYOrig[n3]/2
+//            self.eyePosYFiltered[n2]=self.eyePosYFiltered[n1]/2+self.eyePosYFiltered[n3]/2
+//
+////            self.eyeVeloYOrig[n2]=self.eyeVeloYOrig[n1]/2+self.eyeVeloYOrig[n3]/2
+//            self.eyeVeloYFiltered[n2]=self.eyeVeloYFiltered[n1]/2+self.eyeVeloYFiltered[n3]/2
+//        }
+//    }
 //    #if DEBUG
     var debugDisplayX:CGFloat=0
     var debugDisplayY:CGFloat=0
@@ -1599,7 +1612,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         let ww=view.bounds.width
         vogImage=makeVOGimgWakulines(width: mailWidth*18,height: mailHeight)
-        vogImage = makeVOGImage(startImg:vogImage!,width:0, height:0, start:0, end:eyePosXFiltered.count)
+        vogImage = makeVOGImage(startImg:vogImage!,width:0, height:0, start:0, end:eyePosXFiltered4update.count)
         let drawImage = vogImage!.resize(size: CGSize(width:ww*18, height:vogBoxHeight))
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
@@ -1915,21 +1928,53 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         readingDataNow=true
         let n1=eyePosXFiltered4update.count
         let n2=eyePosXFiltered.count
-        for i in n1..<n2{
-            if errArray[i]==true{
-                eyePosXFiltered4update.append(eyePosXFiltered[i])
-                eyePosYFiltered4update.append(eyePosYFiltered[i])
-                eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
-                eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
-                faceVeloXFiltered4update.append(faceVeloXFiltered[i])
-                faceVeloYFiltered4update.append(faceVeloYFiltered[i])
-            }else{
-                eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
-                eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
-                eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
-                eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
-                faceVeloXFiltered4update.append(0)//faceVeloXFiltered[i])
-                faceVeloYFiltered4update.append(0)//faceVeloYFiltered[i])
+        if fpsIs120==true{
+            for i in n1/2..<n2{
+                if errArray[i]==true{
+                    eyePosXFiltered4update.append(eyePosXFiltered[i])
+                    eyePosYFiltered4update.append(eyePosYFiltered[i])
+                    eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
+                    eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
+                    faceVeloXFiltered4update.append(faceVeloXFiltered[i])
+                    faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+                    eyePosXFiltered4update.append(eyePosXFiltered[i])
+                    eyePosYFiltered4update.append(eyePosYFiltered[i])
+                    eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
+                    eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
+                    faceVeloXFiltered4update.append(faceVeloXFiltered[i])
+                    faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+                }else{
+                    eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
+                    eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
+                    eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
+                    eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
+                    faceVeloXFiltered4update.append(0)//faceVeloXFiltered[i])
+                    faceVeloYFiltered4update.append(0)//faceVeloYFiltered[i])
+                    eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
+                    eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
+                    eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
+                    eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
+                    faceVeloXFiltered4update.append(0)//faceVeloXFiltered[i])
+                    faceVeloYFiltered4update.append(0)//faceVeloYFiltered[i])
+                }
+            }
+        }else{
+            for i in n1..<n2{
+                if errArray[i]==true{
+                    eyePosXFiltered4update.append(eyePosXFiltered[i])
+                    eyePosYFiltered4update.append(eyePosYFiltered[i])
+                    eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
+                    eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
+                    faceVeloXFiltered4update.append(faceVeloXFiltered[i])
+                    faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+                }else{
+                    eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
+                    eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
+                    eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
+                    eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
+                    faceVeloXFiltered4update.append(0)//faceVeloXFiltered[i])
+                    faceVeloYFiltered4update.append(0)//faceVeloYFiltered[i])
+                }
             }
         }
         readingDataNow=false
@@ -2002,11 +2047,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawVHITwaves()
             }
         }else if mode==2{//vog
-            if eyePosXFiltered.count<240*10{//||okpMode==1{//240*10以下なら動けない。
+            if eyePosXFiltered4update.count<240*10{//||okpMode==1{//240*10以下なら動けない。
                 return
             }
             let r = view.bounds.width/CGFloat(mailWidth)
-            vogCurpoint = -Int(Float(r)*waveSlider.value*Float(eyePosXFiltered.count-2400))/eyePosXFiltered.count
+            vogCurpoint = -Int(Float(r)*waveSlider.value*Float(eyePosXFiltered4update.count-2400))/eyePosXFiltered4update.count
             wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
         }
     }
@@ -2588,7 +2633,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true{
             return
         }
-        if eyePosXFiltered.count == 0{
+        if eyePosXFiltered4update.count == 0{
             return
         }
         let alert = UIAlertController(title: "VOG96da", message: "Input ID", preferredStyle: .alert)
