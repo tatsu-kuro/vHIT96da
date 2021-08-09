@@ -87,12 +87,12 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q2m-D3-Mdm">
-                                <rect key="frame" x="153" y="830" width="34" height="43"/>
+                                <rect key="frame" x="158" y="837" width="24" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="waveform.path.ecg" catalog="system"/>
+                                <state key="normal" image="waveform.path.ecg.rectangle" catalog="system"/>
                                 <connections>
                                     <action selector="onWaveButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="a15-x5-hPb"/>
                                 </connections>
@@ -100,7 +100,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZn-CJ-Yxe">
                                 <rect key="frame" x="202" y="819" width="45" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemPinkColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="largecircle.fill.circle" catalog="system"/>
@@ -108,10 +108,10 @@
                                     <action selector="onCalcButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1P8-eL-Cbp"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sqt-I0-fRF">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sqt-I0-fRF">
                                 <rect key="frame" x="201" y="833" width="43" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemPinkColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="stop.circle" catalog="system"/>
@@ -181,7 +181,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w2G-cJ-1fV">
                                 <rect key="frame" x="315" y="833" width="25" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemRedColor"/>
+                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="camera" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -189,16 +189,6 @@
                                 <connections>
                                     <segue destination="eZj-22-ehM" kind="show" id="G0I-9n-edA"/>
                                 </connections>
-                            </button>
-                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3A-xm-U7g">
-                                <rect key="frame" x="97" y="771" width="76" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="vHIT horizontal">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k50-f5-jh1">
                                 <rect key="frame" x="130" y="155" width="59" height="58"/>
@@ -216,13 +206,13 @@
                                 <rect key="frame" x="130" y="98" width="59" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-eE-NWD">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-eE-NWD">
                                 <rect key="frame" x="45" y="794" width="54" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title=" MODE" image="rotate.3d" catalog="system">
+                                <state key="normal" title=" MODE" image="arrow.clockwise.circle" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -378,7 +368,6 @@
                         <outlet property="forwardButton" destination="hru-fB-bbG" id="4o4-De-TdZ"/>
                         <outlet property="helpButton" destination="7OA-cL-B3S" id="YzF-8f-1r2"/>
                         <outlet property="listButton" destination="Afb-7h-V8u" id="hfI-Hx-H2E"/>
-                        <outlet property="modeDispButton" destination="O3A-xm-U7g" id="5il-Ju-r1z"/>
                         <outlet property="nextButton" destination="fee-9L-VIg" id="Dl0-G1-Z6x"/>
                         <outlet property="paraButton" destination="nHY-L8-P6Q" id="Sqr-vl-7wU"/>
                         <outlet property="playButton" destination="4bc-dn-f4s" id="bzE-g7-4XG"/>
@@ -926,6 +915,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.clockwise.circle" catalog="system" width="128" height="121"/>
         <image name="backward.frame.fill" catalog="system" width="128" height="93"/>
         <image name="camera" catalog="system" width="128" height="94"/>
         <image name="chevron.left.circle" catalog="system" width="128" height="121"/>
@@ -939,11 +929,10 @@
         <image name="paperplane" catalog="system" width="128" height="118"/>
         <image name="playpause.fill" catalog="system" width="128" height="70"/>
         <image name="questionmark.circle" catalog="system" width="128" height="121"/>
-        <image name="rotate.3d" catalog="system" width="128" height="121"/>
         <image name="stop.circle" catalog="system" width="128" height="121"/>
         <image name="trash.circle" catalog="system" width="128" height="121"/>
         <image name="vhitpara" width="960" height="270"/>
-        <image name="waveform.path.ecg" catalog="system" width="128" height="124"/>
+        <image name="waveform.path.ecg.rectangle" catalog="system" width="128" height="93"/>
         <systemColor name="darkTextColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
@@ -955,6 +944,9 @@
         </systemColor>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

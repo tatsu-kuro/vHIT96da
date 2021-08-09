@@ -181,16 +181,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let topY:CGFloat=0//damyTop.frame.maxY
         let ww:CGFloat=view.bounds.width
         let wh:CGFloat=view.bounds.height
-//        print("windowHeight",wh)//8:667 x:812 se:568
         let bw:CGFloat=55
         let bh:CGFloat=25
         let bh1=bh+7
 //        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
-//         print(versionNumber)
-//        gyroText.text! += "\n\nvHIT96da Version " + versionNumber
-
         let tw:CGFloat=ww-bw-10
-//        let vhit_h:CGFloat=ww/4
         var by:CGFloat=20//vhit_h+20
         if wh>666{//iPhone8の縦以上の大きさの場合
               by=60
@@ -229,6 +224,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             gyroText.frame = CGRect(x:5,y:topY+by+bh1*5,width:ww-10,height: bh*3 )
             
 //            gyroText.text! = "vHIT96da Version " + versionNumber
+            gyroText.isHidden=true
 
             ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*1 ,width: bw, height: bh)
             ratio2input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
@@ -244,9 +240,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText5.frame = CGRect(x:x2,   y: topY+by+bh1*4 ,width: tw, height: bh)
             paraText6.frame = CGRect(x:x2,   y: topY+by+bh1*5 ,width: tw, height: bh)
             paraText7.frame = CGRect(x:x2,   y: topY+by+bh1*6,width: tw,height:bh)
-            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*7+3,width:tw,height:bh)
-            vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*8+10 ,width: ww, height: ww*9/32)
-            gyroText.frame  = CGRect(x:5,    y: topY+by+bh1*8+25+ww/5,width:ww-10,height:bh*6)
+            faceFbutton.isHidden=true
+            markText.isHidden=true
+//            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*7+3,width:tw,height:bh)
+//            vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*8+10 ,width: ww, height: ww*9/32)
+            vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*7+10 ,width: ww, height: ww*9/32)
+//            gyroText.frame  = CGRect(x:5,    y: topY+by+bh1*8+25+ww/5,width:ww-10,height:bh*6)
+            gyroText.frame  = CGRect(x:5,    y: topY+by+bh1*7+25+ww/5,width:ww-10,height:bh*6)
 //            gyroText.text! += "\n\nvHIT96da Version " + versionNumber
             waveWidthinput.frame =  CGRect(x:x1,y: topY+by,width: bw, height: bh)
             widthRangeinput.frame = CGRect(x:x1,y:topY+by+bh1 ,width: bw, height: bh)

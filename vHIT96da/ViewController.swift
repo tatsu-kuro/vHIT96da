@@ -145,7 +145,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogImage:UIImage?
     @IBOutlet weak var cameraButton: UIButton!
     var boxiesFlag:Bool=false
-    @IBOutlet weak var modeDispButton: UIButton!
+//    @IBOutlet weak var modeDispButton: UIButton!
     @IBOutlet weak var changeModeButton: UIButton!
     
     @IBOutlet weak var forwardButton: UIButton!
@@ -493,13 +493,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func showModeText(){
         if calcMode==0{
-            modeDispButton.setTitle("vHIT hori", for: .normal)
+//            modeDispButton.setTitle("vHIT hori", for: .normal)
+            changeModeButton.setTitle(" vHIT hoirizontal", for: .normal)
         }
         else if calcMode==1{
-            modeDispButton.setTitle("vHIT vert", for: .normal)
+//            modeDispButton.setTitle("vHIT vert", for: .normal)
+            changeModeButton.setTitle(" vHIT vertical", for: .normal)
         }
         else{
-            modeDispButton.setTitle("VOG", for: .normal)
+//            modeDispButton.setTitle("VOG", for: .normal)
+            changeModeButton.setTitle(" VOG hor. & vert.", for: .normal)
         }
     }
     @IBAction func onChangeModeButton(_ sender: Any) {
@@ -811,7 +814,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 setVideoButtons(mode: false)
             }
-            modeDispButton.isEnabled = true
+//            modeDispButton.isEnabled = true
             changeModeButton.isEnabled = true
             cameraButton.isEnabled = true
 //            cameraButton.backgroundColor=UIColor.orange
@@ -825,7 +828,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             setVideoButtons(mode: false)
-            modeDispButton.isEnabled = false
+//            modeDispButton.isEnabled = false
             changeModeButton.isEnabled = false
             cameraButton.isEnabled = false
             cameraButton.isEnabled = false// backgroundColor=UIColor.gray
@@ -2220,6 +2223,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         posRatio = getUserDefault(str: "posRatio", ret: 100)
         veloRatio = getUserDefault(str: "veloRatio", ret: 100)
         faceF = getUserDefault(str: "faceF", ret:0)
+        faceF=0
         getVideoGyryoZureDefault()
         calcMode = getUserDefault(str: "calcMode", ret: 0)
         
@@ -2843,9 +2847,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtonProperty(button:listButton,bw:bw,bh:bh,x:10+bwd*0,y:bh0)
         setButtonProperty(button:saveButton,bw:bw,bh:bh,x:10+bwd*1,y:bh0)
         setButtonProperty(button:waveButton,bw:bw,bh:bh,x:10+bwd*2,y:bh0)
-        setButtonProperty(button:calcButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0)
+        setButtonProperty(button:calcButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0-bh/2-distance/2)
 //        calcButton.backgroundColor=UIColor.blue
-        setButtonProperty(button:stopButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0)
+        setButtonProperty(button:stopButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0-bh/2-distance/2)
 //        stopButton.backgroundColor=UIColor.blue
         setButtonProperty(button:paraButton,bw:bw,bh:bh,x:10+bwd*4,y:bh0)
         setButtonProperty(button:cameraButton,bw:bw,bh:bh,x:10+bwd*6,y:bh0)
@@ -2853,8 +2857,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtonProperty(button:backwardButton,bw:bh,bh:bh,x:10+bwd*4,y:bh1)
         setButtonProperty(button:playButton,bw:bh,bh:bh,x:10+bwd*5,y:bh1)
         setButtonProperty(button:forwardButton,bw:bh,bh:bh,x:10+bwd*6,y:bh1)
-        setButtonProperty(button:changeModeButton,bw:bh*2+distance,bh:bh,x:10,y:bh1)
-        setButtonProperty(button:modeDispButton,bw:bh*2+distance,bh:bh,x:10+bwd*2,y:bh1)
+        setButtonProperty(button:changeModeButton,bw:bh*3+distance*2,bh:bh,x:10,y:bh1)
+//        setButtonProperty(button:modeDispButton,bw:bh*0,bh:bh,x:10+bwd*1.5,y:bh1)
     }
     func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,x:CGFloat,y:CGFloat){
         button.frame = CGRect(x:x,y:y,width:bw,height:bh)
@@ -3369,13 +3373,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
 //        print("tapFrame****before")
-        if currentVideoDate.frame.maxY>sender.location(in: view).y{
+        let loc=sender.location(in: view)
+        let waku=eyeWaku_image.frame
+        if loc.x>waku.minX && loc.x<waku.maxX && loc.y>waku.minY && loc.y<waku.maxY{
             if calcFlag==true && debugMode==true{
                 calcFlag=false
+                nextButton.isHidden=false
+                backButton.isHidden=false
+                eraseButton.isHidden=false
+                videoSlider.isEnabled=true
                 return
             }else if calcFlag==false && boxiesFlag==false{
                 debugMode=true
                 vHITcalc()
+                nextButton.isHidden=true
+                backButton.isHidden=true
+                eraseButton.isHidden=true
+                videoSlider.isEnabled=false
                 return
             }
             return
