@@ -851,7 +851,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
 
         setUserDefaults()
-        if nonsavedFlag == true && (waveTuple.count > 0 || eyePosXFiltered.count > 0){
+        if nonsavedFlag == true && (waveTuple.count > 0 || eyePosXFiltered.count > 1){
             setButtons(mode: false)
             var alert = UIAlertController(
                 title: "You are erasing vHIT Data.",
@@ -869,7 +869,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 self.vHITcalc()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,handler:{ action in
-//                self.setButtons(mode: true)
+                self.setButtons(mode: true)
                 //         print("****cancel")
             }))
             // アラート表示
@@ -965,12 +965,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func vHITcalc(){
         var cvError:Int = 0
         calcFlag = true
-        setArraysData(type: 0)//removeAll
-        setArraysData(type: 1)//append(0)
         KalmanInit()
         calcStartTime=CFAbsoluteTimeGetCurrent()
         setButtons(mode: false)
         if debugMode==false{
+            setArraysData(type: 0)//removeAll
+            setArraysData(type: 1)//append(0)
             showBoxies(f: true)
             setWakuImgs(mode: false)
             waveSlider.isHidden=false
@@ -980,6 +980,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if vhitLineView != nil{
                 vhitLineView?.removeFromSuperview()
             }
+            //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
+            readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+            moveGyroData()//gyroDeltastartframe分をズラして
         }else{
             setWakuImgs(mode: true)
             calcButton.isHidden=false
@@ -988,9 +991,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveSlider.isHidden=true
             videoSlider.isHidden=false
         }
-            //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
-        readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
-        moveGyroData()//gyroDeltastartframe分をズラして
  //        var vHITcnt:Int = 0
         //        var startTime=CFAbsoluteTimeGetCurrent()
         timercnt = 0
@@ -1276,13 +1276,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
             //            print("time:",CFAbsoluteTimeGetCurrent()-st)
-            calcFlag = false
-            if debugMode==true{
-                setArraysData(type: 0)
-            }else{
-                if waveTuple.count > 0{
-                    nonsavedFlag = true
-                }
+            calcFlag = false//video 終了
+            if debugMode==false{
+                nonsavedFlag=true
             }
         }
     }
@@ -1941,6 +1937,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 timerCalc.invalidate()
                 setButtons(mode: true)
                 setVideoButtons(mode: true)
+                nextButton.isHidden=false
+                backButton.isHidden=false
                 debugMode=false
             }
             return
