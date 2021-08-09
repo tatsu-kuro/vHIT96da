@@ -144,7 +144,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var vogImage:UIImage?
     @IBOutlet weak var cameraButton: UIButton!
-    var boxF:Bool=false
+    var boxiesFlag:Bool=false
     @IBOutlet weak var modeDispButton: UIButton!
     @IBOutlet weak var changeModeButton: UIButton!
     
@@ -376,7 +376,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
         return assetCollections.object(at:0)
     }
-    @IBAction func eraseVideo(_ sender: Any) {
+    @IBAction func onEraseButton(_ sender: Any) {
  //       videoAsset[videoCurrent]
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
@@ -528,11 +528,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawVogtext()
             }
         }
-        showBoxies(f:boxF)
+        showBoxies(f:boxiesFlag)
     }
  
 
-    @IBAction func backVideo(_ sender: Any) {
+    @IBAction func onBackVideoButton(_ sender: Any) {
         if vhitLineView?.isHidden == false{
             return
         }
@@ -540,7 +540,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoPlayMode=0
         showVideoIroiro(num: -1)
     }
-    @IBAction func nextVideo(_ sender: Any) {
+    @IBAction func onNextVideoButton(_ sender: Any) {
         if vhitLineView?.isHidden == false{
             return
         }
@@ -554,7 +554,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         waveSlider.isHidden = mode
         backwardButton.isEnabled=mode
         forwardButton.isEnabled=mode
-//        playButton.isEnabled=mode
+        playButton.isEnabled=mode
         eraseButton.isHidden = !mode
     }
     func showVideoIroiro(num:Int){//videosCurrentを移動して、諸々表示
@@ -716,7 +716,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func showBoxies(f:Bool){
         if f==true && calcMode == 2{//vog wave
-            boxF=true
+            boxiesFlag=true
             vogBoxView?.isHidden = false
             vogLineView?.isHidden = false
             wave3View?.isHidden=false
@@ -726,9 +726,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroLineView?.isHidden = true
             setBacknext(f: false)
             eraseButton.isHidden=true
-            //       playButton.isEnabled=false
+            playButton.isEnabled=false
         }else if f==true && calcMode != 2{//vhit wave
-            boxF=true
+            boxiesFlag=true
             vogBoxView?.isHidden = true
             vogLineView?.isHidden = true
             wave3View?.isHidden=true
@@ -738,9 +738,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroLineView?.isHidden = false
             setBacknext(f: false)
             eraseButton.isHidden=true
-            //         playButton.isEnabled=false
+            playButton.isEnabled=false
         }else{//no wave
-            boxF=false
+            boxiesFlag=false
             vogBoxView?.isHidden = true
             vogLineView?.isHidden = true
             wave3View?.isHidden=true
@@ -749,7 +749,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroBoxView?.isHidden = true
             gyroLineView?.isHidden = true
             setBacknext(f: true)
-            //         playButton.isEnabled=true
+            playButton.isEnabled=true
             if videoImg.count != 0{
                 eraseButton.isHidden=false
             }else{
@@ -767,7 +767,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return 0
         }
     }
-    @IBAction func showWave(_ sender: Any) {//saveresult record-unwind の２箇所
+    @IBAction func onWaveButton(_ sender: Any) {//saveresult record-unwind の２箇所
         if checkDispMode()==0{
             showBoxies(f: true)
             setVideoButtons(mode: false)
@@ -792,7 +792,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             backButton.isHidden = true
         }
     }
-    @IBAction func stopCalc(_ sender: Any) {
+    @IBAction func onStopButton(_ sender: Any) {
         calcFlag = false
     }
     
@@ -831,20 +831,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             cameraButton.isEnabled = false// backgroundColor=UIColor.gray
          }
     }
-    @IBAction func vHITcalc(_ sender: Any) {
+    @IBAction func onCalcButton(_ sender: Any) {
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             return
         }
 //        videoPlayer.pause()
+//        if calcFlag==true && debugMode==true{
+//            calcFlag=false
+//            debugMode=false
+//            while debugMode==true{//timerでfalseとなるまで待つ
+//                usleep(1000)
+//            }
+//        }
         if videoImg.count==0{
             return
         }
-        if debugMode==false{
-            wakuImg1.isHidden=true
-            wakuImg2.isHidden=true
-            wakuImg3.isHidden=true
-            wakuImg4.isHidden=true
-        }
+
         setUserDefaults()
         if nonsavedFlag == true && (waveTuple.count > 0 || eyePosXFiltered.count > 0){
             setButtons(mode: false)
@@ -860,18 +862,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             // アラートにボタンをつける
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-                self.setButtons(mode: false)
+//                self.setButtons(mode: false)
                 self.vHITcalc()
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,handler:{ action in
-                self.setButtons(mode: true)
+//                self.setButtons(mode: true)
                 //         print("****cancel")
             }))
             // アラート表示
             self.present(alert, animated: true, completion: nil)
             //１：直ぐここと２を通る
         }else{
-            setButtons(mode: false)
+//            setButtons(mode: false)
             vHITcalc()
         }
         //２：直ぐここを通る
@@ -960,62 +962,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func vHITcalc(){
         var cvError:Int = 0
         calcFlag = true
-        setArraysData(type: 0)
-        setArraysData(type: 1)
-//        faceVeloXOrig.removeAll()
-//        faceVeloXFiltered.removeAll()
-//        faceVeloYOrig.removeAll()
-//        faceVeloYFiltered.removeAll()
-//        eyePosXOrig.removeAll()
-//        eyePosXFiltered.removeAll()
-//        eyeVeloXOrig.removeAll()
-//        eyeVeloXFiltered.removeAll()
-//        eyePosYOrig.removeAll()
-//        eyePosYFiltered.removeAll()
-//        eyeVeloYOrig.removeAll()
-//        eyeVeloYFiltered.removeAll()
-//        gyroMoved.removeAll()
-//        errArray.removeAll()
-//        //表示用データ
-//        faceVeloXFiltered4update.removeAll()
-//        faceVeloYFiltered4update.removeAll()
-//        eyePosXFiltered4update.removeAll()
-//        eyeVeloXFiltered4update.removeAll()
-//        eyePosYFiltered4update.removeAll()
-//        eyeVeloYFiltered4update.removeAll()
-//
-//        faceVeloXOrig.append(0)
-//        faceVeloXFiltered.append(0)
-//        faceVeloYOrig.append(0)
-//        faceVeloYFiltered.append(0)
-//        eyePosXOrig.append(0)
-//        eyePosXFiltered.append(0)
-//        eyeVeloXOrig.append(0)
-//        eyeVeloXFiltered.append(0)
-//        eyePosYOrig.append(0)
-//        eyePosYFiltered.append(0)
-//        eyeVeloYOrig.append(0)
-//        eyeVeloYFiltered.append(0)
-//        eyePosXFiltered4update.append(0)
-//        eyePosYFiltered4update.append(0)
-//        eyeVeloXFiltered4update.append(0)
-//        eyeVeloYFiltered4update.append(0)
-//        faceVeloXFiltered4update.append(0)
-//        faceVeloYFiltered4update.append(0)
-//        gyroMoved.append(0)
-//        errArray.append(false)
+        setArraysData(type: 0)//removeAll
+        setArraysData(type: 1)//append(0)
         KalmanInit()
         calcStartTime=CFAbsoluteTimeGetCurrent()
+        setButtons(mode: false)
         if debugMode==false{
             showBoxies(f: true)
+            setWakuImgs(mode: false)
             waveSlider.isHidden=false
-            //        waveSlider.isEnabled=false
             videoSlider.isHidden=true
             vogImage = makeVOGimgWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
             //vHITlinewViewだけは消しておく。その他波は１秒後には消えるので、そのまま。
             if vhitLineView != nil{
                 vhitLineView?.removeFromSuperview()
             }
+        }else{
+            setWakuImgs(mode: true)
+            calcButton.isHidden=false
+            stopButton.isHidden=true
+            calcButton.isEnabled=false
+            waveSlider.isHidden=true
+            videoSlider.isHidden=false
         }
             //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
@@ -1143,10 +1111,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var faceVeloX:CGFloat = 0
                 var faceVeloY:CGFloat = 0
                 
-//                #if DEBUG //for test display
+                //for test display
                 var x:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
                 let y:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
-//                #endif
                 autoreleasepool{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
@@ -1156,6 +1123,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
                         eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
                         eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
+//                        printR(str:"rect:", rct: eyeWithBorderRect)
                         if debugMode == true {
 //                        #if DEBUG
                         //                        画面表示はmain threadで行う
@@ -1308,10 +1276,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             calcFlag = false
             if debugMode==true{
                 setArraysData(type: 0)
-            }
-//            debugMode=false
-            if waveTuple.count > 0{
-                nonsavedFlag = true
+            }else{
+                if waveTuple.count > 0{
+                    nonsavedFlag = true
+                }
             }
         }
     }
@@ -1969,7 +1937,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if calcFlag == false{
                 timerCalc.invalidate()
                 setButtons(mode: true)
-                setWaveSlider()
+                setVideoButtons(mode: true)
                 debugMode=false
             }
             return
@@ -2044,28 +2012,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var calcStartTime=CFAbsoluteTimeGetCurrent()
 
     @objc func update_vHIT(tm: Timer) {
-         if debugMode==true{
-            if calcFlag == false{
-                timerCalc.invalidate()
-                setButtons(mode: true)
-                setWaveSlider()
-                debugMode=false
-            }
-            return
-        }
-        arrayDataCount = getArrayData()
-        if arrayDataCount < 5 {
-            return
-        }
+        
         if debugMode==true{
             if calcFlag == false{
                 timerCalc.invalidate()
                 setButtons(mode: true)
-                setWaveSlider()
+                setVideoButtons(mode: true)
                 debugMode=false
             }
             return
         }
+ 
+        arrayDataCount = getArrayData()
+        if arrayDataCount < 5 {
+            return
+        }
+
         if calcFlag == false {
             vhitCurpoint=0
             //if timer?.isValid == true {
@@ -2557,7 +2519,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
-    @IBAction func saveResult(_ sender: Any) {//vhit
+    @IBAction func onSaveButton(_ sender: Any) {//vhit
         
         if calcFlag == true{
             return
@@ -3146,7 +3108,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
             dispWakus()
-            if boxF==false{
+            if boxiesFlag==false{
                 showBoxies(f: false)
             }else{
                 showBoxies(f: true)
@@ -3399,19 +3361,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    
+    func setWakuImgs(mode:Bool){
+        wakuImg1.isHidden = !mode
+        wakuImg2.isHidden = !mode
+        wakuImg3.isHidden = !mode
+        wakuImg4.isHidden = !mode
+    }
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
-        print("tapFrame****before")
+//        print("tapFrame****before")
         if currentVideoDate.frame.maxY>sender.location(in: view).y{
-            if calcFlag==true {//&& debugMode==true{
+            if calcFlag==true && debugMode==true{
                 calcFlag=false
-            }else{
+                return
+            }else if calcFlag==false && boxiesFlag==false{
                 debugMode=true
-                wakuImg1.isHidden=false
-                wakuImg2.isHidden=false
-                wakuImg3.isHidden=false
-                wakuImg4.isHidden=false
-                vHITcalc(0)
+                vHITcalc()
+                return
             }
             return
         }
