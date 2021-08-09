@@ -841,14 +841,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             return
         }
-//        videoPlayer.pause()
-//        if calcFlag==true && debugMode==true{
-//            calcFlag=false
-//            debugMode=false
-//            while debugMode==true{//timerでfalseとなるまで待つ
-//                usleep(1000)
-//            }
-//        }
         if videoImg.count==0{
             return
         }
@@ -1229,12 +1221,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
 //                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
                         }
-//                        if fpsIs120==true{
-//                            eyePosXOrig.append(eyePosXOrig.last!)
-//                            eyePosYOrig.append(eyePosYOrig.last!)
-////                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
-////                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
-//                        }
+
                         while readingDataNow==true{//--------の間はアレイデータを書き込まない？
                             usleep(1000)//0.001sec
                         }
@@ -1256,15 +1243,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                              eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
                             eyePosYFiltered.append( -1.0*Kalman(value:eyePosYOrig.last!,num:3))
                             let cnt=eyePosXFiltered.count
-//                            eyeVeloXFiltered.append(-12.0*Kalman(value: eyeVeloXOrig.last!,num:4))
-//                            eyeVeloYFiltered.append(-12.0*Kalman(value: eyeVeloYOrig.last!, num: 5))
-//                            if fpsIs120==true{
-//                            eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-3],num:4))
-//                            eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-3],num:5))
-//                            }else{
-                                eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
-                                eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
-//                            }
+                            eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+                            eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
                         }else{
                             errArray.append(false)
                             KalmanInit()
@@ -1273,15 +1253,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyeVeloXFiltered.append(eyeVeloXFiltered.last!)//(-12.0*eyeVeloXOrig.last!)
                             eyeVeloYFiltered.append(eyeVeloYFiltered.last!)//-12.0*eyeVeloYOrig.last!)
                         }
-//                        if fpsIs120==true{
-//                            errArray.append(errArray.last!)
-//                            eyePosXFiltered.append(eyePosXFiltered.last!)
-//                            eyePosYFiltered.append(eyePosYFiltered.last!)
-//                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
-//                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
-//                            faceVeloXFiltered.append(eyeVeloXFiltered.last!)
-//                            faceVeloYFiltered.append(eyeVeloYFiltered.last!)
-//                        }
                         writingDataNow=false
                     }
                     while reader.status != AVAssetReader.Status.reading {
@@ -1309,83 +1280,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         sum5X=0
         sum5Y=0
     }
-//    func getLast5VeloX()->CGFloat{
-//        let n=eyeVeloXOrig.count-1
-//        sum5X += eyeVeloXOrig[n]
-//        if n>4{
-//            sum5X -= eyeVeloXOrig[n-5]
-//        }
-//        return sum5X/5
-////        return eyePosXOrig.last!
-//    }
-//    func getLast5VeloY()->CGFloat{
-//        let n=eyeVeloYOrig.count-1
-//        sum5Y += eyeVeloYOrig[n]
-//        if n>4{
-//            sum5Y -= eyeVeloYOrig[n-5]
-//        }
-//        return sum5Y/5
-////        return eyePosYOrig.last!
-//    }
-//    func getLast5X()->CGFloat{
-//        let n=eyeVeloXFiltered.count-1
-//        sum5X += eyeVeloXFiltered[n]
-//        if n>4{
-//            sum5X -= eyeVeloXFiltered[n-5]
-//        }
-//        return sum5X/5
-////        return eyePosXOrig.last!
-//    }
-//    func getLast5Y()->CGFloat{
-//        let n=eyeVeloYFiltered.count-1
-//        sum5Y += eyeVeloYFiltered[n]
-//        if n>4{
-//            sum5Y -= eyeVeloYFiltered[n-5]
-//        }
-//        return sum5Y/5
-////        return eyePosYOrig.last!
-//    }
-    //    func average5(
-//    func fps120(){
-////        self.faceVeloXOrig.append(0)
-//        self.faceVeloXFiltered.append(0)
-////        self.faceVeloYOrig.append(0)
-//        self.faceVeloYFiltered.append(0)
-////        self.eyePosXOrig.append(0)
-//        self.eyePosXFiltered.append(0)
-////        self.eyeVeloXOrig.append(0)
-//        self.eyeVeloXFiltered.append(0)
-////        self.eyePosYOrig.append(0)
-//        self.eyePosYFiltered.append(0)
-////        self.eyeVeloYOrig.append(0)
-//        self.eyeVeloYFiltered.append(0)
-//        let i=eyePosXFiltered.count
-//        if i>3{
-//            let n1=i-2
-//            let n2=i-3
-//            let n3=i-4
-////            self.faceVeloXOrig[n2]=self.faceVeloXOrig[n1]/2+self.faceVeloXOrig[n3]/2
-//            self.faceVeloXFiltered[n2]=self.faceVeloXFiltered[n1]/2+self.faceVeloXFiltered[n3]/2
-////            self.faceVeloYOrig[n2]=self.faceVeloYOrig[n1]/2+self.faceVeloYOrig[n3]/2
-//            self.faceVeloYFiltered[n2]=self.faceVeloYFiltered[n1]/2+self.faceVeloYFiltered[n3]/2
-//
-////            self.eyePosXOrig[n2]=self.eyePosXOrig[n1]/2+self.eyePosXOrig[n3]/2
-//            self.eyePosXFiltered[n2]=self.eyePosXFiltered[n1]/2+self.eyePosXFiltered[n3]/2
-//
-////            self.eyeVeloXOrig[n2]=self.eyeVeloXOrig[n1]/2+self.eyeVeloXOrig[n3]/2
-//            self.eyeVeloXFiltered[n2]=self.eyeVeloXFiltered[n1]/2+self.eyeVeloXFiltered[n3]/2
-//
-////            self.eyePosYOrig[n2]=self.eyePosYOrig[n1]/2+self.eyePosYOrig[n3]/2
-//            self.eyePosYFiltered[n2]=self.eyePosYFiltered[n1]/2+self.eyePosYFiltered[n3]/2
-//
-////            self.eyeVeloYOrig[n2]=self.eyeVeloYOrig[n1]/2+self.eyeVeloYOrig[n3]/2
-//            self.eyeVeloYFiltered[n2]=self.eyeVeloYFiltered[n1]/2+self.eyeVeloYFiltered[n3]/2
-//        }
-//    }
-//    #if DEBUG
+
     var debugDisplayX:CGFloat=0
     var debugDisplayY:CGFloat=0
-//    #endif
     func showWakuImages(){//結果が表示されていない時、画面上部1/4をタップするとWaku表示
         if videoDura.count<1 {
             return
