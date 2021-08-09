@@ -777,17 +777,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if checkDispMode()==0{
             showBoxies(f: true)
             setVideoButtons(mode: false)
-//            wakuImg1.isHidden=false
-//            wakuImg2.isHidden=false
-//            wakuImg3.isHidden=false
-//            wakuImg4.isHidden=false
         }else{
             showBoxies(f: false)
             setVideoButtons(mode: true)
-//            wakuImg1.isHidden=true
-//            wakuImg2.isHidden=true
-//            wakuImg3.isHidden=true
-//            wakuImg4.isHidden=true
        }
     }
     func setBacknext(f:Bool){//back and next button
@@ -953,8 +945,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             faceVeloYFiltered4update.append(0)
             gyroMoved.append(0)
             errArray.append(false)
-        }else if type==2{
-            
         }
     }
  
@@ -1048,8 +1038,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        let eyeUIImage:UIImage!
         var eyeWithBorderCGImage:CGImage!
         var eyeWithBorderUIImage:UIImage!
-        var eyeBigCGImage:CGImage!
-        var eyeBigUIImage:UIImage!
+//        var eyeBigCGImage:CGImage!
+//        var eyeBigUIImage:UIImage!
         var faceCGImage:CGImage!
         var faceUIImage:UIImage!
         var faceWithBorderCGImage:CGImage!
@@ -1268,9 +1258,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             calcFlag = false//video 終了
             if debugMode==false{
                 nonsavedFlag=true
-//            }else{
-//                videoSlider.isEnabled=true
             }
+//            }else{
+            videoSlider.isEnabled=true
+//            }
         }
     }
 
@@ -1940,6 +1931,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawOnewave(startcount: vhitCurpoint)
             lastVhitpoint = vhitCurpoint
             if waveTuple.count>0{
+                //setするだけか？
                 checksetPos(pos: lastVhitpoint + Int(self.view.bounds.width/2), mode:1)
                 drawVHITwaves()
             }
@@ -2586,7 +2578,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         str2.draw(at: CGPoint(x: 5*r, y: 180*r), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: 428*r, y: 180*4), withAttributes: [
+        str3.draw(at: CGPoint(x: 428*r, y: 180*r), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
         
