@@ -554,6 +554,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func setVideoButtons(mode:Bool){
         videoSlider.isHidden = !mode
+        videoSlider.isEnabled = mode
         waveSlider.isHidden = mode
         backwardButton.isEnabled=mode
         forwardButton.isEnabled=mode
@@ -1151,7 +1152,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                 x: eX,
                                                 y: eY)
                         if maxEyeV < 0.90{
-                            cvError=5//10/240secはcontinue
+                            if cvError==0{//4回空回りした後は1回だけ空回り
+                                cvError=1
+                            }else{
+                                cvError=5//10/240secはcontinue
+                            }
                             eyeWithBorderRect=eyeWithBorderRect0//初期位置に戻す
 //                            faceWithBorderRect=facWithBorderRect0
                         }else{//検出できた時
@@ -1279,6 +1284,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             calcFlag = false//video 終了
             if debugMode==false{
                 nonsavedFlag=true
+//            }else{
+//                videoSlider.isEnabled=true
             }
         }
     }
@@ -1937,6 +1944,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 timerCalc.invalidate()
                 setButtons(mode: true)
                 setVideoButtons(mode: true)
+                videoSlider.isEnabled=true
                 nextButton.isHidden=false
                 backButton.isHidden=false
                 debugMode=false
