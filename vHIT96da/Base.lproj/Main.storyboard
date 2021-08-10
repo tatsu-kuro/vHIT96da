@@ -97,12 +97,12 @@
                                     <action selector="onWaveButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="a15-x5-hPb"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZn-CJ-Yxe">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZn-CJ-Yxe">
                                 <rect key="frame" x="202" y="819" width="45" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemRedColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
                                 <state key="normal" image="largecircle.fill.circle" catalog="system"/>
                                 <connections>
                                     <action selector="onCalcButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1P8-eL-Cbp"/>
@@ -111,10 +111,10 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sqt-I0-fRF">
                                 <rect key="frame" x="201" y="833" width="43" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemRedColor"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="stop.circle" catalog="system"/>
+                                <state key="normal" image="stop.fill" catalog="system"/>
                                 <connections>
                                     <action selector="onStopButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZYP-2r-Mah"/>
                                 </connections>
@@ -930,6 +930,7 @@
         <image name="playpause.fill" catalog="system" width="128" height="70"/>
         <image name="questionmark.circle" catalog="system" width="128" height="121"/>
         <image name="stop.circle" catalog="system" width="128" height="121"/>
+        <image name="stop.fill" catalog="system" width="128" height="113"/>
         <image name="trash.circle" catalog="system" width="128" height="121"/>
         <image name="vhitpara" width="960" height="270"/>
         <image name="waveform.path.ecg.rectangle" catalog="system" width="128" height="93"/>
