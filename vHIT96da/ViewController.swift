@@ -2787,17 +2787,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtonProperty(button:listButton,bw:bw,bh:bh,x:10+bwd*0,y:bh0)
         setButtonProperty(button:saveButton,bw:bw,bh:bh,x:10+bwd*1,y:bh0)
         setButtonProperty(button:waveButton,bw:bw,bh:bh,x:10+bwd*2,y:bh0)
-//        setButtonProperty(button:calcButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0-bh/2-distance/2)
-        calcButton.frame = CGRect(x:10+bwd*3,y:bh0-bh/2-distance/2,width:bw,height: bh)
-        calcButton.layer.cornerRadius=calcButton.layer.frame.width/2
+        calcButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
+//        calcButton.layer.cornerRadius=calcButton.layer.frame.width/2
 //        calcButton.layer.borderColor = UIColor.red.cgColor
-        calcButton.layer.borderWidth=0
+//        calcButton.layer.borderWidth=0
 //        calcButton.backgroundColor=UIColor.blue
-//        setButtonProperty(button:stopButton,bw:bw,bh:bh,x:10+bwd*3,y:bh0-bh/2-distance/2)
-        stopButton.frame = CGRect(x:10+bwd*3,y:bh0-bh/2-distance/2,width:bw,height: bh)
-        stopButton.layer.cornerRadius=calcButton.layer.frame.width/2
+        stopButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
+//        stopButton.layer.cornerRadius=calcButton.layer.frame.width/2
 //        stopButton.layer.borderColor = UIColor.red.cgColor
-        stopButton.layer.borderWidth=0
+//        stopButton.layer.borderWidth=0
 
 //        stopButton.backgroundColor=UIColor.blue
         setButtonProperty(button:paraButton,bw:bw,bh:bh,x:10+bwd*4,y:bh0)

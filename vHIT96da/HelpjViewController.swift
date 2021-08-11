@@ -44,7 +44,8 @@ class HelpjViewController: UIViewController, UIScrollViewDelegate   {
             helpView.image = UIImage(named: "vHITja")
         }else{
             helpView.image = UIImage(named: "VOGja")
-            langButton.isHidden=true
+            langButton.isEnabled=false
+            langButton.alpha=0.5
         }
 //        print(helpView.frame)
 //        hView.frame.origin.x=0
