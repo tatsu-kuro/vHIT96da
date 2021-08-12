@@ -427,10 +427,20 @@
                                 <rect key="frame" x="161" y="775" width="91" height="87"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <color key="tintColor" systemColor="systemPurpleColor"/>
                                 <state key="normal" image="stop.circle" catalog="system"/>
                                 <connections>
                                     <action selector="onClickStopButton:" destination="eZj-22-ehM" eventType="touchUpInside" id="Q0O-pY-RhE"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="efm-48-AwK">
+                                <rect key="frame" x="161" y="776" width="91" height="86"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <state key="normal" image="largecircle.fill.circle" catalog="system"/>
+                                <connections>
+                                    <action selector="onClickStartButton:" destination="eZj-22-ehM" eventType="touchUpInside" id="JuQ-Pd-Fs9"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JIC-Av-JhT">
@@ -523,24 +533,14 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r9f-Ef-4jz">
-                                <rect key="frame" x="341" y="654" width="54" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r9f-Ef-4jz">
+                                <rect key="frame" x="338" y="779" width="25" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Camera"/>
+                                <state key="normal" image="arrow.triangle.2.circlepath.camera" catalog="system"/>
                                 <connections>
                                     <action selector="onCameraChange:" destination="eZj-22-ehM" eventType="touchUpInside" id="I3I-NM-t2a"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="efm-48-AwK">
-                                <rect key="frame" x="161" y="776" width="91" height="86"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" systemColor="systemRedColor"/>
-                                <state key="normal" image="largecircle.fill.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="onClickStartButton:" destination="eZj-22-ehM" eventType="touchUpInside" id="JuQ-Pd-Fs9"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -916,6 +916,7 @@
     </scenes>
     <resources>
         <image name="arrow.clockwise.circle" catalog="system" width="128" height="121"/>
+        <image name="arrow.triangle.2.circlepath.camera" catalog="system" width="128" height="94"/>
         <image name="backward.frame.fill" catalog="system" width="128" height="93"/>
         <image name="camera" catalog="system" width="128" height="94"/>
         <image name="chevron.left.circle" catalog="system" width="128" height="121"/>
