@@ -25,6 +25,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var fpsMax:Int?
     var fps_non_120_240:Int=2
     var maxFps:Double=240
+    @IBOutlet weak var speakerSwitch: UISwitch!
+    @IBOutlet weak var speakerLabel: UILabel!
+    
     var saved2album:Bool=false//albumに保存終了（エラーの時も）
     var fileOutput = AVCaptureMovieFileOutput()
     var gyro = Array<Double>()
@@ -49,6 +52,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBOutlet weak var cameraView: UIImageView!
     
     @IBOutlet weak var cameraChangeButton: UIButton!
+    
+    
+    @IBAction func onSpeakerSwitch(_ sender: UISwitch) {
+        if speakerSwitch.isOn==true{
+            UserDefaults.standard.set(1, forKey: "startSound")
+        }else{
+            UserDefaults.standard.set(0, forKey: "startSound")
+        }
+    }
     
     func setBars(){
         if cameraType==2{
@@ -102,11 +114,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             if timer?.isValid == true {
                 timer!.invalidate()
             }
+            if speakerSwitch.isOn==true{
             if let soundUrl = URL(string:
                                "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
                  AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
                  AudioServicesPlaySystemSound(soundIdx)
              }
+            }
             print("ストップボタンを押した。")
             fileOutput.stopRecording()
         }
@@ -231,15 +245,32 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             telephotoCamera=true
         }
     }
+    func getUserDefault(str:String,ret:Int) -> Int{//getUserDefault_one
+        if (UserDefaults.standard.object(forKey: str) != nil){//keyが設定してなければretをセット
+            return UserDefaults.standard.integer(forKey:str)
+        }else{
+            UserDefaults.standard.set(ret, forKey: str)
+            return ret
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getCameras()
-        if (UserDefaults.standard.object(forKey: "cameraType") != nil){//keyが設定してなければretをセット
-            cameraType=UserDefaults.standard.integer(forKey:"cameraType")
+        cameraType=getUserDefault(str: "cameraType", ret: 0)
+//        if (UserDefaults.standard.object(forKey: "cameraType") != nil){//keyが設定してなければretをセット
+//            cameraType=UserDefaults.standard.integer(forKey:"cameraType")
+//        }else{
+//            cameraType=0
+//            UserDefaults.standard.set(cameraType, forKey: "cameraType")
+//        }
+        let sound=getUserDefault(str: "startSound", ret: 1)
+        if sound==0{
+            speakerSwitch.isOn=false
         }else{
-            cameraType=0
-            UserDefaults.standard.set(cameraType, forKey: "cameraType")
+            speakerSwitch.isOn=true
         }
+        
         print("cameraType",cameraType)
         self.view.backgroundColor = .black
 //        print("maxFps,fps2:",maxFps,fps_non_120_240)
@@ -430,6 +461,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         stopButton.isHidden=true
         stopButton.tintColor=UIColor.orange
         setButtonProperty(button: exitBut, bw: bw, bh:bh, cx:ww-5-bw/2, cy:bpos)
+//        setButtonProperty(button: speakerOffButton, bw: bw, bh:bh, cx:ww-5-bw/2, cy:bpos)
+//        setButtonProperty(button: speakerOnButton, bw: bw, bh:bh, cx:ww-5-bw/2, cy:bpos)
     }
     func setLabelProperty(label:UILabel,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
         label.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
@@ -608,10 +641,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         stopButton.isHidden=true
         currentTime.isHidden=false
         UIApplication.shared.isIdleTimerDisabled = true//スリープしない
+        if speakerSwitch.isOn==true{
         if let soundUrl = URL(string:
                                 "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
             AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
             AudioServicesPlaySystemSound(soundIdx)
+        }
         }
         try? FileManager.default.removeItem(atPath: TempFilePath)
         
