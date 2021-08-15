@@ -543,38 +543,27 @@
                                     <action selector="onCameraChange:" destination="eZj-22-ehM" eventType="touchUpInside" id="I3I-NM-t2a"/>
                                 </connections>
                             </button>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F5r-0V-iO3">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F5r-0V-iO3">
                                 <rect key="frame" x="5" y="49" width="49" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="47" id="TCg-E3-ATa"/>
-                                    <constraint firstAttribute="height" constant="20" id="c2Y-h2-lCd"/>
-                                </constraints>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="onSpeakerSwitch:" destination="eZj-22-ehM" eventType="valueChanged" id="0gi-Z0-bPh"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="sound of start recording" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M4C-Hx-GiW">
-                                <rect key="frame" x="62" y="49" width="342" height="31"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="31" id="Yrb-ol-Txf"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="speaker.wave.2.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="kKr-fG-XGB">
+                                <rect key="frame" x="60" y="44.5" width="42" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" systemColor="systemGreenColor"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hJU-5A-9nT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="M4C-Hx-GiW" firstAttribute="top" secondItem="hJU-5A-9nT" secondAttribute="top" constant="5" id="5cz-sB-iDB"/>
-                            <constraint firstItem="hJU-5A-9nT" firstAttribute="trailing" secondItem="M4C-Hx-GiW" secondAttribute="trailing" constant="10" id="8HQ-aC-Bhs"/>
                             <constraint firstItem="yPU-jJ-jUT" firstAttribute="bottom" secondItem="hJU-5A-9nT" secondAttribute="bottom" id="EEZ-f6-Lrb"/>
                             <constraint firstItem="hJU-5A-9nT" firstAttribute="trailing" secondItem="yPU-jJ-jUT" secondAttribute="trailing" id="EIL-Mk-h9Z"/>
-                            <constraint firstItem="F5r-0V-iO3" firstAttribute="leading" secondItem="hJU-5A-9nT" secondAttribute="leading" constant="5" id="bId-ii-pb0"/>
                             <constraint firstItem="yPU-jJ-jUT" firstAttribute="leading" secondItem="hJU-5A-9nT" secondAttribute="leading" id="hEG-B4-5fV"/>
-                            <constraint firstItem="M4C-Hx-GiW" firstAttribute="leading" secondItem="F5r-0V-iO3" secondAttribute="trailing" constant="10" id="ox7-t9-I4i"/>
-                            <constraint firstItem="F5r-0V-iO3" firstAttribute="top" secondItem="hJU-5A-9nT" secondAttribute="top" constant="5" id="pZ4-iO-khO"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="NTP-MH-QeC" appends="YES" id="oHU-yE-CKH"/>
@@ -595,7 +584,7 @@
                         <outlet property="focusNear" destination="ds1-rt-blQ" id="qjx-Ho-bh6"/>
                         <outlet property="fps120Button" destination="JIC-Av-JhT" id="uJe-i9-bVo"/>
                         <outlet property="fps240Button" destination="iC2-bZ-his" id="5Nr-9W-9R5"/>
-                        <outlet property="speakerLabel" destination="M4C-Hx-GiW" id="yFN-90-LV2"/>
+                        <outlet property="speakerImage" destination="kKr-fG-XGB" id="oDv-WI-Mfi"/>
                         <outlet property="speakerSwitch" destination="F5r-0V-iO3" id="v4y-xI-TAP"/>
                         <outlet property="startButton" destination="efm-48-AwK" id="1RH-Om-UOn"/>
                         <outlet property="stopButton" destination="gM3-vl-q8n" id="MPj-2W-Ee3"/>
@@ -956,6 +945,7 @@
         <image name="paperplane" catalog="system" width="128" height="118"/>
         <image name="playpause.fill" catalog="system" width="128" height="70"/>
         <image name="questionmark.circle" catalog="system" width="128" height="121"/>
+        <image name="speaker.wave.2.circle" catalog="system" width="128" height="121"/>
         <image name="stop.circle" catalog="system" width="128" height="121"/>
         <image name="trash.circle" catalog="system" width="128" height="121"/>
         <image name="vHITja" width="1260" height="2438"/>
@@ -969,6 +959,9 @@
         </systemColor>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

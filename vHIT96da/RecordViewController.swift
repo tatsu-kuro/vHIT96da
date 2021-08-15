@@ -28,6 +28,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBOutlet weak var speakerSwitch: UISwitch!
     @IBOutlet weak var speakerLabel: UILabel!
     
+    @IBOutlet weak var speakerImage: UIImageView!
     var saved2album:Bool=false//albumに保存終了（エラーの時も）
     var fileOutput = AVCaptureMovieFileOutput()
     var gyro = Array<Double>()
@@ -56,9 +57,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     
     @IBAction func onSpeakerSwitch(_ sender: UISwitch) {
         if speakerSwitch.isOn==true{
-            UserDefaults.standard.set(1, forKey: "startSound")
+            UserDefaults.standard.set(1, forKey: "recordSound")
+            speakerImage.tintColor=UIColor.green
         }else{
-            UserDefaults.standard.set(0, forKey: "startSound")
+            UserDefaults.standard.set(0, forKey: "recordSound")
+            speakerImage.tintColor=UIColor.gray
         }
     }
     
@@ -264,13 +267,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //            cameraType=0
 //            UserDefaults.standard.set(cameraType, forKey: "cameraType")
 //        }
-        let sound=getUserDefault(str: "startSound", ret: 1)
+        let sound=getUserDefault(str: "recordSound", ret: 1)
         if sound==0{
             speakerSwitch.isOn=false
+            speakerImage.tintColor=UIColor.gray
         }else{
             speakerSwitch.isOn=true
+            speakerImage.tintColor=UIColor.green
         }
-        
         print("cameraType",cameraType)
         self.view.backgroundColor = .black
 //        print("maxFps,fps2:",maxFps,fps_non_120_240)
@@ -393,6 +397,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     func hideButtons(type:Bool){
+        speakerImage.isHidden=type
+        speakerSwitch.isHidden=type
         startButton.isHidden=type
         stopButton.isHidden=type
         currentTime.isHidden=type
@@ -442,6 +448,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         //startButton
 
+        speakerSwitch.frame=CGRect(x:8,y:bpos-bh*11/4+5,width: 47,height: 31)
+        speakerImage.frame=CGRect(x:60,y:bpos-bh*11/4+5,width: 31,height: 31)
         setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*11/4)
         setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-20-bh*11/4)
         setLabelProperty(label: LEDLow,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-30-bh*13/4)
@@ -642,11 +650,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         currentTime.isHidden=false
         UIApplication.shared.isIdleTimerDisabled = true//スリープしない
         if speakerSwitch.isOn==true{
-        if let soundUrl = URL(string:
-                                "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
-            AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
-            AudioServicesPlaySystemSound(soundIdx)
-        }
+            if let soundUrl = URL(string:
+                                    "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+                AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+                AudioServicesPlaySystemSound(soundIdx)
+            }
         }
         try? FileManager.default.removeItem(atPath: TempFilePath)
         
