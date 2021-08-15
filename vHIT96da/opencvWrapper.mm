@@ -14,33 +14,41 @@
 @implementation opencvWrapper
 -(double) matching:(UIImage *)wide_img narrow:(UIImage *)narrow_img x:(int *)x_ret y:(int *)y_ret
 {
-        cv::Mat wide_mat;
-        cv::Mat narrow_mat;
-        cv::Mat return_mat;
-        UIImageToMat(wide_img, wide_mat);
-        UIImageToMat(narrow_img, narrow_mat);
-
-        // テンプレートマッチング
-//        cv::cvtColor(wide_mat, wide_mat, CV_BGRA2GRAY);
-//        cv::cvtColor(narrow_mat,narrow_mat,CV_BGR2GRAY);
-          try
-        {
-            cv::matchTemplate(wide_mat, narrow_mat, return_mat, CV_TM_CCOEFF_NORMED);
-           // ...
-        }
-        catch( cv::Exception& e )
-        {
+    cv::Mat wide_mat;
+    cv::Mat narrow_mat;
+    cv::Mat return_mat;
+    // input_imageをcv::Mat型へ変換
+    UIImageToMat(wide_img, wide_mat);
+    UIImageToMat(narrow_img, narrow_mat);
+    // 変換用Matの宣言
+//    cv::Mat gray_wide_mat;
+//    cv::Mat gray_narrow_mat;
+//    cv::cvtColor(wide_mat,gray_wide_mat,CV_BGR2GRAY);
+//    cv::cvtColor(narrow_mat,gray_narrow_mat,CV_BGR2GRAY);
+//    image = MatToUIImage(gray_mat);
+    try
+    {
+//        cv::matchTemplate(gray_wide_mat, gray_narrow_mat, return_mat, CV_TM_CCOEFF_NORMED);
+        cv::matchTemplate(wide_mat, narrow_mat, return_mat, CV_TM_CCOEFF_NORMED);
+           // "TM_SQDIFF",
+//            "TM_SQDIFF_NORMED",
+//            "TM_CCORR",
+//            "TM_CCORR_NORMED",
+//            "TM_CCOEFF",
+//            "TM_CCOEFF_NORMED",...
+    }
+    catch( cv::Exception& e )
+    {
           //  const char* err_msg = e.what();
-            return -2.0;
-        }
-        
-        // 最大のスコアの場所を探す
-        cv::Point max_pt;
-        double maxVal;
-        cv::minMaxLoc(return_mat, NULL, &maxVal, NULL, &max_pt);
-        *x_ret = max_pt.x;
-        *y_ret = max_pt.y;
-        return maxVal;//恐らく見つかった時は　0.7　より大の模様
+        return -2.0;
+    }
+    // 最大のスコアの場所を探す
+    cv::Point max_pt;
+    double maxVal;
+    cv::minMaxLoc(return_mat, NULL, &maxVal, NULL, &max_pt);
+    *x_ret = max_pt.x;
+    *y_ret = max_pt.y;
+    return maxVal;//恐らく見つかった時は　0.7　より大の模様
 }
 -(UIImage *)GrayScale:(UIImage *)image{
     // 変換用Matの宣言
@@ -122,6 +130,7 @@
     return MatToUIImage(frame);//input_img; //---⑤
 }*/
 -(double) matching_gray:(UIImage *)wide_img narrow:(UIImage *)narrow_img x:(int *)x_ret y:(int *)y_ret
+//-(double) matching:(UIImage *)wide_img narrow:(UIImage *)narrow_img x:(int *)x_ret y:(int *)y_ret
 {
     cv::Mat wide_mat;
     cv::Mat narrow_mat;

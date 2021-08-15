@@ -111,7 +111,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             okpMode=0
             faceFbutton.isOn=false
             faceF=0
-            videoGyroZure = 10
+            videoGyroZure = 20
             ratio1 = 100
             ratio2 = 100
             wakuLength = 3

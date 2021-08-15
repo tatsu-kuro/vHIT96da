@@ -274,7 +274,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var veloRatio:Int = 100//vog
     var calcMode:Int?//0:HIThorizontal 1:HITvertical 2:VOG
     var faceF:Int = 0
-    var videoGyroZure:Int = 10
+    var videoGyroZure:Int = 20
     //解析結果保存用配列
     
     var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
@@ -1240,8 +1240,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             KalmanInit()
                             eyePosXFiltered.append( -1.0*eyePosXOrig.last!)
                             eyePosYFiltered.append( -1.0*eyePosYOrig.last!)
-                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)//(-12.0*eyeVeloXOrig.last!)
-                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)//-12.0*eyeVeloYOrig.last!)
+                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
+                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                         }
                         writingDataNow=false
                     }
@@ -2030,11 +2030,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
-    func getVideoGyryoZureDefault(){
-       
-        if UserDefaults.standard.object(forKey:"videoGyroZure") != nil{
-            videoGyroZure=UserDefaults.standard.integer(forKey: "videoGyroZure")
-        }else{
+//    func getVideoGyryoZureDefault(){
+//
+//        if UserDefaults.standard.object(forKey:"videoGyroZure") != nil{
+//            videoGyroZure=UserDefaults.standard.integer(forKey: "videoGyroZure")
+//        }else{
 //            let vw=view.bounds.width
 //            let vh=view.bounds.height
 //            if UIDevice.self.current.model.contains("touch"){//Touch7:320x568->30:120fps
@@ -2050,11 +2050,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            }else{
 //                videoGyroZure=10
 //            }
-            videoGyroZure=10
-            UserDefaults.standard.set(videoGyroZure, forKey: "videoGyroZure")
-            print("videoGyroZure",videoGyroZure)
-        }
-    }
+//            videoGyroZure=10
+//            UserDefaults.standard.set(videoGyroZure, forKey: "videoGyroZure")
+//            print("videoGyroZure",videoGyroZure)
+//        }
+//    }
     func getUserDefault(str:String,ret:Bool)->Bool{
         if (UserDefaults.standard.object(forKey: str) != nil){//keyがなければretをセット
             return UserDefaults.standard.bool(forKey:str)
@@ -2163,15 +2163,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         posRatio = getUserDefault(str: "posRatio", ret: 100)
         veloRatio = getUserDefault(str: "veloRatio", ret: 100)
         faceF = getUserDefault(str: "faceF", ret:0)
-        faceF=0
-        getVideoGyryoZureDefault()
+        faceF=0//toriaezu tukawanai
+//        getVideoGyryoZureDefault()
+        videoGyroZure = getUserDefault(str: "videoGyroZure", ret: 20)
         calcMode = getUserDefault(str: "calcMode", ret: 0)
         
         let width=Int(view.bounds.width/2)
         let height=Int(view.bounds.height/3)
         wakuE.origin.x = CGFloat(getUserDefault(str: "wakuE_x", ret:width))
         wakuE.origin.y = CGFloat(getUserDefault(str: "wakuE_y", ret:height))
-        wakuLength = getUserDefault(str: "wakuLength", ret: 5)
+        wakuLength = getUserDefault(str: "wakuLength", ret: 3)
         if wakuLength<3{
             wakuLength=3
         }
