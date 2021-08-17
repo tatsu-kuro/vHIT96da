@@ -25,6 +25,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             print("in viewDidLayoutSubviews")
             print(topPadding,bottomPadding,leftPadding,rightPadding)    // iPhoneXなら44, その他は20.0
         }
+        setTexts()
  //        setButtons()
     }
 //    @IBOutlet weak var markdispSwitch: UISwitch!
@@ -91,7 +92,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBAction func tapBack(_ sender: Any) {
         numpadOff(0)
     }
-
+//    override var prefersStatusBarHidden: Bool {
+//          return true
+//      }
     @IBAction func numpadOff(_ sender: Any) {
         wakuLengthInput.endEditing(true)
         widthRangeinput.endEditing(true)
@@ -178,26 +181,32 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
     }
     func setTexts(){
-        let topY:CGFloat=0//damyTop.frame.maxY
+        print("toppadding:",topPadding,vhitpng.frame.minY,vhitpng.frame.maxY)
+        let topYVOG=vhitpng.frame.minY
+        var topYvHIT=vhitpng.frame.maxY+10//:CGFloat=0//damyTop.frame.maxY
         let ww:CGFloat=view.bounds.width
         let wh:CGFloat=view.bounds.height
         let bw:CGFloat=55
         let bh:CGFloat=25
         let bh1=bh+7
+        
+        paraText5.text = "matching square width"
+        paraText6.text = "max moving width / frame"
+
 //        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         let tw:CGFloat=ww-bw-10
-        var by:CGFloat=20//vhit_h+20
-        if wh>666{//iPhone8の縦以上の大きさの場合
-              by=60
-        }
+        let by:CGFloat=10//vhit_h+20
+//        if wh>666{//iPhone8の縦以上の大きさの場合
+//              by=60
+//        }
         let x1:CGFloat=3
         let x2=x1+bw+5
 //        paraText5.text = "角膜反射光源枠の幅"
 //        paraText6.text="角膜上反射光源の移動（検出）幅"
 
         if calcMode==2{
-            paraText3.text = "眼球偏位位置表示の高さ％"
-            paraText4.text = "眼球偏位速度表示の高さ％"
+            paraText3.text = "eye position height ％"
+            paraText4.text = "eye velocity height ％"
             markText.isHidden = true
             faceFbutton.isHidden = true
             vhitpng.isHidden=true
@@ -210,54 +219,50 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             ratio1input.isHidden = false
             ratio2input.isHidden = false
             paraText7.isHidden = true
-//            gyroText.isHidden = true
-            paraText2.text = " ** VOG 波形表示高さの調整 **"
-//            paraText3.text = "眼球偏位位置表示の高さ％"
-//            paraText4.text = "眼球偏位速度表示の高さ％"
-//            paraText5.text = "角膜反射光源枠の幅"
-//            paraText6.text="角膜反射光源の移動（検出）幅"
-            paraText2.frame   = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
-            paraText3.frame   = CGRect(x:x2,   y: topY+by+bh1*1,width: tw, height: bh)
-            paraText4.frame   = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
-            paraText5.frame   = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
-            paraText6.frame   = CGRect(x:x2,   y: topY+by+bh1*4 ,width: tw, height: bh)
-            gyroText.frame = CGRect(x:5,y:topY+by+bh1*5,width:ww-10,height: bh*3 )
+            paraText2.text = " ** VOG wave height **"
+            paraText2.frame   = CGRect(x:x2,   y: topYVOG+by ,width: tw, height: bh)
+            paraText3.frame   = CGRect(x:x2,   y: topYVOG+by+bh1*1,width: tw, height: bh)
+            paraText4.frame   = CGRect(x:x2,   y: topYVOG+by+bh1*2 ,width: tw, height: bh)
+            paraText5.frame   = CGRect(x:x2,   y: topYVOG+by+bh1*3 ,width: tw, height: bh)
+            paraText6.frame   = CGRect(x:x2,   y: topYVOG+by+bh1*4 ,width: tw, height: bh)
+            gyroText.frame = CGRect(x:5,y:topYVOG+by+bh1*5,width:ww-10,height: bh*3 )
             
 //            gyroText.text! = "vHIT96da Version " + versionNumber
             gyroText.isHidden=true
 
-            ratio1input.frame = CGRect(x:x1,y: topY+by+bh1*1 ,width: bw, height: bh)
-            ratio2input.frame = CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
-            eyeBinput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
-            wakuLengthInput.frame = CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
+            ratio1input.frame = CGRect(x:x1,y: topYVOG+by+bh1*1 ,width: bw, height: bh)
+            ratio2input.frame = CGRect(x:x1,y: topYVOG+by+bh1*2 ,width: bw, height: bh)
+            eyeBinput.frame = CGRect(x:x1,y: topYVOG+by+bh1*4 ,width: bw, height: bh)
+            wakuLengthInput.frame = CGRect(x:x1,y: topYVOG+by+bh1*3 ,width: bw, height: bh)
         }else{//vhit
-            paraText3.text = "眼球回転速度表示の高さ％"
-            paraText4.text = "頭位回転速度表示の高さ％"
-            paraText1.frame = CGRect(x:x2,   y: topY+by ,width: tw, height: bh)
-            paraText2.frame = CGRect(x:x2,   y: topY+by+bh1 ,width: tw, height: bh)
-            paraText3.frame = CGRect(x:x2,   y: topY+by+bh1*2 ,width: tw, height: bh)
-            paraText4.frame = CGRect(x:x2,   y: topY+by+bh1*3 ,width: tw, height: bh)
-            paraText5.frame = CGRect(x:x2,   y: topY+by+bh1*4 ,width: tw, height: bh)
-            paraText6.frame = CGRect(x:x2,   y: topY+by+bh1*5 ,width: tw, height: bh)
-            paraText7.frame = CGRect(x:x2,   y: topY+by+bh1*6,width: tw,height:bh)
+//            topY=ww*390/937
+            paraText1.text = "(1) from A to D msec"
+            paraText2.text = "(2) from B to C msec"
+            paraText3.text = "eye velocity height ％"
+            paraText4.text = "head velocity height ％"
+            paraText7.text = "gyro and video time lag"
+            paraText1.frame = CGRect(x:x2,   y: topYvHIT+by ,width: tw, height: bh)
+            paraText2.frame = CGRect(x:x2,   y: topYvHIT+by+bh1 ,width: tw, height: bh)
+            paraText3.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*2 ,width: tw, height: bh)
+            paraText4.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*3 ,width: tw, height: bh)
+            paraText5.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*4 ,width: tw, height: bh)
+            paraText6.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*5 ,width: tw, height: bh)
+            paraText7.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*6,width: tw,height:bh)
             faceFbutton.isHidden=true
             markText.isHidden=true
 //            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*7+3,width:tw,height:bh)
-//            vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*8+10 ,width: ww, height: ww*9/32)
-            vhitpng.frame   = CGRect(x:0,    y: topY+by+bh1*7+10 ,width: ww, height: ww*9/32)
-//            gyroText.frame  = CGRect(x:5,    y: topY+by+bh1*8+25+ww/5,width:ww-10,height:bh*6)
-            gyroText.frame  = CGRect(x:5,    y: topY+by+bh1*7+25+ww/5,width:ww-10,height:bh*6)
-//            gyroText.text! += "\n\nvHIT96da Version " + versionNumber
-            waveWidthinput.frame =  CGRect(x:x1,y: topY+by,width: bw, height: bh)
-            widthRangeinput.frame = CGRect(x:x1,y:topY+by+bh1 ,width: bw, height: bh)
-            ratio1input.frame =     CGRect(x:x1,y: topY+by+bh1*2 ,width: bw, height: bh)
-            ratio2input.frame =     CGRect(x:x1,y: topY+by+bh1*3 ,width: bw, height: bh)
-            wakuLengthInput.frame = CGRect(x:x1,y: topY+by+bh1*4 ,width: bw, height: bh)
-            eyeBinput.frame =       CGRect(x:x1,y: topY+by+bh1*5 ,width: bw, height: bh)
-            videoGyroZureinput.frame = CGRect(x:x1,y: topY+by+bh1*6 ,width: bw, height: bh)
-            faceFbutton.frame =     CGRect(x:x1,y: topY+by+bh1*7 ,width: bw, height: bh)
+//            vhitpng.frame   = CGRect(x:5,    y: topPadding/*topY+by+bh1*7+10*/ ,width: ww-10, height: (ww-10)*390/937)
+            gyroText.frame  = CGRect(x:5,    y: topYvHIT+by+bh1*7+25+ww/4,width:0,height:0)//ww-10,height:bh*6)
+            waveWidthinput.frame =  CGRect(x:x1,y: topYvHIT+by,width: bw, height: bh)
+            widthRangeinput.frame = CGRect(x:x1,y:topYvHIT+by+bh1 ,width: bw, height: bh)
+            ratio1input.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*2 ,width: bw, height: bh)
+            ratio2input.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*3 ,width: bw, height: bh)
+            wakuLengthInput.frame = CGRect(x:x1,y: topYvHIT+by+bh1*4 ,width: bw, height: bh)
+            eyeBinput.frame =       CGRect(x:x1,y: topYvHIT+by+bh1*5 ,width: bw, height: bh)
+            videoGyroZureinput.frame = CGRect(x:x1,y: topYvHIT+by+bh1*6 ,width: bw, height: bh)
+            faceFbutton.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*7 ,width: bw, height: bh)
         }
-        keyDown.frame = CGRect(x:ww-80-10, y: topY+by,width: 80, height: 40)
+        keyDown.frame = CGRect(x:ww-80-10, y: topYvHIT+by,width: 80, height: 40)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -281,7 +286,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.ratio1input.keyboardType = UIKeyboardType.numberPad
         self.ratio2input.keyboardType = UIKeyboardType.numberPad
         self.videoGyroZureinput.keyboardType = UIKeyboardType.numberPad
-        setTexts()
+//        setTexts()
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
