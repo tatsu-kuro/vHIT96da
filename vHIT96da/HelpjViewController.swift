@@ -12,7 +12,7 @@ class HelpjViewController: UIViewController, UIScrollViewDelegate   {
 //    @IBOutlet weak var hView:UIImageView!
 //    @IBOutlet weak var scrollView: UIScrollView!
     var calcMode:Int?
-    var jap_eng:Int=1
+    var jap_eng:Int=0
     
     @IBOutlet weak var helpView: UIImageView!
     @IBOutlet weak var exitButton: UIButton!
@@ -21,40 +21,43 @@ class HelpjViewController: UIViewController, UIScrollViewDelegate   {
     @IBAction func langChan(_ sender: Any) {
         if jap_eng==0{
             jap_eng=1
-            helpView.image=UIImage(named:"vHITen")
+            if calcMode != 2{
+                helpView.image=UIImage(named:"vHITen")
+            }else{
+                helpView.image=UIImage(named:"VOGen")
+            }
             langButton.setTitle("Japanese", for: .normal)
             
         }else{
             jap_eng=0
-            helpView.image=UIImage(named:"vHITja")
+            if calcMode != 2{
+                helpView.image=UIImage(named:"vHITja")
+            }else{
+                helpView.image=UIImage(named:"VOGja")
+            }
             langButton.setTitle("English", for: .normal)
         }
     }
-    
+    func firstLang() -> String {
+        let prefLang = Locale.preferredLanguages.first
+        return prefLang!
+    }
+//    func langArray() -> [String] {
+//            let prefLang = Locale.preferredLanguages
+//            print(prefLang)
+//            return prefLang
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        scrollView.delegate = self
-//        scrollView.maximumZoomScale = 2.0
-//        scrollView.minimumZoomScale = 1.0
+        print("language:",firstLang())
+        if firstLang().contains("ja"){
+            jap_eng=1//langChan()で表示するので０でなくて１
+        }else{
+            jap_eng=0
+        }
         langButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
-//        self.view.addSubview(scrollView)
-        if calcMode != 2 {
-            helpView.image = UIImage(named: "vHITen")
-            langButton.setTitle("Japanese", for: .normal)
-        }else{
-            helpView.image = UIImage(named: "VOGja")
-            langButton.isEnabled=false
-            langButton.alpha=0.5
-        }
-//        print(helpView.frame)
-//        hView.frame.origin.x=0
-//        hView.frame.origin.y=0
-//        hView.frame.size.width=self.view.bounds.width
-//        hView.frame.size.height=self.view.bounds.height - 45
-        //        imageView.frame = scrollView.frame
-//        scrollView.addSubview(hView)
+        langChan(0)
     }
     
 //    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
