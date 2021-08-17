@@ -1052,7 +1052,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
         let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
-        let eyeBigRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: view.bounds.width/10)
+        let eyeBigRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: view.bounds.width/5)//10)
         
         let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
         let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
@@ -1070,6 +1070,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:startCIImage)
         var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
         let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:startCIImage)
+        
+//        printR(str: "eyeBigRect", rct: eyeBigRect)
         
 //        let maxWidthWithBorder=videoWidth-eyeWithBorderRect.width-5
 //        let maxHeightWithBorder=videoHeight-eyeWithBorderRect.height-5
