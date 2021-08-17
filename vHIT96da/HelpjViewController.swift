@@ -12,7 +12,7 @@ class HelpjViewController: UIViewController, UIScrollViewDelegate   {
 //    @IBOutlet weak var hView:UIImageView!
 //    @IBOutlet weak var scrollView: UIScrollView!
     var calcMode:Int?
-    var jap_eng:Int=0
+    var jap_eng:Int=1
     
     @IBOutlet weak var helpView: UIImageView!
     @IBOutlet weak var exitButton: UIButton!
@@ -41,7 +41,8 @@ class HelpjViewController: UIViewController, UIScrollViewDelegate   {
         exitButton.layer.cornerRadius = 5
 //        self.view.addSubview(scrollView)
         if calcMode != 2 {
-            helpView.image = UIImage(named: "vHITja")
+            helpView.image = UIImage(named: "vHITen")
+            langButton.setTitle("Japanese", for: .normal)
         }else{
             helpView.image = UIImage(named: "VOGja")
             langButton.isEnabled=false
