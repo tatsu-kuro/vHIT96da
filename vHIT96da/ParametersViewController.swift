@@ -7,7 +7,13 @@
 //
 
 import UIKit
-
+extension String {
+    // 半角数字の判定
+    func isAlphanumeric() -> Bool {
+        return self.range(of: "[^0-9]+", options: .regularExpression) == nil && self != ""
+//        return self.range(of: "[^,:0123456789]", options: .regularExpression) == nil && self != ""
+    }
+}
 class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     var topPadding:CGFloat = 0
@@ -180,10 +186,63 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             self.faceFbutton.isOn=true
         }
     }
+    /*
+    func onEditEttParaButton() {
+        
+        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+//        alert.textFields![0].text!="kiiii"
+        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
+            // 入力したテキストをコンソールに表示
+            let textField = alert.textFields![0] as UITextField
+            let ettString:String = textField.text!
+            if ettString.isAlphanumeric(){//} isOnly(structuredBy: "0123456789:,") == true
+//                if ettMode==0{
+//                    ettModeTxt0=ettString
+//                }else if ettMode==1{
+//                    ettModeTxt1=ettString
+//                }else if ettMode==2{
+//                    ettModeTxt2=ettString
+//                }else{
+//                    ettModeTxt3=ettString
+//                }
+//                setUserDefaults()
+//                paraTxt6.text=ettString
+                print(ettString)
+            }else{
+                let dialog = UIAlertController(title: "", message: "0123456789 only.", preferredStyle: .alert)
+                //ボタンのタイトル
+                dialog.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                //実際に表示させる
+                self.present(dialog, animated: true, completion: nil)
+//                print(",:0123456789以外は受け付けません")
+            }
+//            print("\(String(describing: textField.text))")
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+        }
+        // UIAlertControllerにtextFieldを追加
+        alert.addTextField { (textField:UITextField!) -> Void in
+            textField.keyboardType = UIKeyboardType.default//.numberPad
+//            if self.ettMode==0{
+//                textField.text=self.ettModeTxt0
+//            }else if self.ettMode==1{
+//                textField.text=self.ettModeTxt1
+//            }else if self.ettMode==2{
+//                textField.text=self.ettModeTxt2
+//            }else{
+//                textField.text=self.ettModeTxt3
+//            }
+        }
+        alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
+        alert.addAction(saveAction)
+        present(alert, animated: true, completion: nil)
+    }
+    */
     func setTexts(){
         print("toppadding:",topPadding,vhitpng.frame.minY,vhitpng.frame.maxY)
-        let topYVOG=vhitpng.frame.minY
-        var topYvHIT=vhitpng.frame.maxY+10//:CGFloat=0//damyTop.frame.maxY
+        let topYVOG = keyDown.frame.minY// vhitpng.frame.minY
+        var topYvHIT = keyDown.frame.minY// vhitpng.frame.maxY+10//:CGFloat=0//damyTop.frame.maxY
         let ww:CGFloat=view.bounds.width
         let wh:CGFloat=view.bounds.height
         let bw:CGFloat=55
@@ -236,33 +295,34 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthInput.frame = CGRect(x:x1,y: topYVOG+by+bh1*3 ,width: bw, height: bh)
         }else{//vhit
 //            topY=ww*390/937
-            paraText1.text = "(1) from A to D msec"
-            paraText2.text = "(2) from B to C msec"
+            paraText1.text = "(1) time(ms) from A to D"
+            paraText2.text = "(2) time(ms) from B to C"
             paraText3.text = "eye velocity height ％"
             paraText4.text = "head velocity height ％"
-            paraText7.text = "gyro and video time lag"
-            paraText1.frame = CGRect(x:x2,   y: topYvHIT+by ,width: tw, height: bh)
-            paraText2.frame = CGRect(x:x2,   y: topYvHIT+by+bh1 ,width: tw, height: bh)
-            paraText3.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*2 ,width: tw, height: bh)
-            paraText4.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*3 ,width: tw, height: bh)
-            paraText5.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*4 ,width: tw, height: bh)
-            paraText6.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*5 ,width: tw, height: bh)
-            paraText7.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*6,width: tw,height:bh)
+            paraText7.text = "eye and head time lag"
+            paraText1.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*5 ,width: tw, height: bh)
+            paraText2.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*6 ,width: tw, height: bh)
+            paraText3.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*0 ,width: tw, height: bh)
+            paraText4.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*1 ,width: tw, height: bh)
+            paraText5.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*3 ,width: tw, height: bh)
+            paraText6.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*4 ,width: tw, height: bh)
+            paraText7.frame = CGRect(x:x2,   y: topYvHIT+by+bh1*2,width: tw,height:bh)
             faceFbutton.isHidden=true
             markText.isHidden=true
 //            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*7+3,width:tw,height:bh)
 //            vhitpng.frame   = CGRect(x:5,    y: topPadding/*topY+by+bh1*7+10*/ ,width: ww-10, height: (ww-10)*390/937)
             gyroText.frame  = CGRect(x:5,    y: topYvHIT+by+bh1*7+25+ww/4,width:0,height:0)//ww-10,height:bh*6)
-            waveWidthinput.frame =  CGRect(x:x1,y: topYvHIT+by,width: bw, height: bh)
-            widthRangeinput.frame = CGRect(x:x1,y:topYvHIT+by+bh1 ,width: bw, height: bh)
-            ratio1input.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*2 ,width: bw, height: bh)
-            ratio2input.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*3 ,width: bw, height: bh)
-            wakuLengthInput.frame = CGRect(x:x1,y: topYvHIT+by+bh1*4 ,width: bw, height: bh)
-            eyeBinput.frame =       CGRect(x:x1,y: topYvHIT+by+bh1*5 ,width: bw, height: bh)
-            videoGyroZureinput.frame = CGRect(x:x1,y: topYvHIT+by+bh1*6 ,width: bw, height: bh)
+            waveWidthinput.frame =  CGRect(x:x1,y: topYvHIT+by+bh1*5 ,width: bw, height: bh)
+            widthRangeinput.frame = CGRect(x:x1,y: topYvHIT+by+bh1*6 ,width: bw, height: bh)
+            ratio1input.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*0 ,width: bw, height: bh)
+            ratio2input.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*1 ,width: bw, height: bh)
+            wakuLengthInput.frame = CGRect(x:x1,y: topYvHIT+by+bh1*3 ,width: bw, height: bh)
+            eyeBinput.frame =       CGRect(x:x1,y: topYvHIT+by+bh1*4 ,width: bw, height: bh)
+            videoGyroZureinput.frame = CGRect(x:x1,y: topYvHIT+by+bh1*2 ,width: bw, height: bh)
             faceFbutton.frame =     CGRect(x:x1,y: topYvHIT+by+bh1*7 ,width: bw, height: bh)
+            vhitpng.frame = CGRect(x:5,y:topYvHIT+by+bh1*7,width:ww-10,height: (ww-10)*440/940)
         }
-        keyDown.frame = CGRect(x:ww-80-10, y: topYvHIT+by,width: 80, height: 40)
+//        keyDown.frame = CGRect(x: ww-80-10, y: topYVOG,width: 80, height: 40)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
