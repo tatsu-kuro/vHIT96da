@@ -964,12 +964,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveSlider.isHidden=false
             videoSlider.isHidden=true
             vogImage = makeVOGimgWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
-            //vHITlinewViewだけは消しておく。その他波は１秒後には消えるので、そのまま。
+        
             if wave3View != nil{
                 wave3View?.removeFromSuperview()
             }
             if vhitLineView != nil{
                 vhitLineView?.removeFromSuperview()
+            }
+            if gyroLineView != nil{
+                gyroLineView?.removeFromSuperview()
             }
             //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
             readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
@@ -1905,14 +1908,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             arrayDataCount = getArrayData()//念の為
             timerCalc.invalidate()
             setButtons(mode: true)
-            UIApplication.shared.isIdleTimerDisabled = false//do sleep
-            vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: arrayDataCount)
-            drawVOG2endPt(end: 0)
-            if vogLineView != nil{
-                vogLineView?.removeFromSuperview()//waveを消して
+            autoreleasepool{
+                UIApplication.shared.isIdleTimerDisabled = false//do sleep
+                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: arrayDataCount)
+                drawVOG2endPt(end: 0)
+                if vogLineView != nil{
+                    vogLineView?.removeFromSuperview()//waveを消して
+                }
+                drawVogtext()//文字を表示
+                setWaveSlider()
             }
-            drawVogtext()//文字を表示
-            setWaveSlider()
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれない
         }else{
             #if DEBUG
@@ -1921,11 +1926,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  
 //            let cntTemp=getPosXFilteredCount()// eyePosXFiltered.count
             autoreleasepool{
-            vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
+                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
+                
+                lastArraycount=arrayDataCount
+                drawVOG2endPt(end: arrayDataCount)
+                drawVogtext()
             }
-            lastArraycount=arrayDataCount
-            drawVOG2endPt(end: arrayDataCount)
-            drawVogtext()
         }
     }
 //    func getPosXFilteredCount()->Int{//読み込みを宣言し、書き込みが終わるのを待って、個数を読む
