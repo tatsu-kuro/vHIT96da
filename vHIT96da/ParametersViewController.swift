@@ -16,24 +16,24 @@ extension String {
 }
 class ParametersViewController: UIViewController, UITextFieldDelegate {
     
-    var topPadding:CGFloat = 0
-    var bottomPadding:CGFloat = 0
-    var leftPadding:CGFloat = 0
-    var rightPadding:CGFloat = 0
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if #available(iOS 11.0, *) {
-            // viewDidLayoutSubviewsではSafeAreaの取得ができている
-            topPadding = self.view.safeAreaInsets.top
-            bottomPadding = self.view.safeAreaInsets.bottom
-            leftPadding = self.view.safeAreaInsets.left
-            rightPadding = self.view.safeAreaInsets.right
-            print("in viewDidLayoutSubviews")
-            print(topPadding,bottomPadding,leftPadding,rightPadding)    // iPhoneXなら44, その他は20.0
-        }
-        setTexts()
- //        setButtons()
-    }
+//    var topPadding:CGFloat = 0
+//    var bottomPadding:CGFloat = 0
+//    var leftPadding:CGFloat = 0
+//    var rightPadding:CGFloat = 0
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        if #available(iOS 11.0, *) {
+//            // viewDidLayoutSubviewsではSafeAreaの取得ができている
+//            topPadding = self.view.safeAreaInsets.top
+//            bottomPadding = self.view.safeAreaInsets.bottom
+//            leftPadding = self.view.safeAreaInsets.left
+//            rightPadding = self.view.safeAreaInsets.right
+//            print("in viewDidLayoutSubviews")
+//            print(topPadding,bottomPadding,leftPadding,rightPadding)    // iPhoneXなら44, その他は20.0
+//        }
+//        setTexts()
+// //        setButtons()
+//    }
 //    @IBOutlet weak var markdispSwitch: UISwitch!
 //    @IBOutlet weak var markdispText: UILabel!
     @IBOutlet weak var markText: UILabel!
@@ -42,7 +42,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var defaultButton: UIButton!
     
-    @IBOutlet weak var damyTop: UILabel!
+//    @IBOutlet weak var damyTop: UILabel!
  
     var okpMode:Int = 0
 
@@ -240,7 +240,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
     */
     func setTexts(){
-        print("toppadding:",topPadding,vhitpng.frame.minY,vhitpng.frame.maxY)
+//        print("toppadding:",topPadding,vhitpng.frame.minY,vhitpng.frame.maxY)
         let topYVOG = keyDown.frame.minY// vhitpng.frame.minY
         var topYvHIT = keyDown.frame.minY// vhitpng.frame.maxY+10//:CGFloat=0//damyTop.frame.maxY
         let ww:CGFloat=view.bounds.width
@@ -346,7 +346,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.ratio1input.keyboardType = UIKeyboardType.numberPad
         self.ratio2input.keyboardType = UIKeyboardType.numberPad
         self.videoGyroZureinput.keyboardType = UIKeyboardType.numberPad
-//        setTexts()
+        setTexts()
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
