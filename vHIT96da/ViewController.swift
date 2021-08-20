@@ -1982,6 +1982,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 timerCalc.invalidate()
                 setButtons(mode: true)
                 setVideoButtons(mode: true)
+                videoSlider.isEnabled=true
+                nextButton.isHidden=false
+                backButton.isHidden=false
                 debugMode=false
             }
             return
