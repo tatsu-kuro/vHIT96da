@@ -881,29 +881,17 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="vHITja" translatesAutoresizingMaskIntoConstraints="NO" id="Am6-gR-aqp">
                                 <rect key="frame" x="0.0" y="44" width="414" height="773"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2021-08-25" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aco-ZH-bye">
-                                <rect key="frame" x="95" y="837" width="224" height="15"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="15" id="cRt-bh-bhK"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E8V-fc-BMe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="Aco-ZH-bye" secondAttribute="bottom" constant="10" id="N8W-Gi-SWh"/>
-                            <constraint firstItem="Aco-ZH-bye" firstAttribute="leading" secondItem="Qiw-FJ-LWg" secondAttribute="trailing" constant="10" id="Qj4-TC-0Ub"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="Qiw-FJ-LWg" secondAttribute="bottom" constant="5" id="T3i-UR-i91"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="fPw-uT-6g8" secondAttribute="bottom" constant="5" id="Wtb-U0-3iu"/>
                             <constraint firstItem="fPw-uT-6g8" firstAttribute="top" secondItem="Am6-gR-aqp" secondAttribute="bottom" constant="5" id="b4S-Yx-urB"/>
                             <constraint firstItem="Am6-gR-aqp" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" id="dXB-KJ-cR5"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="trailing" secondItem="fPw-uT-6g8" secondAttribute="trailing" constant="5" id="fwC-Ow-EK2"/>
                             <constraint firstItem="Qiw-FJ-LWg" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" constant="5" id="jRu-lN-br8"/>
-                            <constraint firstItem="fPw-uT-6g8" firstAttribute="leading" secondItem="Aco-ZH-bye" secondAttribute="trailing" constant="10" id="l9a-md-EU2"/>
                             <constraint firstItem="Am6-gR-aqp" firstAttribute="top" secondItem="E8V-fc-BMe" secondAttribute="top" id="miv-8g-S4x"/>
                             <constraint firstItem="Am6-gR-aqp" firstAttribute="trailing" secondItem="E8V-fc-BMe" secondAttribute="trailing" id="rJX-go-PzD"/>
                         </constraints>
