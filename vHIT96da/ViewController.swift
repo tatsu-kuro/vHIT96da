@@ -1244,8 +1244,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
                             eyePosYFiltered.append( -1.0*Kalman(value:eyePosYOrig.last!,num:3))
                             let cnt=eyePosXFiltered.count
-                            eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
-                            eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+                            if calcMode != 2{//vHIT
+                                eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
+                                eyeVeloYFiltered.append(12*(eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
+                            }else{//vogでは、２重にフィフターをかけると体裁が良いが、それで良いのだろうか？
+                                eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+                                eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+                            }
                         }else{
                             errArray.append(false)
                             KalmanInit()
@@ -1822,6 +1827,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     var arrayDataCount:Int=0
     var lastPosXFiltered:Int=0
+    
+    func average(filtered: [CGFloat],i:Int) -> CGFloat {//i!=0 なら直前データとの平均を返す
+        if i==0{
+            return filtered[i]
+        }else{
+            return (filtered[i]+filtered[i-1])/2
+        }
+    }
+    
     func getArrayData()->Int{//データ取得して、そのデータを表示用に利用する。
         while writingDataNow==true{
             usleep(1000)
@@ -1833,18 +1847,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if fpsIs120==true{
             for i in n1/2..<n2{
                 if errArray[i]==true{
-                    let data1=eyePosXFiltered[i]
-                    eyePosXFiltered4update.append(data1)
-                    eyePosXFiltered4update.append(data1)
-                    let data2=eyePosYFiltered[i]
-                    eyePosYFiltered4update.append(data2)
-                    eyePosYFiltered4update.append(data2)
-                    let data3=eyeVeloXFiltered[i]
-                    eyeVeloXFiltered4update.append(data3)
-                    eyeVeloXFiltered4update.append(data3)
-                    let data4=eyeVeloYFiltered[i]
-                    eyeVeloYFiltered4update.append(data4)
-                    eyeVeloYFiltered4update.append(data4)
+                    eyePosXFiltered4update.append(average(filtered:eyePosXFiltered,i:i))
+                    eyePosXFiltered4update.append(eyePosXFiltered[i])
+                    eyePosYFiltered4update.append(average(filtered:eyePosYFiltered,i:i))
+                    eyePosYFiltered4update.append(eyePosYFiltered[i])
+                    eyeVeloXFiltered4update.append(average(filtered:eyeVeloXFiltered,i:i))
+                    eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
+                    eyeVeloYFiltered4update.append(average(filtered:eyeVeloYFiltered,i:i))
+                    eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
 //                    faceVeloXFiltered4update.append(faceVeloXFiltered[i])
 //                    faceVeloYFiltered4update.append(faceVeloYFiltered[i])
                 }else{
