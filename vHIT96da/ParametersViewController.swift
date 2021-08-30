@@ -293,6 +293,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText3.text = "eye velocity height ％"
             paraText4.text = "head velocity height ％"
             paraText7.text = "eye and head time lag"
+            markText.text = "use of the mark on face"
             paraText1.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
             paraText2.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
             paraText3.frame = CGRect(x:x2,   y: topY+bh1*0 ,width: tw, height: bh)
@@ -300,8 +301,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText5.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             paraText6.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             paraText7.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
-            faceFbutton.isHidden=true
-            markText.isHidden=true
+            let vhitpngH=(ww-10)*440/940
+            markText.frame  = CGRect(x:x2,  y: topY+bh1*7+vhitpngH+10,width:tw,height: bh)
+//            faceFbutton.isHidden=true
+//            markText.isHidden=true
 //            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*7+3,width:tw,height:bh)
             gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             waveWidthinput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
@@ -311,8 +314,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             eyeBinput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             videoGyroZureinput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
-            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*7 ,width: bw, height: bh)
-            vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height: (ww-10)*440/940)
+            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: bw, height: bh)
+            vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
         }
     }
     override func viewDidLoad() {
