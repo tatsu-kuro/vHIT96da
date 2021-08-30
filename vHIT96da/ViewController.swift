@@ -527,7 +527,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 calcDrawVHIT()
             }
         }else{
-            rectType=0
+            wakuEyeFace=0
             if eyePosXFiltered.count>0  && videoCurrent != -1{
                 vogCurpoint=0
                 drawVOG2endPt(end: 0)
@@ -1363,7 +1363,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         wakuShowFace_image.layer.cornerRadius = 3
         wakuShowEye_image.image=UIeye
         wakuShowFace_image.image=UIfac
-        if rectType == 0{
+        if wakuEyeFace == 0{
             wakuShowEye_image.layer.borderColor = UIColor.green.cgColor
             wakuShowFace_image.layer.borderColor = UIColor.gray.cgColor
         }else{
@@ -2250,7 +2250,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func dispWakus(){
         let nullRect:CGRect = CGRect(x:0,y:0,width:0,height:0)
         if faceF==0{
-            rectType=0
+            wakuEyeFace=0
         }
         //        printR(str:"wakuE:",rct: wakuE)
         eyeWaku_image.frame=CGRect(x:(wakuE.origin.x)-15,y:wakuE.origin.y-15,width:(wakuE.size.width)+30,height: wakuE.size.height+30)
@@ -2260,7 +2260,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             faceWaku_image.frame=CGRect(x:(wakuF.origin.x)-15,y:wakuF.origin.y-15,width:wakuF.size.width+30,height: wakuF.size.height+30)
         }
         
-        if rectType==0{
+        if wakuEyeFace==0{
             eyeWaku_image.layer.borderColor = UIColor.green.cgColor
             eyeWaku_image.backgroundColor = UIColor.clear
             eyeWaku_image.layer.borderWidth = 1.0
@@ -3279,7 +3279,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 
     var leftrightFlag:Bool = false
-    var rectType:Int = 0//0:eye 1:face 2:outer -1:何も選択されていない
+    var wakuEyeFace:Int = 0//0:eye 1:face 2:outer -1:何も選択されていない
     var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
     var stRect:CGRect = CGRect(x:0,y:0,width:0,height:0)//tapしたrectのtapした時のrect
     var changePo:CGPoint = CGPoint(x:0,y:0)
@@ -3302,9 +3302,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //タップして動かすと、ここに来る
                 //                rectType = checkWaks(po: pos)//0:枠設定 -1:違う
                 if calcMode==2{
-                    rectType=0
+                    wakuEyeFace=0
                 }
-                if rectType==0{
+                if wakuEyeFace==0{
                     stRect=wakuE
                 }else{
                     stRect=wakuF
@@ -3320,11 +3320,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if pos.y>view.bounds.height*3/4{
                     return
                 }
-                if rectType > -1 {//枠の設定の場合
+                if wakuEyeFace > -1 {//枠の設定の場合
                     //                    let w3=view.bounds.width/3
                     let ww=view.bounds.width
                     let wh=view.bounds.height
-                    if rectType == 0 {
+                    if wakuEyeFace == 0 {
                         if faceF==0 || calcMode==2{//EyeRect
                             let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
                             wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et)
@@ -3366,8 +3366,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
 //        print("tapFrame****before")
         let loc=sender.location(in: view)
-        let waku=eyeWaku_image.frame
-        if loc.x>waku.minX && loc.x<waku.maxX && loc.y>waku.minY && loc.y<waku.maxY{
+        let eyeFrame=eyeWaku_image.frame
+        let faceFrame=faceWaku_image.frame
+        if loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY || loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY{
             if calcFlag==true && debugMode==true{
                 calcFlag=false
                 nextButton.isHidden=false
@@ -3413,10 +3414,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             if faceF==1 && calcMode != 2{
                 print("faceF:",faceF)
-                if rectType==0{
-                    rectType=1
+                if wakuEyeFace==0{
+                    wakuEyeFace=1
                 }else{
-                    rectType=0
+                    wakuEyeFace=0
                 }
                 dispWakus()
                 showWakuImages()
