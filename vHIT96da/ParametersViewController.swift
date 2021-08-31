@@ -50,7 +50,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
  
     var okpMode:Int = 0
 
-    var faceF:Int?
+    var useFaceMark:Int?
     var widthRange:Int = 0
     var waveWidth:Int = 0
     var eyeBorder:Int = 0
@@ -89,9 +89,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func faceFchan(_ sender: UISwitch) {
         if sender.isOn{
-            faceF=1
+            useFaceMark=1
         }else{
-            faceF=0
+            useFaceMark=0
         }
     }
     // became first responder
@@ -123,7 +123,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBorder=10
             okpMode=0
             faceFbutton.isOn=false
-            faceF=0
+            useFaceMark=0
             videoGyroZure = 20
             ratio1 = 100
             ratio2 = 100
@@ -184,7 +184,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.ratio1input.text = "\(ratio1)"
         self.ratio2input.text = "\(ratio2)"
         self.wakuLengthInput.text = "\(wakuLength)"
-        if faceF==0{
+        if useFaceMark==0{
             self.faceFbutton.isOn=false
         }else{
             self.faceFbutton.isOn=true
