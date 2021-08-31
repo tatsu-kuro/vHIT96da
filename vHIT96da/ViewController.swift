@@ -768,6 +768,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            eraseButton.isHidden=true//とりあえず
         }
     }
+    //checkDispMode() 1-vHIT 2-VOG 3-non
     func checkDispMode()->Int{
         if vhitBoxView?.isHidden==false {//vHIT on
             return 1
@@ -1969,6 +1970,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        readingDataNow=false
 //        return ret
 //    }
+    var lastVhitpoint:Int = -2//これはなんだろう→あとでチェック！！！
     @objc func onWaveSliderValueChange(){
         let mode=checkDispMode()
 //        print("modes:",mode,calcMode)
@@ -3261,7 +3263,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 
     func moveWakus
-    (rect:CGRect,stRect:CGRect,stPo:CGPoint,movePo:CGPoint,hani:CGRect) -> CGRect{
+    (rect:CGRect,stRect:CGRect,movePo:CGPoint,hani:CGRect) -> CGRect{
         var r:CGRect
         r = rect//2種類の枠を代入、変更してreturnで返す
         let dx:CGFloat = movePo.x
@@ -3283,43 +3285,54 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return r
     }
-
-    var leftrightFlag:Bool = false
-    var wakuEyeFace:Int = 0//0:eye 1:face 2:outer -1:何も選択されていない
-    var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
-    var stRect:CGRect = CGRect(x:0,y:0,width:0,height:0)//tapしたrectのtapした時のrect
-    var changePo:CGPoint = CGPoint(x:0,y:0)
-    var endPo:CGPoint = CGPoint(x:0,y:0)
-    var lastslowVideo:Int = -2
-    var lastVogpoint:Int = -2
-    var lastVhitpoint:Int = -2
-    var lastmoveX:Int = -2
-    var lastmoveXgyro:Int = -2//vHIT用
+    var temp_y_1finger:CGFloat=100//head%
+    var temp_x_1finger:CGFloat=10//zure
+    var temp_y_2finger:CGFloat=100//head% eye%
+    var startPo_1finger = CGPoint(x:0,y:0)
+    var startY_2finger:CGFloat=0
+    var wakuEyeFace:Int = 0//0:eye 1:face
+//    var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
+    var startRect:CGRect = CGRect(x:0,y:0,width:0,height:0)//tapしたrectのtapした時のrect
     @IBAction func panGesture(_ sender: UIPanGestureRecognizer) {
         if calcFlag == true{
             return
         }
+//        print(sender.numberOfTouches)
         let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
         if sender.state == .began {
             
-            stPo = sender.location(in: self.view)
-            if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
+//            stPo = sender.location(in: self.view)
+            if checkDispMode()==0{
+//            if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
                 //タップして動かすと、ここに来る
                 //                rectType = checkWaks(po: pos)//0:枠設定 -1:違う
-                if calcMode==2{
-                    wakuEyeFace=0
-                }
+//                if calcMode==2{
+//                    wakuEyeFace=0
+//                }
                 if wakuEyeFace==0{
-                    stRect=wakuE
+                    startRect=wakuE
                 }else{
-                    stRect=wakuF
+                    startRect=wakuF
+                }
+            }else if checkDispMode()==1{//vhit
+                if sender.numberOfTouches==1{
+                    startPo_1finger=CGPoint(x:temp_x_1finger,y:temp_y_1finger)
+                }else{
+                    startY_2finger=temp_y_2finger
                 }
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
-                
-                print("vhit")
+                if sender.numberOfTouches==1{
+                    temp_x_1finger=startPo_1finger.x + move.x
+                    temp_y_1finger=startPo_1finger.y + move.y
+                    print("vhit-1:",temp_x_1finger,temp_y_1finger)
+                    
+                }else{
+                    temp_y_2finger=startY_2finger + move.y
+                    print("vhit-2:",temp_y_2finger)
+                }
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
                 print("vog")
             }else{//枠 changed
@@ -3336,13 +3349,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et)
 //                        }else{//vHIT && faceF==true FaceRect
                             let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani:et)
+                            wakuE = moveWakus(rect:wakuE,stRect: startRect,movePo: move,hani:et)
 //                        }
                     }else{
                         //let xt=wakuE.origin.x
                         //let w12=view.bounds.width/12
                         let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                        wakuF = moveWakus(rect:wakuF,stRect:stRect, stPo: stPo,movePo: move,hani:et)
+                        wakuF = moveWakus(rect:wakuF,stRect:startRect,movePo: move,hani:et)
                     }
                     dispWakus()
                     showWakuImages()
@@ -3534,4 +3547,5 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        readingDataNow = false
         drawVHITwaves()
     }
+    
 }
