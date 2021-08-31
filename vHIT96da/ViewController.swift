@@ -3285,11 +3285,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return r
     }
-    var temp_y_1finger:CGFloat=100//head%
-    var temp_x_1finger:CGFloat=10//zure
-    var temp_y_2finger:CGFloat=100//head% eye%
+//    var y_1finger:CGFloat=100//head%
+//    var x_1finger:CGFloat=10//zure
+    var zure:Int=10
+    var ratio_eye:Int=100
+    var ratio_head:Int=100
+//    var temp_y1_2finger:CGFloat=100//head% eye%
     var startPo_1finger = CGPoint(x:0,y:0)
-    var startY_2finger:CGFloat=0
+    var startY_2finger:CGFloat=0//eye%
+//    var startY2_2finger:CGFloat=0//head%
     var wakuEyeFace:Int = 0//0:eye 1:face
 //    var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
     var startRect:CGRect = CGRect(x:0,y:0,width:0,height:0)//tapしたrectのtapした時のrect
@@ -3317,21 +3321,42 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }else if checkDispMode()==1{//vhit
                 if sender.numberOfTouches==1{
-                    startPo_1finger=CGPoint(x:temp_x_1finger,y:temp_y_1finger)
+                    startPo_1finger=CGPoint(x:CGFloat(zure),y:CGFloat(ratio_head))
                 }else{
-                    startY_2finger=temp_y_2finger
+                    startY_2finger=CGFloat(ratio_eye)
                 }
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
-                if sender.numberOfTouches==1{
-                    temp_x_1finger=startPo_1finger.x + move.x
-                    temp_y_1finger=startPo_1finger.y + move.y
-                    print("vhit-1:",temp_x_1finger,temp_y_1finger)
+                if sender.numberOfTouches==1{//横でzureGyroHead,縦でratio_headを変更
+                    zure=Int(startPo_1finger.x + move.x/10)
+                    ratio_head=Int(startPo_1finger.y - move.y)
+                    if ratio_head>2000{
+                        ratio_head=2000
+                    }else if ratio_head<10{
+                        ratio_head=10
+                    }
+                    if zure>100{
+                        zure=100
+                    }else if zure<1{
+                        zure=1
+                    }
+                    print("vhit-1:",zure,ratio_head)
                     
-                }else{
-                    temp_y_2finger=startY_2finger + move.y
-                    print("vhit-2:",temp_y_2finger)
+                }else{//縦でratio_headを変更して、その変更倍率でratio_eyeを変更
+                    ratio_head=Int((startY_2finger - move.y)*CGFloat(ratio_head)/CGFloat(ratio_eye))
+                    ratio_eye=Int(startY_2finger - move.y)
+                    if ratio_head>2000{
+                        ratio_head=2000
+                    }else if ratio_head<10{
+                        ratio_head=10
+                    }
+                    if ratio_eye>2000{
+                        ratio_eye=2000
+                    }else if ratio_eye<10{
+                        ratio_eye=10
+                    }
+                    print("vhit-2:",ratio_eye,ratio_head)
                 }
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
                 print("vog")
