@@ -512,13 +512,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         calcMode! += 1
-        if calcMode!>2{
+        if calcMode==3{
             calcMode=0
+        }
+        if calcMode==2{//VOGの時はwakuはeyeにする
+            wakuEyeFace=0
         }
         showModeText()
         setButtons(mode: true)
-//        dispWakus()
-//        showWakuImages()
+        dispWakus()
+        showWakuImages()
         calcStartTime=CFAbsoluteTimeGetCurrent()//所要時間の起点 update_vog
         if calcMode != 2{
             if eyePosXFiltered.count>0 && videoCurrent != -1{
@@ -2011,7 +2014,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             return
         }
- 
         arrayDataCount = getArrayData()
         if arrayDataCount < 5 {
             return
@@ -3316,25 +3318,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
                 
-                
+                print("vhit")
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
-                
+                print("vog")
             }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
                     return
                 }
-                if wakuEyeFace > -1 {//枠の設定の場合
-                    //                    let w3=view.bounds.width/3
+//                if wakuEyeFace > -1 {//枠の設定の場合
+//                    //                    let w3=view.bounds.width/3
                     let ww=view.bounds.width
                     let wh=view.bounds.height
-                    if wakuEyeFace == 0 {
-                        if useFaceMark==0 || calcMode==2{//EyeRect
-                            let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
-                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et)
-                        }else{//vHIT && faceF==true FaceRect
+                    if wakuEyeFace == 0 {//eyeRect
+//                        if useFaceMark==0 || calcMode==2{//EyeRect
+//                            let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
+//                            wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani: et)
+//                        }else{//vHIT && faceF==true FaceRect
                             let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
                             wakuE = moveWakus(rect:wakuE,stRect: stRect,stPo: stPo,movePo: move,hani:et)
-                        }
+//                        }
                     }else{
                         //let xt=wakuE.origin.x
                         //let w12=view.bounds.width/12
@@ -3344,7 +3346,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     dispWakus()
                     showWakuImages()
                     setUserDefaults()
-                }
+//                }
             }
         }else if sender.state == .ended{
             setUserDefaults()
