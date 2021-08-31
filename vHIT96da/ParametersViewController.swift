@@ -246,7 +246,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     func setTexts(){
         let topY = keyDown.frame.minY// vhitpng.frame.minY
         let ww:CGFloat=view.bounds.width
-        let wh:CGFloat=view.bounds.height
+//        let wh:CGFloat=view.bounds.height
         let bw:CGFloat=55
         let bh:CGFloat=25
         let bh1=bh+7

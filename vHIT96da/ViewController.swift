@@ -508,7 +508,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func onChangeModeButton(_ sender: Any) {
-        if calcFlag == true {//|| calcMode != 2{
+        if calcFlag == true {
             return
         }
         calcMode! += 1
@@ -1107,6 +1107,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             usleep(1000)//0.001sec
         }
         if matchingTestMode==true && wakuEyeFace==1{//faceUIImageが探せているかチェック
+            //defaultではeyeUIImageを探す
             eyeUIImage=faceUIImage
             eyeWithBorderRect=faceWithBorderRect
             eyeWithBorderRect0=faceWithBorderRect
