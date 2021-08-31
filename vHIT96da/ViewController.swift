@@ -3371,7 +3371,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let loc=sender.location(in: view)
         let eyeFrame=eyeWaku_image.frame
         let faceFrame=faceWaku_image.frame
-        if loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY || loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY{
+        if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
             if calcFlag==true && matchingTestMode==true{
                 calcFlag=false
                 nextButton.isHidden=false
