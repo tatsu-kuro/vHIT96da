@@ -2468,6 +2468,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 rlPt=260
             }
+            
+//            for n in 0..<120 {
+//                let px = rlPt*r + CGFloat(n*2)*r
+//                let py = CGFloat(gyroWs[i][n])*r + 90*r
+//                let point = CGPoint(x:px,y:py)
+//                pointList.append(point)
+//            }
+            
+            
+            
             for n in 0..<120 {
                 let px = rlPt*r + CGFloat(n*2)*r
                 if vHITDisplayMode==1{
@@ -2477,9 +2487,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                 }else{
                     py = CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
-                    if waveTuple[i].0 == 0{
-                        py = -CGFloat(gyroWs[i][n])*r + posY0
-                    }
+//                    if waveTuple[i].0 == 0{
+//                        py = -CGFloat(gyroWs[i][n])*r + posY0
+//                    }
                 }
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
@@ -3345,6 +3355,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        print(sender.numberOfTouches)
         let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
+        if sender.location(in: view).y>videoSlider.frame.minY-20{//
+            return
+        }
         if sender.state == .began {
             
 //            stPo = sender.location(in: self.view)
