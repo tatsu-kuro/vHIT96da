@@ -2410,7 +2410,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var pointList = Array<CGPoint>()
         let drawPath = UIBezierPath()
         var rlPt:CGFloat = 0
-        
+        //r:4(mail)  r:1(screen)
         var posY0=135*r
         if vHITDisplayMode==0{
             posY0=90*r
@@ -2520,6 +2520,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         drawPath.stroke()
         drawPath.removeAllPoints()
+        if r>3{//mailでは太線なし
+            return
+        }
         for i in 0..<waveTuple.count{//太く表示する
             if waveTuple[i].3 == 1 || (waveTuple[i].3 == 2 && waveTuple[i].2 == 1){
                 if waveTuple[i].0 == 0{
