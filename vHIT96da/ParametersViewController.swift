@@ -50,6 +50,23 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
  
     var okpMode:Int = 0
 
+    @IBOutlet weak var changeDisplayLabel: UILabel!
+    @IBOutlet weak var changeDisplayButton: UIButton!
+    func displayMode(){
+        if vHITDisplayMode == 0{
+            changeDisplayLabel.text="type A"
+        }else{
+            changeDisplayLabel.text="type B"
+        }
+    }
+    @IBAction func onChangeDisplayButton(_ sender: Any) {
+        if vHITDisplayMode == 0{
+           vHITDisplayMode=1
+        }else{
+            vHITDisplayMode=0
+        }
+        displayMode()
+    }
     var useFaceMark:Int?
     var widthRange:Int = 0
     var waveWidth:Int = 0
@@ -59,6 +76,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var ratio2:Int = 0
     var wakuLength:Int = 0
     var calcMode:Int?
+    var vHITDisplayMode:Int = 0
     @IBOutlet weak var gyroText: UILabel!
     @IBOutlet weak var paraText1: UILabel!
     @IBOutlet weak var paraText2: UILabel!
@@ -286,6 +304,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             ratio2input.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             eyeBinput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
+            changeDisplayButton.isHidden=true
+            changeDisplayLabel.isHidden=true
         }else{//vhit
 //            topY=ww*390/937
             paraText1.text = "(1) time(ms) from A to D"
@@ -316,6 +336,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             videoGyroZureinput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: bw, height: bh)
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
+            changeDisplayLabel.frame = CGRect(x:x1+ww/2+5,y: topY+bh1*8+vhitpngH+20 ,width: ww/2, height: bh)
+            changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+20 ,width: ww/2, height: bh)
+            changeDisplayButton.layer.cornerRadius=3
+            displayMode()
         }
     }
     override func viewDidLoad() {

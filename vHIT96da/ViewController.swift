@@ -231,6 +231,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vhitLineView: UIImageView?//vhits
     var vogLineView:UIImageView?//vog
     var vogBoxView:UIImageView?//vog
+    var vHITDisplayMode:Int=0
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var eraseButton: UIButton!
@@ -2217,6 +2218,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        getVideoGyryoZureDefault()
         videoGyroZure = getUserDefault(str: "videoGyroZure", ret: 20)
         calcMode = getUserDefault(str: "calcMode", ret: 0)
+        vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:0)
         
         let width=Int(view.bounds.width/2)
         let height=Int(view.bounds.height/3)
@@ -2253,6 +2255,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UserDefaults.standard.set(Int(wakuF.origin.x), forKey: "wakuF_x")
         UserDefaults.standard.set(Int(wakuF.origin.y), forKey: "wakuF_y")
         UserDefaults.standard.set(calcMode,forKey: "calcMode")
+        UserDefaults.standard.set(vHITDisplayMode,forKey: "vHITDisplayMode")
     }
     
     func dispWakus(){
@@ -2392,7 +2395,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var pointList = Array<CGPoint>()
         let drawPath = UIBezierPath()
         var rlPt:CGFloat = 0
-        let posY0=135*r
+        
+        var posY0=135*r
+        if vHITDisplayMode==0{
+            posY0=90*r
+        }
         for i in 0..<waveTuple.count{//右のvHIT
             if waveTuple[i].2 == 0 || waveTuple[i].0 == 0{
                 continue
@@ -2420,14 +2427,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         drawPath.stroke()
         drawPath.removeAllPoints()
+        var py:CGFloat=0
         for i in 0..<waveTuple.count{//左のvHIT
             if waveTuple[i].2 == 0 || waveTuple[i].0 == 1{
                 continue
             }
             for n in 0..<120 {
                 let px = CGFloat(n*2)*r//260 or 0
-                var py:CGFloat = 0
-                py = -CGFloat(eyeWs[i][n])*r + posY0//表示変更
+//                var py:CGFloat = 0
+                if vHITDisplayMode==1{
+                    py = -CGFloat(eyeWs[i][n])*r + posY0//表示変更
+                }else{
+                    py = CGFloat(eyeWs[i][n])*r + posY0
+                }
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2458,9 +2470,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             for n in 0..<120 {
                 let px = rlPt*r + CGFloat(n*2)*r
-                var py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
-                if waveTuple[i].0 == 0{
-                    py = CGFloat(gyroWs[i][n])*r + posY0
+                if vHITDisplayMode==1{
+                    py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
+                    if waveTuple[i].0 == 0{
+                        py = CGFloat(gyroWs[i][n])*r + posY0
+                    }
+                }else{
+                    py = CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
+                    if waveTuple[i].0 == 0{
+                        py = -CGFloat(gyroWs[i][n])*r + posY0
+                    }
                 }
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
@@ -2485,12 +2504,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 for n in 0..<120 {
                     let px = rlPt*r + CGFloat( n*2)*r
-                    
-                    var py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
+                    if vHITDisplayMode==1{
+                    py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
                     if waveTuple[i].0 == 0{
                         py = CGFloat(gyroWs[i][n])*r + posY0
                     }
-//                    let py = CGFloat(gyroWs[i][n])*r + posY0
+                    }else{
+                        py = CGFloat(gyroWs[i][n])*r + posY0
+                    }
                     let point = CGPoint(x:px,y:py)
                     pointList.append(point)
                 }
@@ -2504,13 +2525,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 pointList.removeAll()
                 for n in 0..<120 {
                     let px = rlPt*r + CGFloat(n*2)*r
-                    var py:CGFloat = 0
-                    
-                    py = CGFloat(eyeWs[i][n])*r + posY0//以下４行　表示変更
-                    if waveTuple[i].0 == 0{
-                        py = -CGFloat(eyeWs[i][n])*r + posY0
+                    if vHITDisplayMode==1{
+                        py = CGFloat(eyeWs[i][n])*r + posY0//以下４行　表示変更
+                        if waveTuple[i].0 == 0{
+                            py = -CGFloat(eyeWs[i][n])*r + posY0
+                        }
+                    }else{
+                        py = CGFloat(eyeWs[i][n])*r + posY0
                     }
-//                    py = CGFloat(eyeWs[i][n])*r + posY0
                     let point = CGPoint(x:px,y:py)
                     pointList.append(point)
                 }
@@ -2999,6 +3021,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 ParametersViewController.ratio1 = eyeRatio
                 ParametersViewController.ratio2 = gyroRatio
                 ParametersViewController.videoGyroZure=videoGyroZure
+                ParametersViewController.vHITDisplayMode=vHITDisplayMode
             }else{
                 ParametersViewController.ratio1 = posRatio
                 ParametersViewController.ratio2 = veloRatio
@@ -3105,6 +3128,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 gyroRatio=ParametersViewController.ratio2
                 useFaceMark=ParametersViewController.useFaceMark!
                 videoGyroZure=ParametersViewController.videoGyroZure
+                vHITDisplayMode=ParametersViewController.vHITDisplayMode
             }else{
                 if posRatio != ParametersViewController.ratio1 ||
                     veloRatio != ParametersViewController.ratio2{
@@ -3116,7 +3140,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             setUserDefaults()
             if eyeVeloXFiltered.count > 400{
                 if calcMode != 2{//データがありそうな時は表示
+                    moveGyroData()
                     calcDrawVHIT()
+                    drawOnewave(startcount: vhitCurpoint)
                 }else{
                     if chanF==true{
                         vogCurpoint=0

@@ -789,6 +789,24 @@
                                     <action selector="waveWidthButton:" destination="jFt-gZ-HXu" eventType="editingChanged" id="b2G-Ax-Cu3"/>
                                 </connections>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNT-h2-pQW">
+                                <rect key="frame" x="-19" y="584" width="139" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="change vHIT display">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="onChangeDisplayButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="pCS-4i-Yhk"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="type A" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwj-An-8NO">
+                                <rect key="frame" x="162" y="587" width="57" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
@@ -807,6 +825,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="qCx-pk-syi"/>
                     <connections>
+                        <outlet property="changeDisplayButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
+                        <outlet property="changeDisplayLabel" destination="bwj-An-8NO" id="L4A-8c-FfO"/>
                         <outlet property="defaultButton" destination="5sT-gS-ZO9" id="oOY-AU-z6c"/>
                         <outlet property="exitButton" destination="ut3-ve-Fe7" id="IR0-BQ-SVI"/>
                         <outlet property="eyeBinput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
