@@ -2392,6 +2392,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var pointList = Array<CGPoint>()
         let drawPath = UIBezierPath()
         var rlPt:CGFloat = 0
+        let posY0=135*r
         for i in 0..<waveTuple.count{//右のvHIT
             if waveTuple[i].2 == 0 || waveTuple[i].0 == 0{
                 continue
@@ -2399,7 +2400,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             for n in 0..<120 {
                 let px = 260*r + CGFloat(n)*2*r//260 or 0
                 var py:CGFloat = 0
-                py = CGFloat(eyeWs[i][n])*r + 90*r
+                py = CGFloat(eyeWs[i][n])*r + posY0
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2426,7 +2427,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             for n in 0..<120 {
                 let px = CGFloat(n*2)*r//260 or 0
                 var py:CGFloat = 0
-                py = CGFloat(eyeWs[i][n])*r + 90*r
+                py = -CGFloat(eyeWs[i][n])*r + posY0//表示変更
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2446,7 +2447,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         drawPath.stroke()
         drawPath.removeAllPoints()
-        for i in 0..<waveTuple.count{//左右のoutWsを表示
+        for i in 0..<waveTuple.count{//左右のgyroWsを表示
             if waveTuple[i].2 == 0{
                 continue
             }
@@ -2457,7 +2458,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             for n in 0..<120 {
                 let px = rlPt*r + CGFloat(n*2)*r
-                let py = CGFloat(gyroWs[i][n])*r + 90*r
+                var py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
+                if waveTuple[i].0 == 0{
+                    py = CGFloat(gyroWs[i][n])*r + posY0
+                }
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2481,7 +2485,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 for n in 0..<120 {
                     let px = rlPt*r + CGFloat( n*2)*r
-                    let py = CGFloat(gyroWs[i][n])*r + 90*r
+                    
+                    var py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
+                    if waveTuple[i].0 == 0{
+                        py = CGFloat(gyroWs[i][n])*r + posY0
+                    }
+//                    let py = CGFloat(gyroWs[i][n])*r + posY0
                     let point = CGPoint(x:px,y:py)
                     pointList.append(point)
                 }
@@ -2496,7 +2505,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 for n in 0..<120 {
                     let px = rlPt*r + CGFloat(n*2)*r
                     var py:CGFloat = 0
-                    py = CGFloat(eyeWs[i][n])*r + 90*r
+                    
+                    py = CGFloat(eyeWs[i][n])*r + posY0//以下４行　表示変更
+                    if waveTuple[i].0 == 0{
+                        py = -CGFloat(eyeWs[i][n])*r + posY0
+                    }
+//                    py = CGFloat(eyeWs[i][n])*r + posY0
                     let point = CGPoint(x:px,y:py)
                     pointList.append(point)
                 }
@@ -2617,7 +2631,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func drawvhitWaves(width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         var r:CGFloat=1
-        if w==500*4{
+        if w==500*4{//mail
            r=4
         }
         // イメージ処理の開始
