@@ -3287,12 +3287,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 //    var y_1finger:CGFloat=100//head%
 //    var x_1finger:CGFloat=10//zure
-    var zure:Int=10
-    var ratio_eye:Int=100
-    var ratio_head:Int=100
+//    var zure:Int=10
+//    var ratio_eye:Int=100
+//    var ratio_head:Int=100
+    var tapPosleftRight:Int=0//left-eye,right=head最初にタップした位置で
 //    var temp_y1_2finger:CGFloat=100//head% eye%
-    var startPo_1finger = CGPoint(x:0,y:0)
-    var startY_2finger:CGFloat=0//eye%
+    var startPoint = CGPoint(x:0,y:0)
+//    var startY_2finger:CGFloat=0//eye%
 //    var startY2_2finger:CGFloat=0//head%
     var wakuEyeFace:Int = 0//0:eye 1:face
 //    var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
@@ -3320,44 +3321,47 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     startRect=wakuF
                 }
             }else if checkDispMode()==1{//vhit
-                if sender.numberOfTouches==1{
-                    startPo_1finger=CGPoint(x:CGFloat(zure),y:CGFloat(ratio_head))
+                if sender.location(in: view).x<view.bounds.width/2{
+                    tapPosleftRight=0
+                    startPoint=CGPoint(x:CGFloat(videoGyroZure),y:CGFloat(eyeRatio))
+                    print("left")
                 }else{
-                    startY_2finger=CGFloat(ratio_eye)
+                    tapPosleftRight=1
+                    startPoint=CGPoint(x:CGFloat(videoGyroZure),y:CGFloat(gyroRatio))
+                    print("right")
                 }
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
-                if sender.numberOfTouches==1{//横でzureGyroHead,縦でratio_headを変更
-                    zure=Int(startPo_1finger.x + move.x/10)
-                    ratio_head=Int(startPo_1finger.y - move.y)
-                    if ratio_head>2000{
-                        ratio_head=2000
-                    }else if ratio_head<10{
-                        ratio_head=10
+                //                if sender.numberOfTouches==1{//横でzureGyroHead,縦でratio_headを変更
+                if move.x*move.x>move.y*move.y{
+                    videoGyroZure=Int(startPoint.x + move.x/10)
+                }else{
+                    if tapPosleftRight==0{
+                        eyeRatio=Int(startPoint.y - move.y)
+                    }else{
+                        gyroRatio=Int(startPoint.y - move.y)
                     }
-                    if zure>100{
-                        zure=100
-                    }else if zure<1{
-                        zure=1
-                    }
-                    print("vhit-1:",zure,ratio_head)
-                    
-                }else{//縦でratio_headを変更して、その変更倍率でratio_eyeを変更
-                    ratio_head=Int((startY_2finger - move.y)*CGFloat(ratio_head)/CGFloat(ratio_eye))
-                    ratio_eye=Int(startY_2finger - move.y)
-                    if ratio_head>2000{
-                        ratio_head=2000
-                    }else if ratio_head<10{
-                        ratio_head=10
-                    }
-                    if ratio_eye>2000{
-                        ratio_eye=2000
-                    }else if ratio_eye<10{
-                        ratio_eye=10
-                    }
-                    print("vhit-2:",ratio_eye,ratio_head)
                 }
+                if gyroRatio>2000{
+                    gyroRatio=2000
+                }else if gyroRatio<10{
+                    gyroRatio=10
+                }
+                if videoGyroZure>100{
+                    videoGyroZure = 100
+                }else if videoGyroZure<1{
+                    videoGyroZure = 1
+                }
+                if eyeRatio>2000{
+                    eyeRatio=2000
+                }else if eyeRatio<10{
+                    eyeRatio=10
+                }
+                moveGyroData()
+                calcDrawVHIT()
+                drawOnewave(startcount: vhitCurpoint)
+                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
                 print("vog")
             }else{//枠 changed
@@ -3551,16 +3555,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func calcDrawVHIT(){
         waveTuple.removeAll()
-        //       print("calcdrawvhit*****")
-//        while writingDataNow==true{//--------の間はアレイデータを書き込まない？
-//            usleep(1000)//0.001sec
-//        }
-//        let vHITcnt = getPosXFilteredCount()// eyeVeloXFiltered.count
         if arrayDataCount < 400 {
             return
         }
         var skipCnt:Int = 0
-//        readingDataNow=true
         for vcnt in 50..<(arrayDataCount - 130) {// flatwidth + 120 までを表示する。実在しないvHITeyeをアクセスしないように！
             
             if skipCnt > 0{
@@ -3569,8 +3567,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 skipCnt = 30
             }
         }
-//        readingDataNow = false
         drawVHITwaves()
     }
-    
 }

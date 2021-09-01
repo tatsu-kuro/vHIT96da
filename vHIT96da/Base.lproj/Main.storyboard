@@ -386,7 +386,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="2" id="YPr-Ux-hO9">
+                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="YPr-Ux-hO9">
                     <connections>
                         <action selector="panGesture:" destination="BYZ-38-t0r" id="0X5-46-4HI"/>
                     </connections>
