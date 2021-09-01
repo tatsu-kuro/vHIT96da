@@ -1845,7 +1845,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return (filtered[i]+filtered[i-1])/2
         }
     }
-    
+    func average5(filtered:[CGFloat],i:Int)->CGFloat{
+        return (filtered[i]+filtered[i+1]+filtered[i+2]+filtered[i+3]+filtered[i+4])/5
+    }
+    func average3(filtered:[CGFloat],i:Int)->CGFloat{
+        return (filtered[i]+filtered[i+1]+filtered[i+2])/3
+    }
+    func averagingData(){
+        for i in 0..<eyeVeloXFiltered4update.count-6{
+            eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
+            eyeVeloYFiltered4update[i]=average5(filtered: eyeVeloYFiltered4update, i: i)
+//            faceVeloXFiltered4update[i]=average5(filtered: faceVeloXFiltered4update, i: i)
+//            faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
+        }
+        
+    }
     func getArrayData()->Int{//データ取得して、そのデータを表示用に利用する。
         while writingDataNow==true{
             usleep(1000)
@@ -2033,6 +2047,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            makeBoxies()
             //            calcDrawVHIT()
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれないので、駄目押し。だめ押し用のcalcdrawvhitは別に作る必要があるかもしれない。
+            averagingData()
             if self.waveTuple.count > 0{
                 self.nonsavedFlag = true
             }
