@@ -3353,18 +3353,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return r
     }
-//    var y_1finger:CGFloat=100//head%
-//    var x_1finger:CGFloat=10//zure
-//    var zure:Int=10
-//    var ratio_eye:Int=100
-//    var ratio_head:Int=100
+
     var tapPosleftRight:Int=0//left-eye,right=head最初にタップした位置で
-//    var temp_y1_2finger:CGFloat=100//head% eye%
-    var startPoint = CGPoint(x:0,y:0)
-//    var startY_2finger:CGFloat=0//eye%
-//    var startY2_2finger:CGFloat=0//head%
+    var startEyeGyroPoint = CGPoint(x:0,y:0)//eye,gyro
+    var startZure:CGFloat=0
     var wakuEyeFace:Int = 0//0:eye 1:face
-//    var stPo:CGPoint = CGPoint(x:0,y:0)//stRect.origin tapした位置
     var startRect:CGRect = CGRect(x:0,y:0,width:0,height:0)//tapしたrectのtapした時のrect
     @IBAction func panGesture(_ sender: UIPanGestureRecognizer) {
         if calcFlag == true{
@@ -3392,26 +3385,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     startRect=wakuF
                 }
             }else if checkDispMode()==1{//vhit
-                if sender.location(in: view).x<view.bounds.width/2{
+                if sender.location(in: view).x<view.bounds.width/3{
                     tapPosleftRight=0
-                    startPoint=CGPoint(x:CGFloat(videoGyroZure),y:CGFloat(eyeRatio))
                     print("left")
-                }else{
+                }else if sender.location(in: view).x<view.bounds.width*2/3{
                     tapPosleftRight=1
-                    startPoint=CGPoint(x:CGFloat(videoGyroZure),y:CGFloat(gyroRatio))
+                    print("middle")
+                }else{
+                    tapPosleftRight=2
                     print("right")
                 }
+                startEyeGyroPoint=CGPoint(x:CGFloat(eyeRatio),y:CGFloat(gyroRatio))
+                startZure=CGFloat(videoGyroZure)
+
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
                 //                if sender.numberOfTouches==1{//横でzureGyroHead,縦でratio_headを変更
                 if move.x*move.x>move.y*move.y{
-                    videoGyroZure=Int(startPoint.x + move.x/10)
+                    videoGyroZure=Int(startZure + move.x/10)
                 }else{
                     if tapPosleftRight==0{
-                        eyeRatio=Int(startPoint.y - move.y)
+                        eyeRatio=Int(startEyeGyroPoint.x - move.y)
+                    }else if tapPosleftRight==1{
+                        let gyroRatio_old=startEyeGyroPoint.y
+                        gyroRatio=Int(startEyeGyroPoint.y - move.y)
+                        eyeRatio=Int(startEyeGyroPoint.x*CGFloat(gyroRatio)/CGFloat(gyroRatio_old))
                     }else{
-                        gyroRatio=Int(startPoint.y - move.y)
+                        gyroRatio=Int(startEyeGyroPoint.y - move.y)
                     }
                 }
                 if gyroRatio>2000{
@@ -3432,7 +3433,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 moveGyroData()
                 calcDrawVHIT()
                 drawOnewave(startcount: vhitCurpoint)
-                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
+//                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
                 print("vog")
             }else{//枠 changed
