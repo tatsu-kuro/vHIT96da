@@ -1108,12 +1108,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            sleep(UInt32(0.1))
             usleep(1000)//0.001sec
         }
-        if matchingTestMode==true && wakuEyeFace==1{//faceUIImageが探せているかチェック
-            //defaultではeyeUIImageを探す
-            eyeUIImage=faceUIImage
-            eyeWithBorderRect=faceWithBorderRect
-            eyeWithBorderRect0=faceWithBorderRect
-        }
+//        if matchingTestMode==true && wakuEyeFace==1{//faceUIImageが探せているかチェック
+//            //defaultではeyeUIImageを探す
+//            eyeUIImage=faceUIImage
+//            eyeWithBorderRect=faceWithBorderRect
+//            eyeWithBorderRect0=faceWithBorderRect
+//        }
         
         DispatchQueue.global(qos: .default).async { [self] in
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
@@ -1143,18 +1143,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             let eye0CGImage = context.createCGImage(frameCIImage, from:eyeWithBorderRect0)!
                             // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
                             let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
-                            
+                            let face0CGImage = context.createCGImage(frameCIImage, from: faceWithBorderRect0)
+                            let face0UIImage = UIImage.init(cgImage:face0CGImage!)
                             DispatchQueue.main.async {
-                                //                            wakuImg1.frame=CGRect(x:x,y:y,width:eyeRect.size.width,height:eyeRect.size.height)
-                                //                            wakuImg1.image=eyeUIImage
-                                //                            x += eyeRect.size.width
-                                wakuImg2.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width,height:eyeWithBorderRect.size.height)
-                                wakuImg2.image=eyeWithBorderUIImage
-                                x += eyeWithBorderRect.size.width
-                                wakuImg3.frame=CGRect(x:x,y:y,width:eyeWithBorderRect0.size.width,height:eyeWithBorderRect0.size.height)
-                                wakuImg3.image=eye0UIImage
+                                if wakuEyeFace==0{
+                                    wakuImg2.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width,height:eyeWithBorderRect.size.height)
+                                    wakuImg2.image=eyeWithBorderUIImage
+                                    x += eyeWithBorderRect.size.width
+                                    wakuImg3.frame=CGRect(x:x,y:y,width:eyeWithBorderRect0.size.width,height:eyeWithBorderRect0.size.height)
+                                    wakuImg3.image=eye0UIImage
+                                }else{
+                                    wakuImg2.frame=CGRect(x:x,y:y,width:faceWithBorderRect.size.width,height:faceWithBorderRect.size.height)
+                                    wakuImg2.image=faceWithBorderUIImage
+                                    x += faceWithBorderRect.size.width
+                                    wakuImg3.frame=CGRect(x:x,y:y,width:faceWithBorderRect0.size.width,height:faceWithBorderRect0.size.height)
+                                    wakuImg3.image=face0UIImage
+
+                                }
                             }
-                            //                        #endif
                         }
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,
                                                 narrow: eyeUIImage,
@@ -1180,21 +1186,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             if useFaceMark==1 && calcMode != 2{
                                 faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
                                 faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
-//                                #if DEBUG
-//                                DispatchQueue.main.async {
-//                                    if faceF==1&&calcMode != 2{
-//                                        wakuImg3.frame=CGRect(x:x,y:y,width:faceRect.size.width*2,height:faceRect.size.height*2)
-//                                        wakuImg3.image=faceUIImage
-//                                        x += faceRect.size.width*2
-//                                        wakuImg4.frame=CGRect(x:x,y:y,width:faceWithBorderRect.size.width*2,height:faceWithBorderRect.size.height*2)
-//                                        wakuImg4.image=faceWithBorderUIImage
-//                                    }
-//                                }
-//                                #endif
-//
                                 maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
                                 if maxFaceV<0.7{
                                     calcFlag=false
+                                    eyeWithBorderRect=eyeWithBorderRect0
                                 }else{
                                     faceVeloX = CGFloat(fX.pointee) - offsetFaceX
                                     faceVeloY = -CGFloat(fY.pointee) + offsetFaceY
@@ -1237,17 +1232,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             print("loop-reeding")
                         }
                         writingDataNow=true
-                                                if useFaceMark==1{
-                        ////                            faceVeloXOrig.append(faceVeloX)
-                                                    faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
-                        ////                            faceVeloYOrig.append(faceVeloY)
-                                                    faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
-                                                }else{
-                        ////                            faceVeloXOrig.append(0)
-                                                    faceVeloXFiltered.append(0)
-                        ////                            faceVeloYOrig.append(0)
-                                                    faceVeloYFiltered.append(0)
-                                                }
+                        if useFaceMark==1{
+                            faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
+                            faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
+                        }else{
+                            faceVeloXFiltered.append(0)
+                            faceVeloYFiltered.append(0)
+                        }
                         
                         if cvError<0{
                             errArray.append(true)
@@ -1855,8 +1846,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for i in 0..<eyeVeloXFiltered4update.count-6{
             eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
             eyeVeloYFiltered4update[i]=average5(filtered: eyeVeloYFiltered4update, i: i)
-//            faceVeloXFiltered4update[i]=average5(filtered: faceVeloXFiltered4update, i: i)
-//            faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
+            faceVeloXFiltered4update[i]=average5(filtered: faceVeloXFiltered4update, i: i)
+            faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
         }
         
     }
@@ -2388,9 +2379,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // 線を描く
         UIColor.red.setStroke()
         drawPath0.stroke()
-//        if faceF==1{
-//            drawPath1.stroke()
-//        }
+        if useFaceMark == 1{
+            drawPath1.stroke()
+        }
         UIColor.black.setStroke()
         drawPath2.stroke()
         let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",arrayDataCount,CGFloat(arrayDataCount)/240.0,videoDura[videoCurrent],timercnt+1)
@@ -3045,16 +3036,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            ParametersViewController.gyroDelta = gyroDelta
             ParametersViewController.useFaceMark = useFaceMark
             ParametersViewController.wakuLength = wakuLength
-            if calcMode != 2{
-                ParametersViewController.ratio1 = eyeRatio
-                ParametersViewController.ratio2 = gyroRatio
+//            if calcMode != 2{
+                ParametersViewController.eyeRatio = eyeRatio
+                ParametersViewController.gyroRatio = gyroRatio
                 ParametersViewController.videoGyroZure=videoGyroZure
                 ParametersViewController.vHITDisplayMode=vHITDisplayMode
-            }else{
-                ParametersViewController.ratio1 = posRatio
-                ParametersViewController.ratio2 = veloRatio
+//            }else{
+                ParametersViewController.posRatio = posRatio
+                ParametersViewController.veloRatio = veloRatio
                 //                ParametersViewController.okpMode = okpMode
-            }
+//            }
             #if DEBUG
             print("prepare para")
             #endif
@@ -3151,20 +3142,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wakuE.size.height = CGFloat(wakuLength)
             //            gyroDelta = ParametersViewController.gyroDelta
             var chanF=false
-            if calcMode != 2{
-                eyeRatio=ParametersViewController.ratio1
-                gyroRatio=ParametersViewController.ratio2
+//            if calcMode != 2{
+                eyeRatio=ParametersViewController.eyeRatio
+                gyroRatio=ParametersViewController.gyroRatio
                 useFaceMark=ParametersViewController.useFaceMark!
                 videoGyroZure=ParametersViewController.videoGyroZure
                 vHITDisplayMode=ParametersViewController.vHITDisplayMode
-            }else{
-                if posRatio != ParametersViewController.ratio1 ||
-                    veloRatio != ParametersViewController.ratio2{
+//            }else{
+                if posRatio != ParametersViewController.posRatio ||
+                    veloRatio != ParametersViewController.veloRatio{
                     chanF=true
                 }
-                posRatio=ParametersViewController.ratio1
-                veloRatio=ParametersViewController.ratio2
-            }
+                posRatio=ParametersViewController.posRatio
+                veloRatio=ParametersViewController.veloRatio
+//            }
             setUserDefaults()
             if eyeVeloXFiltered.count > 400{
                 if calcMode != 2{//データがありそうな時は表示

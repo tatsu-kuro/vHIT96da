@@ -72,8 +72,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var waveWidth:Int = 0
     var eyeBorder:Int = 0
     var videoGyroZure:Int = 0
-    var ratio1:Int = 0
-    var ratio2:Int = 0
+    var eyeRatio:Int = 0
+    var gyroRatio:Int = 0
+    var posRatio:Int = 0
+    var veloRatio:Int = 0
     var wakuLength:Int = 0
     var calcMode:Int?
     var vHITDisplayMode:Int = 0
@@ -143,15 +145,15 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             faceFbutton.isOn=false
             useFaceMark=0
             videoGyroZure = 20
-            ratio1 = 100
-            ratio2 = 100
+            eyeRatio = 100
+            gyroRatio = 100
             wakuLength = 3
         }else{
             eyeBorder=10
             okpMode=0
             faceFbutton.isOn=false
-            ratio1 = 100
-            ratio2 = 100
+            posRatio = 100
+            veloRatio = 100
             wakuLength = 3
         }
         dispParam()
@@ -187,11 +189,19 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 //    }
 
     @IBAction func ratio1Button(_ sender: Any) {
-        ratio1 = Field2value(field: ratio1input)
+        if calcMode != 2{
+            eyeRatio = Field2value(field: ratio1input)
+        }else{
+            posRatio = Field2value(field: ratio1input)
+        }
     }
     
     @IBAction func ratio2Button(_ sender: Any) {
-        ratio2 = Field2value(field: ratio2input)
+        if calcMode != 2{
+            posRatio = Field2value(field: ratio2input)
+        }else{
+            veloRatio = Field2value(field: ratio2input)
+        }
     }
     
     func dispParam(){
@@ -199,8 +209,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.waveWidthinput.text = "\(waveWidth)"
         self.eyeBinput.text = "\(eyeBorder)"
         self.videoGyroZureinput.text = "\(videoGyroZure)"
-        self.ratio1input.text = "\(ratio1)"
-        self.ratio2input.text = "\(ratio2)"
+        if calcMode != 2{
+            self.ratio1input.text = "\(eyeRatio)"
+            self.ratio2input.text = "\(gyroRatio)"
+        }else{
+            self.ratio1input.text = "\(posRatio)"
+            self.ratio2input.text = "\(veloRatio)"
+        }
         self.wakuLengthInput.text = "\(wakuLength)"
         if useFaceMark==0{
             self.faceFbutton.isOn=false
