@@ -496,29 +496,31 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func showModeText(){
         if calcMode==0{
-//            modeDispButton.setTitle("vHIT hori", for: .normal)
+            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
             changeModeButton.setTitle(" vHIT hoirizontal", for: .normal)
         }
         else if calcMode==1{
-//            modeDispButton.setTitle("vHIT vert", for: .normal)
+            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
             changeModeButton.setTitle(" vHIT vertical", for: .normal)
         }
         else{
-//            modeDispButton.setTitle("VOG", for: .normal)
+            changeModeButton.setImage(  UIImage(systemName:""), for: .normal)//ないものを指定
             changeModeButton.setTitle(" VOG hor. & vert.", for: .normal)
         }
     }
     @IBAction func onChangeModeButton(_ sender: Any) {
-        if calcFlag == true {
+        if calcFlag == true || calcMode==2{
             return
         }
-        calcMode! += 1
-        if calcMode==3{
+
+        if calcMode==0{
+            calcMode=1
+        }else{
             calcMode=0
         }
-        if calcMode==2{//VOGの時はwakuはeyeにする
-            wakuEyeFace=0
-        }
+//        if calcMode==2{//VOGの時はwakuはeyeにする
+//            wakuEyeFace=0
+//        }
         showModeText()
         setButtons(mode: true)
         dispWakus()
@@ -530,13 +532,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawOnewave(startcount: 0)
                 calcDrawVHIT()
             }
-        }else{
-            wakuEyeFace=0
-            if eyePosXFiltered.count>0  && videoCurrent != -1{
-                vogCurpoint=0
-                drawVOG2endPt(end: 0)
-                drawVogtext()
-            }
+//        }else{
+//            wakuEyeFace=0
+//            if eyePosXFiltered.count>0  && videoCurrent != -1{
+//                vogCurpoint=0
+//                drawVOG2endPt(end: 0)
+//                drawVogtext()
+//            }
         }
         showBoxies(f:boxiesFlag)
     }
@@ -1064,6 +1066,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
         let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
+        let faceBigRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: view.bounds.width/5)//10)
+
         
         let context:CIContext = CIContext.init(options: nil)
         //            let up = UIImage.Orientation.right
@@ -1085,7 +1089,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        let maxHeightWithBorder=videoHeight-eyeWithBorderRect.height-5
         let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:startCIImage)
         var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
-        
+        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: startCIImage)
         var eyeWithBorderRect0 = eyeWithBorderRect
         let faceWithBorderRect0 = faceWithBorderRect
         
@@ -1196,6 +1200,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                     faceWithBorderRect.origin.x += faceVeloX
                                     faceWithBorderRect.origin.y += faceVeloY
                                 }
+                                let x=(faceWithBorderRect.minX+faceWithBorderRect.maxX)/2
+                                let y=(faceWithBorderRect.minY+faceWithBorderRect.maxY)/2
+                                if x<faceBigRect.minX ||
+                                    x>faceBigRect.maxX ||
+                                    y<faceBigRect.minY ||
+                                    y>faceBigRect.maxY{
+                                    
+                                    faceWithBorderRect=faceWithBorderRect0
+                                }
                             }
                             let x=(eyeWithBorderRect.minX+eyeWithBorderRect.maxX)/2
                             let y=(eyeWithBorderRect.minY+eyeWithBorderRect.maxY)/2
@@ -1274,11 +1287,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             //            print("time:",CFAbsoluteTimeGetCurrent()-st)
             calcFlag = false//video 終了
+//            print("filtered:",eyeVeloXFiltered.count,faceVeloXFiltered.count)
             if matchingTestMode==false{
                 nonsavedFlag=true
             }
 //            }else{
-            videoSlider.isEnabled=true
+//            videoSlider.isEnabled=true
 //            }
         }
     }
@@ -1872,8 +1886,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
                     faceVeloXFiltered4update.append(average(filtered:faceVeloXFiltered,i:i))
                     faceVeloXFiltered4update.append(faceVeloXFiltered[i])
-                    faceVeloXFiltered4update.append(average(filtered:faceVeloYFiltered,i:i))
-                    faceVeloXFiltered4update.append(faceVeloYFiltered[i])
+                    faceVeloYFiltered4update.append(average(filtered:faceVeloYFiltered,i:i))
+                    faceVeloYFiltered4update.append(faceVeloYFiltered[i])
                 }else{
                     var data=eyePosXFiltered4update.last!
                     eyePosXFiltered4update.append(data)
@@ -2038,6 +2052,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            makeBoxies()
             //            calcDrawVHIT()
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれないので、駄目押し。だめ押し用のcalcdrawvhitは別に作る必要があるかもしれない。
+            print("facevelo x:",faceVeloXFiltered4update.count)
+            print("facevelo y:",faceVeloYFiltered4update.count)
+            print("eyevelo x:",eyeVeloXFiltered4update.count)
+            
             averagingData()
             if self.waveTuple.count > 0{
                 self.nonsavedFlag = true
@@ -3140,6 +3158,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wakuLength = ParametersViewController.wakuLength
             wakuE.size.width = CGFloat(wakuLength)
             wakuE.size.height = CGFloat(wakuLength)
+            calcMode=ParametersViewController.calcMode
             //            gyroDelta = ParametersViewController.gyroDelta
             var chanF=false
 //            if calcMode != 2{
@@ -3176,6 +3195,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 showBoxies(f: true)
             }
+            showModeText()
             #if DEBUG
             print("TATSUAKI-unwind from para")
             #endif
@@ -3375,7 +3395,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }else{
                     startRect=wakuF
                 }
-            }else if checkDispMode()==1{//vhit
+            }else if checkDispMode()==1 {//vhit
                 if sender.location(in: view).x<view.bounds.width/3{
                     tapPosleftRight=0
                     print("left")
@@ -3388,7 +3408,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 startEyeGyroPoint=CGPoint(x:CGFloat(eyeRatio),y:CGFloat(gyroRatio))
                 startZure=CGFloat(videoGyroZure)
-
+            }else{//遅いのでやめました
+//                if sender.location(in: view).x<view.bounds.width/3{
+//                    tapPosleftRight=0
+//                    print("left")
+//                }else if sender.location(in: view).x<view.bounds.width*2/3{
+//                    tapPosleftRight=1
+//                    print("middle")
+//                }else{
+//                    tapPosleftRight=2
+//                    print("right")
+//                }
+//                startEyeGyroPoint=CGPoint(x:CGFloat(posRatio),y:CGFloat(veloRatio))
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
@@ -3426,7 +3457,27 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawOnewave(startcount: vhitCurpoint)
 //                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
-                print("vog")
+//                print("vog")//遅いのでやめました。
+//                if tapPosleftRight==0{
+//                    posRatio=Int(startEyeGyroPoint.x - move.y)
+//                }else if tapPosleftRight==1{
+//                    let veloRatio_old=startEyeGyroPoint.y
+//                    gyroRatio=Int(startEyeGyroPoint.y - move.y)
+//                    posRatio=Int(startEyeGyroPoint.x*CGFloat(veloRatio)/CGFloat(veloRatio_old))
+//                }else{
+//                    veloRatio=Int(startEyeGyroPoint.y - move.y)
+//                }
+//                if posRatio>2000{
+//                    posRatio=2000
+//                }else if posRatio<10{
+//                    posRatio=10
+//                }
+//                if veloRatio>2000{
+//                    veloRatio=2000
+//                }else if veloRatio<10{
+//                    veloRatio=10
+//                }
+//                drawVOG2endPt(end: 0)
             }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
                     return

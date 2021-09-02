@@ -44,6 +44,16 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var faceFbutton: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
+    @IBOutlet weak var changeModeButton: UIButton!
+    @IBAction func onChangeModeButton(_ sender: Any) {
+        if calcMode != 2{
+            calcMode=2
+        }else{
+            calcMode=0
+        }
+        dispParam()
+        setTexts()
+    }
     @IBOutlet weak var defaultButton: UIButton!
     
 //    @IBOutlet weak var damyTop: UILabel!
@@ -198,7 +208,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func ratio2Button(_ sender: Any) {
         if calcMode != 2{
-            posRatio = Field2value(field: ratio2input)
+            gyroRatio = Field2value(field: ratio2input)
         }else{
             veloRatio = Field2value(field: ratio2input)
         }
@@ -323,6 +333,23 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             changeDisplayLabel.isHidden=true
         }else{//vhit
 //            topY=ww*390/937
+            
+            
+            markText.isHidden = false
+            faceFbutton.isHidden = false
+            vhitpng.isHidden=false
+            paraText1.isHidden=false
+            paraText6.isHidden=false
+            waveWidthinput.isHidden = false
+            widthRangeinput.isHidden = false
+            eyeBinput.isHidden = false
+            videoGyroZureinput.isHidden = false
+            ratio1input.isHidden = false
+            ratio2input.isHidden = false
+            paraText7.isHidden = false
+            changeDisplayButton.isHidden=false
+            changeDisplayLabel.isHidden=false
+
             paraText1.text = "(1) time(ms) from A to D"
             paraText2.text = "(2) time(ms) from B to C"
             paraText3.text = "eye velocity height ％"
@@ -379,10 +406,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.ratio1input.keyboardType = UIKeyboardType.numberPad
         self.ratio2input.keyboardType = UIKeyboardType.numberPad
         self.videoGyroZureinput.keyboardType = UIKeyboardType.numberPad
-         dispParam()
+        dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
         keyDown.layer.cornerRadius = 5
+        changeModeButton.layer.cornerRadius=5
         keyDown.isHidden = true
 //        setTexts()
     }

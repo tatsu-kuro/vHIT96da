@@ -212,7 +212,7 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title=" MODE" image="arrow.clockwise.circle" catalog="system">
+                                <state key="normal" title=" MODE" image="arrow.forward.circle" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -807,12 +807,29 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySb-fb-deN">
+                                <rect key="frame" x="152" y="812" width="110" height="40"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="110" id="HXC-TB-7PV"/>
+                                    <constraint firstAttribute="height" constant="40" id="ZyT-h7-cvg"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="vHIT.VOG" image="arrow.left.arrow.right.circle" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="onChangeModeButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="KeN-xr-ONo"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="ySb-fb-deN" firstAttribute="centerX" secondItem="rqU-p6-0r2" secondAttribute="centerX" id="Q39-G7-Smi"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="trailing" secondItem="ut3-ve-Fe7" secondAttribute="trailing" constant="10" id="S8h-uY-5se"/>
+                            <constraint firstItem="w0o-6n-dxQ" firstAttribute="bottom" secondItem="ySb-fb-deN" secondAttribute="bottom" constant="10" id="Uul-gs-MRC"/>
                             <constraint firstItem="pMb-F1-KQb" firstAttribute="top" secondItem="w0o-6n-dxQ" secondAttribute="top" constant="10" id="YOx-56-5Gh"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="bottom" secondItem="ut3-ve-Fe7" secondAttribute="bottom" constant="10" id="ZCw-hA-PVB"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="trailing" secondItem="pMb-F1-KQb" secondAttribute="trailing" constant="10" id="dOY-uf-lDE"/>
@@ -827,6 +844,7 @@
                     <connections>
                         <outlet property="changeDisplayButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
                         <outlet property="changeDisplayLabel" destination="bwj-An-8NO" id="L4A-8c-FfO"/>
+                        <outlet property="changeModeButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
                         <outlet property="defaultButton" destination="5sT-gS-ZO9" id="oOY-AU-z6c"/>
                         <outlet property="exitButton" destination="ut3-ve-Fe7" id="IR0-BQ-SVI"/>
                         <outlet property="eyeBinput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
@@ -930,7 +948,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="arrow.clockwise.circle" catalog="system" width="128" height="121"/>
+        <image name="arrow.forward.circle" catalog="system" width="128" height="121"/>
+        <image name="arrow.left.arrow.right.circle" catalog="system" width="128" height="121"/>
         <image name="arrow.triangle.2.circlepath.camera" catalog="system" width="128" height="94"/>
         <image name="backward.frame.fill" catalog="system" width="128" height="93"/>
         <image name="camera" catalog="system" width="128" height="94"/>
