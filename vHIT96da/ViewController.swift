@@ -1118,7 +1118,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            eyeWithBorderRect=faceWithBorderRect
 //            eyeWithBorderRect0=faceWithBorderRect
 //        }
-        
+        let xDiffer=faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
+        let yDiffer=faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
+
         DispatchQueue.global(qos: .default).async { [self] in
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
                 var eyeVeloX:CGFloat = 0
