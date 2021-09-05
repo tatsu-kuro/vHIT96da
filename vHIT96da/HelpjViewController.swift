@@ -8,13 +8,16 @@
 
 import UIKit
 
-class HelpjViewController: UIViewController, UIScrollViewDelegate   {
+class HelpjViewController: UIViewController{
 //    @IBOutlet weak var hView:UIImageView!
 //    @IBOutlet weak var scrollView: UIScrollView!
     var calcMode:Int?
     var jap_eng:Int=0
+//    let noFaceMark=true
+//    @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet weak var helpView: UIImageView!
+    //    @IBOutlet weak var helpView: UIImageView!
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var langButton: UIButton!
     

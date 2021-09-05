@@ -5,7 +5,6 @@
 //  Created by kuroda tatsuaki on 2018/02/11.
 //  Copyright © 2018年 tatsuaki.kuroda. All rights reserved.
 //
-
 import UIKit
 extension String {
     // 半角数字の判定
@@ -364,11 +363,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText6.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             paraText7.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
             let vhitpngH=(ww-10)*440/940
-            markText.frame  = CGRect(x:x2,  y: topY+bh1*7+vhitpngH+10,width:tw,height: bh)
-//            faceFbutton.isHidden=true
-//            markText.isHidden=true
-//            markText.frame  = CGRect(x:x2+4, y: topY+by+bh1*7+3,width:tw,height:bh)
-            gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
+                    gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             waveWidthinput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             widthRangeinput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
             ratio1input.frame =     CGRect(x:x1,y: topY+bh1*0 ,width: bw, height: bh)
@@ -376,11 +371,17 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             eyeBinput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             videoGyroZureinput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
-            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: bw, height: bh)
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
-            changeDisplayLabel.frame = CGRect(x:x1+ww/2+5,y: topY+bh1*8+vhitpngH+20 ,width: ww/2, height: bh)
-            changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+20 ,width: ww/2, height: bh)
+            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: bw, height: bh)
+            markText.frame  = CGRect(x:x2,  y: topY+bh1*8+vhitpngH+10,width:tw,height: bh)
+            changeDisplayLabel.frame = CGRect(x:x1+ww/2+5,y: topY+bh1*7+vhitpngH+10 ,width: ww/2, height: bh)
+            changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: ww/2, height: bh)
             changeDisplayButton.layer.cornerRadius=3
+            print("nofacemark",noFaceMark)
+            if noFaceMark==true{
+                markText.isHidden=true
+                faceFbutton.isHidden=true
+            }
             displayMode()
         }
     }

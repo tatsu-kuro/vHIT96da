@@ -13,7 +13,7 @@ import Photos
 import MessageUI
 //import CoreLocation
 //import CoreTelephony
-
+let noFaceMark=true//facemarkが完成したら削除の予定
 extension UIImage {
     func pixelData() -> [UInt8]? {
         let size = self.size
@@ -279,7 +279,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //解析結果保存用配列
     
     var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
-    
+    var tempTuple = Array<(Int,Int,Int,Int)>()
     var eyePosXOrig = Array<CGFloat>()//eyePosOrig
     var eyePosXFiltered = Array<CGFloat>()//eyePosFiltered
 //    var eyeVeloXOrig = Array<CGFloat>()//eyeVeloOrig
@@ -530,7 +530,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if eyePosXFiltered.count>0 && videoCurrent != -1{
                 vhitCurpoint=0
                 drawOnewave(startcount: 0)
-                calcDrawVHIT()
+                calcDrawVHIT(tuple: false)
             }
 //        }else{
 //            wakuEyeFace=0
@@ -2072,7 +2072,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         #if DEBUG
         print("debug-update",timercnt)
         #endif
-        calcDrawVHIT()
+        calcDrawVHIT(tuple: true)//waveTupleは更新する。
         if calcFlag==false{
             drawOnewave(startcount: 0)
         }
@@ -2241,10 +2241,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         posRatio = getUserDefault(str: "posRatio", ret: 100)
         veloRatio = getUserDefault(str: "veloRatio", ret: 100)
         useFaceMark = getUserDefault(str: "useFaceMark", ret:0)
+        if noFaceMark==true{
+            useFaceMark=0
+        }
 //        getVideoGyryoZureDefault()
         videoGyroZure = getUserDefault(str: "videoGyroZure", ret: 20)
         calcMode = getUserDefault(str: "calcMode", ret: 0)
-        vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:0)
+        vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:1)
         
         let width=Int(view.bounds.width/2)
         let height=Int(view.bounds.height/3)
@@ -2624,7 +2627,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 sleep(UInt32(0.1))
             }
             savePath2album(name:Wave96da,path: "temp.png")
-            calcDrawVHIT()//idnumber表示のため
+            calcDrawVHIT(tuple: false)//idnumber表示のため,waveTupleは変更しない
             // イメージビューに設定する
 //            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
             nonsavedFlag = false //解析結果がsaveされたのでfalse
@@ -3181,7 +3184,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if eyeVeloXFiltered.count > 400{
                 if calcMode != 2{//データがありそうな時は表示
                     moveGyroData()
-                    calcDrawVHIT()
+                    calcDrawVHIT(tuple: false)
                     drawOnewave(startcount: vhitCurpoint)
                 }else{
                     if chanF==true{
@@ -3455,7 +3458,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeRatio=10
                 }
                 moveGyroData()
-                calcDrawVHIT()
+                calcDrawVHIT(tuple: false)
+//                drawVHITwaves()
                 drawOnewave(startcount: vhitCurpoint)
 //                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
@@ -3668,9 +3672,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return t
     }
-    
-    func calcDrawVHIT(){
+   //wavetuple変更の有無、高さ(%)表示変更の時はwavetupleは変更しない。
+    func calcDrawVHIT(tuple:Bool){//true:
+        tempTuple.removeAll()
+        for i in 0..<waveTuple.count{
+            tempTuple.append(waveTuple[i])
+        }
+        print(tempTuple.count,waveTuple.count)
         waveTuple.removeAll()
+        print(tempTuple.count,waveTuple.count)
         if arrayDataCount < 400 {
             return
         }
@@ -3681,6 +3691,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 skipCnt -= 1
             }else if SetWave2wP(number:vcnt) > -1{
                 skipCnt = 30
+            }
+        }
+        if tuple==false{
+            waveTuple.removeAll()
+            for i in 0..<tempTuple.count{
+                waveTuple.append(tempTuple[i])
             }
         }
         drawVHITwaves()
