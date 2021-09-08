@@ -2364,7 +2364,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         
         // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+//        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         // パスの初期化
         let drawPath0 = UIBezierPath()
         let drawPath1 = UIBezierPath()

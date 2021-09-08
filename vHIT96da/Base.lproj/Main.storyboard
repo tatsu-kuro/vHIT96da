@@ -924,15 +924,18 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ElE-cI-fEF" firstAttribute="top" secondItem="E8V-fc-BMe" secondAttribute="top" id="C4O-gq-2L4"/>
-                            <constraint firstItem="ElE-cI-fEF" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" id="CVK-YG-iHo"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="Qiw-FJ-LWg" secondAttribute="bottom" constant="5" id="H2z-KJ-laO"/>
+                            <constraint firstItem="fPw-uT-6g8" firstAttribute="top" secondItem="ElE-cI-fEF" secondAttribute="bottom" id="I4y-2m-LTK"/>
                             <constraint firstItem="Qiw-FJ-LWg" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" constant="5" id="aaI-hi-ZkW"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="fPw-uT-6g8" secondAttribute="bottom" constant="5" id="bQd-rK-3kV"/>
-                            <constraint firstItem="ElE-cI-fEF" firstAttribute="trailing" secondItem="E8V-fc-BMe" secondAttribute="trailing" id="hWF-P4-cQL"/>
-                            <constraint firstItem="fPw-uT-6g8" firstAttribute="top" secondItem="ElE-cI-fEF" secondAttribute="bottom" id="nJc-Kq-ZDP"/>
+                            <constraint firstItem="ElE-cI-fEF" firstAttribute="trailing" secondItem="E8V-fc-BMe" secondAttribute="trailing" id="jG4-dA-wJT"/>
+                            <constraint firstItem="ElE-cI-fEF" firstAttribute="top" secondItem="E8V-fc-BMe" secondAttribute="top" id="pE0-kW-25Z"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="trailing" secondItem="fPw-uT-6g8" secondAttribute="trailing" constant="5" id="rMd-mS-VWp"/>
+                            <constraint firstItem="ElE-cI-fEF" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" id="xZR-tu-vFv"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="rPR-0i-zqS" appends="YES" id="Iun-H0-kIV"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="exitButton" destination="fPw-uT-6g8" id="8qq-Wh-wiQ"/>
@@ -942,7 +945,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8AV-xf-OhK" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Qpl-Z7-gTZ" userLabel="Exit" sceneMemberID="exit"/>
-                <pinchGestureRecognizer id="Whm-Qa-rG2"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="rPR-0i-zqS">
+                    <connections>
+                        <action selector="panGestuer:" destination="jcX-Lf-HTi" id="0LO-Pu-MBy"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1120.2898550724638" y="656.25"/>
         </scene>
