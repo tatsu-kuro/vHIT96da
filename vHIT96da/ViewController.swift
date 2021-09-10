@@ -1602,7 +1602,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         let drawPath = UIGraphicsGetCurrentContext()!
         // Draw a red line
-        let h=mailHeight
+        let h=mailHeight//1600 下文字は120
         drawPath.setLineWidth(2.0)
         var pointListXpos = Array<CGPoint>()
         var pointListXvelo = Array<CGPoint>()
@@ -1611,10 +1611,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let posR=CGFloat(posRatio)/30.0
         let veloR=CGFloat(veloRatio)/10.0
-        let py1=(h-240)/5+120
-        let py2=(h-240)*2/5+120
-        let py3=(h-240)*3/5+120
-        let py4=(h-240)*4/5+120
+        let py1=(h-120)/5
+        let py2=(h-120)*2/5
+        let py3=(h-120)*3/5
+        let py4=(h-120)*4/5
         let dx = 1// xの間隔
         var endN=end
         //        let posXCount=arrayDataCount// getPosXFilteredCount()
