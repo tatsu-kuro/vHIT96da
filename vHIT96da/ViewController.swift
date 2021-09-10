@@ -1661,25 +1661,29 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointListXpos {//add points
             drawPath.addLine(to: pt)
         }
-        
+        drawPath.setStrokeColor(UIColor.red.cgColor)
+        drawPath.strokePath()
         drawPath.move(to: pointListXvelo[0])
         pointListXvelo.removeFirst()
         for pt in pointListXvelo {
             drawPath.addLine(to: pt)
         }
-        drawPath.setStrokeColor(UIColor.blue.cgColor)
+        drawPath.setStrokeColor(UIColor.black.cgColor)
         drawPath.strokePath()
+        
         drawPath.move(to: pointListYpos[0])
         pointListYpos.removeFirst()
         for pt in pointListYpos {
             drawPath.addLine(to: pt)
         }
+        drawPath.setStrokeColor(UIColor.blue.cgColor)
+        drawPath.strokePath()
         drawPath.move(to: pointListYvelo[0])
         pointListYvelo.removeFirst()
         for pt in pointListYvelo {
             drawPath.addLine(to: pt)
         }
-        drawPath.setStrokeColor(UIColor.red.cgColor)
+        drawPath.setStrokeColor(UIColor.black.cgColor)
         drawPath.strokePath()
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -1959,7 +1963,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             setButtons(mode: true)
             autoreleasepool{
                 UIApplication.shared.isIdleTimerDisabled = false//do sleep
-                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-200, end: arrayDataCount)
+                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: arrayDataCount)
                 drawVOG2endPt(end: 0)
                 if vogLineView != nil{
                     vogLineView?.removeFromSuperview()//waveを消して
@@ -1975,7 +1979,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  
 //            let cntTemp=getPosXFilteredCount()// eyePosXFiltered.count
             autoreleasepool{
-                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
+                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-10, end: arrayDataCount)
                 
                 lastArraycount=arrayDataCount
                 drawVOG2endPt(end: arrayDataCount)

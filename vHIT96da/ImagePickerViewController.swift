@@ -139,7 +139,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         
         switch result {
         case .cancelled:
-            print("cancel")
+            print("cancel1")
         case .saved:
             print("save")
         case .sent:
@@ -149,6 +149,7 @@ class ImagePickerViewController: UIViewController, MFMailComposeViewControllerDe
         @unknown default:
             print("unknown error")
         }
+        self.dismiss(animated: true, completion: nil)
         self.dismiss(animated: true, completion: nil)
     }
 }
