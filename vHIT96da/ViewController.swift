@@ -2058,9 +2058,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            makeBoxies()
             //            calcDrawVHIT()
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれないので、駄目押し。だめ押し用のcalcdrawvhitは別に作る必要があるかもしれない。
-            print("facevelo x:",faceVeloXFiltered4update.count)
-            print("facevelo y:",faceVeloYFiltered4update.count)
-            print("eyevelo x:",eyeVeloXFiltered4update.count)
+//            print("facevelo x:",faceVeloXFiltered4update.count)
+//            print("facevelo y:",faceVeloYFiltered4update.count)
+//            print("eyevelo x:",eyeVeloXFiltered4update.count)
             
             averagingData()
             if self.waveTuple.count > 0{
