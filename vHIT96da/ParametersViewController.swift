@@ -43,6 +43,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var faceFbutton: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
+    @IBOutlet weak var modeLabel: UILabel!
+    //    @IBOutlet weak var modeButton: UIButton!
     @IBOutlet weak var changeModeButton: UIButton!
     @IBAction func onChangeModeButton(_ sender: Any) {
         if calcMode != 2{
@@ -218,12 +220,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.waveWidthinput.text = "\(waveWidth)"
         self.eyeBinput.text = "\(eyeBorder)"
         self.videoGyroZureinput.text = "\(videoGyroZure)"
-        if calcMode != 2{
+        if calcMode != 2{//vHIT
             self.ratio1input.text = "\(eyeRatio)"
             self.ratio2input.text = "\(gyroRatio)"
+//            modeLabel.text="vHIT mode"
         }else{
             self.ratio1input.text = "\(posRatio)"
             self.ratio2input.text = "\(veloRatio)"
+//            modeLabel.text="VOG mode"
         }
         self.wakuLengthInput.text = "\(wakuLength)"
         if useFaceMark==0{
@@ -330,9 +334,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             changeDisplayButton.isHidden=true
             changeDisplayLabel.isHidden=true
+            modeLabel.text="VOG mode"
         }else{//vhit
 //            topY=ww*390/937
-            
             
             markText.isHidden = false
             faceFbutton.isHidden = false
@@ -383,6 +387,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
                 faceFbutton.isHidden=true
             }
             displayMode()
+            modeLabel.text="vHIT mode"
         }
     }
     override func viewDidLoad() {
