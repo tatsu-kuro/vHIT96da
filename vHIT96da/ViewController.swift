@@ -3638,9 +3638,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let gb=g5(st:i+naf-raf+2)-g5(st:i+naf-raf+1)
         let gc=g5(st:i+naf+raf+1)-g5(st:i+naf+raf)
         let gd=g5(st:i+naf+raf+2)-g5(st:i+naf+raf+1)
-        if g1>4 && g2>g1+1 && g3>g2+1 && ga>sl && gb>sl && gc < -sl && gd < -sl  {
+//        if g1>4 && g2>g1+1 && g3>g2+1 && ga>sl && gb>sl && gc < -sl && gd < -sl  {
+//            return 1
+//        }else if g1 < -4 && g2<g1+1 && g3<g2+1 && ga < -sl && gb < -sl && gc>sl && gd>sl{
+//            return 0
+//        }
+        //下のように変更すると小さな波も拾える
+        if g1>3 && g2>g1 && g3>g2 && ga>sl && gb>sl && gc < -sl && gd < -sl  {
             return 1
-        }else if g1 < -4 && g2<g1+1 && g3<g2+1 && ga < -sl && gb < -sl && gc>sl && gd>sl{
+        }else if g1 < -3 && g2<g1 && g3<g2 && ga < -sl && gb < -sl && gc>sl && gd>sl{
             return 0
         }
         return -1
