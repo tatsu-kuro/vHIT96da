@@ -3377,6 +3377,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var tapPosleftRight:Int=0//left-eye,right=head最初にタップした位置で
     var startEyeGyroPoint = CGPoint(x:0,y:0)//eye,gyro
     var startZure:CGFloat=0
+  //  var startPoint = CGPoint(x:0,y:0)
+    var moveThumX:CGFloat=0
+    var moveThumY:CGFloat=0
     var wakuEyeFace:Int = 0//0:eye 1:face
     var startRect:CGRect = CGRect(x:0,y:0,width:0,height:0)//tapしたrectのtapした時のrect
     @IBAction func panGesture(_ sender: UIPanGestureRecognizer) {
@@ -3390,7 +3393,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         if sender.state == .began {
-            
+            moveThumX=0
+            moveThumY=0
+//            tapPosleftRight = -1//
+//            startPoint = pos
 //            stPo = sender.location(in: self.view)
             if checkDispMode()==0{
 //            if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
@@ -3433,7 +3439,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
                 //                if sender.numberOfTouches==1{//横でzureGyroHead,縦でratio_headを変更
-                if move.x*move.x>move.y*move.y{
+                moveThumX += move.x*move.x
+                moveThumY += move.y*move.y
+                if moveThumX>moveThumY{//横移動の和＞縦移動の和
                     videoGyroZure=Int(startZure + move.x/10)
                 }else{
                     if tapPosleftRight==0{
@@ -3463,7 +3471,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 moveGyroData()
                 calcDrawVHIT(tuple: false)
-//                drawVHITwaves()
                 drawOnewave(startcount: vhitCurpoint)
 //                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
