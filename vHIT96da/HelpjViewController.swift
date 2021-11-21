@@ -186,7 +186,7 @@ class HelpjViewController: UIViewController{
 
 
         } else if sender.state == .changed {
-            var move=pos.y-startPoint.y
+            let move=pos.y-startPoint.y
             initHelpView(img: currentImage, move:move)
         }else if sender.state == .ended{
          

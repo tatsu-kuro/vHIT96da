@@ -474,7 +474,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             for i in 0..<assets.count-1{//最後はvideoでは無いはずなので
                 let date = formatter.string(from:assets[i].creationDate!)
                 if videoDate.contains(date){//find currentVideo
-                    
                     if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
                         //currentVideoの次がpngならそれを選択
                         let width=assets[i+1].pixelWidth
@@ -487,8 +486,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                         }
                                                     })
                         
-                    }else{
-                      
+                    }else{//次がpngでないとき。録画失敗して、gyroデータを保存できなかったとき
+                        readGyroFromNul()//5min 0
                     }
                 }
             }
@@ -3189,7 +3188,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if calcMode != 2{//データがありそうな時は表示
                     moveGyroData()
                     calcDrawVHIT(tuple: false)
-                    drawOnewave(startcount: vhitCurpoint)
+                    drawOnewave(startcount: vhitCurpoint)//gyroFileがないとエラー
                 }else{
                     if chanF==true{
                         vogCurpoint=0
@@ -3348,6 +3347,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
 //        print(gyroVFiltered.count)
+    }
+    func readGyroFromNul(){
+        for _ in 0..<100*60*5{
+            gyroHFiltered.append(0)
+            gyroVFiltered.append(0)
+        }
     }
 
     func moveWakus
