@@ -21,6 +21,7 @@ class HelpjViewController: UIViewController{
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var langButton: UIButton!
     var currentImage:String!
+    var currentHelpY:CGFloat=0
     func setHelpImage(){
         if jap_eng==1{
 //            jap_eng=1
@@ -56,6 +57,7 @@ class HelpjViewController: UIViewController{
         }else{
             jap_eng=0
         }
+        UserDefaults.standard.set(0,forKey:"currentHelpY")
         setHelpImage()
 //        if jap_eng==0{
 //            jap_eng=1
@@ -98,8 +100,17 @@ class HelpjViewController: UIViewController{
         langButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
         langChan(0)
+        UserDefaults.standard.set(0,forKey:"currentHelpY")
     }
     
+    func getUserDefaultFloat(str:String,ret:Float) -> Float{
+        if (UserDefaults.standard.object(forKey: str) != nil){
+            return UserDefaults.standard.float(forKey: str)
+        }else{//keyが設定してなければretをセット
+            UserDefaults.standard.set(ret, forKey: str)
+            return ret
+        }
+    }
 //    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
 //        return self.hView
 //    }
@@ -152,16 +163,16 @@ class HelpjViewController: UIViewController{
         // 画像サイズをスクリーン幅に合わせる
         let scale:CGFloat = screenWidth / imgWidth
         
-        if moveY>0{
-            moveY=0
-        }else if moveY < -180{//helpView.frame.height-screenHeight{
-            moveY = -180//helpView.frame.height-screenHeight
-        }
+//        if moveY>0{
+//            moveY=0
+//        }else if moveY < -150{//helpView.frame.height-screenHeight{
+//            moveY = -150//helpView.frame.height-screenHeight
+//        }
         
         let rect:CGRect =
             CGRect(x:0, y:moveY, width:imgWidth*scale, height:imgHeight*scale)
-        print(screenHeight,helpView.frame.height,moveY)
-        print(rect,view.bounds,helpView.frame)
+   //     print(screenHeight,helpView.frame.height,moveY)
+     //   print(rect,view.bounds,helpView.frame)
         // ImageView frame をCGRectで作った矩形に合わせる
         imageView.frame = rect;
         
@@ -174,20 +185,25 @@ class HelpjViewController: UIViewController{
     
     var startPoint:CGPoint!
     @IBAction func panGestuer(_ sender: UIPanGestureRecognizer) {
-        print("pan")
-   
-//        print(sender.numberOfTouches)
-//        let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
        
         if sender.state == .began {
             
+            currentHelpY=CGFloat(UserDefaults.standard.integer(forKey:"currentHelpY"))
             startPoint = sender.location(in: self.view)
 
 
         } else if sender.state == .changed {
             let move=pos.y-startPoint.y
-            initHelpView(img: currentImage, move:move)
+            currentHelpY += move/5
+            if currentHelpY < -170{
+                currentHelpY = -170
+            }else if currentHelpY>0{
+                currentHelpY=0
+            }
+            UserDefaults.standard.set(currentHelpY, forKey:"currentHelpY")
+            initHelpView(img: currentImage, move:currentHelpY)
+            
         }else if sender.state == .ended{
          
         }
