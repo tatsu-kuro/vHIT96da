@@ -192,7 +192,6 @@ class HelpjViewController: UIViewController{
             currentHelpY=CGFloat(UserDefaults.standard.integer(forKey:"currentHelpY"))
             startPoint = sender.location(in: self.view)
 
-
         } else if sender.state == .changed {
             let move=pos.y-startPoint.y
             currentHelpY += move/5
