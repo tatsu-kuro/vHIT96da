@@ -20,7 +20,7 @@ class HelpjViewController: UIViewController{
     //    @IBOutlet weak var helpView: UIImageView!
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var langButton: UIButton!
-    var currentImage:String!
+    var currentImageName:String!
     var currentHelpY:CGFloat=0
     func setHelpImage(){
         if jap_eng==1{
@@ -28,11 +28,11 @@ class HelpjViewController: UIViewController{
             if calcMode != 2{
                 //                helpView.image=UIImage(named:"vHITen")
 //                initHelpView(img: "vHITen")
-                currentImage="vHITen"
+                currentImageName="vHITen"
             }else{
 //                initHelpView(img:"VOGen")
 //                helpView.image=UIImage(named:"VOGen")
-                currentImage="VOGen"
+                currentImageName="VOGen"
             }
             langButton.setTitle("Japanese", for: .normal)
             
@@ -41,15 +41,15 @@ class HelpjViewController: UIViewController{
             if calcMode != 2{
                 //                helpView.image=UIImage(named:"vHITja")
 //                initHelpView(img: "vHITja")
-                currentImage="vHITja"
+                currentImageName="vHITja"
             }else{
 //                initHelpView(img: "VOGja")
 //                helpView.image=UIImage(named:"VOGja")
-                currentImage="VOGja"
+                currentImageName="VOGja"
             }
               langButton.setTitle("English", for: .normal)
         }
-        initHelpView(img:currentImage,move:0)
+        initHelpView(img:currentImageName,move:0)
     }
     @IBAction func langChan(_ sender: Any) {
         if jap_eng==0{
@@ -59,36 +59,12 @@ class HelpjViewController: UIViewController{
         }
         UserDefaults.standard.set(0,forKey:"currentHelpY")
         setHelpImage()
-//        if jap_eng==0{
-//            jap_eng=1
-//            if calcMode != 2{
-//                //                helpView.image=UIImage(named:"vHITen")
-//                initHelpView(img: "vHITen")
-//            }else{
-//                helpView.image=UIImage(named:"VOGen")
-//            }
-//            langButton.setTitle("Japanese", for: .normal)
-//
-//        }else{
-//            jap_eng=0
-//            if calcMode != 2{
-//                //                helpView.image=UIImage(named:"vHITja")
-//                initHelpView(img: "vHITja")
-//            }else{
-//                helpView.image=UIImage(named:"VOGja")
-//            }
-//            langButton.setTitle("English", for: .normal)
-//        }
     }
     func firstLang() -> String {
         let prefLang = Locale.preferredLanguages.first
         return prefLang!
     }
-//    func langArray() -> [String] {
-//            let prefLang = Locale.preferredLanguages
-//            print(prefLang)
-//            return prefLang
-//    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         print("language:",firstLang())
@@ -194,15 +170,19 @@ class HelpjViewController: UIViewController{
 
         } else if sender.state == .changed {
             let move=pos.y-startPoint.y
-            currentHelpY += move/5
-            if currentHelpY < -170{
-                currentHelpY = -170
+//            if move < -100{
+//                move = -100
+//            }else if move>0{
+//                move=0
+//            }
+            currentHelpY += move
+            if currentHelpY < -100{
+                currentHelpY = -100
             }else if currentHelpY>0{
                 currentHelpY=0
             }
             UserDefaults.standard.set(currentHelpY, forKey:"currentHelpY")
-            initHelpView(img: currentImage, move:currentHelpY)
-            
+            initHelpView(img: currentImageName, move:currentHelpY)
         }else if sender.state == .ended{
          
         }
