@@ -3167,22 +3167,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wakuE.size.width = CGFloat(wakuLength)
             wakuE.size.height = CGFloat(wakuLength)
             calcMode=ParametersViewController.calcMode
-            //            gyroDelta = ParametersViewController.gyroDelta
+            
             var chanF=false
-//            if calcMode != 2{
-                eyeRatio=ParametersViewController.eyeRatio
-                gyroRatio=ParametersViewController.gyroRatio
-                useFaceMark=ParametersViewController.useFaceMark!
-                videoGyroZure=ParametersViewController.videoGyroZure
-                vHITDisplayMode=ParametersViewController.vHITDisplayMode
-//            }else{
-                if posRatio != ParametersViewController.posRatio ||
-                    veloRatio != ParametersViewController.veloRatio{
-                    chanF=true
-                }
-                posRatio=ParametersViewController.posRatio
-                veloRatio=ParametersViewController.veloRatio
-//            }
+            eyeRatio=ParametersViewController.eyeRatio
+            gyroRatio=ParametersViewController.gyroRatio
+            useFaceMark=ParametersViewController.useFaceMark!
+            videoGyroZure=ParametersViewController.videoGyroZure
+            vHITDisplayMode=ParametersViewController.vHITDisplayMode
+            if posRatio != ParametersViewController.posRatio ||
+                veloRatio != ParametersViewController.veloRatio{
+                chanF=true
+            }
+            posRatio=ParametersViewController.posRatio
+            veloRatio=ParametersViewController.veloRatio
             setUserDefaults()
             if eyeVeloXFiltered.count > 400{
                 if calcMode != 2{//データがありそうな時は表示
@@ -3391,7 +3388,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true{
             return
         }
-//        print(sender.numberOfTouches)
         let move:CGPoint = sender.translation(in: self.view)
         let pos = sender.location(in: self.view)
         if sender.location(in: view).y>videoSlider.frame.minY-20{//
@@ -3400,22 +3396,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if sender.state == .began {
             moveThumX=0
             moveThumY=0
-//            tapPosleftRight = -1//
-//            startPoint = pos
-//            stPo = sender.location(in: self.view)
             if checkDispMode()==0{
-//            if vhitBoxView?.isHidden == true && vogBoxView?.isHidden  == true{
-                //タップして動かすと、ここに来る
-                //                rectType = checkWaks(po: pos)//0:枠設定 -1:違う
-//                if calcMode==2{
-//                    wakuEyeFace=0
-//                }
                 if wakuEyeFace==0{
                     startRect=wakuE
                 }else{
                     startRect=wakuF
                 }
             }else if checkDispMode()==1 {//vhit
+                if sender.location(in: view).y<view.bounds.height*2/5{
+                    
+                }else{
                 if sender.location(in: view).x<view.bounds.width/3{
                     tapPosleftRight=0
                     print("left")
@@ -3428,21 +3418,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 startEyeGyroPoint=CGPoint(x:CGFloat(eyeRatio),y:CGFloat(gyroRatio))
                 startZure=CGFloat(videoGyroZure)
+                }
             }else{//遅いのでやめました
-//                if sender.location(in: view).x<view.bounds.width/3{
-//                    tapPosleftRight=0
-//                    print("left")
-//                }else if sender.location(in: view).x<view.bounds.width*2/3{
-//                    tapPosleftRight=1
-//                    print("middle")
-//                }else{
-//                    tapPosleftRight=2
-//                    print("right")
-//                }
-//                startEyeGyroPoint=CGPoint(x:CGFloat(posRatio),y:CGFloat(veloRatio))
             }
         } else if sender.state == .changed {
             if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
+                if sender.location(in: view).y<view.bounds.height*2/5{
+                    
+                }else{
                 //                if sender.numberOfTouches==1{//横でzureGyroHead,縦でratio_headを変更
                 moveThumX += move.x*move.x
                 moveThumY += move.y*move.y
@@ -3477,6 +3460,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 moveGyroData()
                 calcDrawVHIT(tuple: false)
                 drawOnewave(startcount: vhitCurpoint)
+                }
 //                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
 //                print("vog")//遅いのでやめました。
