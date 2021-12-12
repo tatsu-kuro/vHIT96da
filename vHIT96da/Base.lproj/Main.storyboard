@@ -901,6 +901,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="ElE-cI-fEF">
+                                <rect key="frame" x="0.0" y="44" width="414" height="773"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPw-uT-6g8">
                                 <rect key="frame" x="329" y="817" width="80" height="40"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -931,22 +935,15 @@
                                     <action selector="langChan:" destination="jcX-Lf-HTi" eventType="touchUpInside" id="d97-Fs-pdZ"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="ElE-cI-fEF">
-                                <rect key="frame" x="0.0" y="44" width="414" height="773"/>
-                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E8V-fc-BMe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="Qiw-FJ-LWg" secondAttribute="bottom" constant="5" id="H2z-KJ-laO"/>
-                            <constraint firstItem="fPw-uT-6g8" firstAttribute="top" secondItem="ElE-cI-fEF" secondAttribute="bottom" id="I4y-2m-LTK"/>
                             <constraint firstItem="Qiw-FJ-LWg" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" constant="5" id="aaI-hi-ZkW"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="fPw-uT-6g8" secondAttribute="bottom" constant="5" id="bQd-rK-3kV"/>
-                            <constraint firstItem="ElE-cI-fEF" firstAttribute="trailing" secondItem="E8V-fc-BMe" secondAttribute="trailing" id="jG4-dA-wJT"/>
-                            <constraint firstItem="ElE-cI-fEF" firstAttribute="top" secondItem="E8V-fc-BMe" secondAttribute="top" id="pE0-kW-25Z"/>
                             <constraint firstItem="E8V-fc-BMe" firstAttribute="trailing" secondItem="fPw-uT-6g8" secondAttribute="trailing" constant="5" id="rMd-mS-VWp"/>
-                            <constraint firstItem="ElE-cI-fEF" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" id="xZR-tu-vFv"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="rPR-0i-zqS" appends="YES" id="Iun-H0-kIV"/>
