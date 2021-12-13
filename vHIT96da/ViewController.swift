@@ -3406,18 +3406,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if sender.location(in: view).y<view.bounds.height*2/5{
                     
                 }else{
-                if sender.location(in: view).x<view.bounds.width/3{
-                    tapPosleftRight=0
-                    print("left")
-                }else if sender.location(in: view).x<view.bounds.width*2/3{
-                    tapPosleftRight=1
-                    print("middle")
-                }else{
-                    tapPosleftRight=2
-                    print("right")
-                }
-                startEyeGyroPoint=CGPoint(x:CGFloat(eyeRatio),y:CGFloat(gyroRatio))
-                startZure=CGFloat(videoGyroZure)
+                    if sender.location(in: view).x<view.bounds.width/3{
+                        tapPosleftRight=0
+                        print("left")
+                    }else if sender.location(in: view).x<view.bounds.width*2/3{
+                        tapPosleftRight=1
+                        print("middle")
+                    }else{
+                        tapPosleftRight=2
+                        print("right")
+                    }
+                    startEyeGyroPoint=CGPoint(x:CGFloat(eyeRatio),y:CGFloat(gyroRatio))
+                    startZure=CGFloat(videoGyroZure)
                 }
             }else{//遅いのでやめました
             }
@@ -3570,9 +3570,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         waveTuple[temp].2 = 1
                     }
                 }
-                
                 drawVHITwaves()
-                //                return
+            }else{
+                vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:1)
+                if vHITDisplayMode==0{
+                    vHITDisplayMode=1
+                }else{
+                    vHITDisplayMode=0
+                }
+                UserDefaults.standard.set(vHITDisplayMode,forKey: "vHITDisplayMode")
+                moveGyroData()
+                calcDrawVHIT(tuple: false)
+                drawOnewave(startcount: vhitCurpoint)
             }
         }else if vhitBoxView?.isHidden==true{
             let locationY=sender.location(in: self.view).y
