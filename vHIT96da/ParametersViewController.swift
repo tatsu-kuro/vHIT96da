@@ -69,25 +69,25 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var calcMode:Int?
     var vHITDisplayMode:Int = 0
     @IBOutlet weak var gyroText: UILabel!
-    @IBOutlet weak var paraText1: UILabel!
-    @IBOutlet weak var paraText2: UILabel!
-    @IBOutlet weak var paraText3: UILabel!
-    @IBOutlet weak var paraText4: UILabel!
+    @IBOutlet weak var A2BLabel: UILabel!
+    @IBOutlet weak var B2CLabel: UILabel!
+    @IBOutlet weak var eyeVelocityLabel: UILabel!
+    @IBOutlet weak var headVelocityLabel: UILabel!
 
-    @IBOutlet weak var paraText5: UILabel!
-    @IBOutlet weak var paraText6: UILabel!
+    @IBOutlet weak var wakuLengthLabel: UILabel!
+    @IBOutlet weak var eyeBorderLabel: UILabel!
     @IBOutlet weak var wakuLengthInput: UITextField!
     
-    @IBOutlet weak var videoGyroZureinput: UITextField!
-    @IBOutlet weak var paraText7: UILabel!
+    @IBOutlet weak var timeLagInput: UITextField!
+    @IBOutlet weak var timeLagLabel: UILabel!
     @IBOutlet weak var vhitpng: UIImageView!
     @IBOutlet weak var keyDown: UIButton!
-    @IBOutlet weak var widthRangeinput: UITextField!
-    @IBOutlet weak var waveWidthinput: UITextField!
-    @IBOutlet weak var eyeBinput: UITextField!
+    @IBOutlet weak var B2CInput: UITextField!
+    @IBOutlet weak var A2DInput: UITextField!
+    @IBOutlet weak var eyeBorderInput: UITextField!
 
-    @IBOutlet weak var ratio1input: UITextField!
-    @IBOutlet weak var ratio2input: UITextField!
+    @IBOutlet weak var eyeVelocityInput: UITextField!
+    @IBOutlet weak var headVelocityInput: UITextField!
     @IBAction func wakuLengthAction(_ sender: Any) {
         wakuLength = Field2value(field: wakuLengthInput)
         if wakuLength<3{
@@ -114,12 +114,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func numpadOff(_ sender: Any) {
         wakuLengthInput.endEditing(true)
-        widthRangeinput.endEditing(true)
-        waveWidthinput.endEditing(true)
-        eyeBinput.endEditing(true)
-        videoGyroZureinput.endEditing(true)
-        ratio1input.endEditing(true)
-        ratio2input.endEditing(true)
+        B2CInput.endEditing(true)
+        A2DInput.endEditing(true)
+        eyeBorderInput.endEditing(true)
+        timeLagInput.endEditing(true)
+        eyeVelocityInput.endEditing(true)
+        headVelocityInput.endEditing(true)
         keyDown.isHidden = true
     }
 
@@ -155,47 +155,47 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 
 
     @IBAction func widthRangeButton(_ sender: Any) {
-        widthRange = Field2value(field:widthRangeinput)
+        widthRange = Field2value(field:B2CInput)
     }
     @IBAction func waveWidthButton(_ sender: Any) {
-        waveWidth = Field2value(field: waveWidthinput)
+        waveWidth = Field2value(field: A2DInput)
     }
     
     @IBAction func eyeBorderButton(_ sender: Any) {
-        eyeBorder = Field2value(field: eyeBinput)
+        eyeBorder = Field2value(field: eyeBorderInput)
     }
     
     @IBAction func videoGyroZurechange(_ sender: Any) {
-        videoGyroZure=Field2value(field: videoGyroZureinput)
+        videoGyroZure=Field2value(field: timeLagInput)
     }
  
     @IBAction func ratio1Button(_ sender: Any) {
         if calcMode != 2{
-            eyeRatio = Field2value(field: ratio1input)
+            eyeRatio = Field2value(field: eyeVelocityInput)
         }else{
-            posRatio = Field2value(field: ratio1input)
+            posRatio = Field2value(field: eyeVelocityInput)
         }
     }
     
     @IBAction func ratio2Button(_ sender: Any) {
         if calcMode != 2{
-            gyroRatio = Field2value(field: ratio2input)
+            gyroRatio = Field2value(field: headVelocityInput)
         }else{
-            veloRatio = Field2value(field: ratio2input)
+            veloRatio = Field2value(field: headVelocityInput)
         }
     }
     
     func dispParam(){
-        self.widthRangeinput.text = "\(widthRange)"
-        self.waveWidthinput.text = "\(waveWidth)"
-        self.eyeBinput.text = "\(eyeBorder)"
-        self.videoGyroZureinput.text = "\(videoGyroZure)"
+        self.B2CInput.text = "\(widthRange)"
+        self.A2DInput.text = "\(waveWidth)"
+        self.eyeBorderInput.text = "\(eyeBorder)"
+        self.timeLagInput.text = "\(videoGyroZure)"
         if calcMode != 2{//vHIT
-            self.ratio1input.text = "\(eyeRatio)"
-            self.ratio2input.text = "\(gyroRatio)"
+            self.eyeVelocityInput.text = "\(eyeRatio)"
+            self.headVelocityInput.text = "\(gyroRatio)"
         }else{
-            self.ratio1input.text = "\(posRatio)"
-            self.ratio2input.text = "\(veloRatio)"
+            self.eyeVelocityInput.text = "\(posRatio)"
+            self.headVelocityInput.text = "\(veloRatio)"
         }
         self.wakuLengthInput.text = "\(wakuLength)"
         if useFaceMark==0{
@@ -213,37 +213,37 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let bh:CGFloat=25
         let bh1=bh+7
         
-        paraText5.text = "matching square width"
-        paraText6.text = "max moving width / frame"
+        wakuLengthLabel.text = "matching square width"
+        eyeBorderLabel.text = "max moving width / frame"
         let tw:CGFloat=ww-bw-10
         let x1:CGFloat=3
         let x2=x1+bw+5
         if calcMode==2{
-            paraText3.text = "eye position height ％"
-            paraText4.text = "eye velocity height ％"
+            eyeVelocityLabel.text = "eye position height ％"
+            headVelocityLabel.text = "eye velocity height ％"
             markText.isHidden = true
             faceFbutton.isHidden = true
             vhitpng.isHidden=true
-            paraText1.isHidden=true
-            paraText6.isHidden=false
-            waveWidthinput.isHidden = true
-            widthRangeinput.isHidden = true
-            eyeBinput.isHidden = false
-            videoGyroZureinput.isHidden = true
-            ratio1input.isHidden = false
-            ratio2input.isHidden = false
-            paraText7.isHidden = true
-            paraText2.text = " ** VOG wave height **"
-            paraText2.frame   = CGRect(x:x2,   y: topY ,width: tw, height: bh)
-            paraText3.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
-            paraText4.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
-            paraText5.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
-            paraText6.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
+            A2BLabel.isHidden=true
+            eyeBorderLabel.isHidden=false
+            A2DInput.isHidden = true
+            B2CInput.isHidden = true
+            eyeBorderInput.isHidden = false
+            timeLagInput.isHidden = true
+            eyeVelocityInput.isHidden = false
+            headVelocityInput.isHidden = false
+            timeLagLabel.isHidden = true
+            B2CLabel.text = " ** VOG wave height **"
+            B2CLabel.frame   = CGRect(x:x2,   y: topY ,width: tw, height: bh)
+            eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
+            headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
+            wakuLengthLabel.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
+            eyeBorderLabel.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
             gyroText.isHidden=true
-            ratio1input.frame = CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
-            ratio2input.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
-            eyeBinput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
+            eyeVelocityInput.frame = CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
+            headVelocityInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
+            eyeBorderInput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             changeDisplayButton.isHidden=true
             changeDisplayLabel.isHidden=true
@@ -254,40 +254,40 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             markText.isHidden = false
             faceFbutton.isHidden = false
             vhitpng.isHidden=false
-            paraText1.isHidden=false
-            paraText6.isHidden=false
-            waveWidthinput.isHidden = false
-            widthRangeinput.isHidden = false
-            eyeBinput.isHidden = false
-            videoGyroZureinput.isHidden = false
-            ratio1input.isHidden = false
-            ratio2input.isHidden = false
-            paraText7.isHidden = false
+            A2BLabel.isHidden=false
+            eyeBorderLabel.isHidden=false
+            A2DInput.isHidden = false
+            B2CInput.isHidden = false
+            eyeBorderInput.isHidden = false
+            timeLagInput.isHidden = false
+            eyeVelocityInput.isHidden = false
+            headVelocityInput.isHidden = false
+            timeLagLabel.isHidden = false
             changeDisplayButton.isHidden=false
             changeDisplayLabel.isHidden=false
 
-            paraText1.text = "(1) time(ms) from A to D"
-            paraText2.text = "(2) time(ms) from B to C"
-            paraText3.text = "eye velocity height ％"
-            paraText4.text = "head velocity height ％"
-            paraText7.text = "eye and head time lag"
+            A2BLabel.text = "(1) time(ms) from A to D"
+            B2CLabel.text = "(2) time(ms) from B to C"
+            eyeVelocityLabel.text = "eye velocity height ％"
+            headVelocityLabel.text = "head velocity height ％"
+            timeLagLabel.text = "eye and head time lag"
             markText.text = "use of the mark on face"
-            paraText1.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
-            paraText2.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
-            setLabelProperty(paraText3,x:x2,   y: topY+bh1*0 ,w: tw, h: bh)
-            setLabelProperty(paraText4,x:x2,   y: topY+bh1*1 ,w: tw, h: bh)
-            paraText5.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
-            paraText6.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
-            setLabelProperty(paraText7,x:x2,   y: topY+bh1*2,w: tw,h:bh)
+            A2BLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
+            B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
+            setLabelProperty(eyeVelocityLabel,x:x2,   y: topY+bh1*0 ,w: tw, h: bh)
+            setLabelProperty(headVelocityLabel,x:x2,   y: topY+bh1*1 ,w: tw, h: bh)
+            wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
+            eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
+            setLabelProperty(timeLagLabel,x:x2,   y: topY+bh1*2,w: tw,h:bh)
             let vhitpngH=(ww-10)*440/940
             gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
-            waveWidthinput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
-            widthRangeinput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
-            ratio1input.frame =     CGRect(x:x1,y: topY+bh1*0 ,width: bw, height: bh)
-            ratio2input.frame =     CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
+            A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
+            B2CInput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
+            eyeVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*0 ,width: bw, height: bh)
+            headVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
-            eyeBinput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
-            videoGyroZureinput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
+            eyeBorderInput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
+            timeLagInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
             faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*8+vhitpngH+10,width:tw,height: bh)
@@ -318,21 +318,21 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        widthRangeinput.delegate = self
-        waveWidthinput.delegate = self
-        eyeBinput.delegate = self
-        videoGyroZureinput.delegate = self
-        ratio1input.delegate = self
-        ratio2input.delegate = self
+        B2CInput.delegate = self
+        A2DInput.delegate = self
+        eyeBorderInput.delegate = self
+        timeLagInput.delegate = self
+        eyeVelocityInput.delegate = self
+        headVelocityInput.delegate = self
         wakuLengthInput.delegate = self
 
-        self.widthRangeinput.keyboardType = UIKeyboardType.numberPad
-        self.waveWidthinput.keyboardType = UIKeyboardType.numberPad
-        self.eyeBinput.keyboardType = UIKeyboardType.numberPad
+        self.B2CInput.keyboardType = UIKeyboardType.numberPad
+        self.A2DInput.keyboardType = UIKeyboardType.numberPad
+        self.eyeBorderInput.keyboardType = UIKeyboardType.numberPad
         self.wakuLengthInput.keyboardType = UIKeyboardType.numberPad
-        self.ratio1input.keyboardType = UIKeyboardType.numberPad
-        self.ratio2input.keyboardType = UIKeyboardType.numberPad
-        self.videoGyroZureinput.keyboardType = UIKeyboardType.numberPad
+        self.eyeVelocityInput.keyboardType = UIKeyboardType.numberPad
+        self.headVelocityInput.keyboardType = UIKeyboardType.numberPad
+        self.timeLagInput.keyboardType = UIKeyboardType.numberPad
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
