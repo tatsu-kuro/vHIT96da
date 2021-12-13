@@ -15,26 +15,6 @@ extension String {
 }
 class ParametersViewController: UIViewController, UITextFieldDelegate {
     
-//    var topPadding:CGFloat = 0
-//    var bottomPadding:CGFloat = 0
-//    var leftPadding:CGFloat = 0
-//    var rightPadding:CGFloat = 0
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        if #available(iOS 11.0, *) {
-//            // viewDidLayoutSubviewsではSafeAreaの取得ができている
-//            topPadding = self.view.safeAreaInsets.top
-//            bottomPadding = self.view.safeAreaInsets.bottom
-//            leftPadding = self.view.safeAreaInsets.left
-//            rightPadding = self.view.safeAreaInsets.right
-//            print("in viewDidLayoutSubviews")
-//            print(topPadding,bottomPadding,leftPadding,rightPadding)    // iPhoneXなら44, その他は20.0
-//        }
- //        setButtons()
-//    }
-//    @IBOutlet weak var markdispSwitch: UISwitch!
-//    @IBOutlet weak var markdispText: UILabel!
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setTexts()
@@ -43,8 +23,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var faceFbutton: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
+    @IBOutlet weak var greenItemLabel: UILabel!
     @IBOutlet weak var modeLabel: UILabel!
-    //    @IBOutlet weak var modeButton: UIButton!
     @IBOutlet weak var changeModeButton: UIButton!
     @IBAction func onChangeModeButton(_ sender: Any) {
         if calcMode != 2{
@@ -56,8 +36,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         setTexts()
     }
     @IBOutlet weak var defaultButton: UIButton!
-    
-//    @IBOutlet weak var damyTop: UILabel!
  
     var okpMode:Int = 0
 
@@ -65,9 +43,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var changeDisplayButton: UIButton!
     func displayMode(){
         if vHITDisplayMode == 0{
-            changeDisplayLabel.text="type A"
+            changeDisplayLabel.text="vHIT display mode: A"
         }else{
-            changeDisplayLabel.text="type B"
+            changeDisplayLabel.text="vHIT display mode: B"
         }
     }
     @IBAction func onChangeDisplayButton(_ sender: Any) {
@@ -133,9 +111,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBAction func tapBack(_ sender: Any) {
         numpadOff(0)
     }
-//    override var prefersStatusBarHidden: Bool {
-//          return true
-//      }
+
     @IBAction func numpadOff(_ sender: Any) {
         wakuLengthInput.endEditing(true)
         widthRangeinput.endEditing(true)
@@ -192,13 +168,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBAction func videoGyroZurechange(_ sender: Any) {
         videoGyroZure=Field2value(field: videoGyroZureinput)
     }
-    //    @IBAction func gyroDeltaButton(_  sender: Any) {
-//        gyroDelta = Field2value(field: gyroDinput)
-//    }
-//    @IBAction func outerBorderButton(_ sender: Any) {
-////        outerBorder = Field2value(field: outerBinput)
-//    }
-
+ 
     @IBAction func ratio1Button(_ sender: Any) {
         if calcMode != 2{
             eyeRatio = Field2value(field: ratio1input)
@@ -223,11 +193,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         if calcMode != 2{//vHIT
             self.ratio1input.text = "\(eyeRatio)"
             self.ratio2input.text = "\(gyroRatio)"
-//            modeLabel.text="vHIT mode"
         }else{
             self.ratio1input.text = "\(posRatio)"
             self.ratio2input.text = "\(veloRatio)"
-//            modeLabel.text="VOG mode"
         }
         self.wakuLengthInput.text = "\(wakuLength)"
         if useFaceMark==0{
@@ -236,59 +204,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             self.faceFbutton.isOn=true
         }
     }
-    /*
-    func onEditEttParaButton() {
-        
-        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
-//        alert.textFields![0].text!="kiiii"
-        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
-            // 入力したテキストをコンソールに表示
-            let textField = alert.textFields![0] as UITextField
-            let ettString:String = textField.text!
-            if ettString.isAlphanumeric(){//} isOnly(structuredBy: "0123456789:,") == true
-//                if ettMode==0{
-//                    ettModeTxt0=ettString
-//                }else if ettMode==1{
-//                    ettModeTxt1=ettString
-//                }else if ettMode==2{
-//                    ettModeTxt2=ettString
-//                }else{
-//                    ettModeTxt3=ettString
-//                }
-//                setUserDefaults()
-//                paraTxt6.text=ettString
-                print(ettString)
-            }else{
-                let dialog = UIAlertController(title: "", message: "0123456789 only.", preferredStyle: .alert)
-                //ボタンのタイトル
-                dialog.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                //実際に表示させる
-                self.present(dialog, animated: true, completion: nil)
-//                print(",:0123456789以外は受け付けません")
-            }
-//            print("\(String(describing: textField.text))")
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
-        }
-        // UIAlertControllerにtextFieldを追加
-        alert.addTextField { (textField:UITextField!) -> Void in
-            textField.keyboardType = UIKeyboardType.default//.numberPad
-//            if self.ettMode==0{
-//                textField.text=self.ettModeTxt0
-//            }else if self.ettMode==1{
-//                textField.text=self.ettModeTxt1
-//            }else if self.ettMode==2{
-//                textField.text=self.ettModeTxt2
-//            }else{
-//                textField.text=self.ettModeTxt3
-//            }
-        }
-        alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
-        alert.addAction(saveAction)
-        present(alert, animated: true, completion: nil)
-    }
-    */
+  
     func setTexts(){
         let topY = keyDown.frame.minY// vhitpng.frame.minY
         let ww:CGFloat=view.bounds.width
@@ -299,8 +215,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         
         paraText5.text = "matching square width"
         paraText6.text = "max moving width / frame"
-
-//        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         let tw:CGFloat=ww-bw-10
         let x1:CGFloat=3
         let x2=x1+bw+5
@@ -326,7 +240,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             paraText5.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             paraText6.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
-//            gyroText.text! = "vHIT96da Version " + versionNumber
             gyroText.isHidden=true
             ratio1input.frame = CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
             ratio2input.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
@@ -335,9 +248,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             changeDisplayButton.isHidden=true
             changeDisplayLabel.isHidden=true
             modeLabel.text="VOG mode"
+            greenItemLabel.isHidden=true
         }else{//vhit
-//            topY=ww*390/937
-            
+            greenItemLabel.isHidden=false
             markText.isHidden = false
             faceFbutton.isHidden = false
             vhitpng.isHidden=false
@@ -361,13 +274,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             markText.text = "use of the mark on face"
             paraText1.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
             paraText2.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
-            paraText3.frame = CGRect(x:x2,   y: topY+bh1*0 ,width: tw, height: bh)
-            paraText4.frame = CGRect(x:x2,   y: topY+bh1*1 ,width: tw, height: bh)
+            setLabelProperty(paraText3,x:x2,   y: topY+bh1*0 ,w: tw, h: bh)
+            setLabelProperty(paraText4,x:x2,   y: topY+bh1*1 ,w: tw, h: bh)
             paraText5.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             paraText6.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
-            paraText7.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
+            setLabelProperty(paraText7,x:x2,   y: topY+bh1*2,w: tw,h:bh)
             let vhitpngH=(ww-10)*440/940
-                    gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
+            gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             waveWidthinput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             widthRangeinput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
             ratio1input.frame =     CGRect(x:x1,y: topY+bh1*0 ,width: bw, height: bh)
@@ -378,9 +291,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
             faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*8+vhitpngH+10,width:tw,height: bh)
-            changeDisplayLabel.frame = CGRect(x:x1+ww/2+5,y: topY+bh1*7+vhitpngH+10 ,width: ww/2, height: bh)
-            changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: ww/2, height: bh)
+            setLabelProperty(changeDisplayLabel,x:x2,y: topY+bh1*7+vhitpngH+10 ,w: tw, h: bh)
+            changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: bw, height: bh)
             changeDisplayButton.layer.cornerRadius=3
+            setLabelProperty(greenItemLabel,x:x1,y: topY+bh1*8+vhitpngH+10 ,w: view.bounds.width-x1*2, h: bh)
             print("nofacemark",noFaceMark)
             if noFaceMark==true{
                 markText.isHidden=true
@@ -388,15 +302,22 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             }
             displayMode()
             modeLabel.text="vHIT mode"
+            modeLabel.layer.masksToBounds=true
+            modeLabel.layer.cornerRadius=5
+            greenItemLabel.layer.borderColor = UIColor.green.cgColor
+            greenItemLabel.layer.borderWidth = 1.0
         }
+    }
+    func setLabelProperty(_ label:UILabel,x:CGFloat,y:CGFloat,w:CGFloat,h:CGFloat){
+        label.frame = CGRect(x:x, y:y, width: w, height: h)
+//        label.layer.borderColor = UIColor.black.cgColor
+//        label.layer.borderWidth = 1.0
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 3
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let versionNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
-////         print(versionNumber)
-//        gyroText.text! += "\n\nvHIT96da Version " + versionNumber
-//        UserDefaults.standard.set(wakuLength, forKey: "wakuLength")
-//print("wakulength:",wakuLength)
+
         widthRangeinput.delegate = self
         waveWidthinput.delegate = self
         eyeBinput.delegate = self
@@ -418,11 +339,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         keyDown.layer.cornerRadius = 5
         changeModeButton.layer.cornerRadius=5
         keyDown.isHidden = true
-//        setTexts()
     }
-//    override func viewDidAppear(_ animated: Bool) {
-//        setTexts()
-//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
