@@ -797,37 +797,33 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySb-fb-deN">
-                                <rect key="frame" x="152" y="812" width="110" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySb-fb-deN">
+                                <rect key="frame" x="206" y="812" width="88" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="110" id="HXC-TB-7PV"/>
-                                    <constraint firstAttribute="height" constant="40" id="ZyT-h7-cvg"/>
-                                </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="vHIT.VOG" image="arrow.left.arrow.right.circle" catalog="system">
+                                <state key="normal" title="VOG">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="onChangeModeButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="KeN-xr-ONo"/>
+                                    <action selector="onToVOGButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="hyB-dd-mpf"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="vHIT mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNY-eg-azz">
-                                <rect key="frame" x="152" y="767" width="110" height="40"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="vHIT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNY-eg-azz">
+                                <rect key="frame" x="129" y="773" width="57" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="Ko2-ak-VfG"/>
-                                    <constraint firstAttribute="width" constant="110" id="LVk-6z-ova"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Green items are changable on top Page" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m3m-N0-giW">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m3m-N0-giW">
                                 <rect key="frame" x="29" y="639" width="375" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <string key="text">Pannig on the top page to change (1),(2),(3).
+Tapping on the top page to change (4)</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" systemColor="systemGreenColor"/>
                                 <nil key="highlightedColor"/>
@@ -846,20 +842,36 @@
                                     <action selector="numpadOff:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="L6q-yK-h1D"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DZA-EA-S6I">
+                                <rect key="frame" x="129" y="818" width="54" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="vHIT"/>
+                                <connections>
+                                    <action selector="onTovHITButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="fcH-YQ-rpE"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="VOG" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ifV-06-obi">
+                                <rect key="frame" x="230" y="764" width="40" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ySb-fb-deN" firstAttribute="centerX" secondItem="rqU-p6-0r2" secondAttribute="centerX" id="Q39-G7-Smi"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="trailing" secondItem="ut3-ve-Fe7" secondAttribute="trailing" constant="10" id="S8h-uY-5se"/>
-                            <constraint firstItem="w0o-6n-dxQ" firstAttribute="bottom" secondItem="ySb-fb-deN" secondAttribute="bottom" constant="10" id="Uul-gs-MRC"/>
-                            <constraint firstItem="QNY-eg-azz" firstAttribute="centerX" secondItem="rqU-p6-0r2" secondAttribute="centerX" id="Vp2-kL-B83"/>
                             <constraint firstItem="pMb-F1-KQb" firstAttribute="top" secondItem="w0o-6n-dxQ" secondAttribute="top" constant="10" id="YOx-56-5Gh"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="bottom" secondItem="ut3-ve-Fe7" secondAttribute="bottom" constant="10" id="ZCw-hA-PVB"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="trailing" secondItem="pMb-F1-KQb" secondAttribute="trailing" constant="10" id="dOY-uf-lDE"/>
                             <constraint firstItem="w0o-6n-dxQ" firstAttribute="bottom" secondItem="5sT-gS-ZO9" secondAttribute="bottom" constant="10" id="qns-QB-U5q"/>
-                            <constraint firstItem="ySb-fb-deN" firstAttribute="top" secondItem="QNY-eg-azz" secondAttribute="bottom" constant="5" id="sx9-JB-HCM"/>
                             <constraint firstItem="5sT-gS-ZO9" firstAttribute="leading" secondItem="rqU-p6-0r2" secondAttribute="leadingMargin" constant="-10" id="vpD-DJ-vko"/>
                         </constraints>
                         <connections>
@@ -872,9 +884,9 @@
                         <outlet property="A2DInput" destination="yIp-mP-SHA" id="EgU-x1-BK1"/>
                         <outlet property="B2CInput" destination="O7P-AP-fl8" id="9dw-E5-Jqf"/>
                         <outlet property="B2CLabel" destination="9oE-gN-h2Z" id="cr5-4C-3Jp"/>
+                        <outlet property="VOGLabel" destination="ifV-06-obi" id="zkC-t8-lZh"/>
                         <outlet property="changeDisplayButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
                         <outlet property="changeDisplayLabel" destination="bwj-An-8NO" id="L4A-8c-FfO"/>
-                        <outlet property="changeModeButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
                         <outlet property="defaultButton" destination="5sT-gS-ZO9" id="oOY-AU-z6c"/>
                         <outlet property="exitButton" destination="ut3-ve-Fe7" id="IR0-BQ-SVI"/>
                         <outlet property="eyeBorderInput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
@@ -888,9 +900,11 @@
                         <outlet property="headVelocityLabel" destination="Wre-qf-59d" id="8WU-o2-e4F"/>
                         <outlet property="keyDown" destination="pMb-F1-KQb" id="9ax-j5-bsU"/>
                         <outlet property="markText" destination="aD3-jN-jML" id="cLB-AB-x5I"/>
-                        <outlet property="modeLabel" destination="QNY-eg-azz" id="6mA-db-m2a"/>
                         <outlet property="timeLagInput" destination="FYu-Qu-Gex" id="MPg-6E-bbA"/>
                         <outlet property="timeLagLabel" destination="69E-lo-wOt" id="25e-FT-cVH"/>
+                        <outlet property="toVOGButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
+                        <outlet property="tovHITButton" destination="DZA-EA-S6I" id="eba-4P-chM"/>
+                        <outlet property="vHITLabel" destination="QNY-eg-azz" id="6mA-db-m2a"/>
                         <outlet property="vhitpng" destination="EJg-35-yLr" id="juY-rW-Ebq"/>
                         <outlet property="wakuLengthInput" destination="yGy-kJ-89F" id="jVb-91-XuR"/>
                         <outlet property="wakuLengthLabel" destination="HbG-UI-ZsL" id="fZW-2n-cud"/>
@@ -981,7 +995,6 @@
     </scenes>
     <resources>
         <image name="arrow.forward.circle" catalog="system" width="128" height="121"/>
-        <image name="arrow.left.arrow.right.circle" catalog="system" width="128" height="121"/>
         <image name="arrow.triangle.2.circlepath.camera" catalog="system" width="128" height="94"/>
         <image name="backward.frame.fill" catalog="system" width="128" height="93"/>
         <image name="camera" catalog="system" width="128" height="94"/>
