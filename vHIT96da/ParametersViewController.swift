@@ -13,10 +13,15 @@ extension String {
 //        return self.range(of: "[^,:0123456789]", options: .regularExpression) == nil && self != ""
     }
 }
+
 class ParametersViewController: UIViewController, UITextFieldDelegate {
-    
+    var bottomPadding:CGFloat=0
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        if #available(iOS 11.0, *) {
+             bottomPadding = self.view.safeAreaInsets.bottom
+//            UserDefaults.standard.set(bottomPadding,forKey: "bottomPadding")
+        }
         setTexts()
     }
     @IBOutlet weak var markText: UILabel!
@@ -49,6 +54,22 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var changeDisplayLabel: UILabel!
     @IBOutlet weak var changeDisplayButton: UIButton!
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        if #available(iOS 11.0, *) {
+//            // viewDidLayoutSubviewsではSafeAreaの取得ができている
+////            let topPadding = self.view.safeAreaInsets.top
+//            let bottomPadding = self.view.safeAreaInsets.bottom
+////            let leftPadding = self.view.safeAreaInsets.left
+////            let rightPadding = self.view.safeAreaInsets.right
+////            UserDefaults.standard.set(topPadding,forKey: "topPadding")
+//            UserDefaults.standard.set(bottomPadding,forKey: "bottomPadding")
+////            UserDefaults.standard.set(leftPadding,forKey: "leftPadding")
+////            UserDefaults.standard.set(rightPadding,forKey: "rightPadding")
+////            let left=UserDefaults.standard.integer(forKey:"leftPadding")
+////            print("top,bottom,right,left,(int Left)",topPadding,bottomPadding,rightPadding,leftPadding,left)    // iPhoneXなら44, その他は20.0
+//        }
+//    }
     func displayMode(){
         if vHITDisplayMode == 0{
             changeDisplayLabel.text="(2*)vHIT display mode: A"
@@ -334,7 +355,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let sp:CGFloat=5
         let butw=(view.bounds.width-sp*7)/4
         let buth=butw/2
-        let buty=view.bounds.height-sp-buth
+        let buty=view.bounds.height-sp-buth-bottomPadding
         defaultButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
         tovHITButton.frame=CGRect(x:butw+3*sp,y:buty,width:butw,height: buth)
         vHITLabel.frame=CGRect(x:butw+3*sp,y:buty-7,width:butw,height: 5)
