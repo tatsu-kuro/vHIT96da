@@ -51,9 +51,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var changeDisplayButton: UIButton!
     func displayMode(){
         if vHITDisplayMode == 0{
-            changeDisplayLabel.text="4)vHIT display mode: A"
+            changeDisplayLabel.text="(2*)vHIT display mode: A"
         }else{
-            changeDisplayLabel.text="4)vHIT display mode: B"
+            changeDisplayLabel.text="(2*)vHIT display mode: B"
         }
     }
     @IBAction func onChangeDisplayButton(_ sender: Any) {
@@ -221,7 +221,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     func setTexts(){
         let topY = keyDown.frame.minY// vhitpng.frame.minY
         let ww:CGFloat=view.bounds.width
-//        let wh:CGFloat=view.bounds.height
+        //        let wh:CGFloat=view.bounds.height
         let bw:CGFloat=55
         let bh:CGFloat=25
         let bh1=bh+7
@@ -231,9 +231,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let tw:CGFloat=ww-bw-10
         let x1:CGFloat=3
         let x2=x1+bw+5
-        if calcMode==2{
+        if calcMode==2{//VOG
             eyeVelocityLabel.text = "eye position height ％"
             headVelocityLabel.text = "eye velocity height ％"
+            eyeVelocityLabel.backgroundColor=UIColor.white
+            eyeVelocityLabel.textColor=UIColor.black
+            headVelocityLabel.backgroundColor=UIColor.white
+            headVelocityLabel.textColor=UIColor.black
             markText.isHidden = true
             faceFbutton.isHidden = true
             vhitpng.isHidden=true
@@ -260,12 +264,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             changeDisplayButton.isHidden=true
             changeDisplayLabel.isHidden=true
-       //     vHITLabel.text="VOG mode"
-            vHITLabel.isHidden=true// text="vHIT mode"
+            vHITLabel.isHidden=true
             VOGLabel.isHidden=false
-
             greenItemLabel.isHidden=true
         }else{//vhit
+            eyeVelocityLabel.backgroundColor=UIColor.systemGreen
+            eyeVelocityLabel.textColor=UIColor.white
+            headVelocityLabel.backgroundColor=UIColor.systemGreen
+            headVelocityLabel.textColor=UIColor.white
             greenItemLabel.isHidden=false
             markText.isHidden = false
             faceFbutton.isHidden = false
@@ -281,12 +287,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             timeLagLabel.isHidden = false
             changeDisplayButton.isHidden=false
             changeDisplayLabel.isHidden=false
-
+            
             A2BLabel.text = "(1) time(ms) from A to D"
             B2CLabel.text = "(2) time(ms) from B to C"
-            eyeVelocityLabel.text = "1)eye velocity height ％"
-            headVelocityLabel.text = "2)head velocity height ％"
-            timeLagLabel.text = "3)eye and head time lag"
+            eyeVelocityLabel.text = "(1*)eye velocity height ％"
+            headVelocityLabel.text = "(1*)head velocity height ％"
+            timeLagLabel.text = "(1*)eye and head time lag"
             markText.text = "use of the mark on face"
             A2BLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
             B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
@@ -311,20 +317,32 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: bw, height: bh)
             changeDisplayButton.layer.cornerRadius=3
             setLabelProperty(greenItemLabel,x:x1,y: topY+bh1*8+vhitpngH+10 ,w: view.bounds.width-x1*2, h: bh*2)
-            print("nofacemark",noFaceMark)
+//            print("nofacemark",noFaceMark)
             if noFaceMark==true{
                 markText.isHidden=true
                 faceFbutton.isHidden=true
             }
             displayMode()
-            vHITLabel.isHidden=false// text="vHIT mode"
+            vHITLabel.isHidden=false
             VOGLabel.isHidden=true
             vHITLabel.layer.masksToBounds=true
-            vHITLabel.layer.cornerRadius=5
+//            vHITLabel.layer.cornerRadius=5
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
         }
+        //
+        let sp:CGFloat=5
+        let butw=(view.bounds.width-sp*7)/4
+        let buth=butw/2
+        let buty=view.bounds.height-sp-buth
+        defaultButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
+        tovHITButton.frame=CGRect(x:butw+3*sp,y:buty,width:butw,height: buth)
+        vHITLabel.frame=CGRect(x:butw+3*sp,y:buty-7,width:butw,height: 5)
+        toVOGButton.frame=CGRect(x:butw*2+4*sp,y:buty,width:butw,height: buth)
+        VOGLabel.frame=CGRect(x:butw*2+4*sp,y:buty-7,width:butw,height: 5)
+        exitButton.frame=CGRect(x:butw*3+5*sp,y:buty,width:butw,height: buth)
     }
+    
     func setLabelProperty(_ label:UILabel,x:CGFloat,y:CGFloat,w:CGFloat,h:CGFloat){
         label.frame = CGRect(x:x, y:y, width: w, height: h)
 //        label.layer.borderColor = UIColor.black.cgColor
@@ -355,6 +373,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         exitButton.layer.cornerRadius = 5
         keyDown.layer.cornerRadius = 5
         toVOGButton.layer.cornerRadius=5
+        tovHITButton.layer.cornerRadius=5
         keyDown.isHidden = true
     }
 
