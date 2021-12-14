@@ -41,7 +41,7 @@ class HelpjViewController: UIViewController{
         // 画像サイズをスクリーン幅に合わせる
         let scale:CGFloat = imgHeight / imgWidth
         helpView.frame=CGRect(x:0,y:20,width:view.bounds.width,height: view.bounds.width*scale)
-        helpHlimit=view.bounds.width*scale-view.bounds.height
+        helpHlimit=view.bounds.width*scale-view.bounds.height+50
     }
     @IBAction func langChan(_ sender: Any) {
         if jap_eng==0{
