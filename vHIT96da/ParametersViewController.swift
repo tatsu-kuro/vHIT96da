@@ -289,10 +289,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             VOGLabel.isHidden=false
             greenItemLabel.isHidden=true
         }else{//vhit
-            eyeVelocityLabel.backgroundColor=UIColor.systemGreen
-            eyeVelocityLabel.textColor=UIColor.white
-            headVelocityLabel.backgroundColor=UIColor.systemGreen
-            headVelocityLabel.textColor=UIColor.white
             greenItemLabel.isHidden=false
             markText.isHidden = false
             faceFbutton.isHidden = false
@@ -314,14 +310,25 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeVelocityLabel.text = "(1*)eye velocity height ％"
             headVelocityLabel.text = "(1*)head velocity height ％"
             timeLagLabel.text = "(1*)eye and head time lag"
+            
+            eyeVelocityLabel.backgroundColor=UIColor.white
+            eyeVelocityLabel.textColor=UIColor.systemGreen
+            headVelocityLabel.backgroundColor=UIColor.white
+            headVelocityLabel.textColor=UIColor.systemGreen
+            timeLagLabel.backgroundColor=UIColor.white
+            timeLagLabel.textColor=UIColor.systemGreen
+            changeDisplayLabel.textColor=UIColor.systemGreen
+            changeDisplayLabel.backgroundColor=UIColor.white
+            
+            
             markText.text = "use of the mark on face"
             A2BLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
             B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
-            setLabelProperty(eyeVelocityLabel,x:x2,   y: topY+bh1*0 ,w: tw, h: bh)
-            setLabelProperty(headVelocityLabel,x:x2,   y: topY+bh1*1 ,w: tw, h: bh)
+            eyeVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*0 ,width: tw, height: bh)
+            headVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*1 ,width: tw, height: bh)
             wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
-            setLabelProperty(timeLagLabel,x:x2,   y: topY+bh1*2,w: tw,h:bh)
+            timeLagLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
             let vhitpngH=(ww-10)*440/940
             gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
@@ -334,11 +341,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
             faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*8+vhitpngH+10,width:tw,height: bh)
-            setLabelProperty(changeDisplayLabel,x:x2,y: topY+bh1*7+vhitpngH+10 ,w: tw, h: bh)
+            changeDisplayLabel.frame = CGRect(x:x2,y: topY+bh1*7+vhitpngH+10 ,width: tw, height: bh)
             changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: bw, height: bh)
             changeDisplayButton.layer.cornerRadius=3
-            setLabelProperty(greenItemLabel,x:x1,y: topY+bh1*8+vhitpngH+10 ,w: view.bounds.width-x1*2, h: bh*2)
-//            print("nofacemark",noFaceMark)
+            greenItemLabel.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: view.bounds.width-x1*2, height: bh*2)
+            greenItemLabel.layer.masksToBounds = true
+            greenItemLabel.layer.cornerRadius = 3
             if noFaceMark==true{
                 markText.isHidden=true
                 faceFbutton.isHidden=true
@@ -347,7 +355,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vHITLabel.isHidden=false
             VOGLabel.isHidden=true
             vHITLabel.layer.masksToBounds=true
-//            vHITLabel.layer.cornerRadius=5
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
         }
@@ -364,13 +371,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         exitButton.frame=CGRect(x:butw*3+5*sp,y:buty,width:butw,height: buth)
     }
     
-    func setLabelProperty(_ label:UILabel,x:CGFloat,y:CGFloat,w:CGFloat,h:CGFloat){
-        label.frame = CGRect(x:x, y:y, width: w, height: h)
-//        label.layer.borderColor = UIColor.black.cgColor
-//        label.layer.borderWidth = 1.0
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 3
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
