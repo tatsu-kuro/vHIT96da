@@ -788,6 +788,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             showBoxies(f: false)
             setVideoButtons(mode: true)
        }
+//        let picture = UIImage(named: "face")
+//        waveButton.setImage(picture, for: .normal)
     }
     func setBacknext(f:Bool){//back and next button
         nextButton.isHidden = !f
@@ -3536,42 +3538,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let loc=sender.location(in: view)
         let eyeFrame=eyeWaku_image.frame
         let faceFrame=faceWaku_image.frame
-        if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
-            if calcFlag==true && matchingTestMode==true{
-                calcFlag=false
-                nextButton.isHidden=false
-                backButton.isHidden=false
-                eraseButton.isHidden=false
-                videoSlider.isEnabled=true
+        //checkDispMode() 1-vHIT 2-VOG 3-non
+        if checkDispMode()==1{//vhit
+            if loc.y<vhitBoxView!.frame.minY || (loc.y>vhitBoxView!.frame.maxY && loc.y<gyroBoxView!.frame.minY) ||
+                (loc.y>gyroBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
+                onWaveButton(0)
                 return
-            }else if calcFlag==false && boxiesFlag==false{
-                matchingTestMode=true
-                vHITcalc()
-                nextButton.isHidden=true
-                backButton.isHidden=true
-                eraseButton.isHidden=true
-                videoSlider.isEnabled=false
-                return
-            }
-            return
-        }
-        if calcFlag == true {
-            return
-        }
-       
-        if vhitBoxView?.isHidden==false && waveTuple.count>0{
-            if sender.location(in: self.view).y > self.view.bounds.width/5 + 160{
-                //上に中央vHITwaveをタップで表示させるタップ範囲を設定
-                let temp = checksetPos(pos:lastVhitpoint + Int(sender.location(in: self.view).x),mode: 2)
-                if temp >= 0{
-                    if waveTuple[temp].2 == 1{
-                        waveTuple[temp].2 = 0
-                    }else{
-                        waveTuple[temp].2 = 1
-                    }
-                }
-                drawVHITwaves()
-            }else{
+            }else if loc.y>vhitBoxView!.frame.minY && loc.y<vhitBoxView!.frame.maxY{//in vhitbox
                 vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:1)
                 if vHITDisplayMode==0{
                     vHITDisplayMode=1
@@ -3582,10 +3555,52 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 moveGyroData()
                 calcDrawVHIT(tuple: false)
                 drawOnewave(startcount: vhitCurpoint)
+                return
+            }else if loc.y<gyroBoxView!.frame.maxY && waveTuple.count>0{
+                //上に中央vHITwaveをタップで表示させるタップ範囲を設定
+                let temp = checksetPos(pos:lastVhitpoint + Int(loc.x),mode: 2)
+                if temp >= 0{
+                    if waveTuple[temp].2 == 1{
+                        waveTuple[temp].2 = 0
+                    }else{
+                        waveTuple[temp].2 = 1
+                    }
+                }
+                drawVHITwaves()
             }
-        }else if vhitBoxView?.isHidden==true{
-            let locationY=sender.location(in: self.view).y
-            if locationY>view.bounds.height*3/4{
+        }else if checkDispMode()==2{//vog
+            if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
+                onWaveButton(0)
+                return
+            }
+        }else{//
+            if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
+                if calcFlag==false && boxiesFlag==false{//within waku
+                    matchingTestMode=true
+                    vHITcalc()
+                    nextButton.isHidden=true
+                    backButton.isHidden=true
+                    eraseButton.isHidden=true
+                    videoSlider.isEnabled=false
+                    return
+                }
+            }
+            if calcFlag==true {//計算中
+                if matchingTestMode==true{//testMode計算中なら
+                    calcFlag=false
+                    nextButton.isHidden=false
+                    backButton.isHidden=false
+                    eraseButton.isHidden=false
+                    videoSlider.isEnabled=true
+                }
+                return
+            }
+            if wakuImg2.isHidden==false||wakuImg3.isHidden==false{//testModeの表示があるとき
+                wakuImg2.isHidden=true
+                wakuImg3.isHidden=true
+                return
+            }
+            if loc.y > videoSlider.frame.minY-20{
                 //video slide bar と被らないように
                 return
             }
@@ -3693,9 +3708,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for i in 0..<waveTuple.count{
             tempTuple.append(waveTuple[i])
         }
-        print(tempTuple.count,waveTuple.count)
+//        print(tempTuple.count,waveTuple.count)
         waveTuple.removeAll()
-        print(tempTuple.count,waveTuple.count)
+//        print(tempTuple.count,waveTuple.count)
         if arrayDataCount < 400 {
             return
         }
