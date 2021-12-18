@@ -271,7 +271,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         
         if calcMode==2{//VOG
             eyeVelocityLabel.text = "height of position waveform ％"
-            headVelocityLabel.text = "height of speed waveform％"
+            headVelocityLabel.text = "height of speed waveform ％"
             eyeVelocityLabel.backgroundColor=UIColor.white
             eyeVelocityLabel.textColor=UIColor.black
             headVelocityLabel.backgroundColor=UIColor.white
