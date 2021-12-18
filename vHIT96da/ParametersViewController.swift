@@ -52,8 +52,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
  
     var okpMode:Int = 0
 
-    @IBOutlet weak var changeDisplayLabel: UILabel!
-    @IBOutlet weak var changeDisplayButton: UIButton!
+    @IBOutlet weak var vhitDisplayLabel: UILabel!
+    @IBOutlet weak var parallelButton: UIButton!
 //    override func viewDidLayoutSubviews() {
 //        super.viewDidLayoutSubviews()
 //        if #available(iOS 11.0, *) {
@@ -70,20 +70,31 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 ////            print("top,bottom,right,left,(int Left)",topPadding,bottomPadding,rightPadding,leftPadding,left)    // iPhoneXなら44, その他は20.0
 //        }
 //    }
+    
+    @IBOutlet weak var oppositeButton: UIButton!
+    
+    @IBOutlet weak var parallelLabel: UILabel!
+    
+    @IBOutlet weak var oppositeLabel: UILabel!
     func displayMode(){
         if vHITDisplayMode == 0{
-            changeDisplayLabel.text="(2*)vHIT display mode: A"
+            parallelLabel.isHidden=true
+            oppositeLabel.isHidden=false
         }else{
-            changeDisplayLabel.text="(2*)vHIT display mode: B"
+            parallelLabel.isHidden=false
+            oppositeLabel.isHidden=true
+            
         }
     }
-    @IBAction func onChangeDisplayButton(_ sender: Any) {
-        if vHITDisplayMode == 0{
-           vHITDisplayMode=1
-        }else{
-            vHITDisplayMode=0
-        }
-        displayMode()
+    @IBAction func onOppositButton(_ sender: Any) {
+        vHITDisplayMode=0
+        parallelLabel.isHidden=true
+        oppositeLabel.isHidden=false
+    }
+    @IBAction func onParallelButton(_ sender: Any) {
+        vHITDisplayMode=1
+        parallelLabel.isHidden=false
+        oppositeLabel.isHidden=true
     }
     var useFaceMark:Int?
     var widthRange:Int = 0
@@ -252,9 +263,15 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let tw:CGFloat=ww-bw-10
         let x1:CGFloat=3
         let x2=x1+bw+5
+        
+        let sp:CGFloat=5
+        let butw=(view.bounds.width-sp*7)/4
+        let buth=butw/2
+        let buty=view.bounds.height-sp-buth-bottomPadding
+        
         if calcMode==2{//VOG
-            eyeVelocityLabel.text = "eye position height ％"
-            headVelocityLabel.text = "eye velocity height ％"
+            eyeVelocityLabel.text = "height of position waveform ％"
+            headVelocityLabel.text = "height of speed waveform％"
             eyeVelocityLabel.backgroundColor=UIColor.white
             eyeVelocityLabel.textColor=UIColor.black
             headVelocityLabel.backgroundColor=UIColor.white
@@ -283,8 +300,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             headVelocityInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             eyeBorderInput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
-            changeDisplayButton.isHidden=true
-            changeDisplayLabel.isHidden=true
+            parallelButton.isHidden=true
+            parallelLabel.isHidden=true
+            oppositeLabel.isHidden=true
+            oppositeButton.isHidden=true
+            vhitDisplayLabel.isHidden=true
+                        
             vHITLabel.isHidden=true
             VOGLabel.isHidden=false
             greenItemLabel.isHidden=true
@@ -302,14 +323,18 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeVelocityInput.isHidden = false
             headVelocityInput.isHidden = false
             timeLagLabel.isHidden = false
-            changeDisplayButton.isHidden=false
-            changeDisplayLabel.isHidden=false
-            
+                
+            parallelButton.isHidden=false
+            parallelLabel.isHidden=false
+            oppositeLabel.isHidden=false
+            oppositeButton.isHidden=false
+            vhitDisplayLabel.isHidden=false
+
             A2BLabel.text = "(1) time(ms) from A to D"
             B2CLabel.text = "(2) time(ms) from B to C"
-            eyeVelocityLabel.text = "(1*)eye velocity height ％"
-            headVelocityLabel.text = "(1*)head velocity height ％"
-            timeLagLabel.text = "(1*)eye and head time lag"
+            eyeVelocityLabel.text = "(1*)height of eye waveform ％"
+            headVelocityLabel.text = "(1*)height of head waveform ％"
+            timeLagLabel.text = "(1*)time lag: eye & head waveforms"
             
             eyeVelocityLabel.backgroundColor=UIColor.white
             eyeVelocityLabel.textColor=UIColor.systemGreen
@@ -317,9 +342,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             headVelocityLabel.textColor=UIColor.systemGreen
             timeLagLabel.backgroundColor=UIColor.white
             timeLagLabel.textColor=UIColor.systemGreen
-            changeDisplayLabel.textColor=UIColor.systemGreen
-            changeDisplayLabel.backgroundColor=UIColor.white
-            
+            vhitDisplayLabel.textColor=UIColor.systemGreen
+            vhitDisplayLabel.backgroundColor=UIColor.white
             
             markText.text = "use of the mark on face"
             A2BLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
@@ -341,9 +365,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
             faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*8+vhitpngH+10,width:tw,height: bh)
-            changeDisplayLabel.frame = CGRect(x:x2,y: topY+bh1*7+vhitpngH+10 ,width: tw, height: bh)
-            changeDisplayButton.frame = CGRect(x:x1,y: topY+bh1*7+vhitpngH+10 ,width: bw, height: bh)
-            changeDisplayButton.layer.cornerRadius=3
+            
+            vhitDisplayLabel.frame = CGRect(x:butw*2+4*sp,y: topY+bh1*7+vhitpngH+10 ,width: tw, height: bh)
+            parallelLabel.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+5 ,width: butw, height: 3)
+            parallelButton.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+10 ,width: butw, height: bh)
+            parallelButton.layer.cornerRadius=3
+            oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:3)
+            oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+10,width:butw,height:bh)
+            oppositeButton.layer.cornerRadius=3
             greenItemLabel.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: view.bounds.width-x1*2, height: bh*2)
             greenItemLabel.layer.masksToBounds = true
             greenItemLabel.layer.cornerRadius = 3
@@ -359,10 +388,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.layer.borderWidth = 1.0
         }
         //
-        let sp:CGFloat=5
-        let butw=(view.bounds.width-sp*7)/4
-        let buth=butw/2
-        let buty=view.bounds.height-sp-buth-bottomPadding
+//        let sp:CGFloat=5
+//        let butw=(view.bounds.width-sp*7)/4
+//        let buth=butw/2
+//        let buty=view.bounds.height-sp-buth-bottomPadding
         defaultButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
         tovHITButton.frame=CGRect(x:butw+3*sp,y:buty,width:butw,height: buth)
         vHITLabel.frame=CGRect(x:butw+3*sp,y:buty-7,width:butw,height: 5)

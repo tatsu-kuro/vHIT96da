@@ -768,19 +768,8 @@
                                     <action selector="waveWidthButton:" destination="jFt-gZ-HXu" eventType="editingChanged" id="b2G-Ax-Cu3"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNT-h2-pQW">
-                                <rect key="frame" x="34" y="584" width="35" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="A - B">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="onChangeDisplayButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="pCS-4i-Yhk"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="type A" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwj-An-8NO">
-                                <rect key="frame" x="87" y="587" width="122" height="20"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(2*)vhit waveforms" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwj-An-8NO">
+                                <rect key="frame" x="192" y="588" width="122" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="textColor"/>
@@ -858,6 +847,47 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p30-4I-jic">
+                                <rect key="frame" x="87" y="583" width="67" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Opposite">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="onOppositButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="Xnv-dV-ZVF"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNT-h2-pQW">
+                                <rect key="frame" x="27" y="584" width="50" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Parallel">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="onParallelButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="ETi-Ny-YOF"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXE-sa-v6F">
+                                <rect key="frame" x="27" y="563" width="49" height="12"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemGreenColor"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3U-lw-sar">
+                                <rect key="frame" x="100" y="572" width="56" height="12"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemGreenColor"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
@@ -877,8 +907,6 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="B2CInput" destination="O7P-AP-fl8" id="9dw-E5-Jqf"/>
                         <outlet property="B2CLabel" destination="9oE-gN-h2Z" id="cr5-4C-3Jp"/>
                         <outlet property="VOGLabel" destination="ifV-06-obi" id="zkC-t8-lZh"/>
-                        <outlet property="changeDisplayButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
-                        <outlet property="changeDisplayLabel" destination="bwj-An-8NO" id="L4A-8c-FfO"/>
                         <outlet property="defaultButton" destination="5sT-gS-ZO9" id="oOY-AU-z6c"/>
                         <outlet property="exitButton" destination="ut3-ve-Fe7" id="IR0-BQ-SVI"/>
                         <outlet property="eyeBorderInput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
@@ -892,11 +920,16 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="headVelocityLabel" destination="Wre-qf-59d" id="8WU-o2-e4F"/>
                         <outlet property="keyDown" destination="pMb-F1-KQb" id="9ax-j5-bsU"/>
                         <outlet property="markText" destination="aD3-jN-jML" id="cLB-AB-x5I"/>
+                        <outlet property="oppositeButton" destination="p30-4I-jic" id="atM-HJ-i7U"/>
+                        <outlet property="oppositeLabel" destination="i3U-lw-sar" id="hTw-07-F5J"/>
+                        <outlet property="parallelButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
+                        <outlet property="parallelLabel" destination="vXE-sa-v6F" id="Nnc-ZI-dhn"/>
                         <outlet property="timeLagInput" destination="FYu-Qu-Gex" id="MPg-6E-bbA"/>
                         <outlet property="timeLagLabel" destination="69E-lo-wOt" id="25e-FT-cVH"/>
                         <outlet property="toVOGButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
                         <outlet property="tovHITButton" destination="DZA-EA-S6I" id="eba-4P-chM"/>
                         <outlet property="vHITLabel" destination="QNY-eg-azz" id="6mA-db-m2a"/>
+                        <outlet property="vhitDisplayLabel" destination="bwj-An-8NO" id="L4A-8c-FfO"/>
                         <outlet property="vhitpng" destination="EJg-35-yLr" id="juY-rW-Ebq"/>
                         <outlet property="wakuLengthInput" destination="yGy-kJ-89F" id="jVb-91-XuR"/>
                         <outlet property="wakuLengthLabel" destination="HbG-UI-ZsL" id="fZW-2n-cud"/>
