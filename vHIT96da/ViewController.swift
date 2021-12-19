@@ -2014,7 +2014,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawVHITwaves()
             }
         }else if mode==2{//vogalc
-            if eyePosXFiltered4update.count<240*10{//||okpMode==1{//240*10以下なら動けない。
+            if eyePosXFiltered4update.count<240*10{//240*10以下なら動けない。
                 return
             }
             let r = view.bounds.width/CGFloat(mailWidth)
@@ -3074,7 +3074,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            }else{
                 ParametersViewController.posRatio = posRatio
                 ParametersViewController.veloRatio = veloRatio
-                //                ParametersViewController.okpMode = okpMode
 //            }
             #if DEBUG
             print("prepare para")
@@ -3446,8 +3445,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         gyroRatio=Int(startEyeGyroPoint.y - move.y)
                     }
                 }
-                if gyroRatio>2000{
-                    gyroRatio=2000
+                if gyroRatio>4000{
+                    gyroRatio=4000
                 }else if gyroRatio<10{
                     gyroRatio=10
                 }
@@ -3456,8 +3455,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }else if videoGyroZure<1{
                     videoGyroZure = 1
                 }
-                if eyeRatio>2000{
-                    eyeRatio=2000
+                if eyeRatio>4000{
+                    eyeRatio=4000
                 }else if eyeRatio<10{
                     eyeRatio=10
                 }

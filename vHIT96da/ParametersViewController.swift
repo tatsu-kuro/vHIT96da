@@ -50,26 +50,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
     @IBOutlet weak var defaultButton: UIButton!
  
-    var okpMode:Int = 0
+//    var okpMode:Int = 0
 
     @IBOutlet weak var vhitDisplayLabel: UILabel!
     @IBOutlet weak var parallelButton: UIButton!
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        if #available(iOS 11.0, *) {
-//            // viewDidLayoutSubviewsではSafeAreaの取得ができている
-////            let topPadding = self.view.safeAreaInsets.top
-//            let bottomPadding = self.view.safeAreaInsets.bottom
-////            let leftPadding = self.view.safeAreaInsets.left
-////            let rightPadding = self.view.safeAreaInsets.right
-////            UserDefaults.standard.set(topPadding,forKey: "topPadding")
-//            UserDefaults.standard.set(bottomPadding,forKey: "bottomPadding")
-////            UserDefaults.standard.set(leftPadding,forKey: "leftPadding")
-////            UserDefaults.standard.set(rightPadding,forKey: "rightPadding")
-////            let left=UserDefaults.standard.integer(forKey:"leftPadding")
-////            print("top,bottom,right,left,(int Left)",topPadding,bottomPadding,rightPadding,leftPadding,left)    // iPhoneXなら44, その他は20.0
-//        }
-//    }
     
     @IBOutlet weak var oppositeButton: UIButton!
     
@@ -135,14 +119,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func wakuLengthAction(_ sender: Any) {
         wakuLength = Field2value(field: wakuLengthInput)
-        if wakuLength<3{
-            wakuLength=3
-//            dispParam()
-        }else if wakuLength>15{
-            wakuLength=15
-//            dispParam()
-        }
-        UserDefaults.standard.set(wakuLength, forKey: "wakuLength")
+//        if wakuLength<3{
+//            wakuLength=3
+//        }else if wakuLength>15{
+//            wakuLength=15
+//        }
+//        UserDefaults.standard.set(wakuLength, forKey: "wakuLength")
     }
     
     @IBAction func faceFchan(_ sender: UISwitch) {
@@ -160,7 +142,49 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBAction func tapBack(_ sender: Any) {
         numpadOff(0)
     }
-
+    func setMaxMin(){
+        if videoGyroZure<1{
+            videoGyroZure=1
+        }else if videoGyroZure>100{
+            videoGyroZure=100
+        }
+        if waveWidth<40{
+            waveWidth=40
+        }else if waveWidth>200{
+            waveWidth=200
+        }
+        if widthRange<5{
+            widthRange=5
+        }else if widthRange>50{
+            widthRange=50
+        }
+        if wakuLength<3{
+            wakuLength=3
+        }else if wakuLength>15{
+            wakuLength=15
+        }
+        
+        if eyeBorder<5{
+            eyeBorder=5
+        }else if eyeBorder>30{
+            eyeBorder=30
+        }
+        if eyeRatio<10{
+            eyeRatio=10
+        }else if eyeRatio>4000{
+            eyeRatio=4000
+        }
+        if gyroRatio<10{
+            gyroRatio=10
+        }else if gyroRatio>4000{
+            gyroRatio=4000
+        }
+        if veloRatio<10{
+            veloRatio=10
+        }else if veloRatio>4000{
+            veloRatio=4000
+        }
+    }
     @IBAction func numpadOff(_ sender: Any) {
         wakuLengthInput.endEditing(true)
         B2CInput.endEditing(true)
@@ -170,6 +194,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         eyeVelocityInput.endEditing(true)
         headVelocityInput.endEditing(true)
         keyDown.isHidden = true
+        setMaxMin()
         dispParam()
     }
 
@@ -178,7 +203,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             widthRange = 30
             waveWidth = 80
             eyeBorder=10
-            okpMode=0
+//            okpMode=0
             faceFbutton.isOn=false
             useFaceMark=0
             videoGyroZure = 20
@@ -187,7 +212,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLength = 3
         }else{
             eyeBorder=10
-            okpMode=0
+//            okpMode=0
             faceFbutton.isOn=false
             posRatio = 100
             veloRatio = 100
@@ -213,14 +238,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func eyeBorderButton(_ sender: Any) {
         eyeBorder = Field2value(field: eyeBorderInput)
-        if eyeBorder<5{
-            eyeBorder=5
-//            dispParam()
-        }else if eyeBorder>30{
-            eyeBorder=30
-//            dispParam()
-        }
-//        print("eyeBorder:",eyeBorder)
+//        if eyeBorder<5{
+//            eyeBorder=5
+//        }else if eyeBorder>30{
+//            eyeBorder=30
+//        }
     }
     
     @IBAction func videoGyroZurechange(_ sender: Any) {
@@ -438,6 +460,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         toVOGButton.layer.cornerRadius=5
         tovHITButton.layer.cornerRadius=5
         keyDown.isHidden = true
+        setMaxMin()//念の為パラメータを正常範囲にしておく。
     }
 
     override func didReceiveMemoryWarning() {
