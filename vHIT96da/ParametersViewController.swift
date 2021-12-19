@@ -137,6 +137,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         wakuLength = Field2value(field: wakuLengthInput)
         if wakuLength<3{
             wakuLength=3
+//            dispParam()
+        }else if wakuLength>15{
+            wakuLength=15
+//            dispParam()
         }
         UserDefaults.standard.set(wakuLength, forKey: "wakuLength")
     }
@@ -166,6 +170,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         eyeVelocityInput.endEditing(true)
         headVelocityInput.endEditing(true)
         keyDown.isHidden = true
+        dispParam()
     }
 
     @IBAction func setDefault(_ sender: Any) {
@@ -208,6 +213,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func eyeBorderButton(_ sender: Any) {
         eyeBorder = Field2value(field: eyeBorderInput)
+        if eyeBorder<5{
+            eyeBorder=5
+//            dispParam()
+        }else if eyeBorder>30{
+            eyeBorder=30
+//            dispParam()
+        }
+//        print("eyeBorder:",eyeBorder)
     }
     
     @IBAction func videoGyroZurechange(_ sender: Any) {

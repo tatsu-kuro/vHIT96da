@@ -1367,7 +1367,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         CGeye = context.createCGImage(ciImage, from: eyeR)!
         UIeye = UIImage.init(cgImage: CGeye, scale:1.0, orientation:orientation)
         let wakuY=videoFps.frame.origin.y+videoFps.frame.size.height+5
-        wakuShowEye_image.frame=CGRect(x:5,y:wakuY,width: eyeR.size.width*5,height: eyeR.size.height*5)
+        let wakuSizeW:CGFloat=view.bounds.width/8
+        let wakuSizeH=wakuSizeW*eyeR.height/eyeR.width
+        wakuShowEye_image.frame=CGRect(x:5,y:wakuY,width:wakuSizeW,height:wakuSizeH)// eyeR.size.width*5,height: eyeR.size.height*5)
 //        #if DEBUG
         debugDisplayX=wakuShowEye_image.frame.maxX
         debugDisplayY=wakuShowEye_image.frame.minY
@@ -1375,7 +1377,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         wakuShowEye_image.layer.borderWidth = 1.0
         wakuShowEye_image.backgroundColor = UIColor.clear
         wakuShowEye_image.layer.cornerRadius = 3
-        wakuShowFace_image.frame=CGRect(x:5,y:wakuY+eyeR.size.height*5.1,width: eyeR.size.width*5,height: eyeR.size.height*5)
+        wakuShowFace_image.frame=CGRect(x:5,y:wakuY+wakuSizeH+1,width:wakuSizeW,height:wakuSizeH)// eyeR.size.width*5,height: eyeR.size.height*5)
         wakuShowFace_image.layer.borderWidth = 1.0
         wakuShowFace_image.backgroundColor = UIColor.clear
         wakuShowFace_image.layer.cornerRadius = 3
