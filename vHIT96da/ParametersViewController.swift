@@ -293,8 +293,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let bh:CGFloat=25
         let bh1=bh+7
         
-        wakuLengthLabel.text = "matching square width"
-        eyeBorderLabel.text = "max moving width / frame"
+        wakuLengthLabel.text = "width of rectangle to be detected"
+        eyeBorderLabel.text = "maximum moving width / frame"
         let tw:CGFloat=ww-bw-10
         let x1:CGFloat=3
         let x2=x1+bw+5
