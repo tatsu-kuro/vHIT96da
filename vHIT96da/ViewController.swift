@@ -2954,7 +2954,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         super.viewDidLoad()
         dispFilesindoc()//for debug
         checkLibraryAuthorized()
-        if checkLibraryAuthrizedFlag==0{
+        while checkLibraryAuthrizedFlag==0{
             sleep(UInt32(0.1))
         }
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
