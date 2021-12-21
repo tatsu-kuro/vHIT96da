@@ -2912,21 +2912,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var checkLibraryAuthrizedFlag:Int=0
     func checkLibraryAuthorized(){
         //iOS14に対応
-        checkLibraryAuthrizedFlag=0//0：ここの処理が終わっていないとき　1：許可　−１：拒否
+        self.checkLibraryAuthrizedFlag=0//0：ここの処理が終わっていないとき　1：許可　−１：拒否
         if #available(iOS 14.0, *) {
             PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
                 switch status {
                 case .limited:
                     self.checkLibraryAuthrizedFlag=1
-                    print("制限あり")
+                    print("14制限あり")
                     break
                 case .authorized:
                     self.checkLibraryAuthrizedFlag=1
-                    print("許可ずみ")
+                    print("14許可ずみ")
                     break
                 case .denied:
                     self.checkLibraryAuthrizedFlag = -1
-                    print("拒否ずみ")
+                    print("14拒否ずみ")
                     break
                 default:
                     self.checkLibraryAuthrizedFlag = -1
@@ -2943,6 +2943,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     } else if status == .denied {
                         self.checkLibraryAuthrizedFlag = -1
                         print("拒否ずみ")
+                    }else{
+                        self.checkLibraryAuthrizedFlag = -1
                     }
                 }
             } else {
@@ -2953,11 +2955,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         dispFilesindoc()//for debug
-        checkLibraryAuthorized()
-        while checkLibraryAuthrizedFlag==0{
-            sleep(UInt32(0.1))
-        }
-        //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
+           //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
         mailHeight=1600//240*10*2/3
          //vHIT結果サイズは500*200
@@ -2965,6 +2963,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
         showModeText()
+        
+        checkLibraryAuthorized()
+        //すでに許可しているときはすぐに帰ってくる。
+        //最初の許可では、下記ループでダイアログ表示されない？
+        //チェックしないで実行すると既存のデータは登録されないが、次回起動するときに読み込めるので取り敢えずそんな姑息な手段を使う。
+//        print("checkLibraryAuthorized1:",checkLibraryAuthrizedFlag)
+//        while checkLibraryAuthrizedFlag==0{
+//            sleep(UInt32(0.1))
+//        }
+        print("checkLibraryAuthorized2:",checkLibraryAuthrizedFlag)
+        
         if checkLibraryAuthrizedFlag==1{
             getVideosAlbumList(name:vHIT_VOG)
         }
