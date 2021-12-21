@@ -2871,12 +2871,49 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-  
- 
+    var checkLibraryAuthrizedFlag:Bool=false
+    func checkLibraryAuthorized(){
+        //iOS14に対応
+    checkLibraryAuthrizedFlag=false
+        if #available(iOS 14.0, *) {
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+                switch status {
+                case .limited:
+                    self.checkLibraryAuthrizedFlag=true
+                    print("制限あり")
+                    break
+                case .authorized:
+                    self.checkLibraryAuthrizedFlag=true
+                    print("許可ずみ")
+                    break
+                case .denied:
+                    print("拒否ずみ")
+                    break
+                default:
+                    break
+                }
+            }
+        }
+        else  {
+            if PHPhotoLibrary.authorizationStatus() != .authorized {
+                PHPhotoLibrary.requestAuthorization { status in
+                    if status == .authorized {
+                        self.checkLibraryAuthrizedFlag=true
+                        print("許可ずみ")
+                    } else if status == .denied {
+                        print("拒否ずみ")
+                    }
+                }
+            } else {
+                
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         dispFilesindoc()//for debug
+        checkLibraryAuthorized()
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
         mailHeight=1600//240*10*2/3
@@ -2885,7 +2922,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
         showModeText()
+        if checkLibraryAuthrizedFlag==true{
         getVideosAlbumList(name:vHIT_VOG)
+        }
 //        videoURLCount = videoURL.count
         //videcurrentは前回終了時のものを利用する
         videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
