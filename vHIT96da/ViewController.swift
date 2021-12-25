@@ -2952,6 +2952,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dispFilesindoc()//for debug
@@ -2995,6 +2996,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         waveSlider.isHidden=true
     }
+    
     func setButtons_first(){
         let ww=view.bounds.width
         var bw=(ww-30)/4//vhit,camera,vogのボタンの幅
