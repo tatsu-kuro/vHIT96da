@@ -11,7 +11,7 @@ import AVFoundation
 
 class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
     let tempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
-    let albumName:String = "vHIT_VOG"
+    var defaultAlbumName:String = "any"
     var videoDevice: AVCaptureDevice?
     var captureSession: AVCaptureSession!
     var fileOutput = AVCaptureMovieFileOutput()
@@ -19,7 +19,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
     var saved2album:Bool = false
     var videoDate = Array<String>()
 //    var videoURL = Array<URL?>()
-    var videoAlbumAssets = Array<PHAsset>()
+    var videoPHAssets = Array<PHAsset>()
 
     var albumExistFlag:Bool = false
     var dialogStatus:Int=0
@@ -27,10 +27,10 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
     var widthCurrent:Int=0
     var heightCurrent:Int=0
     var cameraMode:Int=0
-//    init(name: String) {
-//        // 全てのプロパティを初期化する前にインスタンスメソッドを実行することはできない
-//        self.albumName = "Fushiki"//name
-//    }
+    init(albumName: String) {
+        // 全てのプロパティを初期化する前にインスタンスメソッドを実行することはできない
+        self.defaultAlbumName = albumName
+    }
     //ジワーッと文字を表示するため
     func updateRecClarification(tm: Int)->CGFloat {
         var cnt=tm%40
@@ -49,10 +49,6 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
         }else{
             return CGRect(x:left/6,y:height-height/5.5,width:w,height:w)
         }
-//        let imgH=height/30//415*177 2.34  383*114 3.36 257*112 2.3
-//        let imgW=imgH*2.3
-//        let space=imgW*0.1
-//        return CGRect(x:width-imgW-space,y:height-imgH-space,width: imgW,height:imgH)
     }
     func checkEttString(ettStr:String)->Bool{//ettTextがちゃんと並んでいるか like as 1,2:3:20,3:2:20
         let ettTxtComponents = ettStr.components(separatedBy: ",")
@@ -74,43 +70,47 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
             return false
         }
     }
-    func albumExists() -> Bool {
+    func albumExists(_ albumTitle: String) -> Bool {
         // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
+        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
         let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
-            PHAssetCollectionSubtype.albumRegular, options: nil)
+                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
         for i in 0 ..< albums.count {
             let album = albums.object(at: i)
-            if album.localizedTitle != nil && album.localizedTitle == albumName {
+            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
+//                vHIT96daAlbum = album
                 return true
             }
         }
         return false
     }
-    //何も返していないが、ここで見つけたor作成したalbumを返したい。そうすればグローバル変数にアクセスせずに済む
-    func createNewAlbum( callback: @escaping (Bool) -> Void) {
-        if self.albumExists() {
+
+    func createNewAlbum(_ albumTitle: String, callback: @escaping (Bool) -> Void) {
+        if self.albumExists(albumTitle) {
             callback(true)
         } else {
-            PHPhotoLibrary.shared().performChanges({ [self] in
-                _ = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
+            PHPhotoLibrary.shared().performChanges({
+                _ = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
             }) { (isSuccess, error) in
                 callback(isSuccess)
             }
         }
     }
-    func makeAlbum(){
-        if albumExists()==false{
-            createNewAlbum() { [self] (isSuccess) in
+
+    func makeAlbum(_ name:String){
+        if albumExists(name )==false{
+            createNewAlbum(name) {  isSuccess in
                 if isSuccess{
-                    print(albumName," can be made,")
+                    print(name," can be made,")
                 } else{
-                    print(albumName," can't be made.")
+                    print(name," can't be made.")
                 }
             }
         }else{
-            print(albumName," exist already.")
+            print(name," exist already.")
         }
     }
+
     func getPHAssetcollection()->PHAssetCollection{
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
@@ -118,17 +118,31 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", defaultAlbumName)
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         //アルバムはviewdidloadで作っているのであるはず？
 //        if (assetCollections.count > 0) {
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
         return assetCollections.object(at:0)
     }
-
+    func requestAVAsset(asset: PHAsset)-> AVAsset? {
+        guard asset.mediaType == .video else { return nil }
+        let phVideoOptions = PHVideoRequestOptions()
+        phVideoOptions.version = .original
+        let group = DispatchGroup()
+        let imageManager = PHImageManager.default()
+        var avAsset: AVAsset?
+        group.enter()
+        imageManager.requestAVAsset(forVideo: asset, options: phVideoOptions) { (asset, _, _) in
+            avAsset = asset
+            group.leave()
+        }
+        group.wait()
+        return avAsset
+    }
     func getAlbumAssets(){
         let requestOptions = PHImageRequestOptions()
-        videoAlbumAssets.removeAll()
+        videoPHAssets.removeAll()
 //        videoURL.removeAll()
         videoDate.removeAll()
         requestOptions.isSynchronous = true
@@ -136,7 +150,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
         requestOptions.deliveryMode = .highQualityFormat
         // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", defaultAlbumName)
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         if (assetCollections.count > 0) {//アルバムが存在しない時
             //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
@@ -150,7 +164,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
             for i in 0..<assets.count{
                 let asset=assets[i]
                 if asset.duration>0{//静止画を省く
-                    videoAlbumAssets.append(asset)
+                    videoPHAssets.append(asset)
 //                    videoURL.append(nil)
                     let date_sub = asset.creationDate
                     let date = formatter.string(from: date_sub!)
@@ -160,33 +174,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
             }
         }
     }
-  /*
-    var setURLfromPHAssetFlag:Bool=false
-    var getURL:URL?
-    func getURLfromPHAsset(asset:PHAsset)->URL{
-        setURLfromPHAssetFlag=false
-        setURLfromPHAsset(asset: asset)
-        while setURLfromPHAssetFlag == false{
-            sleep(UInt32(0.1))
-        }
-        return getURL!
-    }
-    func setURLfromPHAsset(asset:PHAsset){
-        //        let asset = PHAsset.fetchAssets(withLocalIdentifiers: localID, options: nil).object(at: num)
-        let options = PHVideoRequestOptions()
-        options.version = .original
-        PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { [self] (asset: AVAsset?, audioMix: AVAudioMix?, info: [AnyHashable : Any]?) -> Void in
-            if let urlAsset = asset as? AVURLAsset {//on iphone?
-                let localVideoUrl = urlAsset.url as URL
-                getURL = localVideoUrl
-                setURLfromPHAssetFlag=true
-            }else{//on cloud?
-                getURL = URL(string: tempFilePath)
-                setURLfromPHAssetFlag=true
-            }
-        }
-    }
-    */
+ 
     func setZoom(level:Float){//
         if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
@@ -234,7 +222,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", defaultAlbumName)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
 //        print("asset:",assetCollections.count)
@@ -443,7 +431,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
         //    }
         //    let album = AlbumController(name:"fushiki")
         
-        if albumExists()==true{
+        if albumExists(defaultAlbumName)==true{
 //            recordedFlag=true
             PHPhotoLibrary.shared().performChanges({ [self] in
                 //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)

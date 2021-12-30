@@ -12,16 +12,16 @@ import GLKit
 import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
-    let iroiro = IroIro()
+    let iroiro = IroIro(albumName:"vHIT_VOG")
     let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
     let vHIT_VOG:String="vHIT_VOG"
     var recordedFlag:Bool = false
     let motionManager = CMMotionManager()
-    var session: AVCaptureSession!
+    var captureSession: AVCaptureSession!
     var videoDevice: AVCaptureDevice?
     var filePath:String?
     var timer:Timer?
-    var videoURLCount:Int?
+    var videoCount:Int?//保持するだけ
     var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     var fpsMax:Int?
     var fps_non_120_240:Int=2
@@ -98,10 +98,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         print("cameraType",cameraType)
         UserDefaults.standard.set(cameraType, forKey: "cameraType")
-         if session.isRunning{
+         if captureSession.isRunning{
         // セッションが始動中なら止める
             print("isrunning")
-            session.stopRunning()
+            captureSession.stopRunning()
         }
         initSession(fps: fps_non_120_240)
         setBars()
@@ -132,34 +132,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
  
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
-//        if cameraType==2{
-//            return
-//        }
-//        let screenSize=cameraView.bounds.size
-//        let x0 = sender.location(in: self.view).x
-//        let y0 = sender.location(in: self.view).y
-//        print("tap:",x0,y0,screenSize.height)
-//
-//        if y0>view.bounds.height*3/5{//screenSize.height*3/4{
-//            return
-//        }
-//        let x = y0/screenSize.height
-//        let y = 1.0 - x0/screenSize.width
-//        let focusPoint = CGPoint(x:x,y:y)
-//        if let device = videoDevice{
-//            do {
-//                try device.lockForConfiguration()
-//
-//                device.focusPointOfInterest = focusPoint
-////                                device.focusMode = .continuousAutoFocus
-//                device.focusMode = .autoFocus
-//
-//                device.unlockForConfiguration()
-//            }
-//            catch {
-//                // just ignore
-//            }
-//        }
     }
     // 指定の FPS のフォーマットに切り替える (その FPS で最大解像度のフォーマットを選ぶ)
     //
@@ -168,12 +140,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func switchFormat(desiredFps: Double)->Bool {
         // セッションが始動しているかどうか
         var retF:Bool=false
-        let isRunning = session.isRunning
+        let isRunning = captureSession.isRunning
         
         // セッションが始動中なら止める
         if isRunning {
             print("isrunning")
-            session.stopRunning()
+            captureSession.stopRunning()
         }
         
         // 取得したフォーマットを格納する変数
@@ -218,7 +190,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
         // セッションが始動中だったら再開する
         if isRunning {
-            session.startRunning()
+            captureSession.startRunning()
         }
         return retF
     }
@@ -484,7 +456,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func initSession(fps:Int) {
         // セッション生成
-        session = AVCaptureSession()
+        captureSession = AVCaptureSession()
         // 入力 : 背面カメラ
         if cameraType==0{
             videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
@@ -496,7 +468,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
         }
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
-        session.addInput(videoInput)
+        captureSession.addInput(videoInput)
         // ↓ココ重要！！！！！
         // viewDidLoadから240fpsで飛んでくる
         //２回目は、120fps録画のみの機種では120で飛んでくる。
@@ -511,25 +483,25 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // ファイル出力設定
         fileOutput = AVCaptureMovieFileOutput()
 //        fileOutput.maxRecordedDuration = CMTimeMake(value:5*60, timescale: 1)//最長録画時間
-        session.addOutput(fileOutput)
+        captureSession.addOutput(fileOutput)
         //手振れ補正はデフォルトがoff
 //        fileOutput.connections[0].preferredVideoStabilizationMode=AVCaptureVideoStabilizationMode.off
-        let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
+        let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         videoLayer.frame = self.view.bounds
         videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill//無くても同じ
         //self.view.layer.addSublayer(videoLayer)
         cameraView.layer.addSublayer(videoLayer)
         // zooming slider
         // セッションを開始する (録画開始とは別)
-        session.startRunning()
+        captureSession.startRunning()
     }
     func checkinitSession() {//maxFpsを設定
         // セッション生成
-        session = AVCaptureSession()
+        captureSession = AVCaptureSession()
         // 入力 : 背面カメラ
         videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
-        session.addInput(videoInput)
+        captureSession.addInput(videoInput)
         
         maxFps=240.0
         fps_non_120_240=2
@@ -544,14 +516,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // ファイル出力設定
         fileOutput = AVCaptureMovieFileOutput()
 //        fileOutput.maxRecordedDuration = CMTimeMake(value: 5*60, timescale: 1)//最長録画時間
-        session.addOutput(fileOutput)
+        captureSession.addOutput(fileOutput)
         
-        let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
+        let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         videoLayer.frame = self.view.bounds
         videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill//無くても同じ
         cameraView.layer.addSublayer(videoLayer)
         // セッションを開始する (録画開始とは別)
-        session.startRunning()
+        captureSession.startRunning()
     }
     
     func defaultCamera() -> AVCaptureDevice? {

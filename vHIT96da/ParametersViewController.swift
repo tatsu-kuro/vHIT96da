@@ -115,16 +115,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var eyeVelocityInput: UITextField!
     @IBOutlet weak var headVelocityInput: UITextField!
 
-  
-    
     @IBAction func wakuLengthAction(_ sender: Any) {
         wakuLength = Field2value(field: wakuLengthInput)
-//        if wakuLength<3{
-//            wakuLength=3
-//        }else if wakuLength>15{
-//            wakuLength=15
-//        }
-//        UserDefaults.standard.set(wakuLength, forKey: "wakuLength")
     }
     
     @IBAction func faceFchan(_ sender: UISwitch) {
@@ -203,7 +195,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             widthRange = 30
             waveWidth = 80
             eyeBorder=10
-//            okpMode=0
             faceFbutton.isOn=false
             useFaceMark=0
             videoGyroZure = 20
@@ -212,7 +203,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLength = 3
         }else{
             eyeBorder=10
-//            okpMode=0
             faceFbutton.isOn=false
             posRatio = 100
             veloRatio = 100
@@ -238,11 +228,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func eyeBorderButton(_ sender: Any) {
         eyeBorder = Field2value(field: eyeBorderInput)
-//        if eyeBorder<5{
-//            eyeBorder=5
-//        }else if eyeBorder>30{
-//            eyeBorder=30
-//        }
     }
     
     @IBAction func videoGyroZurechange(_ sender: Any) {
@@ -422,11 +407,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
         }
-        //
-//        let sp:CGFloat=5
-//        let butw=(view.bounds.width-sp*7)/4
-//        let buth=butw/2
-//        let buty=view.bounds.height-sp-buth-bottomPadding
         defaultButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
         tovHITButton.frame=CGRect(x:butw+3*sp,y:buty,width:butw,height: buth)
         vHITLabel.frame=CGRect(x:butw+3*sp,y:buty-7,width:butw,height: 5)

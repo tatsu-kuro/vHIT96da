@@ -119,7 +119,7 @@ extension UIImage {
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let openCV = opencvWrapper()
-    let iroiro = IroIro()
+    let iroiro = IroIro(albumName: "vHIT_VOG")
     var writingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
     var readingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
@@ -134,7 +134,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var videoSlider: UISlider!
     //以下はalbum関連
     var albumExist:Bool=false
-//    var videoURLCount:Int = 0
     var videoDate = Array<String>()
     var videoDateTime = Array<Date>()//creationDate+durationより１−２秒遅れるpngdate
     var videoURL = Array<URL>()
@@ -156,18 +155,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var backwardButton: UIButton!
     
     @IBOutlet weak var damyBottom: UILabel!
-    
-//    func playTrack()//こんな方法もある
-//    {
-//        let playerItem = AVPlayerItem(url: videoURL[videoCurrent])
-//        videoPlayer.replaceCurrentItem(with:playerItem)
-//        videoPlayer.play()
-//    }
-//    func playTrack(number:Int)//こんな方法もある
-//    {
-//        videoPlayer.replaceCurrentItem(with:AVPlayerItem(url: videoURL[number]))
-//        videoPlayer.play()
-//    }
+ 
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
 //        if checkDispMode() != 0{
@@ -196,7 +184,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
 //        stopTimerVideo()
         startTimerVideo()
-        if videoURL.count == 0{
+        if videoDate.count == 0{
             return
         }
         if videoPlayMode==mode{
@@ -317,6 +305,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func playVideoURL(video:URL){//nextVideo
         let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
         let avAsset = AVURLAsset(url: video, options: options)
+//        let avasset = iroiro.requestAVAsset(asset: iroiro.videoPHAssets[videoCurrent])
+        
+//        videoDuration=Float(CMTimeGetSeconds(avasset!.duration))
+//        let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset!)
+//        // Create AVPlayer
+//        videoPlayer = AVPlayer(playerItem: playerItem)
+//
+        
+        
+        
         let playerItem: AVPlayerItem = AVPlayerItem(asset: avAsset)
         let videoDuration=Float(CMTimeGetSeconds(avAsset.duration))
         // Create AVPlayer
@@ -444,7 +442,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoURL.remove(at: videoCurrent)
             videoImg.remove(at: videoCurrent)
             videoDura.remove(at: videoCurrent)
-//            videoURLCount -= 1
             videoCurrent -= 1
             showVideoIroiro(num: 0)
             if videoImg.count==0{
@@ -796,7 +793,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func setBacknext(f:Bool){//back and next button
         nextButton.isHidden = !f
         backButton.isHidden = !f
-        if videoURL.count < 2{
+        if videoDate.count < 2{
             nextButton.isHidden = true
             backButton.isHidden = true
         }
@@ -2160,7 +2157,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         //videosImgだけはここでゲット
         videoImg.removeAll()
-        for i in 0..<videoURL.count{
+        for i in 0..<videoDate.count{
             videoImg.append(getThumb(url: videoURL[i]))
         }
     }
@@ -2882,71 +2879,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         present(alertController, animated: true)
     }
     // アルバムが既にあるか確認し
-    func albumExists(albumTitle: String) -> Bool {
-        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
-        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
-        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
-                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
-        for i in 0 ..< albums.count {
-            let album = albums.object(at: i)
-            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
-//                vHIT96daAlbum = album
-                return true
-            }
-        }
-        return false
-    }
-    
-    //何も返していないが、ここで見つけたor作成したalbumを返したい。そうすればグローバル変数にアクセスせずに済む
-    func createNewAlbum(albumTitle: String, callback: @escaping (Bool) -> Void) {
-        if self.albumExists(albumTitle: albumTitle) {
-            callback(true)
-        } else {
-            PHPhotoLibrary.shared().performChanges({
-                _ = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
-            }) { (isSuccess, error) in
-                callback(isSuccess)
-            }
-        }
-    }
-//    var checkLibraryAuthrizedFlag:Bool=false
-//    func checkLibraryAuthorized(){
-//        //iOS14に対応
-//        checkLibraryAuthrizedFlag=false
-//        if #available(iOS 14.0, *) {
-//            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
-//                switch status {
-//                case .limited:
-//                    self.checkLibraryAuthrizedFlag=true
-//                    print("制限あり")
-//                    break
-//                case .authorized:
-//                    self.checkLibraryAuthrizedFlag=true
-//                    print("許可ずみ")
-//                    break
-//                case .denied:
-//                    print("拒否ずみ")
-//                    break
-//                default:
-//                    break
-//                }
+//    func albumExists(albumTitle: String) -> Bool {
+//        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
+//        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
+//        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
+//                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
+//        for i in 0 ..< albums.count {
+//            let album = albums.object(at: i)
+//            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
+////                vHIT96daAlbum = album
+//                return true
 //            }
 //        }
-//        else  {
-//            if PHPhotoLibrary.authorizationStatus() != .authorized {
-//                PHPhotoLibrary.requestAuthorization { status in
-//                    if status == .authorized {
-//                        self.checkLibraryAuthrizedFlag=true
-//                        print("許可ずみ")
-//                    } else if status == .denied {
-//                        print("拒否ずみ")
-//                    }
-//                }
-//            } else {
-//
+//        return false
+//    }
+//    
+    //何も返していないが、ここで見つけたor作成したalbumを返したい。そうすればグローバル変数にアクセスせずに済む
+//    func createNewAlbum(albumTitle: String, callback: @escaping (Bool) -> Void) {
+//        if iroiro.albumExists(albumTitle) {
+//            callback(true)
+//        } else {
+//            PHPhotoLibrary.shared().performChanges({
+//                _ = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
+//            }) { (isSuccess, error) in
+//                callback(isSuccess)
 //            }
 //        }
 //    }
+
     var checkLibraryAuthrizedFlag:Int=0
     func checkLibraryAuthorized(){
         //iOS14に対応
@@ -3016,11 +2976,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if checkLibraryAuthrizedFlag==1{
             getVideosAlbumList(name:vHIT_VOG)
         }
-//        videoURLCount = videoURL.count
         //videcurrentは前回終了時のものを利用する
         videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
-        if videoCurrent>videoURL.count-1{
-            videoCurrent=videoURL.count-1
+        if videoCurrent>videoDate.count-1{
+            videoCurrent=videoDate.count-1
         }
         makeBoxies()//three boxies of gyro vHIT vog
         showBoxies(f: false)//isVHITに応じてviewを表示
@@ -3157,19 +3116,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // Dispose of any resources that can be recreated.
     }
    
-    func makeAlbum(name:String){
-        if albumExists(albumTitle:name )==false{
-            createNewAlbum(albumTitle: name) {  isSuccess in
-                if isSuccess{
-                    print(name," can be made,")
-                } else{
-                    print(name," can't be made.")
-                }
-            }
-        }else{
-            print(name," exist already.")
-        }
-    }
+//    func makeAlbum(name:String){
+//        if albumExists(albumTitle:name )==false{
+//            createNewAlbum(albumTitle: name) {  isSuccess in
+//                if isSuccess{
+//                    print(name," can be made,")
+//                } else{
+//                    print(name," can't be made.")
+//                }
+//            }
+//        }else{
+//            print(name," exist already.")
+//        }
+//    }
     //    var tempCalcflag:Bool = false
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // segueから遷移先のResultViewControllerを取得する
@@ -3202,9 +3161,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             Controller.calcMode = calcMode
         }else if let vc = segue.destination as? RecordViewController{
             let Controller:RecordViewController = vc
-            makeAlbum(name: vHIT_VOG)//なければ作る
-            makeAlbum(name: Wave96da)//これもなければ作る
-            Controller.videoURLCount=videoURL.count
+            iroiro.makeAlbum(vHIT_VOG)//なければ作る
+            iroiro.makeAlbum(Wave96da)//これもなければ作る
+            Controller.videoCount=videoDate.count
         }else{
             #if DEBUG
             print("prepare list")
@@ -3327,8 +3286,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #endif
         }else if let vc = segue.source as? RecordViewController{
             let Controller:RecordViewController = vc
-            if Controller.session.isRunning{//何もせず帰ってきた時
-                Controller.session.stopRunning()
+            if Controller.captureSession.isRunning{//何もせず帰ってきた時
+                Controller.captureSession.stopRunning()
                 print("sessionが動いている")
             }else{
                 print("sessionが動いていない")
@@ -3366,15 +3325,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 removeFile(delFile: "temp.png")
                 getVideosAlbumList(name: vHIT_VOG)
                 print("rewind***3")
-                let videoCount=Controller.videoURLCount
+                let videoCount=Controller.videoCount
                 //ビデオが出来るまで待つ
-                while videoDura.count==videoCount{//videoURLCount{
+                while videoDura.count==videoCount{
                     sleep(UInt32(0.5))
                 }
-//                videoURLCount=videoDura.count
+
                 videoCurrent=videoDura.count-1
                 showVideoIroiro(num:0)
                 var fps=getFPS(url: videoURL[videoCurrent])
+                //                fps=avasset!.tracks.first!.nominalFrameRate
                 if fps < 200.0{
                     fps *= 2.0
                 }
