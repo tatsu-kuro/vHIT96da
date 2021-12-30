@@ -140,6 +140,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoImg = Array<UIImage>()
     var videoDura = Array<String>()
     var videoAsset = Array<AVAsset>()
+    var videoAlbumAssets = Array<PHAsset>()
     var videoCurrent:Int=0
 
     //album関連、ここまで
@@ -2162,7 +2163,42 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             videoImg.append(getThumb(url: videoURL[i]))
         }
     }
- 
+    func getAlbumAssets(){
+        let requestOptions = PHImageRequestOptions()
+        videoAlbumAssets.removeAll()
+//        videoURL.removeAll()
+        videoDate.removeAll()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = true//これでもicloud上のvideoを取ってしまう
+        requestOptions.deliveryMode = .highQualityFormat
+        // アルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        if (assetCollections.count > 0) {//アルバムが存在しない時
+            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+            let assetCollection = assetCollections.object(at:0)
+            // creationDate降順でアルバム内のアセットをフェッチ
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            for i in 0..<assets.count{
+                let asset=assets[i]
+                if asset.duration>0{//静止画を省く
+                    videoAlbumAssets.append(asset)
+//                    print("asset:",asset)
+//                    videoURL.append(nil)
+                    let date_sub = asset.creationDate
+                    let date = formatter.string(from: date_sub!)
+                    let duration = String(format:"%.1fs",asset.duration)
+                    videoDate.append(date + "(" + duration + ")")
+//                    asset.video
+                }
+            }
+        }
+    }
     func getAlbumList_sub(name:String){
         //     let imgManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
@@ -2208,30 +2244,33 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let date_sub = asset.creationDate
                 let date = formatter.string(from: date_sub!)
                 let duration = String(format:"%.1fs",asset.duration)
-                let options=PHVideoRequestOptions()
-                options.version = .original
-                PHImageManager.default().requestAVAsset(forVideo:asset,
-                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
-                    
-                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
-                        videoURL.append(urlAsset.url)
-                        videoDate.append(date)// + "(" + duration + ")")
-                        videoDura.append(duration)
-                        videoDateTime.append(date_sub!)//pngDateTimeと比較する？念のため
-                        videoAsset.append(asset!)
-                        //ここではgetThumbができないことがある。
-//                        videosImg.append(getThumb(url: urlAsset.url))
-//                        print(videoDate.last as Any)
-                        if i == assets.count - 1{
-                            gettingAlbumF=false
-                        }
-                    }else{//on icloud
-//                        print("on icloud:",asset)
-                        if i == assets.count - 1{
-                            gettingAlbumF=false
-                        }
-                    }
-                }
+                videoDate.append(date)
+                videoDura.append(duration)
+//                videoAsset.append(asset!)
+//                let options=PHVideoRequestOptions()
+//                options.version = .original
+//                PHImageManager.default().requestAVAsset(forVideo:asset,
+//                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
+//
+//                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
+//                        videoURL.append(urlAsset.url)
+//                        videoDate.append(date)// + "(" + duration + ")")
+//                        videoDura.append(duration)
+//                        videoDateTime.append(date_sub!)//pngDateTimeと比較する？念のため
+////                        videoAsset.append(asset!)
+//                        //ここではgetThumbができないことがある。
+////                        videosImg.append(getThumb(url: urlAsset.url))
+////                        print(videoDate.last as Any)
+//                        if i == assets.count - 1{
+//                            gettingAlbumF=false
+//                        }
+//                    }else{//on icloud
+////                        print("on icloud:",asset)
+//                        if i == assets.count - 1{
+//                            gettingAlbumF=false
+//                        }
+//                    }
+//                }
             }
         }else{
             albumExist=false
