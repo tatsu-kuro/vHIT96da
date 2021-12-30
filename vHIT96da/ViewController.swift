@@ -119,6 +119,7 @@ extension UIImage {
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let openCV = opencvWrapper()
+    let iroiro = IroIro()
     var writingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
     var readingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
@@ -2199,6 +2200,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+
     func getAlbumList_sub(name:String){
         //     let imgManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
@@ -2244,33 +2246,30 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let date_sub = asset.creationDate
                 let date = formatter.string(from: date_sub!)
                 let duration = String(format:"%.1fs",asset.duration)
-                videoDate.append(date)
-                videoDura.append(duration)
-//                videoAsset.append(asset!)
-//                let options=PHVideoRequestOptions()
-//                options.version = .original
-//                PHImageManager.default().requestAVAsset(forVideo:asset,
-//                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
-//
-//                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
-//                        videoURL.append(urlAsset.url)
-//                        videoDate.append(date)// + "(" + duration + ")")
-//                        videoDura.append(duration)
-//                        videoDateTime.append(date_sub!)//pngDateTimeと比較する？念のため
-////                        videoAsset.append(asset!)
-//                        //ここではgetThumbができないことがある。
-////                        videosImg.append(getThumb(url: urlAsset.url))
-////                        print(videoDate.last as Any)
-//                        if i == assets.count - 1{
-//                            gettingAlbumF=false
-//                        }
-//                    }else{//on icloud
-////                        print("on icloud:",asset)
-//                        if i == assets.count - 1{
-//                            gettingAlbumF=false
-//                        }
-//                    }
-//                }
+                let options=PHVideoRequestOptions()
+                options.version = .original
+                PHImageManager.default().requestAVAsset(forVideo:asset,
+                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
+                    
+                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
+                        videoURL.append(urlAsset.url)
+                        videoDate.append(date)// + "(" + duration + ")")
+                        videoDura.append(duration)
+                        videoDateTime.append(date_sub!)//pngDateTimeと比較する？念のため
+                        videoAsset.append(asset!)
+                        //ここではgetThumbができないことがある。
+//                        videosImg.append(getThumb(url: urlAsset.url))
+//                        print(videoDate.last as Any)
+                        if i == assets.count - 1{
+                            gettingAlbumF=false
+                        }
+                    }else{//on icloud
+//                        print("on icloud:",asset)
+                        if i == assets.count - 1{
+                            gettingAlbumF=false
+                        }
+                    }
+                }
             }
         }else{
             albumExist=false
@@ -3054,34 +3053,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         bw=bh//bhは冒頭で決めている。上２段のボタンの高さと同じ。
         let bwd=bw+distance
         let bh0=bottomY-bh//wh-10-bw/2
-        setButtonProperty(button:listButton,bw:bw,bh:bh,x:10+bwd*0,y:bh0)
-        setButtonProperty(button:saveButton,bw:bw,bh:bh,x:10+bwd*1,y:bh0)
-        setButtonProperty(button:waveButton,bw:bw,bh:bh,x:10+bwd*2,y:bh0)
-        calcButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
-//        calcButton.layer.cornerRadius=calcButton.layer.frame.width/2
-//        calcButton.layer.borderColor = UIColor.red.cgColor
-//        calcButton.layer.borderWidth=0
-//        calcButton.backgroundColor=UIColor.blue
-        stopButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
-//        stopButton.layer.cornerRadius=calcButton.layer.frame.width/2
-//        stopButton.layer.borderColor = UIColor.red.cgColor
-//        stopButton.layer.borderWidth=0
+        iroiro.setButtonProperty(listButton,x:10+bwd*0,y:bh0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(saveButton,x:10+bwd*1,y:bh0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(waveButton,x:10+bwd*2,y:bh0,w:bw,h:bh,UIColor.systemBlue)
 
-//        stopButton.backgroundColor=UIColor.blue
-        setButtonProperty(button:paraButton,bw:bw,bh:bh,x:10+bwd*4,y:bh0)
-        setButtonProperty(button:cameraButton,bw:bw,bh:bh,x:10+bwd*6,y:bh0)
-        setButtonProperty(button:helpButton,bw:bw,bh:bh,x:10+bwd*5,y:bh0)
-        setButtonProperty(button:backwardButton,bw:bh,bh:bh,x:10+bwd*4,y:bh1)
-        setButtonProperty(button:playButton,bw:bh,bh:bh,x:10+bwd*5,y:bh1)
-        setButtonProperty(button:forwardButton,bw:bh,bh:bh,x:10+bwd*6,y:bh1)
-        setButtonProperty(button:changeModeButton,bw:bh*3+distance*2,bh:bh,x:10,y:bh1)
-//        setButtonProperty(button:modeDispButton,bw:bh*0,bh:bh,x:10+bwd*1.5,y:bh1)
-    }
-    func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,x:CGFloat,y:CGFloat){
-        button.frame = CGRect(x:x,y:y,width:bw,height:bh)
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.borderWidth = 1.0
-        button.layer.cornerRadius = 5
+        calcButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
+        stopButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
+
+        iroiro.setButtonProperty(paraButton,x:10+bwd*4,y:bh0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(helpButton,x:10+bwd*5,y:bh0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(cameraButton,x:10+bwd*6,y:bh0,w:bw,h:bh,UIColor.systemRed)
+        
+        iroiro.setButtonProperty(backwardButton,x:10+bwd*4,y:bh1,w:bw,h:bh,UIColor.systemOrange)
+        iroiro.setButtonProperty(playButton,x:10+bwd*5,y:bh1,w:bw,h:bh,UIColor.systemOrange)
+        iroiro.setButtonProperty(forwardButton,x:10+bwd*6,y:bh1,w:bw,h:bh,UIColor.systemOrange)
+        iroiro.setButtonProperty(changeModeButton,x:10,y:bh1,w:bh*3+distance*2,h:bh,UIColor.darkGray)
     }
 
     override var prefersHomeIndicatorAutoHidden: Bool {

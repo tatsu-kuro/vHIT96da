@@ -12,6 +12,7 @@ import GLKit
 import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
+    let iroiro = IroIro()
     let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
     let vHIT_VOG:String="vHIT_VOG"
     var recordedFlag:Bool = false
@@ -423,7 +424,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let bw=(ww/4)-8
         //        let bd=Int(ww/5/4)
         let bh:CGFloat=60
-        let bpos=wh-bh/2-10
+//        let bpos=wh-bh/2-10
+        let y0=wh-bh-10
+        let y1=y0-bh-10
+        let y2=y1-bh
+        let y3=y2-10-bh/2
+        let y4=y3-10-bh/2
+        let x1=ww-5-bw
         
         currentTime.frame   = CGRect(x:0,   y: 0 ,width: bw*1.5, height: bh/2)
         currentTime.layer.position=CGPoint(x:ww/2,y:wh-bh*4)
@@ -432,8 +439,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         currentTime.layer.cornerRadius = 5
         currentTime.font = UIFont.monospacedDigitSystemFont(ofSize: 25*view.bounds.width/320, weight: .medium)
 
-        setButtonProperty(button: fps240Button, bw: bw, bh:bh, cx:(10+bw)/2 , cy: bpos-10-bh)
-        setButtonProperty(button: fps120Button, bw: bw, bh: bh, cx:(10+bw)/2 , cy:bpos)
+//        setButtonProperty(button: fps240Button, bw: bw, bh:bh, cx:(10+bw)/2 , cy: bpos-10-bh)
+//        setButtonProperty(button: fps120Button, bw: bw, bh: bh, cx:(10+bw)/2 , cy:bpos)
+        
+        iroiro.setButtonProperty(fps240Button, x:5,y: y1, w: bw, h:bh,UIColor.gray)
+        iroiro.setButtonProperty(fps120Button, x:5,y:y0, w: bw, h: bh,UIColor.gray)
+
         
         if fps_non_120_240==2{
             self.fps120Button.backgroundColor = UIColor.darkGray
@@ -448,44 +459,28 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         //startButton
 
-        speakerSwitch.frame=CGRect(x:8,y:bpos-bh*11/4+5,width: 47,height: 31)
-        speakerImage.frame=CGRect(x:60,y:bpos-bh*11/4+5,width: 31,height: 31)
-        setLabelProperty(label: focusNear,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-20-bh*11/4)
-        setLabelProperty(label:focusFar, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-20-bh*11/4)
-        setLabelProperty(label: LEDLow,bw:bw,bh:bh/2,cx:(10+bw)/2,cy:bpos-30-bh*13/4)
-        setLabelProperty(label:LEDHigh, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-30-bh*13/4)
+        speakerSwitch.frame=CGRect(x:8,y:y2,width: 47,height: 31)
+        speakerImage.frame=CGRect(x:60,y:y2,width: 31,height: 31)
+        iroiro.setLabelProperty(focusNear,x:5,y:y3,w:bw,h:bh/2,UIColor.white)
+        iroiro.setLabelProperty(focusFar,x:x1,y:y3,w:bw,h:bh/2,UIColor.white)
+        iroiro.setLabelProperty(LEDLow,x:5,y:y4,w:bw,h:bh/2,UIColor.gray)
+        iroiro.setLabelProperty(LEDHigh,x:x1,y:y4, w: bw, h:bh/2,UIColor.systemOrange)
 //        setButtonProperty(button:cameraChangeButton, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-40-bh*15/4)
-        setButtonProperty(button:cameraChangeButton, bw: bw, bh:bh, cx:ww-5-bw/2, cy:bpos-10-bh)
-        focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
-        focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*11/4)
-        LEDBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
-        LEDBar.layer.position=CGPoint(x:ww/2,y:bpos-30-bh*13/4)
+        iroiro.setButtonProperty(cameraChangeButton,x:x1,y:y1, w: bw, h:bh,UIColor.systemOrange)
+        iroiro.setButtonProperty(exitBut,x:x1,y:y0, w: bw, h:bh,UIColor.darkGray)
+//        focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
+        focusBar.frame=CGRect(x:10+bw+10,y:y3,width: ww-bw*2-40,height:bh/2)
+//        focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*11/4)
+        LEDBar.frame=CGRect(x:20+bw,y:y4,width:ww-bw*2-40,height:bh/2)
+//        LEDBar.layer.position=CGPoint(x:ww/2,y:bpos-30-bh*13/4)
         
-        startButton.frame=CGRect(x:0,y:0,width:bh*3.2,height:bh*3.2)
-        startButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
-        stopButton.frame=CGRect(x:0,y:0,width:bh*3.2,height:bh*3.2)
-        stopButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
+        startButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
+//        startButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
+        stopButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
+//        stopButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
         startButton.isHidden=true
         stopButton.isHidden=true
         stopButton.tintColor=UIColor.orange
-        setButtonProperty(button: exitBut, bw: bw, bh:bh, cx:ww-5-bw/2, cy:bpos)
-//        setButtonProperty(button: speakerOffButton, bw: bw, bh:bh, cx:ww-5-bw/2, cy:bpos)
-//        setButtonProperty(button: speakerOnButton, bw: bw, bh:bh, cx:ww-5-bw/2, cy:bpos)
-    }
-    func setLabelProperty(label:UILabel,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
-        label.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
-        label.layer.borderColor = UIColor.black.cgColor
-        label.layer.borderWidth = 1.0
-        label.layer.position=CGPoint(x:cx,y:cy)
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 5
-    }
-    func setButtonProperty(button:UIButton,bw:CGFloat,bh:CGFloat,cx:CGFloat,cy:CGFloat){
-        button.frame   = CGRect(x:0,   y: 0 ,width: bw, height: bh)
-        button.layer.borderColor = UIColor.black.cgColor
-        button.layer.borderWidth = 1.0
-        button.layer.position=CGPoint(x:cx,y:cy)
-        button.layer.cornerRadius = 5
     }
     func initSession(fps:Int) {
         // セッション生成

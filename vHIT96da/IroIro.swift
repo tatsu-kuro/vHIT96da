@@ -1,16 +1,17 @@
 //
-//  IroIro.swift
-//  vHIT96da
+//  recordAlbum.swift
+//  Fushiki
 //
-//  Created by 黒田建彰 on 2021/12/30.
-//  Copyright © 2021 tatsuaki.kuroda. All rights reserved.
+//  Created by 黒田建彰 on 2021/01/10.
+//  Copyright © 2021 tatsuaki.Fushiki. All rights reserved.
+//
 import UIKit
 import Photos
 import AVFoundation
 
-class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
+class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
     let tempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
-    let albumName:String = "iCapNYS"
+    let albumName:String = "vHIT_VOG"
     var videoDevice: AVCaptureDevice?
     var captureSession: AVCaptureSession!
     var fileOutput = AVCaptureMovieFileOutput()
@@ -30,19 +31,6 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
 //        // 全てのプロパティを初期化する前にインスタンスメソッドを実行することはできない
 //        self.albumName = "Fushiki"//name
 //    }
-    func getCameraNumber()->Int{
-        var cameras:Int = 0
-        if AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) != nil {
-            cameras += 4
-        }
-        if AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back) != nil {
-            cameras += 2
-        }
-        if AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) != nil {
-            cameras += 1
-        }
-        return cameras
-    }
     //ジワーッと文字を表示するため
     func updateRecClarification(tm: Int)->CGFloat {
         var cnt=tm%40
@@ -54,10 +42,37 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         return alpha
     }
     func getRecClarificationRct(width:CGFloat,height:CGFloat)->CGRect{
-        let imgH=height/30//415*177 2.34  383*114 3.36 257*112 2.3
-        let imgW=imgH*2.3
-        let space=imgW*0.1
-        return CGRect(x:width-imgW-space,y:height-imgH-space,width: imgW,height:imgH)
+        let w=width/100
+        let left=CGFloat( UserDefaults.standard.float(forKey: "left"))
+        if left==0{
+            return CGRect(x:width-w,y:height-w,width:w,height:w)
+        }else{
+            return CGRect(x:left/6,y:height-height/5.5,width:w,height:w)
+        }
+//        let imgH=height/30//415*177 2.34  383*114 3.36 257*112 2.3
+//        let imgW=imgH*2.3
+//        let space=imgW*0.1
+//        return CGRect(x:width-imgW-space,y:height-imgH-space,width: imgW,height:imgH)
+    }
+    func checkEttString(ettStr:String)->Bool{//ettTextがちゃんと並んでいるか like as 1,2:3:20,3:2:20
+        let ettTxtComponents = ettStr.components(separatedBy: ",")
+        let widthCnt = ettTxtComponents[0].components(separatedBy: ":").count
+        var paramCnt = 3
+        if ettTxtComponents.count<2{
+            return false
+        }
+        for i in 1...ettTxtComponents.count-1{//3個以外の時はその数値をセット
+            let str = ettTxtComponents[i].components(separatedBy: ":")
+            if str.count != 3{
+                paramCnt = str.count
+            }
+        }
+        
+        if widthCnt == 1 && paramCnt == 3 && ettStr.isAlphanumeric(){
+            return true
+        }else{
+            return false
+        }
     }
     func albumExists() -> Bool {
         // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
@@ -136,31 +151,19 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
                 let asset=assets[i]
                 if asset.duration>0{//静止画を省く
                     videoAlbumAssets.append(asset)
-//                    print("asset:",asset)
 //                    videoURL.append(nil)
                     let date_sub = asset.creationDate
                     let date = formatter.string(from: date_sub!)
                     let duration = String(format:"%.1fs",asset.duration)
                     videoDate.append(date + "(" + duration + ")")
-//                    asset.video
                 }
             }
         }
     }
-   
-//    var setURLfromPHAssetFlag:Bool=false
-//    var getURL:URL?
-/*    func getURLfromPHAsset(asset:PHAsset)->URL?{
-        setURLfromPHAssetFlag=false
-        setURLfromPHAsset(phasset: asset)
-        while setURLfromPHAssetFlag == false{
-            sleep(UInt32(0.1))
-        }
-        print("geturl:",getURL)
-        return getURL!
-    }*/
-    /*
-   func getURLfromPHAsset(asset:PHAsset)->URL?{
+  /*
+    var setURLfromPHAssetFlag:Bool=false
+    var getURL:URL?
+    func getURLfromPHAsset(asset:PHAsset)->URL{
         setURLfromPHAssetFlag=false
         setURLfromPHAsset(asset: asset)
         while setURLfromPHAssetFlag == false{
@@ -178,49 +181,14 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
                 getURL = localVideoUrl
                 setURLfromPHAssetFlag=true
             }else{//on cloud?
-//                getURL = nil//tempFileURL!// URL(string: tempFilePath)
                 getURL = URL(string: tempFilePath)
                 setURLfromPHAssetFlag=true
             }
         }
     }
     */
- /*   func setURLfromPHAsset(phasset:PHAsset){
-        setURLfromPHAssetFlag=false
-        PHCachingImageManager().requestAVAsset(forVideo: phasset, options: nil) { (asset, audioMix, args) in
-            let asset = asset as! AVURLAsset
-            DispatchQueue.main.async {
-                self.getURL=asset.url
-                self.setURLfromPHAssetFlag=true
-                print("url:",self.getURL as Any)
-            }
-        }
-    }*/
-    /*
-     func playVideo (view: UIViewController, videoAsset: PHAsset) {
-
-         guard (videoAsset.mediaType == .video) else {
-             print("Not a valid video media type")
-             return
-         }
-
-         PHCachingImageManager().requestAVAsset(forVideo: videoAsset, options: nil) { (asset, audioMix, args) in
-             let asset = asset as! AVURLAsset
-
-             DispatchQueue.main.async {
-                 let player = AVPlayer(url: asset.url)
-                 let playerViewController = AVPlayerViewController()
-                 playerViewController.player = player
-                 view.present(playerViewController, animated: true) {
-                     playerViewController.player!.play()
-                 }
-             }
-         }
-     }
-     */
-    
     func setZoom(level:Float){//
-        if cameraMode==2{
+        if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
         if let device = videoDevice {
@@ -237,7 +205,7 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
     }
     
     func setFocus(focus:Float){//focus 0:最接近　0-1.0
-        if cameraMode==2{
+        if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
         if let device = videoDevice {
@@ -310,53 +278,59 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
     }
 
     func recordStart(){
-        if cameraMode==2{
+        if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
+        if let soundUrl = URL(string:
+                                "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+            let speakerOnOff=UserDefaults.standard.integer(forKey: "speakerOnOff")
+            if speakerOnOff==1{
+            
+            AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+            AudioServicesPlaySystemSound(soundIdx)
+            }
+        }
+        
+        
         try? FileManager.default.removeItem(atPath: tempFilePath)
         let fileURL = NSURL(fileURLWithPath: tempFilePath)
         fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
     }
     func recordStop(){
-        if cameraMode==2{
+        if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
         captureSession.stopRunning()//下行と入れ替えても動く
         fileOutput.stopRecording()
      }
     func stopRunning(){
-        if cameraMode==2{
+        if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
         captureSession.stopRunning()
     }
-    var topPadding:CGFloat=0
-    var bottomPadding:CGFloat=0
-    var leftPadding:CGFloat=0
-    var rightPadding:CGFloat=0
-    func getAllPadding(view:UIView) {
-        if #available(iOS 11.0, *) {
-            // viewDidLayoutSubviewsではSafeAreaの取得ができている
-            topPadding = view.safeAreaInsets.top
-            bottomPadding = view.safeAreaInsets.bottom
-            leftPadding = view.safeAreaInsets.left
-            rightPadding = view.safeAreaInsets.right
-            print("in viewDidLayoutSubviews")
-            print(topPadding,bottomPadding,leftPadding,rightPadding)
-        }
-    }
+
     func initSession(camera:Int,bounds:CGRect,cameraView:UIImageView) {
         // セッション生成
         cameraMode=camera
-        if cameraMode==2{
+        if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
         captureSession = AVCaptureSession()
         // 入力 : 背面カメラ
+        //Fushiki-->builtInWideAngleCamera
+        //builtInUltraWideCamera//12-upper, 8-error, 7plus-error
+        //builtInTelephontoCamera//7plus-right,8-error
+        //builtInWideAngleCamera//12-lower, 7plus-left, 8
         if camera==0{
-        videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-        }else{
+            videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+        }else if camera==1{
             videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+        }else if camera==2{
+            videoDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
+        }else{
+            videoDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back)
+
         }
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
         captureSession.addInput(videoInput)
@@ -452,8 +426,12 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let soundUrl = URL(string:
                                 "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+            let speakerOnOff=UserDefaults.standard.integer(forKey: "speakerOnOff")
+            if speakerOnOff==1{
+            
             AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
             AudioServicesPlaySystemSound(soundIdx)
+            }
         }
          print("終了ボタン、最大を超えた時もここを通る")
         //         motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
@@ -540,8 +518,17 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
             return ret
         }
     }
+    func getUserDefaultString(str:String,ret:String) -> String{
+        if (UserDefaults.standard.object(forKey: str) != nil){
+            return UserDefaults.standard.string(forKey:str)!
+        }else{//keyが設定してなければretをセット
+            UserDefaults.standard.set(ret, forKey: str)
+            return ret
+        }
+    }
     func setLedLevel(level:Float){
-        if cameraMode==2{
+        
+        if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
         if let device = videoDevice{
@@ -574,4 +561,3 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         }
     }
 }
-
