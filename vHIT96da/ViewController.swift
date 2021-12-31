@@ -2141,9 +2141,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-    var gettingAlbumF:Bool = false
     func getAlbumAssets(){
         gettingAlbumF = true
+        getAlbumAssets_sub()
+        while gettingAlbumF == true{
+            sleep(UInt32(0.1))
+        }
+    }
+    var gettingAlbumF:Bool = false
+    func getAlbumAssets_sub(){
         let requestOptions = PHImageRequestOptions()
         videoPHAsset.removeAll()
         videoDura.removeAll()
@@ -2964,7 +2970,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
         showModeText()
-        
         checkLibraryAuthorized()
         //すでに許可しているときはすぐに帰ってくる。
         //最初の許可では、下記ループでダイアログ表示されない？
@@ -2980,24 +2985,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
         
- 
-        print("checkLibraryAuthorized2:",checkLibraryAuthrizedFlag)
-        
-//        if checkLibraryAuthrizedFlag==1{
-//            getVideosAlbumList(name:vHIT_VOG)
-
-            getAlbumAssets()
-            while gettingAlbumF==true{
-                sleep(UInt32(0.1))
-            }
-
-//        }
-        
-        
-//        getAlbumAssets()
-//        while gettingAlbumF==true{
-//            sleep(UInt32(0.1))
-//        }
+        print("checkLibraryAuthorized?:",checkLibraryAuthrizedFlag)
+        getAlbumAssets()//完了したら戻ってくるようにしたつもり
         //videcurrentは前回終了時のものを利用する
         videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
         if videoCurrent>videoDate.count-1{
