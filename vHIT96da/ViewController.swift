@@ -2167,7 +2167,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let assetCollection = assetCollections.object(at:0)
             // creationDate降順でアルバム内のアセットをフェッチ
             let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -2977,14 +2977,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        print("checkLibraryAuthorized1:",checkLibraryAuthrizedFlag)
         var count:Int=0
         while checkLibraryAuthrizedFlag==0{
-//            sleep(UInt32(0.1))
             usleep(1000)//0.001sec
             count += 1
             if count>5000{
                 break
             }
         }
-        
         print("checkLibraryAuthorized?:",checkLibraryAuthrizedFlag)
         getAlbumAssets()//完了したら戻ってくるようにしたつもり
         //videcurrentは前回終了時のものを利用する
@@ -3081,7 +3079,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
     func removeFile(delFile:String){
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            
             let path_file_name = dir.appendingPathComponent( delFile )
             let fileManager = FileManager.default
             
