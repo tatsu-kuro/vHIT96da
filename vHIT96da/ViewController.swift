@@ -303,21 +303,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var initialFlag:Bool=true//:Int = 0
     func playVideoURL(video:URL){//nextVideo
-        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-        let avAsset = AVURLAsset(url: video, options: options)
-//        let avasset = iroiro.requestAVAsset(asset: iroiro.videoPHAssets[videoCurrent])
-        
-//        videoDuration=Float(CMTimeGetSeconds(avasset!.duration))
-//        let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset!)
-//        // Create AVPlayer
-//        videoPlayer = AVPlayer(playerItem: playerItem)
-//
-        
-        
-        
-        let playerItem: AVPlayerItem = AVPlayerItem(asset: avAsset)
-        let videoDuration=Float(CMTimeGetSeconds(avAsset.duration))
-        // Create AVPlayer
+//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+//        let avasset = AVURLAsset(url: video, options: options)
+//        let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset)
+//        let videoDuration=Float(CMTimeGetSeconds(avasset.duration))
+        let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
+        let videoDuration=Float(CMTimeGetSeconds(avasset!.duration))
+        let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset!)
+         // Create AVPlayer
         videoPlayer = AVPlayer(playerItem: playerItem)
         // Add AVPlayer
         let layer = AVPlayerLayer()
@@ -2206,6 +2199,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoDateTime.removeAll()
         videoDura.removeAll()
         videoAVAsset.removeAll()
+        videoPHAsset.removeAll()
         //videoImgだけは上記３arrayを取得後に、getAlbumListで取得する。
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
@@ -2239,21 +2233,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             for i in 0..<assets.count{
-                let asset=assets[i]
-                let date_sub = asset.creationDate
+                let phasset=assets[i]
+                let date_sub = phasset.creationDate
                 let date = formatter.string(from: date_sub!)
-                let duration = String(format:"%.1fs",asset.duration)
+                let duration = String(format:"%.1fs",phasset.duration)
                 let options=PHVideoRequestOptions()
                 options.version = .original
-                PHImageManager.default().requestAVAsset(forVideo:asset,
-                                                        options: options){ [self](asset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
+                PHImageManager.default().requestAVAsset(forVideo:phasset,
+                                                        options: options){ [self](avasset:AVAsset?,audioMix, info:[AnyHashable:Any]?)->Void in
                     
-                    if let urlAsset = asset as? AVURLAsset{//not on iCloud
+                    if let urlAsset = avasset as? AVURLAsset{//not on iCloud
                         videoURL.append(urlAsset.url)
                         videoDate.append(date)// + "(" + duration + ")")
                         videoDura.append(duration)
                         videoDateTime.append(date_sub!)//pngDateTimeと比較する？念のため
-                        videoAVAsset.append(asset!)
+                        videoAVAsset.append(avasset!)
+                        videoPHAsset.append(phasset)
                         //ここではgetThumbができないことがある。
 //                        videosImg.append(getThumb(url: urlAsset.url))
 //                        print(videoDate.last as Any)
