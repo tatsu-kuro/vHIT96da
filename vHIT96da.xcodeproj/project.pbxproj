@@ -10,6 +10,7 @@
 		690B818B2748D74F00892C01 /* sora1.png in Resources */ = {isa = PBXBuildFile; fileRef = 690B818A2748D74E00892C01 /* sora1.png */; };
 		690F57C1277DAAF300135F5D /* IroIro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690F57C0277DAAF300135F5D /* IroIro.swift */; };
 		6932D4C4240A7D97008A03D9 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D4C3240A7D97008A03D9 /* RecordViewController.swift */; };
+		6986E8EA277ED3A700B5FE1C /* gyroData.png in Resources */ = {isa = PBXBuildFile; fileRef = 6986E8E9277ED3A700B5FE1C /* gyroData.png */; };
 		8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */; };
 		8E495CC6202FE7880030748C /* ParametersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E495CC5202FE7880030748C /* ParametersViewController.swift */; };
 		8EA90BE32038208200D042D0 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EA90BE22038208200D042D0 /* opencv2.framework */; };
@@ -26,6 +27,7 @@
 		690B818A2748D74E00892C01 /* sora1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sora1.png; path = Assets.xcassets/sora1.imageset/sora1.png; sourceTree = "<group>"; };
 		690F57C0277DAAF300135F5D /* IroIro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IroIro.swift; sourceTree = "<group>"; };
 		6932D4C3240A7D97008A03D9 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		6986E8E9277ED3A700B5FE1C /* gyroData.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gyroData.png; sourceTree = "<group>"; };
 		8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
 		8E495CC5202FE7880030748C /* ParametersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersViewController.swift; sourceTree = "<group>"; };
 		8EA90BE22038208200D042D0 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 			children = (
 				8EE2C01C202F32440064ED6F /* AppDelegate.swift */,
 				8EBC227F2182D6A100EF040C /* HelpjViewController.swift */,
+				6986E8E9277ED3A700B5FE1C /* gyroData.png */,
 				690B818A2748D74E00892C01 /* sora1.png */,
 				8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */,
 				8EE2C020202F32440064ED6F /* Main.storyboard */,
@@ -156,6 +159,7 @@
 				8EE2C027202F32440064ED6F /* LaunchScreen.storyboard in Resources */,
 				8EE2C022202F32440064ED6F /* Main.storyboard in Resources */,
 				690B818B2748D74F00892C01 /* sora1.png in Resources */,
+				6986E8EA277ED3A700B5FE1C /* gyroData.png in Resources */,
 				8EB6E0F9208E1CB0000A85EB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
