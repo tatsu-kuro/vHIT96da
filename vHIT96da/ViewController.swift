@@ -394,45 +394,49 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//            var eraseAssetDate=assets[0].creationDate
-//            var eraseAssetPngNumber=0
+            var id:Int=0
             for i in 0..<assets.count{
                 let date_sub=assets[i].creationDate
                 let date = formatter.string(from:date_sub!)
 //                eraseAssetPngNumber=i+1
                 if videoDate[videoCurrent].contains(date){//
-                    if !assets[i].canPerform(.delete) {
-                        return
-                    }
-                    var delAssets=Array<PHAsset>()
-                    delAssets.append(assets[i])
-                    if i != assets.count-1{//最後でなければ
-                        if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
-                            delAssets.append(assets[i+1])//pngはその次に入っているはず
-                        }
-                    }
-                    PHPhotoLibrary.shared().performChanges({
-                        PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
-                    }, completionHandler: { success,error in//[self] _, _ in
-                        if success==true{
-                            dialogStatus = 1//YES
-                        }else{
-                            dialogStatus = -1//NO
-                        }
-                        // 削除後の処理
-                    })
-//                    break
+                    id=i
+                    break
                 }
             }
+            
+            if !assets[id].canPerform(.delete) {
+                return
+            }
+            var delAssets=Array<PHAsset>()
+            delAssets.append(assets[id])
+            if id != assets.count-1{//最後でなければ
+                if assets[id+1].duration==0{//pngが無くて、videoが選択されてない事を確認
+                    delAssets.insert(assets[id+1], at: 0)// append(assets[id+1])//pngはその次に入っているはず
+                }
+            }
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
+            }, completionHandler: { success,error in//[self] _, _ in
+                if success==true{
+                    dialogStatus = 1//YES
+                }else{
+                    dialogStatus = -1//NO
+                }
+                // 削除後の処理
+            })
+            //                    break
+            //                }
         }
+//    }
         while dialogStatus == 0{//dialogから抜けるまでは0
             sleep(UInt32(0.2))
         }
         if dialogStatus == 1{//yesで抜けた時
             videoDate.remove(at: videoCurrent)
-//            videoURL.remove(at: videoCurrent)
-//            videoImg.remove(at: videoCurrent)
             videoDura.remove(at: videoCurrent)
+            videoPHAsset.remove(at: videoCurrent)
+            
             videoCurrent -= 1
             showVideoIroiro(num: 0)
             if videoDate.count==0{
@@ -466,15 +470,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if videoDate.contains(date){//find currentVideo
                     if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
                         //currentVideoの次がpngならそれを選択
-                        let width=assets[i+1].pixelWidth
-                        let height=assets[i+1].pixelHeight
+                        let width=1080//assets[i+1].pixelWidth
+                        let height=1920//assets[i+1].pixelHeight
                         let imgManager = PHImageManager.default()
                         imgManager.requestImage(for: assets[i+1], targetSize: CGSize(width: width, height: height), contentMode:
-                                                    .aspectFill, options: requestOptions, resultHandler: { [self] img, _ in
-                                                        if let img = img {
-                                                            readGyroFromPng(img: img)
-                                                        }
-                                                    })
+                                                        .aspectFill, options: requestOptions, resultHandler: { [self] img, _ in
+                            if let img = img {
+                                readGyroFromPng(img: img)
+                            }
+                        })
                         
                     }else{//次がpngでないとき。録画失敗して、gyroデータを保存できなかったとき
                         readGyroFromNul()//5min 0
@@ -2996,11 +3000,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         print("count:",videoDate.count)
         showVideoIroiro(num:0)
-        if videoDate.count==0{
-            setVideoButtons(mode: false)
-        }else{
-            startTimerVideo()
-        }
+//        if videoDate.count==0{
+//            setVideoButtons(mode: false)
+//        }else{
+//            startTimerVideo()
+//        }
         waveSlider.isHidden=true
     }
     
