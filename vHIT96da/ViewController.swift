@@ -404,17 +404,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     break
                 }
             }
-            
             if !assets[id].canPerform(.delete) {
                 return
             }
             var delAssets=Array<PHAsset>()
-            delAssets.append(assets[id])
+//            delAssets.append(assets[id])
+            print("erase0:",id,assets.count)
             if id != assets.count-1{//最後でなければ
+                print("erase1:",id,assets.count)
                 if assets[id+1].duration==0{//pngが無くて、videoが選択されてない事を確認
-                    delAssets.insert(assets[id+1], at: 0)// append(assets[id+1])//pngはその次に入っているはず
+                    delAssets.append(assets[id+1])//insert(assets[id+1], at: 0)// append(assets[id+1])//pngはその次に入っているはず
+                    print("erase2:",id,assets.count)
                 }
             }
+            delAssets.append(assets[id])
             PHPhotoLibrary.shared().performChanges({
                 PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
             }, completionHandler: { success,error in//[self] _, _ in
@@ -3000,11 +3003,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         print("count:",videoDate.count)
         showVideoIroiro(num:0)
-//        if videoDate.count==0{
-//            setVideoButtons(mode: false)
-//        }else{
-//            startTimerVideo()
-//        }
+        if videoDate.count==0{
+            setVideoButtons(mode: false)
+        }else{
+            startTimerVideo()
+        }
         waveSlider.isHidden=true
     }
     
