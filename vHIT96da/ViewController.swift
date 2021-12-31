@@ -408,16 +408,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 return
             }
             var delAssets=Array<PHAsset>()
-//            delAssets.append(assets[id])
+            delAssets.append(assets[id])
             print("erase0:",id,assets.count)
             if id != assets.count-1{//最後でなければ
                 print("erase1:",id,assets.count)
                 if assets[id+1].duration==0{//pngが無くて、videoが選択されてない事を確認
-                    delAssets.append(assets[id+1])//insert(assets[id+1], at: 0)// append(assets[id+1])//pngはその次に入っているはず
+                    delAssets.append(assets[id+1])//pngはその次に入っているはず
                     print("erase2:",id,assets.count)
                 }
             }
-            delAssets.append(assets[id])
+//            delAssets.append(assets[id])
             PHPhotoLibrary.shared().performChanges({
                 PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
             }, completionHandler: { success,error in//[self] _, _ in
@@ -473,8 +473,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if videoDate.contains(date){//find currentVideo
                     if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
                         //currentVideoの次がpngならそれを選択
-                        let width=1080//assets[i+1].pixelWidth
-                        let height=1920//assets[i+1].pixelHeight
+                        let width=assets[i+1].pixelWidth
+                        let height=assets[i+1].pixelHeight
                         let imgManager = PHImageManager.default()
                         imgManager.requestImage(for: assets[i+1], targetSize: CGSize(width: width, height: height), contentMode:
                                                         .aspectFill, options: requestOptions, resultHandler: { [self] img, _ in
@@ -758,7 +758,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroBoxView?.isHidden = true
             gyroLineView?.isHidden = true
             setBacknext(f: true)
-            playButton.isEnabled=true
+            if videoDate.count>0{
+                playButton.isEnabled=true
+            }
             if videoDate.count != 0{
                 eraseButton.isHidden=false
             }else{
@@ -778,6 +780,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func onWaveButton(_ sender: Any) {//saveresult record-unwind の２箇所
+        if videoDate.count == 0{
+            return
+        }
         if checkDispMode()==0{
             showBoxies(f: true)
             setVideoButtons(mode: false)
@@ -836,13 +841,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          }
     }
     @IBAction func onCalcButton(_ sender: Any) {
+        if videoDate.count==0{
+                return
+            }
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             return
         }
-        if videoDate.count==0{
-            return
-        }
-
         setUserDefaults()
         if nonsavedFlag == true && (waveTuple.count > 0 || eyePosXFiltered.count > 1){
             setButtons(mode: false)
@@ -2832,55 +2836,77 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            videoFps.text = "\(freeCounter)"
         }
     }
-    var gettingThumbFlag:Bool?
-    func getThumb(url:URL) -> UIImage{//getするまで待って帰る
-        gettingThumbFlag=true
-        let img=getThumb_sub(url:url)
-        while gettingThumbFlag==true{
-            sleep(UInt32(0.1))
-        }
-        return img!
-    }
-    func getThumb_sub(url: URL) -> UIImage? {
-        do {
-            let asset = AVURLAsset(url: url as URL , options: nil)
-            let imgGenerator = AVAssetImageGenerator(asset: asset)
-            imgGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
-            let thumbnail = UIImage(cgImage: cgImage)
-            gettingThumbFlag=false
-            return thumbnail
-        } catch let error {
-            print("*** Error generating thumbnail: \(error.localizedDescription)")
-            return nil
-        }
-    }
-    func getThumbnailFrom(path:String) -> UIImage{//getするまで待って帰る
-        gettingThumbFlag=true
-        let img=getThumbnailFrom_sub(path: path)
-        while gettingThumbFlag==true{
-            sleep(UInt32(0.1))
-        }
-        return img!
-    }
-    func getThumbnailFrom_sub(path: String) -> UIImage? {
-        let url = NSURL(fileURLWithPath: path)
-        if path==""{
-            return nil
-        }
-        do {
-            let asset = AVURLAsset(url: url as URL , options: nil)
-            let imgGenerator = AVAssetImageGenerator(asset: asset)
-            imgGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
-            let thumbnail = UIImage(cgImage: cgImage)
-            gettingThumbFlag=false
-            return thumbnail
-        } catch let error {
-            print("*** Error generating thumbnail: \(error.localizedDescription)")
-            return nil
-        }
-    }
+//    var gettingThumbFlag:Bool?
+//    func getThumb(avasset:AVAsset) -> UIImage{//getするまで待って帰る
+//        gettingThumbFlag=true
+//        let img=getThumb_sub(avasset:avasset)
+//        while gettingThumbFlag==true{
+//            sleep(UInt32(0.1))
+//        }
+//        return img!
+//    }
+//    func getThumb_sub(avasset:AVAsset) -> UIImage? {
+//        do {
+////            let asset = AVURLAsset(url: url as URL , options: nil)
+//            let imgGenerator = AVAssetImageGenerator(asset: avasset)
+//            imgGenerator.appliesPreferredTrackTransform = true
+//            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+//            let thumbnail = UIImage(cgImage: cgImage)
+//            gettingThumbFlag=false
+//            return thumbnail
+//        } catch let error {
+//            print("*** Error generating thumbnail: \(error.localizedDescription)")
+//            return nil
+//        }
+//    }
+//    func getThumb(url:URL) -> UIImage{//getするまで待って帰る
+//        gettingThumbFlag=true
+//        let img=getThumb_sub(url:url)
+//        while gettingThumbFlag==true{
+//            sleep(UInt32(0.1))
+//        }
+//        return img!
+//    }
+//    func getThumb_sub(url: URL) -> UIImage? {
+//        do {
+//            let asset = AVURLAsset(url: url as URL , options: nil)
+//            let imgGenerator = AVAssetImageGenerator(asset: asset)
+//            imgGenerator.appliesPreferredTrackTransform = true
+//            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+//            let thumbnail = UIImage(cgImage: cgImage)
+//            gettingThumbFlag=false
+//            return thumbnail
+//        } catch let error {
+//            print("*** Error generating thumbnail: \(error.localizedDescription)")
+//            return nil
+//        }
+//    }
+//    func getThumbnailFrom(path:String) -> UIImage{//getするまで待って帰る
+//        gettingThumbFlag=true
+//        let img=getThumbnailFrom_sub(path: path)
+//        while gettingThumbFlag==true{
+//            sleep(UInt32(0.1))
+//        }
+//        return img!
+//    }
+//    func getThumbnailFrom_sub(path: String) -> UIImage? {
+//        let url = NSURL(fileURLWithPath: path)
+//        if path==""{
+//            return nil
+//        }
+//        do {
+//            let asset = AVURLAsset(url: url as URL , options: nil)
+//            let imgGenerator = AVAssetImageGenerator(asset: asset)
+//            imgGenerator.appliesPreferredTrackTransform = true
+//            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+//            let thumbnail = UIImage(cgImage: cgImage)
+//            gettingThumbFlag=false
+//            return thumbnail
+//        } catch let error {
+//            print("*** Error generating thumbnail: \(error.localizedDescription)")
+//            return nil
+//        }
+//    }
 
     //UIDevice
     var alertController: UIAlertController!
@@ -3277,7 +3303,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             posRatio=ParametersViewController.posRatio
             veloRatio=ParametersViewController.veloRatio
             setUserDefaults()
-            if eyeVeloXFiltered.count > 400{
+            if eyeVeloXFiltered.count > 400 && videoDate.count>0{
                 if calcMode != 2{//データがありそうな時は表示
                     moveGyroData()
                     calcDrawVHIT(tuple: false)
@@ -3376,8 +3402,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let gyroCSV=getGyroCSV()//csv文字列
 //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
                 //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
-                let gyroDataImg = UIImage(named:"gyroData")
-                let gyroImage=openCV.pixel2image(gyroDataImg/*videoImg[videoCurrent]*/, csv: gyroCSV as String)
+                let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
+                let eyeImage = iroiro.getThumb(avasset: avasset!)
+                let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
                 //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
                 saveImage2path(image: gyroImage!, path: "temp.png")
                 while existFile(aFile: "temp.png")==false{
@@ -3631,6 +3658,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         wakuImg4.isHidden = !mode
     }
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
+        if videoDate.count==0{
+            return
+        }
 //        print("tapFrame****before")
 //        if calcFlag==true{
 //                  return

@@ -175,7 +175,41 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
             }
         }
     }
- 
+    var gettingThumbFlag:Bool?
+    func getThumb(avasset:AVAsset) -> UIImage{//getするまで待って帰る
+        gettingThumbFlag=true
+        let img=getThumb_sub(avasset:avasset)
+        while gettingThumbFlag==true{
+            sleep(UInt32(0.1))
+        }
+        return img!
+    }
+    func getThumb_sub(avasset:AVAsset) -> UIImage? {
+        do {
+//            let asset = AVURLAsset(url: url as URL , options: nil)
+            let imgGenerator = AVAssetImageGenerator(asset: avasset)
+            imgGenerator.appliesPreferredTrackTransform = true
+            let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+            let thumbnail = UIImage(cgImage: cgImage)
+            gettingThumbFlag=false
+            return thumbnail
+        } catch let error {
+            print("*** Error generating thumbnail: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+//    func getThumnailImage(avasset: AVAsset) -> UIImage? {
+//        let imageGenerator = AVAssetImageGenerator(asset: avasset)
+//        do {
+//            let thumnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1,timescale: 60), actualTime: nil)
+//            print("well done")
+//            return UIImage(cgImage: thumnailCGImage, scale: 0, orientation: .up)
+//        }catch let err{
+//            print("error\(err)")
+//        }
+//        return nil
+//    }
     func setZoom(level:Float){//
         if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
