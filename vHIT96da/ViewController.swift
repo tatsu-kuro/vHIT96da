@@ -139,8 +139,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoURL = Array<URL>()
     var videoImg = Array<UIImage>()
     var videoDura = Array<String>()
-    var videoAsset = Array<AVAsset>()
-    var videoAlbumAssets = Array<PHAsset>()
+    var videoAVAsset = Array<AVAsset>()
+    var videoPHAsset = Array<PHAsset>()
     var videoCurrent:Int=0
 
     //album関連、ここまで
@@ -2163,7 +2163,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func getAlbumAssets(){
         let requestOptions = PHImageRequestOptions()
-        videoAlbumAssets.removeAll()
+        videoPHAsset.removeAll()
 //        videoURL.removeAll()
         videoDate.removeAll()
         requestOptions.isSynchronous = true
@@ -2185,7 +2185,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             for i in 0..<assets.count{
                 let asset=assets[i]
                 if asset.duration>0{//静止画を省く
-                    videoAlbumAssets.append(asset)
+                    videoPHAsset.append(asset)
 //                    print("asset:",asset)
 //                    videoURL.append(nil)
                     let date_sub = asset.creationDate
@@ -2205,7 +2205,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoDate.removeAll()
         videoDateTime.removeAll()
         videoDura.removeAll()
-        videoAsset.removeAll()
+        videoAVAsset.removeAll()
         //videoImgだけは上記３arrayを取得後に、getAlbumListで取得する。
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
@@ -2253,7 +2253,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         videoDate.append(date)// + "(" + duration + ")")
                         videoDura.append(duration)
                         videoDateTime.append(date_sub!)//pngDateTimeと比較する？念のため
-                        videoAsset.append(asset!)
+                        videoAVAsset.append(asset!)
                         //ここではgetThumbができないことがある。
 //                        videosImg.append(getThumb(url: urlAsset.url))
 //                        print(videoDate.last as Any)
@@ -3614,15 +3614,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
 //        print("tapFrame****before")
+//        if calcFlag==true{
+//                  return
+//              }
         let loc=sender.location(in: view)
         let eyeFrame=eyeWaku_image.frame
         let faceFrame=faceWaku_image.frame
         //checkDispMode() 1-vHIT 2-VOG 3-non
+      
         if checkDispMode()==1{//vhit
             if loc.y<vhitBoxView!.frame.minY || (loc.y>vhitBoxView!.frame.maxY && loc.y<gyroBoxView!.frame.minY) ||
                 (loc.y>gyroBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
-                onWaveButton(0)
-                return
+                if timerCalc?.isValid == false {
+                    onWaveButton(0)
+                    return
+                }
             }else if loc.y>vhitBoxView!.frame.minY && loc.y<vhitBoxView!.frame.maxY{//in vhitbox
                 vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:1)
                 if vHITDisplayMode==0{
@@ -3649,8 +3655,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else if checkDispMode()==2{//vog
             if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
-                onWaveButton(0)
-                return
+                if timerCalc?.isValid == false {
+                    onWaveButton(0)
+                    return
+                }
+//                onWaveButton(0)
+//                return
             }
         }else{//
             if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){

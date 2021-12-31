@@ -19,7 +19,8 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
     var saved2album:Bool = false
     var videoDate = Array<String>()
 //    var videoURL = Array<URL?>()
-    var videoPHAssets = Array<PHAsset>()
+    var videoPHAsset = Array<PHAsset>()
+    var videoAVAsset = Array<AVAsset>()
 
     var albumExistFlag:Bool = false
     var dialogStatus:Int=0
@@ -142,7 +143,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
     }
     func getAlbumAssets(){
         let requestOptions = PHImageRequestOptions()
-        videoPHAssets.removeAll()
+        videoPHAsset.removeAll()
 //        videoURL.removeAll()
         videoDate.removeAll()
         requestOptions.isSynchronous = true
@@ -164,7 +165,7 @@ class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
             for i in 0..<assets.count{
                 let asset=assets[i]
                 if asset.duration>0{//静止画を省く
-                    videoPHAssets.append(asset)
+                    videoPHAsset.append(asset)
 //                    videoURL.append(nil)
                     let date_sub = asset.creationDate
                     let date = formatter.string(from: date_sub!)
