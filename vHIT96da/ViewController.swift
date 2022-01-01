@@ -2239,6 +2239,52 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
 
     }
+    func getAlbumAssets_last(){
+        gettingAlbumF = true
+        getAlbumAssets_last_sub()
+        while gettingAlbumF == true{
+            sleep(UInt32(0.1))
+        }
+    }
+    
+    var gettingAlbumF:Bool = false
+    func getAlbumAssets_last_sub(){
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = false
+        requestOptions.isNetworkAccessAllowed = false//これでもicloud上のvideoを取ってしまう
+        requestOptions.deliveryMode = .highQualityFormat
+        // アルバムをフェッチ
+        let assetFetchOptions = PHFetchOptions()
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        if (assetCollections.count > 0) {//アルバムが存在しない時
+            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+            let assetCollection = assetCollections.object(at:0)
+            // creationDate降順でアルバム内のアセットをフェッチ
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            for i in (assets.count-2)..<assets.count{
+                let asset=assets[i]
+                if asset.duration>0{//静止画を省く
+                    videoPHAsset.append(asset)
+                    print("asset:",asset)
+//                    videoURL.append(nil)
+                    let date_sub = asset.creationDate
+                    let date = formatter.string(from: date_sub!)
+                    let duration = String(format:"%.1fs",asset.duration)
+                    videoDate.append(date)// + "(" + duration + ")")
+//                    asset.video
+                    videoDura.append(duration)
+                }
+            }
+            gettingAlbumF = false
+        }else{
+            gettingAlbumF = false
+        }
+    }
     func getAlbumAssets(){
         gettingAlbumF = true
         getAlbumAssets_sub()
@@ -2256,15 +2302,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     
-    var gettingAlbumF:Bool = false
     func getAlbumAssets_sub(){
         let requestOptions = PHImageRequestOptions()
         videoPHAsset.removeAll()
         videoDura.removeAll()
 //        videoURL.removeAll()
         videoDate.removeAll()
-        requestOptions.isSynchronous = true
-        requestOptions.isNetworkAccessAllowed = true//これでもicloud上のvideoを取ってしまう
+        requestOptions.isSynchronous = false
+        requestOptions.isNetworkAccessAllowed = false//これでもicloud上のvideoを取ってしまう
         requestOptions.deliveryMode = .highQualityFormat
         // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
@@ -3419,7 +3464,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
                 removeFile(delFile: "temp.png")
 //                getVideosAlbumList(name: vHIT_VOG)
-                getAlbumAssets()
+                getAlbumAssets_last()
                 print("rewind***3")
                 let videoCount=Controller.videoCount
                 //ビデオが出来るまで待つ

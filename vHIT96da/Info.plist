@@ -31,7 +31,7 @@
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
-	<true/>
+	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app takes movies of eye movement and saves them in the album "vHIT_VOG".</string>
 	<key>NSHumanReadableCopyright</key>
