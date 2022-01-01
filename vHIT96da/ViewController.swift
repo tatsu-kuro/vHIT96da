@@ -3464,7 +3464,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
                 removeFile(delFile: "temp.png")
 //                getVideosAlbumList(name: vHIT_VOG)
-                getAlbumAssets_last()
+                if videoDate.count<3{
+                    getAlbumAssets()
+                }else{
+                    getAlbumAssets_last()
+                }
                 print("rewind***3")
                 let videoCount=Controller.videoCount
                 //ビデオが出来るまで待つ
