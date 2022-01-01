@@ -1458,7 +1458,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
         showModeText()
-        
+        makeBoxies()//three boxies of gyro vHIT vog
+        showBoxies(f: false)//isVHITに応じてviewを表示
         if PHPhotoLibrary.authorizationStatus() != .authorized {
             PHPhotoLibrary.requestAuthorization { status in
                 if status == .authorized {
@@ -1493,8 +1494,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if videoCurrent>videoDate.count-1{
                 videoCurrent=videoDate.count-1
             }
-            makeBoxies()//three boxies of gyro vHIT vog
-            showBoxies(f: false)//isVHITに応じてviewを表示
+//            makeBoxies()//three boxies of gyro vHIT vog
+//            showBoxies(f: false)//isVHITに応じてviewを表示
             self.setNeedsStatusBarAppearanceUpdate()
             dispWakus()
             print("didloadcount:",videoDate.count)
@@ -1542,22 +1543,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func makeBoxies(){
+        let vw=view.bounds.width
+        let vh=view.bounds.height
+        vhitBoxHeight=vw*2/5
+           vhitBoxYmin=160*vh/568-vogBoxHeight/2
+           vhitBoxYcenter=160*vh/568
+        gyroBoxHeight=180*vw/320
+          gyroBoxYmin=340*vh/568-vogBoxHeight/2
+          gyroBoxYcenter=340*vh/568
         if gyroBoxView == nil {//vHITboxView vogboxView
-            let vw=view.bounds.width
-            let vh=view.bounds.height
-            
-            vhitBoxHeight=vw*2/5
-            vhitBoxYmin=160*vh/568-vogBoxHeight/2
-            vhitBoxYcenter=160*vh/568
-            var boxImage = makeBox(width: vw, height: vhitBoxHeight)//128
+   
+               var boxImage = makeBox(width: vw, height: vhitBoxHeight)//128
             vhitBoxView = UIImageView(image: boxImage)
             vhitBoxView?.center = CGPoint(x:vw/2,y:vhitBoxYcenter)//vh/4)//160)// view.center
             view.addSubview(vhitBoxView!)
             
-            gyroBoxHeight=180*vw/320
-            gyroBoxYmin=340*vh/568-vogBoxHeight/2
-            gyroBoxYcenter=340*vh/568
-            boxImage = makeBox(width: vw, height: gyroBoxHeight)
+              boxImage = makeBox(width: vw, height: gyroBoxHeight)
             gyroBoxView = UIImageView(image: boxImage)
             gyroBoxView?.center = CGPoint(x:vw/2,y:gyroBoxYcenter)//340)
             view.addSubview(gyroBoxView!)
@@ -2521,6 +2522,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func drawLine(num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+        print("drawLine:",num,w,h)
         // 折れ線にする点の配列
         var pointList0 = Array<CGPoint>()
         var pointList1 = Array<CGPoint>()
