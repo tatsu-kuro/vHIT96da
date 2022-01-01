@@ -303,7 +303,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        let avasset = AVURLAsset(url: video, options: options)
 //        let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset)
 //        let videoDuration=Float(CMTimeGetSeconds(avasset.duration))
+//        print("videoCurrent:",videoCurrent, videoPHAsset.count,videoDate.count)
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
+//        print("avasset:",avasset)
         let videoDuration=Float(CMTimeGetSeconds(avasset!.duration))
         let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset!)
         currentVideoFPS=avasset!.tracks.first!.nominalFrameRate
@@ -1444,77 +1446,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func printR(str:String,cnt:Int,max:Double,rct1:CGRect,rct2:CGRect){
         print("\(str)",String(format: "%d %.2f-%.0f,%.0f %.0f,%.0f",cnt,max,rct1.origin.x,rct1.origin.y,rct2.origin.x,rct2.origin.y))
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-     dispFilesindoc()//for debug
-        //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
-     mailWidth=2400//240*10
-     mailHeight=1600//240*10*2/3
-      //vHIT結果サイズは500*200
-     getUserDefaults()
-//        setButtons_first()
-     setButtons(mode: true)
-    waveSlider.isHidden=true
-     stopButton.isHidden = true
-     showModeText()
      
-     
-  //      let mainBrightness = UIScreen.main.brightness
-    //    UserDefaults.standard.set(mainBrightness, forKey: "mainBrightness")
-      //  UIApplication.shared.isIdleTimerDisabled = falseスリープする
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        if UIApplication.shared.isIdleTimerDisabled == true{
-            UIApplication.shared.isIdleTimerDisabled = false//監視する
-        }
-          print("didappear")
-        checkLibraryAuthorized()
-        print("checkLibraryAuthrizedflag1:",checkLibraryAuthrizedFlag)
-//        setButtons_first()
-    
-        var count:Int=0
-        while checkLibraryAuthrizedFlag==0{
-            usleep(1000)//0.001sec
-            count += 1
-            if count>5000{
-                break
-            }
-        }
-        print("checkLibraryAuthrizedflag2:",checkLibraryAuthrizedFlag)
-
-        if checkLibraryAuthrizedFlag==1{
-            getAlbumAssets()//完了したら戻ってくるようにしたつもり
-         
-        }
-     
-        print("checkLibraryAuthorized?:",checkLibraryAuthrizedFlag)
-           //videcurrentは前回終了時のものを利用する
-        videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
-        if videoCurrent>videoDate.count-1{
-            videoCurrent=videoDate.count-1
-        }
-        makeBoxies()//three boxies of gyro vHIT vog
-        showBoxies(f: false)//isVHITに応じてviewを表示
-        self.setNeedsStatusBarAppearanceUpdate()
-        dispWakus()
-        print("count:",videoDate.count)
-        showVideoIroiro(num:0)
-        if videoDate.count==0{
-            setVideoButtons(mode: false)
-        }else{
-            startTimerVideo()
-        }
- //        setButtons(mode: true)
-//        setButtons_first()
-//        stopButton.isHidden = true
-//        showModeText()
-    }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setButtons_first()
-    }
-     /*
     override func viewDidLoad() {
         super.viewDidLoad()
         dispFilesindoc()//for debug
@@ -1526,45 +1458,61 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setButtons(mode: true)
         stopButton.isHidden = true
         showModeText()
-        checkLibraryAuthorized()
-        //すでに許可しているときはすぐに帰ってくる。
-        //最初の許可では、下記ループでダイアログ表示されない？
-        //チェックしないで実行すると既存のデータは登録されないが、次回起動するときに読み込めるので取り敢えずそんな姑息な手段を使う。
-//        print("checkLibraryAuthorized1:",checkLibraryAuthrizedFlag)
-        var count:Int=0
-        while checkLibraryAuthrizedFlag==0{
-            usleep(1000)//0.001sec
-            count += 1
-            if count>5000{
-                break
+        
+        if PHPhotoLibrary.authorizationStatus() != .authorized {
+            PHPhotoLibrary.requestAuthorization { status in
+                if status == .authorized {
+                    self.checkLibraryAuthrizedFlag=1
+                    print("authorized")
+                } else if status == .denied {
+                    self.checkLibraryAuthrizedFlag = -1
+                    print("denied")
+                }else{
+                    self.checkLibraryAuthrizedFlag = -1
+                }
             }
-        }
-        print("checkLibraryAuthorized?:",checkLibraryAuthrizedFlag)
-        getAlbumAssets()//完了したら戻ってくるようにしたつもり
-        //videcurrentは前回終了時のものを利用する
-        videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
-        if videoCurrent>videoDate.count-1{
-            videoCurrent=videoDate.count-1
-        }
-        makeBoxies()//three boxies of gyro vHIT vog
-        showBoxies(f: false)//isVHITに応じてviewを表示
-        self.setNeedsStatusBarAppearanceUpdate()
-        dispWakus()
-        print("count:",videoDate.count)
-        showVideoIroiro(num:0)
-        if videoDate.count==0{
-            setVideoButtons(mode: false)
         }else{
-            startTimerVideo()
+            
+            //        checkLibraryAuthorized()
+            //すでに許可しているときはすぐに帰ってくる。
+            //最初の許可では、下記ループでダイアログ表示されない？
+            //チェックしないで実行すると既存のデータは登録されないが、次回起動するときに読み込めるので取り敢えずそんな姑息な手段を使う。
+            //        print("checkLibraryAuthorized1:",checkLibraryAuthrizedFlag)
+            //        var count:Int=0
+            //        while checkLibraryAuthrizedFlag==0{
+            //            usleep(1000)//0.001sec
+            //            count += 1
+            //            if count>5000{
+            //                break
+            //            }
+            //        }
+            //        print("checkLibraryAuthorized?:",checkLibraryAuthrizedFlag)
+            getAlbumAssets()//完了したら戻ってくるようにしたつもり
+            //videcurrentは前回終了時のものを利用する
+            videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
+            if videoCurrent>videoDate.count-1{
+                videoCurrent=videoDate.count-1
+            }
+            makeBoxies()//three boxies of gyro vHIT vog
+            showBoxies(f: false)//isVHITに応じてviewを表示
+            self.setNeedsStatusBarAppearanceUpdate()
+            dispWakus()
+            print("didloadcount:",videoDate.count)
+            showVideoIroiro(num:0)
+            if videoDate.count==0{
+                setVideoButtons(mode: false)
+            }else{
+                startTimerVideo()
+            }
+            waveSlider.isHidden=true
         }
-        waveSlider.isHidden=true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         dispWakus()
         setButtons_first()
         showWakuImages()
-    }*/
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
        // dispWakuImages()ここでは効かない
@@ -2275,7 +2223,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         while gettingAlbumF == true{
             sleep(UInt32(0.1))
         }
+        //設定　一般　AirPlayとHandoff　を有効にするときは以下を有効にする。
+//        for i in (0..<videoDate.count).reversed(){//cloudのは見ない・削除する
+//
+//            let avasset = iroiro.requestAVAsset(asset: videoPHAsset[i])
+//            if avasset == nil{
+//                videoPHAsset.remove(at: i)
+//                videoDate.remove(at: i)
+//                videoDura.remove(at: i)
+//            }
+//        }
     }
+    
     var gettingAlbumF:Bool = false
     func getAlbumAssets_sub(){
         let requestOptions = PHImageRequestOptions()
