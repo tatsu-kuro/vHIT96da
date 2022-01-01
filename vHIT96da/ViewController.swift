@@ -2216,23 +2216,44 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
+    var iCloudStatus:Bool=true
+    func checkIsiCloud(assetVideo:PHAsset,cachingImageManager:PHCachingImageManager) -> PHImageRequestID{
 
+            let opt=PHVideoRequestOptions()
+            opt.deliveryMode = .mediumQualityFormat
+            opt.isNetworkAccessAllowed=true //iCloud video can play
+            return cachingImageManager.requestAVAsset(forVideo:assetVideo, options: opt) { (asset, audioMix, info) in
+
+                DispatchQueue.main.async {
+                    if (info!["PHImageFileSandboxExtensionTokenKey"] != nil) {
+                        self.iCloudStatus=false
+//                        self.playVideo(videoAsset:asset!)
+                    }else if((info![PHImageResultIsInCloudKey]) != nil) {
+                        self.iCloudStatus=true
+
+                    }else{
+                       self.iCloudStatus=false
+//                       self.playVideo(videoAsset:asset!)
+                    }
+                }
+        }
+
+    }
     func getAlbumAssets(){
         gettingAlbumF = true
         getAlbumAssets_sub()
         while gettingAlbumF == true{
             sleep(UInt32(0.1))
         }
-        //設定　一般　AirPlayとHandoff　を有効にするときは以下を有効にする。
-//        for i in (0..<videoDate.count).reversed(){//cloudのは見ない・削除する
-//
-//            let avasset = iroiro.requestAVAsset(asset: videoPHAsset[i])
-//            if avasset == nil{
-//                videoPHAsset.remove(at: i)
-//                videoDate.remove(at: i)
-//                videoDura.remove(at: i)
-//            }
-//        }
+    
+        for i in (0..<videoDate.count).reversed(){//cloudのは見ない・削除する
+            let avasset = iroiro.requestAVAsset(asset: videoPHAsset[i])
+            if avasset == nil{
+                videoPHAsset.remove(at: i)
+                videoDate.remove(at: i)
+                videoDura.remove(at: i)
+            }
+        }
     }
     
     var gettingAlbumF:Bool = false
@@ -2262,7 +2283,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let asset=assets[i]
                 if asset.duration>0{//静止画を省く
                     videoPHAsset.append(asset)
-//                    print("asset:",asset)
+                    print("asset:",asset)
 //                    videoURL.append(nil)
                     let date_sub = asset.creationDate
                     let date = formatter.string(from: date_sub!)
