@@ -1473,29 +1473,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }else{
-            
-            //        checkLibraryAuthorized()
-            //すでに許可しているときはすぐに帰ってくる。
-            //最初の許可では、下記ループでダイアログ表示されない？
-            //チェックしないで実行すると既存のデータは登録されないが、次回起動するときに読み込めるので取り敢えずそんな姑息な手段を使う。
-            //        print("checkLibraryAuthorized1:",checkLibraryAuthrizedFlag)
-            //        var count:Int=0
-            //        while checkLibraryAuthrizedFlag==0{
-            //            usleep(1000)//0.001sec
-            //            count += 1
-            //            if count>5000{
-            //                break
-            //            }
-            //        }
-            //        print("checkLibraryAuthorized?:",checkLibraryAuthrizedFlag)
             getAlbumAssets()//完了したら戻ってくるようにしたつもり
             //videcurrentは前回終了時のものを利用する
             videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
             if videoCurrent>videoDate.count-1{
                 videoCurrent=videoDate.count-1
             }
-//            makeBoxies()//three boxies of gyro vHIT vog
-//            showBoxies(f: false)//isVHITに応じてviewを表示
             self.setNeedsStatusBarAppearanceUpdate()
             dispWakus()
             print("didloadcount:",videoDate.count)
@@ -3170,6 +3153,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         iroiro.setButtonProperty(playButton,x:10+bwd*5,y:bh1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(forwardButton,x:10+bwd*6,y:bh1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(changeModeButton,x:10,y:bh1,w:bh*3+distance*2,h:bh,UIColor.darkGray)
+        showVideoIroiro(num: 0)
     }
 
     override var prefersHomeIndicatorAutoHidden: Bool {
