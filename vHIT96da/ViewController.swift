@@ -3174,6 +3174,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             playButton.isEnabled=false
             forwardButton.isEnabled=false
             backwardButton.isEnabled=false
+            currentVideoDate.text="tap button in lower right corner"
+            videoFps.text="to record the video of the eye"
         }
 //        showVideoIroiro(num: 0)
     }
