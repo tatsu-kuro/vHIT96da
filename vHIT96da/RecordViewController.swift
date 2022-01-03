@@ -12,7 +12,7 @@ import GLKit
 import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
-    let iroiro = IroIro(albumName:"vHIT_VOG")
+    let iroiro = myFunctions(albumName:"vHIT_VOG")
     let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
     let vHIT_VOG:String="vHIT_VOG"
     var recordedFlag:Bool = false

@@ -9,7 +9,7 @@ import UIKit
 import Photos
 import AVFoundation
 
-class IroIro: NSObject, AVCaptureFileOutputRecordingDelegate{
+class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
     let tempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
     var defaultAlbumName:String = "any"
     var videoDevice: AVCaptureDevice?

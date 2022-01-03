@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		690B818B2748D74F00892C01 /* sora1.png in Resources */ = {isa = PBXBuildFile; fileRef = 690B818A2748D74E00892C01 /* sora1.png */; };
-		690F57C1277DAAF300135F5D /* IroIro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690F57C0277DAAF300135F5D /* IroIro.swift */; };
+		690F57C1277DAAF300135F5D /* myFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690F57C0277DAAF300135F5D /* myFunctions.swift */; };
 		6932D4C4240A7D97008A03D9 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D4C3240A7D97008A03D9 /* RecordViewController.swift */; };
 		8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */; };
 		8E495CC6202FE7880030748C /* ParametersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E495CC5202FE7880030748C /* ParametersViewController.swift */; };
@@ -24,7 +24,7 @@
 
 /* Begin PBXFileReference section */
 		690B818A2748D74E00892C01 /* sora1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sora1.png; path = Assets.xcassets/sora1.imageset/sora1.png; sourceTree = "<group>"; };
-		690F57C0277DAAF300135F5D /* IroIro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IroIro.swift; sourceTree = "<group>"; };
+		690F57C0277DAAF300135F5D /* myFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myFunctions.swift; sourceTree = "<group>"; };
 		6932D4C3240A7D97008A03D9 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
 		8E495CC5202FE7880030748C /* ParametersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersViewController.swift; sourceTree = "<group>"; };
@@ -80,7 +80,7 @@
 				8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */,
 				8EE2C020202F32440064ED6F /* Main.storyboard */,
 				8EE2C01E202F32440064ED6F /* ViewController.swift */,
-				690F57C0277DAAF300135F5D /* IroIro.swift */,
+				690F57C0277DAAF300135F5D /* myFunctions.swift */,
 				8E495CC5202FE7880030748C /* ParametersViewController.swift */,
 				6932D4C3240A7D97008A03D9 /* RecordViewController.swift */,
 				8EB6E0F8208E1CAF000A85EB /* Assets.xcassets */,
@@ -170,7 +170,7 @@
 				8EE2C01F202F32440064ED6F /* ViewController.swift in Sources */,
 				8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */,
 				6932D4C4240A7D97008A03D9 /* RecordViewController.swift in Sources */,
-				690F57C1277DAAF300135F5D /* IroIro.swift in Sources */,
+				690F57C1277DAAF300135F5D /* myFunctions.swift in Sources */,
 				8E495CC6202FE7880030748C /* ParametersViewController.swift in Sources */,
 				8EBC22802182D6A100EF040C /* HelpjViewController.swift in Sources */,
 				8ECE3964203802750054AC0C /* opencvWrapper.mm in Sources */,
@@ -322,7 +322,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.4.0;
+				CURRENT_PROJECT_VERSION = 1.4.1;
 				DEVELOPMENT_TEAM = YKSHGZ7H3T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -350,7 +350,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.4.0;
+				CURRENT_PROJECT_VERSION = 1.4.1;
 				DEVELOPMENT_TEAM = YKSHGZ7H3T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -119,7 +119,7 @@ extension UIImage {
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     let openCV = opencvWrapper()
-    let iroiro = IroIro(albumName: "vHIT_VOG")
+    let iroiro = myFunctions(albumName: "vHIT_VOG")
     var writingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
     var readingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
@@ -549,6 +549,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         startFrame=0
         videoPlayMode=0
+//        print("onBackVideo****")
         showVideoIroiro(num: -1)
     }
     @IBAction func onNextVideoButton(_ sender: Any) {
@@ -557,6 +558,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         startFrame=0
         videoPlayMode=0
+//        print("onNextVideo*****")
         showVideoIroiro(num: 1)
     }
     
@@ -571,12 +573,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func showVideoIroiro(num:Int){//videosCurrentを移動して、諸々表示
         if videoDura.count == 0{
-            print("ないですよ！！！！！！")
+//            print("none!!!!!!!!!")
             setVideoButtons(mode: false)
             currentVideoDate.text="tap button in lower right corner"
             videoFps.text="to record the video of the eye"
             return
         }
+//        print("showvideoiroiro***********")
         setVideoButtons(mode: true)
         videoCurrent += num
         if videoCurrent>videoDura.count-1{
@@ -1449,6 +1452,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
      
     override func viewDidLoad() {
         super.viewDidLoad()
+        #if DEBUG
+        print("viewDidLoad******")
+        #endif
         dispFilesindoc()//for debug
            //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
@@ -1463,13 +1469,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if PHPhotoLibrary.authorizationStatus() != .authorized {
             PHPhotoLibrary.requestAuthorization { status in
                 if status == .authorized {
-                    self.checkLibraryAuthrizedFlag=1
+//                    self.checkLibraryAuthrizedFlag=1
                     print("authorized")
                 } else if status == .denied {
-                    self.checkLibraryAuthrizedFlag = -1
+//                    self.checkLibraryAuthrizedFlag = -1
                     print("denied")
                 }else{
-                    self.checkLibraryAuthrizedFlag = -1
+//                    self.checkLibraryAuthrizedFlag = -1
                 }
             }
         }else{
@@ -1481,7 +1487,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             self.setNeedsStatusBarAppearanceUpdate()
             dispWakus()
+#if DEBUG
             print("didloadcount:",videoDate.count)
+#endif
             showVideoIroiro(num:0)
             if videoDate.count==0{
                 setVideoButtons(mode: false)
@@ -1924,7 +1932,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func getArrayData()->Int{//データ取得して、そのデータを表示用に利用する。
         while writingDataNow==true{
             usleep(1000)
+#if DEBUG
             print("writing_loop")
+#endif
         }
         readingDataNow=true
         let n1=eyePosXFiltered4update.count
@@ -2254,8 +2264,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let asset=assets[i]
                 if asset.duration>0{//静止画を省く
                     videoPHAsset.append(asset)
+#if DEBUG
                     print("asset:",asset)
-//                    videoURL.append(nil)
+#endif
+                    //                    videoURL.append(nil)
                     let date_sub = asset.creationDate
                     let date = formatter.string(from: date_sub!)
                     let duration = String(format:"%.1fs",asset.duration)
@@ -2312,7 +2324,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let asset=assets[i]
                 if asset.duration>0{//静止画を省く
                     videoPHAsset.append(asset)
+#if DEBUG
                     print("asset:",asset)
+#endif
 //                    videoURL.append(nil)
                     let date_sub = asset.creationDate
                     let date = formatter.string(from: date_sub!)
@@ -2505,7 +2519,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func drawLine(num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        print("drawLine:",num,w,h)
+#if DEBUG
+     print("drawLine:",num,w,h)
+#endif
         // 折れ線にする点の配列
         var pointList0 = Array<CGPoint>()
         var pointList1 = Array<CGPoint>()
@@ -3075,8 +3091,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        }
 //    }
 
-    var checkLibraryAuthrizedFlag:Int=0
-    func checkLibraryAuthorized(){
+//    var checkLibraryAuthrizedFlag:Int=0
+  /*  func checkLibraryAuthorized(){
         //iOS14に対応
         self.checkLibraryAuthrizedFlag=0//0：ここの処理が終わっていないとき　1：許可　−１：拒否
         if #available(iOS 14.0, *) {
@@ -3118,9 +3134,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    
+    */
   
     func setButtons_first(){
+//        print("setbuttons_first")
         let ww=view.bounds.width
         var bw=(ww-30)/4//vhit,camera,vogのボタンの幅
         let distance:CGFloat=4//最下段のボタンとボタンの距離
@@ -3153,7 +3170,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         iroiro.setButtonProperty(playButton,x:10+bwd*5,y:bh1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(forwardButton,x:10+bwd*6,y:bh1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(changeModeButton,x:10,y:bh1,w:bh*3+distance*2,h:bh,UIColor.darkGray)
-        showVideoIroiro(num: 0)
+        if videoDate.count == 0{
+            playButton.isEnabled=false
+            forwardButton.isEnabled=false
+            backwardButton.isEnabled=false
+        }
+//        showVideoIroiro(num: 0)
     }
 
     override var prefersHomeIndicatorAutoHidden: Bool {
@@ -3233,7 +3255,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 print(files[i])
             }
         } catch {
-            print("ないよ？")
+            print("none?")
         }
     }
   
@@ -3361,7 +3383,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
-   
         if let vc = segue.source as? ParametersViewController {
             let ParametersViewController:ParametersViewController = vc
             // segueから遷移先のResultViewControllerを取得する
@@ -3414,14 +3435,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let Controller:RecordViewController = vc
             if Controller.captureSession.isRunning{//何もせず帰ってきた時
                 Controller.captureSession.stopRunning()
-                print("sessionが動いている")
+                print("session is moving")
             }else{
-                print("sessionが動いていない")
+                print("session is not moving")
             }
             if Controller.recordedFlag==true{
                 //                getVideosAlbumList()
                 //            }else{//
-                print("ちゃんと録画した")
+                print("recorded well")
                 var dH:Double=0//lateral
                 var dV:Double=0//vertical
                 var gyroH = Array<Double>()//Holizontal
@@ -3508,9 +3529,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
 //                    getVideosAlbumList(name: vHIT_VOG)
                     getAlbumAssets()
+#if DEBUG
                     print("アルバムを消されていたので、録画を保存しなかった。")
+#endif
                 }else{
+#if DEBUG
                     print("Exitで抜けた。")
+#endif
                 }
             }
             UIApplication.shared.isIdleTimerDisabled = false//スリープする
