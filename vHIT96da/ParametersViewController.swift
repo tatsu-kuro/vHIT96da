@@ -98,6 +98,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var eyeVelocityLabel: UILabel!
     @IBOutlet weak var headVelocityLabel: UILabel!
 
+    @IBOutlet weak var eyePositionLabel: UILabel!
     @IBOutlet weak var tovHITButton: UIButton!
     @IBOutlet weak var VOGLabel: UILabel!
     @IBOutlet weak var wakuLengthLabel: UILabel!
@@ -278,8 +279,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let bh:CGFloat=25
         let bh1=bh+7
         
-        wakuLengthLabel.text = "width of rectangle to be detected"
-        eyeBorderLabel.text = "maximum moving width / frame"
+//        wakuLengthLabel.text = "width of rectangle to be detected"
+//        eyeBorderLabel.text = "maximum moving width / frame"
         let tw:CGFloat=ww-bw-10
         let x1:CGFloat=3
         let x2=x1+bw+5
@@ -290,8 +291,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let buty=view.bounds.height-sp-buth-bottomPadding
         
         if calcMode==2{//VOG
-            eyeVelocityLabel.text = "height of position waveform ％"
-            headVelocityLabel.text = "height of speed waveform ％"
+//            eyeVelocityLabel.text = "height of position waveform ％"
+//            headVelocityLabel.text = "height of speed waveform ％"
             eyeVelocityLabel.backgroundColor=UIColor.white
             eyeVelocityLabel.textColor=UIColor.black
             headVelocityLabel.backgroundColor=UIColor.white
@@ -350,11 +351,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             oppositeButton.isHidden=false
             vhitDisplayLabel.isHidden=false
 
-            A2BLabel.text = "(1) time(ms) from A to D"
-            B2CLabel.text = "(2) time(ms) from B to C"
-            eyeVelocityLabel.text = "(1*)height of eye waveform ％"
-            headVelocityLabel.text = "(1*)height of head waveform ％"
-            timeLagLabel.text = "(1*)time lag: eye & head waveforms"
+//            A2BLabel.text = "(1) time(ms) from A to D"
+//            B2CLabel.text = "(2) time(ms) from B to C"
+//            eyeVelocityLabel.text = "(1*)height of eye waveform ％"
+//            headVelocityLabel.text = "(1*)height of head waveform ％"
+//            timeLagLabel.text = "(1*)time lag: eye & head waveforms"
             
             eyeVelocityLabel.backgroundColor=UIColor.white
             eyeVelocityLabel.textColor=UIColor.systemGreen
