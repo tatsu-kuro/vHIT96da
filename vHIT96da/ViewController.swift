@@ -446,7 +446,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             showVideoIroiro(num: 0)
             if videoDate.count==0{
                 setVideoButtons(mode: false)
-                
+                currentVideoDate.text="tap button in lower right corner"
+                videoFps.text="to record the video of the eye"
             }
         }
     }
@@ -575,8 +576,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDura.count == 0{
 //            print("none!!!!!!!!!")
             setVideoButtons(mode: false)
-            currentVideoDate.text="tap button in lower right corner"
-            videoFps.text="to record the video of the eye"
+//            currentVideoDate.text="tap button in lower right corner"
+//            videoFps.text="to record the video of the eye"
             return
         }
 //        print("showvideoiroiro***********")
@@ -3174,8 +3175,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             playButton.isEnabled=false
             forwardButton.isEnabled=false
             backwardButton.isEnabled=false
-            currentVideoDate.text="tap button in lower right corner"
-            videoFps.text="to record the video of the eye"
+//            currentVideoDate.text="tap button in lower right corner"
+//            videoFps.text="to record the video of the eye"
         }
 //        showVideoIroiro(num: 0)
     }

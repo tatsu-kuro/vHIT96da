@@ -27,8 +27,8 @@
 		690B818A2748D74E00892C01 /* sora1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sora1.png; path = Assets.xcassets/sora1.imageset/sora1.png; sourceTree = "<group>"; };
 		690F57C0277DAAF300135F5D /* myFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myFunctions.swift; sourceTree = "<group>"; };
 		6932D4C3240A7D97008A03D9 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
-		6983F1FD27855BFD00FA8D9A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
-		6983F1FE27855BFD00FA8D9A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		6987E75B2785E45D00934BC1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		6987E75C2785E45D00934BC1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		698A19362785CE18004C4CE9 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
 		8E495CC5202FE7880030748C /* ParametersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersViewController.swift; sourceTree = "<group>"; };
@@ -192,7 +192,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8EE2C021202F32440064ED6F /* Base */,
-				6983F1FD27855BFD00FA8D9A /* ja */,
+				6987E75B2785E45D00934BC1 /* ja */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -201,7 +201,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8EE2C026202F32440064ED6F /* Base */,
-				6983F1FE27855BFD00FA8D9A /* ja */,
+				6987E75C2785E45D00934BC1 /* ja */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

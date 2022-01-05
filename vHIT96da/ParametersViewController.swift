@@ -95,10 +95,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var gyroText: UILabel!
     @IBOutlet weak var A2BLabel: UILabel!
     @IBOutlet weak var B2CLabel: UILabel!
+    
     @IBOutlet weak var eyeVelocityLabel: UILabel!
     @IBOutlet weak var headVelocityLabel: UILabel!
-
-    @IBOutlet weak var eyePositionLabel: UILabel!
+    @IBOutlet weak var eyePositionLabelVOG: UILabel!
+    @IBOutlet weak var eyeVelocityLabelVOG: UILabel!
+    
     @IBOutlet weak var tovHITButton: UIButton!
     @IBOutlet weak var VOGLabel: UILabel!
     @IBOutlet weak var wakuLengthLabel: UILabel!
@@ -331,6 +333,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             VOGLabel.isHidden=false
             greenItemLabel.isHidden=true
         }else{//vhit
+            gyroText.isHidden=true
+
             greenItemLabel.isHidden=false
             markText.isHidden = false
             faceFbutton.isHidden = false
