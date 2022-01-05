@@ -10,6 +10,7 @@
 		690B818B2748D74F00892C01 /* sora1.png in Resources */ = {isa = PBXBuildFile; fileRef = 690B818A2748D74E00892C01 /* sora1.png */; };
 		690F57C1277DAAF300135F5D /* myFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690F57C0277DAAF300135F5D /* myFunctions.swift */; };
 		6932D4C4240A7D97008A03D9 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D4C3240A7D97008A03D9 /* RecordViewController.swift */; };
+		698A19372785CE18004C4CE9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 698A19362785CE18004C4CE9 /* InfoPlist.strings */; };
 		8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */; };
 		8E495CC6202FE7880030748C /* ParametersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E495CC5202FE7880030748C /* ParametersViewController.swift */; };
 		8EA90BE32038208200D042D0 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EA90BE22038208200D042D0 /* opencv2.framework */; };
@@ -26,6 +27,9 @@
 		690B818A2748D74E00892C01 /* sora1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sora1.png; path = Assets.xcassets/sora1.imageset/sora1.png; sourceTree = "<group>"; };
 		690F57C0277DAAF300135F5D /* myFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myFunctions.swift; sourceTree = "<group>"; };
 		6932D4C3240A7D97008A03D9 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		6983F1FD27855BFD00FA8D9A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		6983F1FE27855BFD00FA8D9A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		698A19362785CE18004C4CE9 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
 		8E495CC5202FE7880030748C /* ParametersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersViewController.swift; sourceTree = "<group>"; };
 		8EA90BE22038208200D042D0 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -85,6 +89,7 @@
 				6932D4C3240A7D97008A03D9 /* RecordViewController.swift */,
 				8EB6E0F8208E1CAF000A85EB /* Assets.xcassets */,
 				8EE2C025202F32440064ED6F /* LaunchScreen.storyboard */,
+				698A19362785CE18004C4CE9 /* InfoPlist.strings */,
 				8EE2C028202F32440064ED6F /* Info.plist */,
 				8ECE3962203802750054AC0C /* opencvWrapper.h */,
 				8ECE3963203802750054AC0C /* opencvWrapper.mm */,
@@ -137,6 +142,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = 8EE2C010202F32440064ED6F;
 			productRefGroup = 8EE2C01A202F32440064ED6F /* Products */;
@@ -157,6 +163,7 @@
 				8EE2C022202F32440064ED6F /* Main.storyboard in Resources */,
 				690B818B2748D74F00892C01 /* sora1.png in Resources */,
 				8EB6E0F9208E1CB0000A85EB /* Assets.xcassets in Resources */,
+				698A19372785CE18004C4CE9 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +192,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8EE2C021202F32440064ED6F /* Base */,
+				6983F1FD27855BFD00FA8D9A /* ja */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -193,6 +201,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8EE2C026202F32440064ED6F /* Base */,
+				6983F1FE27855BFD00FA8D9A /* ja */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -204,6 +213,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -264,6 +274,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -322,7 +333,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.4.2;
+				CURRENT_PROJECT_VERSION = 1.4.3;
 				DEVELOPMENT_TEAM = YKSHGZ7H3T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -350,7 +361,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.4.2;
+				CURRENT_PROJECT_VERSION = 1.4.3;
 				DEVELOPMENT_TEAM = YKSHGZ7H3T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

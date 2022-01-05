@@ -1,0 +1,96 @@
+
+/* Class = "UILabel"; text = "2018-01-01 00:00:00 (0)"; ObjectID = "0q7-O3-Ich"; */
+"0q7-O3-Ich.text" = "2018-01-01 00:00:00 (0)";
+
+/* Class = "UILabel"; text = "LED"; ObjectID = "3Cx-vb-1Rg"; */
+"3Cx-vb-1Rg.text" = "LED";
+
+/* Class = "UILabel"; text = "LED"; ObjectID = "3Ut-hV-2qn"; */
+"3Ut-hV-2qn.text" = "LED";
+
+/* Class = "UIButton"; normalTitle = "Default"; ObjectID = "5sT-gS-ZO9"; */
+"5sT-gS-ZO9.normalTitle" = "Default";
+
+/* Class = "UILabel"; text = "ビデオとセンサーの波形のずれ"; ObjectID = "69E-lo-wOt"; */
+"69E-lo-wOt.text" = "ビデオとセンサーの波形のずれ";
+
+/* Class = "UILabel"; text = "00:00"; ObjectID = "6Oa-WH-xL2"; */
+"6Oa-WH-xL2.text" = "00:00";
+
+/* Class = "UILabel"; text = "2.3s/120fps"; ObjectID = "6oH-Ur-nDk"; */
+"6oH-Ur-nDk.text" = "2.3s/120fps";
+
+/* Class = "UILabel"; text = "(2)同上波形幅の誤差許容範囲 msec"; ObjectID = "9oE-gN-h2Z"; */
+"9oE-gN-h2Z.text" = "(2)同上波形幅の誤差許容範囲 msec";
+
+/* Class = "UIButton"; normalTitle = "vHIT"; ObjectID = "DZA-EA-S6I"; */
+"DZA-EA-S6I.normalTitle" = "vHIT";
+
+/* Class = "UILabel"; text = "角膜反射光源の被検出幅"; ObjectID = "HbG-UI-ZsL"; */
+"HbG-UI-ZsL.text" = "角膜反射光源の被検出幅";
+
+/* Class = "UIButton"; normalTitle = "120fps"; ObjectID = "JIC-Av-JhT"; */
+"JIC-Av-JhT.normalTitle" = "120fps";
+
+/* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "NG3-VA-Sxk"; */
+"NG3-VA-Sxk.normalTitle" = "Exit";
+
+/* Class = "UILabel"; text = "角膜反射光源の検出幅"; ObjectID = "NMH-1D-eWf"; */
+"NMH-1D-eWf.text" = "角膜反射光源の検出幅";
+
+/* Class = "UIButton"; normalTitle = "English"; ObjectID = "Qiw-FJ-LWg"; */
+"Qiw-FJ-LWg.normalTitle" = "English";
+
+/* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "Ty3-wO-nMU"; */
+"Ty3-wO-nMU.normalTitle" = "Exit";
+
+/* Class = "UILabel"; text = "頭部回転角速度表示の高さ %"; ObjectID = "Wre-qf-59d"; */
+"Wre-qf-59d.text" = "頭部回転角速度表示の高さ %";
+
+/* Class = "UIButton"; normalTitle = " MODE"; ObjectID = "XhS-eE-NWD"; */
+"XhS-eE-NWD.normalTitle" = " MODE";
+
+/* Class = "UILabel"; text = "皮膚上マークの動きによる補正"; ObjectID = "aD3-jN-jML"; */
+"aD3-jN-jML.text" = "皮膚上マークの動きによる補正";
+
+/* Class = "UILabel"; text = "(2*)vhit waveforms"; ObjectID = "bwj-An-8NO"; */
+"bwj-An-8NO.text" = "(2*)vhit表示法";
+
+/* Class = "UILabel"; text = "near"; ObjectID = "ds1-rt-blQ"; */
+"ds1-rt-blQ.text" = "近";
+
+/* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "fPw-uT-6g8"; */
+"fPw-uT-6g8.normalTitle" = "Exit";
+
+/* Class = "UIButton"; normalTitle = "240fps"; ObjectID = "iC2-bZ-his"; */
+"iC2-bZ-his.normalTitle" = "240fps";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "ktc-fi-Lu2"; */
+"ktc-fi-Lu2.text" = "Label";
+
+/* Class = "UILabel"; text = "Pan the waveforms to change the (1*).\nTap the waveforms to change the (2*)."; ObjectID = "m3m-N0-giW"; */
+"m3m-N0-giW.text" = "下波形のパンで(1*)パラメータを変更.\n上波形のタップで(2*)vHIT表示変更.";
+
+/* Class = "UIButton"; normalTitle = "Opposite"; ObjectID = "p30-4I-jic"; */
+"p30-4I-jic.normalTitle" = "上下";
+
+/* Class = "UIButton"; normalTitle = "KeyOff"; ObjectID = "pMb-F1-KQb"; */
+"pMb-F1-KQb.normalTitle" = "KeyOff";
+
+/* Class = "UILabel"; text = "(1)頭部回転時のGyro波形幅 msec"; ObjectID = "srl-OW-f1c"; */
+"srl-OW-f1c.text" = "(1)頭部回転時のGyro波形幅 msec";
+
+/* Class = "UIButton"; normalTitle = "Parallel"; ObjectID = "tNT-h2-pQW"; */
+"tNT-h2-pQW.normalTitle" = "並行";
+
+/* Class = "UILabel"; text = "眼球回転角速度表示の高さ %"; ObjectID = "tWF-A9-5II"; */
+"tWF-A9-5II.text" = "眼球回転角速度表示の高さ %";
+
+/* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "ut3-ve-Fe7"; */
+"ut3-ve-Fe7.normalTitle" = "Exit";
+
+/* Class = "UIButton"; normalTitle = "VOG"; ObjectID = "ySb-fb-deN"; */
+"ySb-fb-deN.normalTitle" = "VOG";
+
+/* Class = "UILabel"; text = "far"; ObjectID = "z8v-v3-JoQ"; */
+"z8v-v3-JoQ.text" = "遠";
