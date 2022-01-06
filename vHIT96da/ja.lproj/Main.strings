@@ -58,7 +58,7 @@
 "b3H-GH-mSd.text" = "眼球位置波形の高さ (%)";
 
 /* Class = "UILabel"; text = "(2*)vhit waveforms"; ObjectID = "bwj-An-8NO"; */
-"bwj-An-8NO.text" = "(2*)vhit波形表示タイプ";
+"bwj-An-8NO.text" = "(2*)vhit表示タイプ";
 
 /* Class = "UILabel"; text = "near"; ObjectID = "ds1-rt-blQ"; */
 "ds1-rt-blQ.text" = "近";
@@ -73,7 +73,7 @@
 "ktc-fi-Lu2.text" = "Label";
 
 /* Class = "UILabel"; text = "Pan the waveforms to change the (1*).\nTap the waveforms to change the (2*)."; ObjectID = "m3m-N0-giW"; */
-"m3m-N0-giW.text" = "下波形のパンで(1*)パラメータを変更.\n上波形のタップで(2*)vHIT表示変更.";
+"m3m-N0-giW.text" = "波形のパンで(1*)パラメータを変更.\n波形のタップで(2*)vHIT表示変更.";
 
 /* Class = "UIButton"; normalTitle = "Opposite"; ObjectID = "p30-4I-jic"; */
 "p30-4I-jic.normalTitle" = "上下";

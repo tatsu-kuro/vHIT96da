@@ -291,8 +291,16 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let butw=(view.bounds.width-sp*7)/4
         let buth=butw/2
         let buty=view.bounds.height-sp-buth-bottomPadding
-        
+        eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
+        headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
+        eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
+        eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
+
         if calcMode==2{//VOG
+            eyeVelocityLabel.isHidden=true
+            headVelocityLabel.isHidden=true
+            eyePositionLabelVOG.isHidden=false
+            eyeVelocityLabelVOG.isHidden=false
 //            eyeVelocityLabel.text = "height of position waveform ％"
 //            headVelocityLabel.text = "height of speed waveform ％"
             eyeVelocityLabel.backgroundColor=UIColor.white
@@ -313,8 +321,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             timeLagLabel.isHidden = true
             B2CLabel.text = " ** VOG wave height **"
             B2CLabel.frame   = CGRect(x:x2,   y: topY ,width: tw, height: bh)
-            eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
-            headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
+//            eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
+//            headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
+//            eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
+//            eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
             wakuLengthLabel.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
@@ -333,6 +343,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             VOGLabel.isHidden=false
             greenItemLabel.isHidden=true
         }else{//vhit
+            eyeVelocityLabel.isHidden=false
+            headVelocityLabel.isHidden=false
+            eyePositionLabelVOG.isHidden=true
+            eyeVelocityLabelVOG.isHidden=true
+
             gyroText.isHidden=true
 
             greenItemLabel.isHidden=false
