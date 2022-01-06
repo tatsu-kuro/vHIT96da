@@ -1,6 +1,6 @@
 
 /* Class = "UILabel"; text = "2018-01-01 00:00:00 (0)"; ObjectID = "0q7-O3-Ich"; */
-"0q7-O3-Ich.text" = "右下ボタンをタップして";
+
 
 /* Class = "UILabel"; text = "LED"; ObjectID = "3Cx-vb-1Rg"; */
 "3Cx-vb-1Rg.text" = "LED";
@@ -16,18 +16,16 @@
 
 /* Class = "UILabel"; text = "00:00"; ObjectID = "6Oa-WH-xL2"; */
 "6Oa-WH-xL2.text" = "00:00";
-
-/* Class = "UILabel"; text = "2.3s/120fps"; ObjectID = "6oH-Ur-nDk"; */
+"0q7-O3-Ich.text" = "右下ボタンをタップして";
 "6oH-Ur-nDk.text" = "ビデオを撮影して下さい";
-
-/* Class = "UILabel"; text = "(2)同上波形幅の誤差許容範囲 msec"; ObjectID = "9oE-gN-h2Z"; */
-"9oE-gN-h2Z.text" = "(2)同上波形幅の誤差許容範囲 msec";
+"srl-OW-f1c.text" = "(1) A(立上がり) - D(頂点) msec";
+"9oE-gN-h2Z.text" = "(2) B(上昇) - C(下降) msec";
 
 /* Class = "UIButton"; normalTitle = "vHIT"; ObjectID = "DZA-EA-S6I"; */
 "DZA-EA-S6I.normalTitle" = "vHIT";
 
 /* Class = "UILabel"; text = "角膜反射光源の被検出幅"; ObjectID = "HbG-UI-ZsL"; */
-"HbG-UI-ZsL.text" = "角膜反射光源の被検出幅";
+"HbG-UI-ZsL.text" = "画像(光源)を検出する範囲の幅";
 
 /* Class = "UIButton"; normalTitle = "120fps"; ObjectID = "JIC-Av-JhT"; */
 "JIC-Av-JhT.normalTitle" = "120fps";
@@ -36,7 +34,7 @@
 "NG3-VA-Sxk.normalTitle" = "Exit";
 
 /* Class = "UILabel"; text = "角膜反射光源の検出幅"; ObjectID = "NMH-1D-eWf"; */
-"NMH-1D-eWf.text" = "角膜反射光源の検出幅";
+"NMH-1D-eWf.text" = "比較検出する画像(光源)の幅";
 
 /* Class = "UIButton"; normalTitle = "English"; ObjectID = "Qiw-FJ-LWg"; */
 "Qiw-FJ-LWg.normalTitle" = "English";
@@ -82,7 +80,7 @@
 "pMb-F1-KQb.normalTitle" = "KeyOff";
 
 /* Class = "UILabel"; text = "(1)頭部回転時のGyro波形幅 msec"; ObjectID = "srl-OW-f1c"; */
-"srl-OW-f1c.text" = "(1)頭部回転時のGyro波形幅 msec";
+
 
 /* Class = "UIButton"; normalTitle = "Parallel"; ObjectID = "tNT-h2-pQW"; */
 "tNT-h2-pQW.normalTitle" = "平行";

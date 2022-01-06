@@ -93,7 +93,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var calcMode:Int?
     var vHITDisplayMode:Int = 0
     @IBOutlet weak var gyroText: UILabel!
-    @IBOutlet weak var A2BLabel: UILabel!
+    @IBOutlet weak var A2DLabel: UILabel!
     @IBOutlet weak var B2CLabel: UILabel!
     
     @IBOutlet weak var eyeVelocityLabel: UILabel!
@@ -301,8 +301,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             headVelocityLabel.isHidden=true
             eyePositionLabelVOG.isHidden=false
             eyeVelocityLabelVOG.isHidden=false
-//            eyeVelocityLabel.text = "height of position waveform ％"
-//            headVelocityLabel.text = "height of speed waveform ％"
             eyeVelocityLabel.backgroundColor=UIColor.white
             eyeVelocityLabel.textColor=UIColor.black
             headVelocityLabel.backgroundColor=UIColor.white
@@ -310,7 +308,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             markText.isHidden = true
             faceFbutton.isHidden = true
             vhitpng.isHidden=true
-            A2BLabel.isHidden=true
+            A2DLabel.isHidden=true
+            B2CLabel.isHidden=true
             eyeBorderLabel.isHidden=false
             A2DInput.isHidden = true
             B2CInput.isHidden = true
@@ -319,12 +318,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeVelocityInput.isHidden = false
             headVelocityInput.isHidden = false
             timeLagLabel.isHidden = true
-            B2CLabel.text = " ** VOG wave height **"
-            B2CLabel.frame   = CGRect(x:x2,   y: topY ,width: tw, height: bh)
-//            eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
-//            headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
-//            eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
-//            eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
             wakuLengthLabel.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
@@ -354,7 +347,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             markText.isHidden = false
             faceFbutton.isHidden = false
             vhitpng.isHidden=false
-            A2BLabel.isHidden=false
+            A2DLabel.isHidden=false
+            B2CLabel.isHidden=false
             eyeBorderLabel.isHidden=false
             A2DInput.isHidden = false
             B2CInput.isHidden = false
@@ -385,8 +379,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vhitDisplayLabel.textColor=UIColor.systemGreen
             vhitDisplayLabel.backgroundColor=UIColor.white
             
-            markText.text = "use of the mark on face"
-            A2BLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
+//            markText.text = "use of the mark on face"
+            A2DLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
             B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
             eyeVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*0 ,width: tw, height: bh)
             headVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*1 ,width: tw, height: bh)
