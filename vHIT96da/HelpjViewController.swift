@@ -19,19 +19,26 @@ class HelpjViewController: UIViewController{
     func setHelpImage(){
         if jap_eng==1{
             if calcMode != 2{
-                 currentImageName="vHITen"
+                currentImageName="vHITen"
             }else{
                 currentImageName="VOGen"
             }
-            langButton.setTitle("Japanese", for: .normal)
-            
+            if Locale.preferredLanguages.first!.contains("ja"){
+                langButton.setTitle("日本語", for: .normal)
+            }else{
+                langButton.setTitle("Japanese", for: .normal)
+            }
         }else{
             if calcMode != 2{
-                 currentImageName="vHITja"
+                currentImageName="vHITja"
             }else{
                 currentImageName="VOGja"
             }
-              langButton.setTitle("English", for: .normal)
+            if Locale.preferredLanguages.first!.contains("ja"){
+                langButton.setTitle("英語", for: .normal)
+            }else{
+                langButton.setTitle("English", for: .normal)
+            }
         }
         helpView.image = UIImage(named:currentImageName)!
         let image:UIImage = UIImage(named:currentImageName)!
@@ -52,15 +59,10 @@ class HelpjViewController: UIViewController{
         setHelpImage()
         UserDefaults.standard.set(0,forKey:"currentHelpY")
     }
-    func firstLang() -> String {
-        let prefLang = Locale.preferredLanguages.first
-        return prefLang!
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("language:",firstLang())
-        if firstLang().contains("ja"){
+        if Locale.preferredLanguages.first!.contains("ja"){
             jap_eng=1//langChan()で表示するので０でなくて１
         }else{
             jap_eng=0

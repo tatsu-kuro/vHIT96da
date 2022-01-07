@@ -446,8 +446,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             showVideoIroiro(num: 0)
             if videoDate.count==0{
                 setVideoButtons(mode: false)
-                currentVideoDate.text="tap button in lower right corner"
-                videoFps.text="to record the video of the eye"
+                if Locale.preferredLanguages.first!.contains("ja"){
+                    currentVideoDate.text="右下ボタンをタップして"
+                    videoFps.text="ビデオを撮影して下さい"
+                }else{
+                    currentVideoDate.text="tap button in lower right corner"
+                    videoFps.text="to record the video of the eye"
+                }
             }
         }
     }
