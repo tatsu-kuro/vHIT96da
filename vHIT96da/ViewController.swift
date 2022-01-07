@@ -413,7 +413,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             delAssets.append(assets[id])
             print("erase0:",id,assets.count)
             if id != assets.count-1{//最後でなければ
-                print("erase1:",id,assets.count)
+//                print("erase1:",id,assets.count)
                 if assets[id+1].duration==0{//pngが無くて、videoが選択されてない事を確認
                     delAssets.append(assets[id+1])//pngはその次に入っているはず
                     print("erase2:",id,assets.count)
@@ -447,9 +447,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if videoDate.count==0{
                 setVideoButtons(mode: false)
                 if Locale.preferredLanguages.first!.contains("ja"){
+//                    print("japanese")
                     currentVideoDate.text="右下ボタンをタップして"
                     videoFps.text="ビデオを撮影して下さい"
                 }else{
+//                    print("english")
                     currentVideoDate.text="tap button in lower right corner"
                     videoFps.text="to record the video of the eye"
                 }
