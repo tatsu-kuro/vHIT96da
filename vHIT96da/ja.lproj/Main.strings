@@ -53,7 +53,7 @@
 "aD3-jN-jML.text" = "皮膚上マークの動きによる補正";
 
 /* Class = "UILabel"; text = "eye position wave Height (%)"; ObjectID = "b3H-GH-mSd"; */
-"b3H-GH-mSd.text" = "眼球位置波形の高さ (%)";
+"b3H-GH-mSd.text" = "眼球位置波形の高さ %";
 
 /* Class = "UILabel"; text = "(2*)vhit waveforms"; ObjectID = "bwj-An-8NO"; */
 "bwj-An-8NO.text" = "(2*)vhit表示タイプ";
