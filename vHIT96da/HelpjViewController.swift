@@ -23,22 +23,22 @@ class HelpjViewController: UIViewController{
             }else{
                 currentImageName="VOGen"
             }
-            if Locale.preferredLanguages.first!.contains("ja"){
-                langButton.setTitle("日本語", for: .normal)
-            }else{
-                langButton.setTitle("Japanese", for: .normal)
-            }
+//            if Locale.preferredLanguages.first!.contains("ja"){
+//                langButton.setTitle("日本語", for: .normal)
+//            }else{
+//                langButton.setTitle("Japanese", for: .normal)
+//            }
         }else{
             if calcMode != 2{
                 currentImageName="vHITja"
             }else{
                 currentImageName="VOGja"
             }
-            if Locale.preferredLanguages.first!.contains("ja"){
-                langButton.setTitle("英語", for: .normal)
-            }else{
-                langButton.setTitle("English", for: .normal)
-            }
+//            if Locale.preferredLanguages.first!.contains("ja"){
+//                langButton.setTitle("英語", for: .normal)
+//            }else{
+//                langButton.setTitle("English", for: .normal)
+//            }
         }
         helpView.image = UIImage(named:currentImageName)!
         let image:UIImage = UIImage(named:currentImageName)!
@@ -67,8 +67,9 @@ class HelpjViewController: UIViewController{
         }else{
             jap_eng=0
         }
-        langButton.layer.cornerRadius = 5
-        exitButton.layer.cornerRadius = 5
+//        langButton.layer.cornerRadius = 5
+//        exitButton.layer.cornerRadius = 5
+//        setButtons()
         langChan(0)//contains setHelpImage()
         UserDefaults.standard.set(0,forKey:"currentHelpY")
     }
@@ -97,5 +98,33 @@ class HelpjViewController: UIViewController{
 //            print("panGest:",helpHlimit,helpView.frame.origin.y,posY,posYlast)
         }else if sender.state == .ended{
         }
+    }
+    func setButtons(){
+//        let ww:CGFloat=view.bounds.width
+        //        let wh:CGFloat=view.bounds.height
+//        let bw:CGFloat=55
+//        let bh:CGFloat=25
+//        let bh1=bh+7
+//        let tw:CGFloat=ww-bw-10
+//        let x1:CGFloat=3
+//        let x2=x1+bw+5
+        
+        let sp:CGFloat=5
+        let butw=(view.bounds.width-sp*7)/4
+        let buth=butw/2
+        let buty=view.bounds.height-sp-buth-bottomPadding
+ 
+        langButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
+        exitButton.frame=CGRect(x:butw*3+5*sp,y:buty,width:butw,height: buth)
+        langButton.layer.cornerRadius = 5
+        exitButton.layer.cornerRadius = 5
+    }
+    var bottomPadding:CGFloat=0
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if #available(iOS 11.0, *) {
+             bottomPadding = self.view.safeAreaInsets.bottom
+        }
+        setButtons()
     }
 }

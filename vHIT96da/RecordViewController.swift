@@ -75,8 +75,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }else{
             focusBar.value=getUserDefault(str: "focusValue", ret: 0)
             setFocus(focus: focusBar.value)
-            focusFar.text = "far"//false
-            focusNear.text = "near"//isHidden=false
+            if Locale.preferredLanguages.first!.contains("ja"){
+                focusFar.text = "近"//false
+                focusNear.text = "遠"//isHidden=false
+            }else{
+                focusFar.text = "far"//false
+                focusNear.text = "near"//isHidden=false
+
+            }
         }
     }
     @IBAction func onCameraChange(_ sender: Any) {//camera>1

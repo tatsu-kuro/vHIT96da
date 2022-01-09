@@ -37,7 +37,7 @@
 "NMH-1D-eWf.text" = "比較検出する画像(光源)の幅";
 
 /* Class = "UIButton"; normalTitle = "English"; ObjectID = "Qiw-FJ-LWg"; */
-"Qiw-FJ-LWg.normalTitle" = "English";
+//"Qiw-FJ-LWg.normalTitle" = "English";
 
 /* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "Ty3-wO-nMU"; */
 "Ty3-wO-nMU.normalTitle" = "Exit";

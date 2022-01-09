@@ -3167,8 +3167,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         iroiro.setButtonProperty(saveButton,x:10+bwd*1,y:bh0,w:bw,h:bh,UIColor.systemBlue)
         iroiro.setButtonProperty(waveButton,x:10+bwd*2,y:bh0,w:bw,h:bh,UIColor.systemBlue)
 
-        calcButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
-        stopButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
+//        calcButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
+//        stopButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
+        iroiro.setButtonProperty(calcButton,x:10+bwd*3,y:bh0-bh/2-distance/2,w:bw,h: bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(stopButton,x:10+bwd*3,y:bh0-bh/2-distance/2,w:bw,h: bh,UIColor.systemBlue)
+//        stopButton.frame = CGRect(x:10+bwd*3,y:bh0-bh/2-distance/2,width:bw,height: bh)
 
         iroiro.setButtonProperty(paraButton,x:10+bwd*4,y:bh0,w:bw,h:bh,UIColor.systemBlue)
         iroiro.setButtonProperty(helpButton,x:10+bwd*5,y:bh0,w:bw,h:bh,UIColor.systemBlue)
