@@ -76,8 +76,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             focusBar.value=getUserDefault(str: "focusValue", ret: 0)
             setFocus(focus: focusBar.value)
             if Locale.preferredLanguages.first!.contains("ja"){
-                focusFar.text = "近"//false
-                focusNear.text = "遠"//isHidden=false
+                focusFar.text = "遠"//false
+                focusNear.text = "近"//isHidden=false
             }else{
                 focusFar.text = "far"//false
                 focusNear.text = "near"//isHidden=false
