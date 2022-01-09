@@ -516,7 +516,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func onChangeModeButton(_ sender: Any) {
-        if calcFlag == true || calcMode==2{
+        if calcFlag == true || calcMode == 2 || videoDate.count == 0{
             return
         }
 
