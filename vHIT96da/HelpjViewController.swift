@@ -50,7 +50,9 @@ class HelpjViewController: UIViewController{
         setHelpImage()
         UserDefaults.standard.set(0,forKey:"currentHelpY")
     }
-
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewdidload")
