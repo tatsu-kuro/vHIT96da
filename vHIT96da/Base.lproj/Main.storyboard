@@ -973,13 +973,10 @@ Tap the waveforms to change the (2*).</string>
                                 <rect key="frame" x="0.0" y="44" width="414" height="773"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPw-uT-6g8">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPw-uT-6g8">
                                 <rect key="frame" x="329" y="817" width="80" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="TbE-02-SoB"/>
-                                    <constraint firstAttribute="width" constant="80" id="nqp-SA-KL7"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Exit">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -988,13 +985,10 @@ Tap the waveforms to change the (2*).</string>
                                     <segue destination="Qpl-Z7-gTZ" kind="unwind" unwindAction="unwind:" id="pFc-0D-QS7"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qiw-FJ-LWg">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qiw-FJ-LWg">
                                 <rect key="frame" x="5" y="817" width="80" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="lEv-gJ-B3D"/>
-                                    <constraint firstAttribute="height" constant="40" id="oYl-UI-4hh"/>
-                                </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="globe" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1007,12 +1001,6 @@ Tap the waveforms to change the (2*).</string>
                         <viewLayoutGuide key="safeArea" id="E8V-fc-BMe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="Qiw-FJ-LWg" secondAttribute="bottom" constant="5" id="H2z-KJ-laO"/>
-                            <constraint firstItem="Qiw-FJ-LWg" firstAttribute="leading" secondItem="E8V-fc-BMe" secondAttribute="leading" constant="5" id="aaI-hi-ZkW"/>
-                            <constraint firstItem="E8V-fc-BMe" firstAttribute="bottom" secondItem="fPw-uT-6g8" secondAttribute="bottom" constant="5" id="bQd-rK-3kV"/>
-                            <constraint firstItem="E8V-fc-BMe" firstAttribute="trailing" secondItem="fPw-uT-6g8" secondAttribute="trailing" constant="5" id="rMd-mS-VWp"/>
-                        </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="rPR-0i-zqS" appends="YES" id="Iun-H0-kIV"/>
                         </connections>

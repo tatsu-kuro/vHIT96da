@@ -61,6 +61,7 @@ class HelpjViewController: UIViewController{
         }
         langChan(0)//contains setHelpImage()
         UserDefaults.standard.set(0,forKey:"currentHelpY")
+        setButtons()
     }
 
     func getUserDefaultFloat(str:String,ret:Float) -> Float{
@@ -89,12 +90,10 @@ class HelpjViewController: UIViewController{
     }
     func setButtons(){
         let bottomPadding=CGFloat(UserDefaults.standard.float(forKey: "bottom"))
-
         let sp:CGFloat=5
         let butw=(view.bounds.width-sp*7)/4
         let buth=butw/2
         let buty=view.bounds.height-sp-buth-bottomPadding
- 
         langButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
         exitButton.frame=CGRect(x:butw*3+5*sp,y:buty,width:butw,height: buth)
         langButton.layer.cornerRadius = 5
