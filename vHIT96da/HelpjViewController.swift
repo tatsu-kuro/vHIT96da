@@ -15,30 +15,21 @@ class HelpjViewController: UIViewController{
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var langButton: UIButton!
     var currentImageName:String!
-//    var currentHelpY:CGFloat=0
     func setHelpImage(){
+        let topPadding=CGFloat(UserDefaults.standard.float(forKey: "top"))
+//        let bottomPadding=CGFloat(UserDefaults.standard.float(forKey: "bottom"))
         if jap_eng==1{
             if calcMode != 2{
                 currentImageName="vHITen"
             }else{
                 currentImageName="VOGen"
             }
-//            if Locale.preferredLanguages.first!.contains("ja"){
-//                langButton.setTitle("日本語", for: .normal)
-//            }else{
-//                langButton.setTitle("Japanese", for: .normal)
-//            }
         }else{
             if calcMode != 2{
                 currentImageName="vHITja"
             }else{
                 currentImageName="VOGja"
             }
-//            if Locale.preferredLanguages.first!.contains("ja"){
-//                langButton.setTitle("英語", for: .normal)
-//            }else{
-//                langButton.setTitle("English", for: .normal)
-//            }
         }
         helpView.image = UIImage(named:currentImageName)!
         let image:UIImage = UIImage(named:currentImageName)!
@@ -47,7 +38,7 @@ class HelpjViewController: UIViewController{
         let imgHeight:CGFloat = image.size.height
         // 画像サイズをスクリーン幅に合わせる
         let scale:CGFloat = imgHeight / imgWidth
-        helpView.frame=CGRect(x:0,y:20,width:view.bounds.width,height: view.bounds.width*scale)
+        helpView.frame=CGRect(x:0,y:topPadding,width:view.bounds.width,height: view.bounds.width*scale)
         helpHlimit=view.bounds.width*scale-view.bounds.height+50
     }
     @IBAction func langChan(_ sender: Any) {
@@ -62,18 +53,16 @@ class HelpjViewController: UIViewController{
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("viewdidload")
         if Locale.preferredLanguages.first!.contains("ja"){
             jap_eng=1//langChan()で表示するので０でなくて１
         }else{
             jap_eng=0
         }
-//        langButton.layer.cornerRadius = 5
-//        exitButton.layer.cornerRadius = 5
-//        setButtons()
         langChan(0)//contains setHelpImage()
         UserDefaults.standard.set(0,forKey:"currentHelpY")
     }
-    
+
     func getUserDefaultFloat(str:String,ret:Float) -> Float{
         if (UserDefaults.standard.object(forKey: str) != nil){
             return UserDefaults.standard.float(forKey: str)
@@ -88,27 +77,19 @@ class HelpjViewController: UIViewController{
     @IBAction func panGestuer(_ sender: UIPanGestureRecognizer) {
         if sender.state == .began {
             posYlast=sender.location(in: self.view).y
-        } else if sender.state == .changed {
+        }else if sender.state == .changed {
             let posY = sender.location(in: self.view).y
             let h=helpView.frame.origin.y - posYlast + posY
             if h < 20 && h > -helpHlimit{
                 helpView.frame.origin.y -= posYlast-posY
                 posYlast=posY
             }
-//            print("panGest:",helpHlimit,helpView.frame.origin.y,posY,posYlast)
         }else if sender.state == .ended{
         }
     }
     func setButtons(){
-//        let ww:CGFloat=view.bounds.width
-        //        let wh:CGFloat=view.bounds.height
-//        let bw:CGFloat=55
-//        let bh:CGFloat=25
-//        let bh1=bh+7
-//        let tw:CGFloat=ww-bw-10
-//        let x1:CGFloat=3
-//        let x2=x1+bw+5
-        
+        let bottomPadding=CGFloat(UserDefaults.standard.float(forKey: "bottom"))
+
         let sp:CGFloat=5
         let butw=(view.bounds.width-sp*7)/4
         let buth=butw/2
@@ -118,13 +99,5 @@ class HelpjViewController: UIViewController{
         exitButton.frame=CGRect(x:butw*3+5*sp,y:buty,width:butw,height: buth)
         langButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
-    }
-    var bottomPadding:CGFloat=0
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if #available(iOS 11.0, *) {
-             bottomPadding = self.view.safeAreaInsets.bottom
-        }
-        setButtons()
     }
 }

@@ -3994,4 +3994,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         drawVHITwaves()
     }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let topPadding = self.view.safeAreaInsets.top
+        let bottomPadding = self.view.safeAreaInsets.bottom
+//        let leftPadding = self.view.safeAreaInsets.left
+//        let rightPadding = self.view.safeAreaInsets.righ
+        UserDefaults.standard.set(topPadding, forKey: "top")
+        UserDefaults.standard.set(bottomPadding, forKey: "bottom")
+//        UserDefaults.standard.set(leftPadding, forKey: "left")
+//        UserDefaults.standard.set(rightPadding, forKey: "right")
+    }
 }
