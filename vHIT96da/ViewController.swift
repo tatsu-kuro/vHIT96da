@@ -1327,7 +1327,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDura.count<1 {
             return
         }
-        if useFaceMark==1 && calcMode != 2{
+        if useFaceMark==1{//} && calcMode != 2{//vhit,vogどちらでも有効とする
             wakuShowFace_image.isHidden=false
         }else{
             wakuShowFace_image.isHidden=true
