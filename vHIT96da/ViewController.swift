@@ -13,7 +13,7 @@ import Photos
 import MessageUI
 //import CoreLocation
 //import CoreTelephony
-let noFaceMark=true//facemarkが完成したら削除の予定
+//let noFaceMark=true//facemarkが完成したら削除の予定
 extension UIImage {
     func pixelData() -> [UInt8]? {
         let size = self.size
@@ -2450,9 +2450,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         posRatio = getUserDefault(str: "posRatio", ret: 100)
         veloRatio = getUserDefault(str: "veloRatio", ret: 100)
         useFaceMark = getUserDefault(str: "useFaceMark", ret:0)
-        if noFaceMark==true{
-            useFaceMark=0
-        }
+//        if noFaceMark==true{
+//            useFaceMark=0
+//        }
 //        getVideoGyryoZureDefault()
         videoGyroZure = getUserDefault(str: "videoGyroZure", ret: 20)
         calcMode = getUserDefault(str: "calcMode", ret: 0)

@@ -305,8 +305,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeVelocityLabel.textColor=UIColor.black
             headVelocityLabel.backgroundColor=UIColor.white
             headVelocityLabel.textColor=UIColor.black
-            markText.isHidden = true
-            faceFbutton.isHidden = true
+//            markText.isHidden = true
+//            faceFbutton.isHidden = true
             vhitpng.isHidden=true
             A2DLabel.isHidden=true
             B2CLabel.isHidden=true
@@ -326,6 +326,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             headVelocityInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             eyeBorderInput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
+            
+            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
+            markText.frame  = CGRect(x:x2,  y: topY+bh1*5,width:tw,height: bh)
+
             parallelButton.isHidden=true
             parallelLabel.isHidden=true
             oppositeLabel.isHidden=true
@@ -387,7 +391,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             timeLagLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
-            let vhitpngH=(ww-10)*440/940
+            let vhitpngH=(ww-10)*440/940-10
             gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             B2CInput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
@@ -397,23 +401,24 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBorderInput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             timeLagInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
-            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: bw, height: bh)
-            markText.frame  = CGRect(x:x2,  y: topY+bh1*8+vhitpngH+10,width:tw,height: bh)
-            
-            vhitDisplayLabel.frame = CGRect(x:butw*2+4*sp,y: topY+bh1*7+vhitpngH+10 ,width: tw, height: bh)
-            parallelLabel.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+5 ,width: butw, height: 3)
-            parallelButton.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+10 ,width: butw, height: bh)
+                       
+            vhitDisplayLabel.frame = CGRect(x:butw*2+4*sp,y: topY+bh1*7+vhitpngH+5 ,width: tw, height: bh)
+            parallelLabel.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH,width: butw, height: 3)
+            parallelButton.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+5 ,width: butw, height: bh)
             parallelButton.layer.cornerRadius=3
-            oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:3)
-            oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+10,width:butw,height:bh)
+            oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH,width:butw,height:3)
+            oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:bh)
             oppositeButton.layer.cornerRadius=3
-            greenItemLabel.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+10 ,width: view.bounds.width-x1*2, height: bh*2)
+            greenItemLabel.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+5 ,width: view.bounds.width-x1*2, height: bh*2)
             greenItemLabel.layer.masksToBounds = true
             greenItemLabel.layer.cornerRadius = 3
-            if noFaceMark==true{
-                markText.isHidden=true
-                faceFbutton.isHidden=true
-            }
+            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*10+vhitpngH-5 ,width: bw, height: bh)
+            markText.frame  = CGRect(x:x2,  y: topY+bh1*10+vhitpngH-5,width:tw,height: bh)
+//            greenItemLabel.isHidden=true
+//            if noFaceMark==true{
+//                markText.isHidden=true
+//                faceFbutton.isHidden=true
+//            }
             displayMode()
             vHITLabel.isHidden=false
             VOGLabel.isHidden=true
