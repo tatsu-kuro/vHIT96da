@@ -1204,7 +1204,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyePosX = eyeWithBorderRect.origin.x - eyeWithBorderRect0.origin.x// + ex
                             eyePosY = eyeWithBorderRect.origin.y - eyeWithBorderRect0.origin.y// + ey
                             
-                            if useFaceMark==1 && calcMode != 2{
+                            if useFaceMark==1{//} && calcMode != 2{
                                 faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
                                 faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
                                 maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
@@ -2503,7 +2503,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         //        printR(str:"wakuE:",rct: wakuE)
         eyeWaku_image.frame=CGRect(x:(wakuE.origin.x)-15,y:wakuE.origin.y-15,width:(wakuE.size.width)+30,height: wakuE.size.height+30)
-        if  calcMode==2 || useFaceMark==0{//vHIT 表示無し、補整無し
+        if  useFaceMark==0{//markによる補整無し
             faceWaku_image.frame=nullRect
         }else{
             faceWaku_image.frame=CGRect(x:(wakuF.origin.x)-15,y:wakuF.origin.y-15,width:wakuF.size.width+30,height: wakuF.size.height+30)
@@ -3796,7 +3796,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let faceFrame=faceWaku_image.frame
         //checkDispMode() 1-vHIT 2-VOG 3-non
       
-        if checkDispMode()==1{//vhit
+        if checkDispMode()==1 || checkDispMode()==2{//vhit
             if loc.y<vhitBoxView!.frame.minY || (loc.y>vhitBoxView!.frame.maxY && loc.y<gyroBoxView!.frame.minY) ||
                 (loc.y>gyroBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
                 if timerCalc?.isValid == false {
@@ -3867,13 +3867,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //video slide bar と被らないように
                 return
             }
-            if useFaceMark==1 && calcMode != 2{
-                print("useFaceMark:",useFaceMark)
-                if wakuEyeFace==0{
+            if useFaceMark==1{//} && calcMode != 2{
+                   if wakuEyeFace==0{
                     wakuEyeFace=1
                 }else{
                     wakuEyeFace=0
                 }
+                print("useFaceMark:",useFaceMark,wakuEyeFace)
                 dispWakus()
                 showWakuImages()
             }
