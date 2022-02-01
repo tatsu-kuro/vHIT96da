@@ -3787,10 +3787,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDate.count==0{
             return
         }
-//        print("tapFrame****before")
-//        if calcFlag==true{
-//                  return
-//              }
         let loc=sender.location(in: view)
         let eyeFrame=eyeWaku_image.frame
         let faceFrame=faceWaku_image.frame
@@ -3801,10 +3797,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 (loc.y>gyroBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
                 if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
                     onWaveButton(0)
-                    print("onWaveButton",vHIT_VOG)
                     return
                 }
-            }else if loc.y>vhitBoxView!.frame.minY && loc.y<vhitBoxView!.frame.maxY{//in vhitbox
+            }else if loc.y>vhitBoxView!.frame.minY && loc.y<vhitBoxView!.frame.maxY{//vhit表示モード変更
                 vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:1)
                 if vHITDisplayMode==0{
                     vHITDisplayMode=1
@@ -3830,12 +3825,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else if vHIT_VOG==2{//vog
             if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
-                if timerCalc?.isValid == false {
+                if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
                     onWaveButton(0)
                     return
                 }
-//                onWaveButton(0)
-//                return
             }
         }else{//波形が表示されていないとき
             if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
@@ -3864,17 +3857,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 wakuImg3.isHidden=true
                 return
             }
-            if loc.y > videoSlider.frame.minY-20{
-                //video slide bar と被らないように
+            if loc.y > videoSlider.frame.minY-20{//video slide bar と被らないように
                 return
             }
-            if useFaceMark==1{//} && calcMode != 2{
-                   if wakuEyeFace==0{
+            if useFaceMark==1{//選択枠を変更
+                if wakuEyeFace==0{
                     wakuEyeFace=1
                 }else{
                     wakuEyeFace=0
                 }
-                print("useFaceMark:",useFaceMark,wakuEyeFace)
+//                print("useFaceMark:",useFaceMark,wakuEyeFace)
                 dispWakus()
                 showWakuImages()
             }
