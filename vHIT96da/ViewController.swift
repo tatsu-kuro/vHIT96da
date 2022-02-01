@@ -3794,13 +3794,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let loc=sender.location(in: view)
         let eyeFrame=eyeWaku_image.frame
         let faceFrame=faceWaku_image.frame
-        //checkDispMode() 1-vHIT 2-VOG 3-non
-      
-        if checkDispMode()==1 || checkDispMode()==2{//vhit
+        //checkDispMode() 1-vHIT 2-VOG 0-non
+        let vHIT_VOG=checkDispMode()
+        if vHIT_VOG==1 {//vhit
             if loc.y<vhitBoxView!.frame.minY || (loc.y>vhitBoxView!.frame.maxY && loc.y<gyroBoxView!.frame.minY) ||
                 (loc.y>gyroBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
-                if timerCalc?.isValid == false {
+                if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
                     onWaveButton(0)
+                    print("onWaveButton",vHIT_VOG)
                     return
                 }
             }else if loc.y>vhitBoxView!.frame.minY && loc.y<vhitBoxView!.frame.maxY{//in vhitbox
@@ -3827,7 +3828,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 drawVHITwaves()
             }
-        }else if checkDispMode()==2{//vog
+        }else if vHIT_VOG==2{//vog
             if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
                 if timerCalc?.isValid == false {
                     onWaveButton(0)
@@ -3836,7 +3837,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                onWaveButton(0)
 //                return
             }
-        }else{//
+        }else{//波形が表示されていないとき
             if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
                 if calcFlag==false && boxiesFlag==false{//within waku
                     matchingTestMode=true
