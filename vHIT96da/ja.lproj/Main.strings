@@ -24,8 +24,8 @@
 /* Class = "UIButton"; normalTitle = "vHIT"; ObjectID = "DZA-EA-S6I"; */
 "DZA-EA-S6I.normalTitle" = "vHIT";
 
-/* Class = "UILabel"; text = "角膜反射光源の被検出幅"; ObjectID = "HbG-UI-ZsL"; */
-"HbG-UI-ZsL.text" = "画像(光源)を検出する範囲の幅";
+/* Class = "UILabel"; text = "Width of the LED image"; ObjectID = "HbG-UI-ZsL"; */
+"HbG-UI-ZsL.text" = "LED画像の幅";
 
 /* Class = "UIButton"; normalTitle = "120fps"; ObjectID = "JIC-Av-JhT"; */
 "JIC-Av-JhT.normalTitle" = "120fps";
@@ -33,8 +33,8 @@
 /* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "NG3-VA-Sxk"; */
 "NG3-VA-Sxk.normalTitle" = "Exit";
 
-/* Class = "UILabel"; text = "角膜反射光源の検出幅"; ObjectID = "NMH-1D-eWf"; */
-"NMH-1D-eWf.text" = "比較検出する画像(光源)の幅";
+/* Class = "UILabel"; text = "Range for detecting the LED image"; ObjectID = "NMH-1D-eWf"; */
+"NMH-1D-eWf.text" = "LED画像を探す範囲の幅";
 
 /* Class = "UIButton"; normalTitle = "English"; ObjectID = "Qiw-FJ-LWg"; */
 //"Qiw-FJ-LWg.normalTitle" = "English";
