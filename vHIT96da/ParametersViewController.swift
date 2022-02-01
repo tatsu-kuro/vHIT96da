@@ -25,13 +25,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         setTexts()
     }
     @IBOutlet weak var markText: UILabel!
-    @IBOutlet weak var faceFbutton: UISwitch!
+    @IBOutlet weak var faceMarkSwitch: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
     @IBOutlet weak var greenItemLabel: UILabel!
     @IBOutlet weak var vHITLabel: UILabel!
     @IBOutlet weak var toVOGButton: UIButton!
-    
     @IBAction func onTovHITButton(_ sender: Any) {
         if calcMode == 0{
             return
@@ -80,6 +79,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         parallelLabel.isHidden=false
         oppositeLabel.isHidden=true
     }
+    var faceMarkHidden:Bool=true
+    //これでmarkswitch,marktextの表示をオンオフする。
     var useFaceMark:Int?
     var widthRange:Int = 0
     var waveWidth:Int = 0
@@ -198,7 +199,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             widthRange = 30
             waveWidth = 80
             eyeBorder=10
-            faceFbutton.isOn=false
+            faceMarkSwitch.isOn=false
             useFaceMark=0
             videoGyroZure = 20
             eyeRatio = 100
@@ -206,7 +207,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLength = 3
         }else{
             eyeBorder=10
-            faceFbutton.isOn=false
+            faceMarkSwitch.isOn=false
             posRatio = 100
             veloRatio = 100
             wakuLength = 3
@@ -267,9 +268,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
         self.wakuLengthInput.text = "\(wakuLength)"
         if useFaceMark==0{
-            self.faceFbutton.isOn=false
+            self.faceMarkSwitch.isOn=false
         }else{
-            self.faceFbutton.isOn=true
+            self.faceMarkSwitch.isOn=true
         }
     }
   
@@ -327,7 +328,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBorderInput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             
-            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
+            faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*5,width:tw,height: bh)
 
             parallelButton.isHidden=true
@@ -348,8 +349,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             gyroText.isHidden=true
 
             greenItemLabel.isHidden=false
-            markText.isHidden = false
-            faceFbutton.isHidden = false
+//            markText.isHidden = false
+//            faceFbutton.isHidden = false
             vhitpng.isHidden=false
             A2DLabel.isHidden=false
             B2CLabel.isHidden=false
@@ -391,7 +392,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             timeLagLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
-            let vhitpngH=(ww-10)*440/940-10
+            var vhitpngH=(ww-10)*440/940
             gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             B2CInput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
@@ -400,8 +401,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             eyeBorderInput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             timeLagInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
-            vhitpng.frame = CGRect(x:5,y:topY+bh1*7,width:ww-10,height:vhitpngH)
-                       
+            vhitpng.frame = CGRect(x:5,y:topY+bh1*7-5,width:ww-10,height:vhitpngH)
+            vhitpngH -= 5
             vhitDisplayLabel.frame = CGRect(x:butw*2+4*sp,y: topY+bh1*7+vhitpngH+5 ,width: tw, height: bh)
             parallelLabel.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH,width: butw, height: 3)
             parallelButton.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+5 ,width: butw, height: bh)
@@ -412,7 +413,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+5 ,width: view.bounds.width-x1*2, height: bh*2)
             greenItemLabel.layer.masksToBounds = true
             greenItemLabel.layer.cornerRadius = 3
-            faceFbutton.frame =     CGRect(x:x1,y: topY+bh1*10+vhitpngH-5 ,width: bw, height: bh)
+            faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*10+vhitpngH-5 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*10+vhitpngH-5,width:tw,height: bh)
 //            greenItemLabel.isHidden=true
 //            if noFaceMark==true{
@@ -437,7 +438,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if faceMarkHidden==true{
+            markText.isHidden=true
+            faceMarkSwitch.isHidden=true
+        }
         B2CInput.delegate = self
         A2DInput.delegate = self
         eyeBorderInput.delegate = self

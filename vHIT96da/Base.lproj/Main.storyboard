@@ -929,7 +929,7 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="eyeVelocityInput" destination="2b1-ge-IVn" id="sOA-1O-Bl3"/>
                         <outlet property="eyeVelocityLabel" destination="tWF-A9-5II" id="8r4-49-JPz"/>
                         <outlet property="eyeVelocityLabelVOG" destination="utK-j7-SyA" id="wPW-pc-8Sx"/>
-                        <outlet property="faceFbutton" destination="eyC-be-Bgy" id="1BZ-yx-0Xd"/>
+                        <outlet property="faceMarkSwitch" destination="eyC-be-Bgy" id="1BZ-yx-0Xd"/>
                         <outlet property="greenItemLabel" destination="m3m-N0-giW" id="txz-0U-d4M"/>
                         <outlet property="gyroText" destination="Atu-MZ-zqA" id="65H-wy-p1s"/>
                         <outlet property="headVelocityInput" destination="PBe-Ga-pXd" id="PGy-ii-8Mc"/>

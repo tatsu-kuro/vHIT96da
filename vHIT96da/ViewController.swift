@@ -218,6 +218,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogLineView:UIImageView?//vog
     var vogBoxView:UIImageView?//vog
     var vHITDisplayMode:Int=0
+
+    var faceMarkHidden:Bool=false
+    //faceMarkを使わないプログラムにするには上行をtrueに
+    
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var eraseButton: UIButton!
@@ -2450,9 +2454,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         posRatio = getUserDefault(str: "posRatio", ret: 100)
         veloRatio = getUserDefault(str: "veloRatio", ret: 100)
         useFaceMark = getUserDefault(str: "useFaceMark", ret:0)
-//        if noFaceMark==true{
-//            useFaceMark=0
-//        }
+        if faceMarkHidden==true{//マークを使わないプログラムの時はtrue
+            useFaceMark=0
+        }
 //        getVideoGyryoZureDefault()
         videoGyroZure = getUserDefault(str: "videoGyroZure", ret: 20)
         calcMode = getUserDefault(str: "calcMode", ret: 0)
@@ -3297,6 +3301,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if let vc = segue.destination as? ParametersViewController {
             let ParametersViewController:ParametersViewController = vc
             //      遷移先のParametersViewControllerで宣言している値に代入して渡す
+            ParametersViewController.faceMarkHidden = faceMarkHidden
             ParametersViewController.widthRange = widthRange
             ParametersViewController.waveWidth = waveWidth
             ParametersViewController.calcMode = calcMode
