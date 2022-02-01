@@ -220,7 +220,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vHITDisplayMode:Int=0
 
     var faceMarkHidden:Bool=false
-    //faceMarkを使わないプログラムにするには上行をtrueに
+    //faceMarkSwitchの無いプログラムにするには上行をtrueに
     
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
