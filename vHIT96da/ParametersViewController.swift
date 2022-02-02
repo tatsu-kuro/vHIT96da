@@ -80,8 +80,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         oppositeLabel.isHidden=true
     }
     var faceMarkHidden:Bool=true
+    var faceMark:Bool=true
     //これでmarkswitch,marktextの表示をオンオフする。
-    var useFaceMark:Int?
+//    var useFaceMark:Int?
     var widthRange:Int = 0
     var waveWidth:Int = 0
     var eyeBorder:Int = 0
@@ -125,9 +126,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func faceFchan(_ sender: UISwitch) {
         if sender.isOn{
-            useFaceMark=1
+            faceMark=true
         }else{
-            useFaceMark=0
+            faceMark=false
         }
     }
     // became first responder
@@ -200,7 +201,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             waveWidth = 80
             eyeBorder=10
             faceMarkSwitch.isOn=false
-            useFaceMark=0
+            faceMark=false
             videoGyroZure = 20
             eyeRatio = 100
             gyroRatio = 100
@@ -267,7 +268,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             self.headVelocityInput.text = "\(veloRatio)"
         }
         self.wakuLengthInput.text = "\(wakuLength)"
-        if useFaceMark==0{
+        if faceMark==false{
             self.faceMarkSwitch.isOn=false
         }else{
             self.faceMarkSwitch.isOn=true
