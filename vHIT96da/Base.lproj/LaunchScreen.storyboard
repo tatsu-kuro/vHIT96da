@@ -22,7 +22,7 @@
                                     <constraint firstAttribute="height" constant="75" id="VaV-Nk-e64"/>
                                 </constraints>
                                 <string key="text">Version 5.9
-2022-1-10
+2022-2-2
 Kuroda ENT</string>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="22"/>
                                 <nil key="textColor"/>

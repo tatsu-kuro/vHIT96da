@@ -5,7 +5,7 @@
 //  Created by kuroda tatsuaki on 2018/02/10.
 //  Copyright © 2018年 tatsuaki.kuroda. All rights reserved.
 //
-
+//faceMarkHiddenをtrueにするとマーク補正機能を削除
 import UIKit
 import AVFoundation
 import AssetsLibrary
@@ -1027,7 +1027,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        print("calcdate:",calcDate)
         let fps=getFPS(videoCurrent)
         var realframeRatio:Float=fps/240
-        //これを設定すると頭出ししてもあまりずれない。どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
+        //これを設定すると頭出ししてもあまりずれない。
+        //どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
         if fps<200.0{
             fpsIs120=true
             realframeRatio=fps/120.0
@@ -1183,7 +1184,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                     x += faceWithBorderRect.size.width
                                     wakuImg3.frame=CGRect(x:x,y:y,width:faceWithBorderRect0.size.width,height:faceWithBorderRect0.size.height)
                                     wakuImg3.image=face0UIImage
-
                                 }
                             }
                         }
@@ -1212,7 +1212,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
                                 faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
                                 maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
-                                if maxFaceV<0.7{
+                                if maxFaceV<0.7{//この時は終了する
                                     calcFlag=false
                                     eyeWithBorderRect=eyeWithBorderRect0
                                 }else{
@@ -1243,7 +1243,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                         context.clearCaches()
                     }
-                    if matchingTestMode==false{
+                    
+                    if matchingTestMode==false && calcFlag==true{//faceMatchingErrorの時は抜ける
                         if cvError < 0{
                             eyePosXOrig.append(eyePosX)
                             eyePosYOrig.append(eyePosY)
@@ -1296,15 +1297,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                         writingDataNow=false
                     }
-                    while reader.status != AVAssetReader.Status.reading {
-                        usleep(1000)//0.001sec
-                    }
-                    
-                    //マッチングデバッグ用スリープ、デバッグが終わったら削除
-                    if matchingTestMode == true{
-                        usleep(1000)//0.001sec
+                    if calcFlag==true{//faceMatchingErrorでない時
+                        while reader.status != AVAssetReader.Status.reading {
+                            usleep(1000)//0.001sec
+                        }
+                        
+                        //マッチングデバッグ用スリープ、デバッグが終わったら削除
+                        if matchingTestMode == true{
+                            usleep(1000)//0.001sec
+                        }
                     }
                 }
+    
             }
             //            print("time:",CFAbsoluteTimeGetCurrent()-st)
             calcFlag = false//video 終了
