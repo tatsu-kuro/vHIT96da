@@ -1134,6 +1134,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
                         eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,narrow: eyeUIImage,x: eX,y: eY)
+//                        print("max:",maxEyeV,maxFaceV)
                         if maxEyeV < 0.90{
                             if cvError==0{//4回空回りした後は1回だけ空回り
                                 cvError=1
@@ -1154,9 +1155,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
                             faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
                             maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
-                            if maxFaceV<0.7{//faceMarkが検出できない時は終了する
-                                calcFlag=false
-                                eyeWithBorderRect=eyeWithBorderRect0
+                            print("max:",maxEyeV,maxFaceV)
+                            if maxFaceV<0.9{//faceMarkが検出できない時は終了する
+                                //autoreleasepoolからは自力では簡単には抜けられん？ので、最後まで空回りさせる
+                                cvError=100
+                                faceWithBorderRect=faceWithBorderRect0
                             }else{
                                 faceVeloX = CGFloat(fX.pointee) - offsetFaceX
                                 faceVeloY = -CGFloat(fY.pointee) + offsetFaceY
@@ -1222,7 +1225,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             usleep(1000)//0.001sec
                         }
                     }
-                }
+                }//autoreleasepool
             }
             calcFlag = false//video 終了
             nonsavedFlag=true
