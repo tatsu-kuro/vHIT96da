@@ -881,7 +881,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             // アラートにボタンをつける
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 //                self.setButtons(mode: false)
-                self.vHITcalcMark()
+                if self.faceMark==true{
+                    self.vHITcalcWithMark()
+                }else{
+                    self.vHITcalc()
+                }
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel,handler:{ action in
                 self.setButtons(mode: true)
@@ -892,7 +896,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //１：直ぐここと２を通る
         }else{
 //            setButtons(mode: false)
-            vHITcalcMark()
+            if faceMark==true{
+                vHITcalcWithMark()
+            }else{
+                vHITcalc()
+            }
         }
         //２：直ぐここを通る
     }
@@ -976,13 +984,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
  
-    func vHITcalcMark(){
+    func vHITcalcWithMark(){
         var cvError:Int = 0
         calcFlag = true
         KalmanInit()
         calcStartTime=CFAbsoluteTimeGetCurrent()
         setButtons(mode: false)
-        
         setArraysData(type: 0)//removeAll
         setArraysData(type: 1)//append(0)
         
@@ -1156,15 +1163,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 faceWithBorderRect.origin.x += faceVeloX
                                 faceWithBorderRect.origin.y += faceVeloY
                             }
-                            var x=(faceWithBorderRect.minX+faceWithBorderRect.maxX)/2
-                            var y=(faceWithBorderRect.minY+faceWithBorderRect.maxY)/2
-                            if x<faceBigRect.minX||x>faceBigRect.maxX||y<faceBigRect.minY||y>faceBigRect.maxY{
+                            let fx=(faceWithBorderRect.minX+faceWithBorderRect.maxX)/2
+                            let fy=(faceWithBorderRect.minY+faceWithBorderRect.maxY)/2
+                            if fx<faceBigRect.minX||fx>faceBigRect.maxX||fy<faceBigRect.minY||fy>faceBigRect.maxY{
                                 faceWithBorderRect=faceWithBorderRect0
                             }
                             
-                            x=(eyeWithBorderRect.minX+eyeWithBorderRect.maxX)/2
-                            y=(eyeWithBorderRect.minY+eyeWithBorderRect.maxY)/2
-                            if x<eyeBigRect.minX||x>eyeBigRect.maxX||y<eyeBigRect.minY||y>eyeBigRect.maxY{
+                            let ex=(eyeWithBorderRect.minX+eyeWithBorderRect.maxX)/2
+                            let ey=(eyeWithBorderRect.minY+eyeWithBorderRect.maxY)/2
+                            if ex<eyeBigRect.minX||ex>eyeBigRect.maxX||ey<eyeBigRect.minY||ey>eyeBigRect.maxY{
                                 cvError=5
                                 eyeWithBorderRect=eyeWithBorderRect0
                             }
@@ -1180,7 +1187,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyePosXOrig.append(eyePosXOrig.last!)
                             eyePosYOrig.append(eyePosYOrig.last!)
                         }
-                        
                         while readingDataNow==true{//--------の間はアレイデータを書き込まない？
                             usleep(1000)//0.001sec
                             print("loop-reeding")
@@ -1252,19 +1258,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
         moveGyroData()//gyroDeltastartframe分をズラして
         
-        //        print("count:",eyePosXFiltered.count)
-        //        var vHITcnt:Int = 0
-        //        var startTime=CFAbsoluteTimeGetCurrent()
         timercnt = 0
         UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
-        //        print("eyeborder:",eyeBorder,faceF)
-        startTimerCalc()//resizerectのチェックの時はここをコメントアウト*********************
-//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+          startTimerCalc()//resizerectのチェックの時はここをコメントアウト*********************
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
         calcDate = currentVideoDate.text!
-        //        print("calcdate:",calcDate)
-        let fps=getFPS(videoCurrent)
+         let fps=getFPS(videoCurrent)
         var realframeRatio:Float=fps/240
         //これを設定すると頭出ししてもあまりずれない。
         //どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
@@ -1306,26 +1306,26 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // UnsafeとMutableはまあ調べてもらうとして、eX, eY等は<Int32>が一つ格納されている場所へのポインタとして宣言される。
         let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
         let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
-        let fX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
-        let fY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+//        let fX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+//        let fY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
 //        var eyeCGImage:CGImage!
 //        let eyeUIImage:UIImage!
         var eyeWithBorderCGImage:CGImage!
         var eyeWithBorderUIImage:UIImage!
 //        var eyeBigCGImage:CGImage!
 //        var eyeBigUIImage:UIImage!
-        var faceCGImage:CGImage!
-        var faceUIImage:UIImage!
-        var faceWithBorderCGImage:CGImage!
-        var faceWithBorderUIImage:UIImage!
+//        var faceCGImage:CGImage!
+//        var faceUIImage:UIImage!
+//        var faceWithBorderCGImage:CGImage!
+//        var faceWithBorderUIImage:UIImage!
         
         let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
         let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
         let eyeBigRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: view.bounds.width/5)//10)
         
-        let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
-        let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
-        let faceBigRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: view.bounds.width/5)//10)
+//        let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
+//        let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
+//        let faceBigRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: view.bounds.width/5)//10)
 
         
         let context:CIContext = CIContext.init(options: nil)
@@ -1346,34 +1346,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
 //        let maxWidthWithBorder=videoWidth-eyeWithBorderRect.width-5
 //        let maxHeightWithBorder=videoHeight-eyeWithBorderRect.height-5
-        let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:startCIImage)
-        var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: startCIImage)
+//        let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:startCIImage)
+//        var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
+//        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: startCIImage)
         var eyeWithBorderRect0 = eyeWithBorderRect
-        let faceWithBorderRect0 = faceWithBorderRect
+//        let faceWithBorderRect0 = faceWithBorderRect
         
         let eyeCGImage = context.createCGImage(startCIImage, from: eyeRect)!
         var eyeUIImage = UIImage.init(cgImage: eyeCGImage)
-        faceCGImage = context.createCGImage(startCIImage, from: faceRect)!
-        faceUIImage = UIImage.init(cgImage:faceCGImage)
+//        faceCGImage = context.createCGImage(startCIImage, from: faceRect)!
+//        faceUIImage = UIImage.init(cgImage:faceCGImage)
         
         let offsetEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
         let offsetEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0
-        let offsetFaceX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0
-        let offsetFaceY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0
+//        let offsetFaceX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0
+//        let offsetFaceY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0
 //        let offsetBigX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0
 //        let offsetBigY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0
         
         var maxEyeV:Double = 0
-        var maxFaceV:Double = 0
+//        var maxFaceV:Double = 0
         initSum5XY()//平均加算の初期化
         while reader.status != AVAssetReader.Status.reading {
             //            sleep(UInt32(0.1))
             usleep(1000)//0.001sec
         }
 
-        let xDiffer=faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
-        let yDiffer=faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
+//        let xDiffer=faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
+//        let yDiffer=faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
 
         DispatchQueue.global(qos: .default).async { [self] in
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
@@ -1381,12 +1381,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var eyeVeloY:CGFloat = 0
                 var eyePosX:CGFloat = 0
                 var eyePosY:CGFloat = 0
-                var faceVeloX:CGFloat = 0
-                var faceVeloY:CGFloat = 0
-                
+//                var faceVeloX:CGFloat = 0
+//                var faceVeloY:CGFloat = 0
+//
                 //for test display
-                var x:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
-                let y:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
+//                var x:CGFloat = debugDisplayX//wakuShowEye_image.frame.maxX
+//                let y:CGFloat = debugDisplayY//wakuShowEye_image.frame.minY
                 autoreleasepool{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
@@ -1443,28 +1443,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyePosX = eyeWithBorderRect.origin.x - eyeWithBorderRect0.origin.x// + ex
                             eyePosY = eyeWithBorderRect.origin.y - eyeWithBorderRect0.origin.y// + ey
                             
-                            if faceMark==true{
-                                faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
-                                faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
-                                maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
-                                if maxFaceV<0.7{//faceMarkが検出できない時は終了する
-                                    calcFlag=false
-                                    eyeWithBorderRect=eyeWithBorderRect0
-                                }else{
-                                    faceVeloX = CGFloat(fX.pointee) - offsetFaceX
-                                    faceVeloY = -CGFloat(fY.pointee) + offsetFaceY
-                                    faceWithBorderRect.origin.x += faceVeloX
-                                    faceWithBorderRect.origin.y += faceVeloY
-                                }
-                                let x=(faceWithBorderRect.minX+faceWithBorderRect.maxX)/2
-                                let y=(faceWithBorderRect.minY+faceWithBorderRect.maxY)/2
-                                if x<faceBigRect.minX ||
-                                    x>faceBigRect.maxX ||
-                                    y<faceBigRect.minY ||
-                                    y>faceBigRect.maxY{
-                                    faceWithBorderRect=faceWithBorderRect0
-                                }
-                            }
+//                            if faceMark==true{
+//                                faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
+//                                faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
+//                                maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
+//                                if maxFaceV<0.7{//faceMarkが検出できない時は終了する
+//                                    calcFlag=false
+//                                    eyeWithBorderRect=eyeWithBorderRect0
+//                                }else{
+//                                    faceVeloX = CGFloat(fX.pointee) - offsetFaceX
+//                                    faceVeloY = -CGFloat(fY.pointee) + offsetFaceY
+//                                    faceWithBorderRect.origin.x += faceVeloX
+//                                    faceWithBorderRect.origin.y += faceVeloY
+//                                }
+//                                let x=(faceWithBorderRect.minX+faceWithBorderRect.maxX)/2
+//                                let y=(faceWithBorderRect.minY+faceWithBorderRect.maxY)/2
+//                                if x<faceBigRect.minX ||
+//                                    x>faceBigRect.maxX ||
+//                                    y<faceBigRect.minY ||
+//                                    y>faceBigRect.maxY{
+//                                    faceWithBorderRect=faceWithBorderRect0
+//                                }
+//                            }
                             let x=(eyeWithBorderRect.minX+eyeWithBorderRect.maxX)/2
                             let y=(eyeWithBorderRect.minY+eyeWithBorderRect.maxY)/2
                             if x<eyeBigRect.minX ||
@@ -1492,13 +1492,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             print("loop-reeding")
                         }
                         writingDataNow=true
-                        if faceMark==true{
-                            faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
-                            faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
-                        }else{
-                            faceVeloXFiltered.append(0)
-                            faceVeloYFiltered.append(0)
-                        }
+//                        if faceMark==true{
+//                            faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
+//                            faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
+//                        }else{
+//                            faceVeloXFiltered.append(0)
+//                            faceVeloYFiltered.append(0)
+//                        }
                         
                         if cvError<0{
                             errArray.append(true)
@@ -2372,8 +2372,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for i in 0..<eyeVeloXFiltered4update.count-6{
             eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
             eyeVeloYFiltered4update[i]=average5(filtered: eyeVeloYFiltered4update, i: i)
+            if faceMark==true{
             faceVeloXFiltered4update[i]=average5(filtered: faceVeloXFiltered4update, i: i)
             faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
+            }
         }
         
     }
@@ -2398,10 +2400,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
                     eyeVeloYFiltered4update.append(average(filtered:eyeVeloYFiltered,i:i))
                     eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
+                    if faceMark==true{
                     faceVeloXFiltered4update.append(average(filtered:faceVeloXFiltered,i:i))
                     faceVeloXFiltered4update.append(faceVeloXFiltered[i])
                     faceVeloYFiltered4update.append(average(filtered:faceVeloYFiltered,i:i))
                     faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+                    }
                 }else{
                     var data=eyePosXFiltered4update.last!
                     eyePosXFiltered4update.append(data)
@@ -2416,11 +2420,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeVeloYFiltered4update.append(data)
                     eyeVeloYFiltered4update.append(data)
                     data=faceVeloXFiltered4update.last!
+                    if faceMark==true{
                     faceVeloXFiltered4update.append(data)
                     faceVeloXFiltered4update.append(data)
                     data=faceVeloYFiltered4update.last!
                     faceVeloYFiltered4update.append(data)
                     faceVeloYFiltered4update.append(data)
+                    }
                 }
             }
         }else{
@@ -2430,15 +2436,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyePosYFiltered4update.append(eyePosYFiltered[i])
                     eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
                     eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
+                    if faceMark==true{
                     faceVeloXFiltered4update.append(faceVeloXFiltered[i])
                     faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+                    }
                 }else{
                     eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
                     eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
                     eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
                     eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
+                    if faceMark==true{
                     faceVeloXFiltered4update.append(faceVeloXFiltered4update.last!)
                     faceVeloYFiltered4update.append(faceVeloYFiltered4update.last!)
+                    }
                 }
             }
         }
