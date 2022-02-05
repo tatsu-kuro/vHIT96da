@@ -1422,6 +1422,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                             eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                         }
+                        faceVeloXFiltered.append(0.0)
+                        faceVeloYFiltered.append(0.0)
                         writingDataNow=false
                     }
                     if calcFlag==true{//faceMatchingErrorでない時
@@ -2274,12 +2276,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for i in 0..<eyeVeloXFiltered4update.count-6{
             eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
             eyeVeloYFiltered4update[i]=average5(filtered: eyeVeloYFiltered4update, i: i)
-            if faceMark==true{
             faceVeloXFiltered4update[i]=average5(filtered: faceVeloXFiltered4update, i: i)
             faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
-            }
         }
-        
     }
     func getArrayData()->Int{//データ取得して、そのデータを表示用に利用する。
         while writingDataNow==true{
@@ -2302,12 +2301,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
                     eyeVeloYFiltered4update.append(average(filtered:eyeVeloYFiltered,i:i))
                     eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
-                    if faceMark==true{
                     faceVeloXFiltered4update.append(average(filtered:faceVeloXFiltered,i:i))
                     faceVeloXFiltered4update.append(faceVeloXFiltered[i])
                     faceVeloYFiltered4update.append(average(filtered:faceVeloYFiltered,i:i))
                     faceVeloYFiltered4update.append(faceVeloYFiltered[i])
-                    }
                 }else{
                     var data=eyePosXFiltered4update.last!
                     eyePosXFiltered4update.append(data)
@@ -2322,13 +2319,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeVeloYFiltered4update.append(data)
                     eyeVeloYFiltered4update.append(data)
                     data=faceVeloXFiltered4update.last!
-                    if faceMark==true{
                     faceVeloXFiltered4update.append(data)
                     faceVeloXFiltered4update.append(data)
                     data=faceVeloYFiltered4update.last!
                     faceVeloYFiltered4update.append(data)
                     faceVeloYFiltered4update.append(data)
-                    }
                 }
             }
         }else{
@@ -2338,19 +2333,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyePosYFiltered4update.append(eyePosYFiltered[i])
                     eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
                     eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
-                    if faceMark==true{
+//                    if faceMark==true{
                     faceVeloXFiltered4update.append(faceVeloXFiltered[i])
                     faceVeloYFiltered4update.append(faceVeloYFiltered[i])
-                    }
+//                    }
                 }else{
                     eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
                     eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
                     eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
                     eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
-                    if faceMark==true{
+//                    if faceMark==true{
                     faceVeloXFiltered4update.append(faceVeloXFiltered4update.last!)
                     faceVeloYFiltered4update.append(faceVeloYFiltered4update.last!)
-                    }
+//                    }
                 }
             }
         }
