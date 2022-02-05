@@ -1594,10 +1594,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
             calcFlag = false//video 終了
-            //            print("filtered:",eyeVeloXFiltered.count,faceVeloXFiltered.count)
-            if matchingTestMode==false{
-                nonsavedFlag=true
-            }
+//            //            print("filtered:",eyeVeloXFiltered.count,faceVeloXFiltered.count)
+//            if matchingTestMode==false{
+//                nonsavedFlag=true
+//            }
         }
     }
     
