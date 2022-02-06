@@ -1065,9 +1065,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         var eyeWithBorderCGImage:CGImage!
         var eyeWithBorderUIImage:UIImage!
-        
-        var faceCGImage:CGImage!
-        var faceUIImage:UIImage!
         var faceWithBorderCGImage:CGImage!
         var faceWithBorderUIImage:UIImage!
         
@@ -1095,13 +1092,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:startCIImage)
         var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
         let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: startCIImage)
+ 
         let eyeWithBorderRect0 = eyeWithBorderRect
         let faceWithBorderRect0 = faceWithBorderRect
         
         let eyeCGImage = context.createCGImage(startCIImage, from: eyeRect)!
         let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
-        faceCGImage = context.createCGImage(startCIImage, from: faceRect)!
-        faceUIImage = UIImage.init(cgImage:faceCGImage)
+        let faceCGImage = context.createCGImage(startCIImage, from: faceRect)!
+        let faceUIImage = UIImage.init(cgImage:faceCGImage)
         
         let offsetEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
         let offsetEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0
