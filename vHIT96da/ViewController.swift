@@ -1050,7 +1050,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         reader.add(readerOutput)
         
         let frameRate = videoTrack.nominalFrameRate
-        //let startframe=startPoints[vhitVideocurrent]
+    
         let startTime = CMTime(value: CMTimeValue(Float(startFrame)*realframeRatio), timescale: CMTimeScale(frameRate))
         let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
         
@@ -1078,34 +1078,39 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         
         let context:CIContext = CIContext.init(options: nil)
-        //            let up = UIImage.Orientation.right
+    
         var sample:CMSampleBuffer!
         stopButton.isEnabled = true
         sample = readerOutput.copyNextSampleBuffer()
         
         let pixelBuffer:CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
-        let startCIImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-        
-        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:startCIImage)
-        var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:startCIImage)
-        var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: startCIImage)
+        var lastCIImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(.right)
+        let videoWidth=lastCIImage.extent.width
+        let videoHeight=lastCIImage.extent.height
+
+        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:lastCIImage)
+        var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: lastCIImage)
  
         let eyeWithBorderRect0 = eyeWithBorderRect
         let faceWithBorderRect0 = faceWithBorderRect
         
-        let eyeCGImage = context.createCGImage(startCIImage, from: eyeRect)!
+        let eyeCGImage = context.createCGImage(lastCIImage, from: eyeRect)!
         let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
-        let faceCGImage = context.createCGImage(startCIImage, from: faceRect)!
+        let faceCGImage = context.createCGImage(lastCIImage, from: faceRect)!
         let faceUIImage = UIImage.init(cgImage:faceCGImage)
         
         let offsetEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
         let offsetEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0
         let offsetFaceX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0
         let offsetFaceY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0
-        
+
+        let xDiffer = faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
+        let yDiffer = faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
+
         var maxEyeV:Double = 0
         var maxFaceV:Double = 0
         initSum5XY()//平均加算の初期化
@@ -1127,9 +1132,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     cvError -= 1
                     if cvError <= 0{
                         //orientation.upとrightは所要時間同じ
-                        let frameCIImage: CIImage =
-                        CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-                        eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
+                        lastCIImage = CIImage(cvPixelBuffer:pixelBuffer).oriented(.right)//(CGImagePropertyOrientation.right)
+                        eyeWithBorderCGImage = context.createCGImage(lastCIImage, from: eyeWithBorderRect)!
                         eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,narrow: eyeUIImage,x: eX,y: eY)
 //                        print("max:",maxEyeV,maxFaceV)
@@ -1150,10 +1154,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyePosX = eyeWithBorderRect.origin.x - eyeWithBorderRect0.origin.x// + ex
                             eyePosY = eyeWithBorderRect.origin.y - eyeWithBorderRect0.origin.y// + ey
                             
-                            faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
+                            faceWithBorderCGImage = context.createCGImage(lastCIImage, from:faceWithBorderRect)!
                             faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
                             maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
-                            print("max:",maxEyeV,maxFaceV)
+//                            print("max:",maxEyeV,maxFaceV)
                             if maxFaceV<0.9{//faceMarkが検出できない時は終了する
                                 //autoreleasepoolからは自力では簡単には抜けられん？ので、最後まで空回りさせる
                                 cvError=100
@@ -1315,19 +1319,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let eyeBigRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: view.bounds.width/5)//10)
                 
         let context:CIContext = CIContext.init(options: nil)
-        //            let up = UIImage.Orientation.right
+        
         var sample:CMSampleBuffer!
         stopButton.isEnabled = true
         sample = readerOutput.copyNextSampleBuffer()
         
         let pixelBuffer:CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
-        let startCIImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:startCIImage)
-        var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:startCIImage)
+        var lastCIImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(.right)
+        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:lastCIImage)
         let eyeWithBorderRect0 = eyeWithBorderRect
         
-        let eyeCGImage = context.createCGImage(startCIImage, from: eyeRect)!
+        let eyeCGImage = context.createCGImage(lastCIImage, from: eyeRect)!
         let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
         
         let offsetEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
@@ -1352,9 +1356,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
              
                     if cvError <= 0{
                         //orientation.upとrightは所要時間同じ
-                        let frameCIImage: CIImage =
-                        CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-                        eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
+                        lastCIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(.right)
+                        eyeWithBorderCGImage = context.createCGImage(lastCIImage, from: eyeWithBorderRect)!
                         eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
                          
                         maxEyeV=openCV.matching(eyeWithBorderUIImage,narrow: eyeUIImage,x: eX, y: eY)
@@ -1520,25 +1523,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let faceBigRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: view.bounds.width/5)//10)
         
         let context:CIContext = CIContext.init(options: nil)
-        //            let up = UIImage.Orientation.right
+    
         var sample:CMSampleBuffer!
         stopButton.isEnabled = true
         sample = readerOutput.copyNextSampleBuffer()
         
         let pixelBuffer:CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
-        let startCIImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:startCIImage)
-        var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:startCIImage)
-        var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:startCIImage)
-        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: startCIImage)
+        var lastCIImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(.right)
+        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:lastCIImage)
+        var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:lastCIImage)
+        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: lastCIImage)
         let eyeWithBorderRect0 = eyeWithBorderRect
         let faceWithBorderRect0 = faceWithBorderRect
         
-        let eyeCGImage = context.createCGImage(startCIImage, from: eyeRect)!
+        let eyeCGImage = context.createCGImage(lastCIImage, from: eyeRect)!
         let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
-        faceCGImage = context.createCGImage(startCIImage, from: faceRect)!
+        faceCGImage = context.createCGImage(lastCIImage, from: faceRect)!
         faceUIImage = UIImage.init(cgImage:faceCGImage)
         
         let offsetEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
@@ -1567,14 +1570,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     cvError -= 1
                     if cvError <= 0{
                         //orientation.upとrightは所要時間同じ
-                        let frameCIImage: CIImage =
-                        CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
-                        eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
+                        lastCIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(.right)
+                        eyeWithBorderCGImage = context.createCGImage(lastCIImage, from: eyeWithBorderRect)!
                         eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
-                        let eye0CGImage = context.createCGImage(frameCIImage, from:eyeWithBorderRect0)!
+                        let eye0CGImage = context.createCGImage(lastCIImage, from:eyeWithBorderRect0)!
                         // let eye0CGImage = context.createCGImage(ciImage, from:eyeErrorRect)!
                         let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
-                        let face0CGImage = context.createCGImage(frameCIImage, from: faceWithBorderRect0)
+                        let face0CGImage = context.createCGImage(lastCIImage, from: faceWithBorderRect0)
                         let face0UIImage = UIImage.init(cgImage:face0CGImage!)
                         DispatchQueue.main.async {
                             if wakuEyeFace==0{
@@ -1619,7 +1621,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 eyeWithBorderRect=eyeWithBorderRect0
                             }
                         }else{
-                            faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
+                            faceWithBorderCGImage = context.createCGImage(lastCIImage, from:faceWithBorderRect)!
                             faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
                             maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
                             if maxFaceV<0.9{//faceMarkが検出できない時は終了する
@@ -1717,7 +1719,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var sample:CMSampleBuffer!
         sample = readerOutput.copyNextSampleBuffer()
         let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(.right)
 //        print("waku",wakuE.size.width,wakuE.size.height)
         let eyeR = resizeR2(wakuE, viewRect:view.frame,image:ciImage)
         let facR = resizeR2(wakuF, viewRect:view.frame, image: ciImage)
