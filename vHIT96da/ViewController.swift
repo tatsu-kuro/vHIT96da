@@ -938,17 +938,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func setArraysData(type:Int){
         if type==0{//removeAll
-//            faceVeloXOrig.removeAll()
+            //            faceVeloXOrig.removeAll()
             faceVeloXFiltered.removeAll()
-//            faceVeloYOrig.removeAll()
+            //            faceVeloYOrig.removeAll()
             faceVeloYFiltered.removeAll()
             eyePosXOrig.removeAll()
             eyePosXFiltered.removeAll()
-//            eyeVeloXOrig.removeAll()
+            //            eyeVeloXOrig.removeAll()
             eyeVeloXFiltered.removeAll()
             eyePosYOrig.removeAll()
             eyePosYFiltered.removeAll()
-//            eyeVeloYOrig.removeAll()
+            //            eyeVeloYOrig.removeAll()
             eyeVeloYFiltered.removeAll()
             gyroMoved.removeAll()
             errArray.removeAll()
@@ -959,19 +959,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             eyeVeloXFiltered4update.removeAll()
             eyePosYFiltered4update.removeAll()
             eyeVeloYFiltered4update.removeAll()
-
+            
         }else if type==1{//append(0)
-//            faceVeloXOrig.append(0)
+            //            faceVeloXOrig.append(0)
             faceVeloXFiltered.append(0)
-//            faceVeloYOrig.append(0)
+            //            faceVeloYOrig.append(0)
             faceVeloYFiltered.append(0)
             eyePosXOrig.append(0)
             eyePosXFiltered.append(0)
-//            eyeVeloXOrig.append(0)
+            //            eyeVeloXOrig.append(0)
             eyeVeloXFiltered.append(0)
             eyePosYOrig.append(0)
             eyePosYFiltered.append(0)
-//            eyeVeloYOrig.append(0)
+            //            eyeVeloYOrig.append(0)
             eyeVeloYFiltered.append(0)
             eyePosXFiltered4update.append(0)
             eyePosYFiltered4update.append(0)
@@ -1428,6 +1428,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                         faceVeloXFiltered.append(0.0)
                         faceVeloYFiltered.append(0.0)
+                        if fpsIs120==true{
+                            eyePosXFiltered.append(eyePosXFiltered.last!)
+                            eyePosYFiltered.append(eyePosYFiltered.last!)
+                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
+                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
+                            faceVeloXFiltered.append(0.0)
+                            faceVeloYFiltered.append(0.0)
+                            errArray.append(errArray.last!)
+                        }
                         writingDataNow=false
                     }
                     if calcFlag==true{//faceMatchingErrorでない時
@@ -2037,7 +2046,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if startN>endN{
             return startImg
         }
-        for i in startN..<endN {
+        var step:Int = 1
+        if fpsIs120==true{
+            step=2
+        }
+        
+        for i in stride(from: startN, to: endN, by: step){
+
+//        for i in startN..<endN {
             let px = CGFloat(dx * i)
             //            if eyePosXOrig[i]>99{
             //                print("eyeposorig:",eyePosXOrig[i])
@@ -2262,19 +2278,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var arrayDataCount:Int=0
     var lastPosXFiltered:Int=0
     
-    func average(filtered: [CGFloat],i:Int) -> CGFloat {//i!=0 なら直前データとの平均を返す
-        if i==0{
-            return filtered[i]
-        }else{
-            return (filtered[i]+filtered[i-1])/2
-        }
-    }
+//    func average(filtered: [CGFloat],i:Int) -> CGFloat {//i!=0 なら直前データとの平均を返す
+//        if i==0{
+//            return filtered[i]
+//        }else{
+//            return (filtered[i]+filtered[i-1])/2
+//        }
+//    }
     func average5(filtered:[CGFloat],i:Int)->CGFloat{
         return (filtered[i]+filtered[i+1]+filtered[i+2]+filtered[i+3]+filtered[i+4])/5
     }
-    func average3(filtered:[CGFloat],i:Int)->CGFloat{
-        return (filtered[i]+filtered[i+1]+filtered[i+2])/3
-    }
+//    func average3(filtered:[CGFloat],i:Int)->CGFloat{
+//        return (filtered[i]+filtered[i+1]+filtered[i+2])/3
+//    }
     func averagingData(){
         for i in 0..<eyeVeloXFiltered4update.count-6{
             eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
@@ -2283,7 +2299,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
         }
     }
-    func getArrayData()->Int{//データ取得して、そのデータを表示用に利用する。
+    func getArrayData()->Int{//一気にデータ取得して、そのデータをゆっくり？表示用に利用する。
         while writingDataNow==true{
             usleep(1000)
 #if DEBUG
@@ -2293,63 +2309,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         readingDataNow=true
         let n1=eyePosXFiltered4update.count
         let n2=eyePosXFiltered.count
-        if fpsIs120==true{
-            for i in n1/2..<n2{
-                if errArray[i]==true{
-                    eyePosXFiltered4update.append(average(filtered:eyePosXFiltered,i:i))
-                    eyePosXFiltered4update.append(eyePosXFiltered[i])
-                    eyePosYFiltered4update.append(average(filtered:eyePosYFiltered,i:i))
-                    eyePosYFiltered4update.append(eyePosYFiltered[i])
-                    eyeVeloXFiltered4update.append(average(filtered:eyeVeloXFiltered,i:i))
-                    eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
-                    eyeVeloYFiltered4update.append(average(filtered:eyeVeloYFiltered,i:i))
-                    eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
-                    faceVeloXFiltered4update.append(average(filtered:faceVeloXFiltered,i:i))
-                    faceVeloXFiltered4update.append(faceVeloXFiltered[i])
-                    faceVeloYFiltered4update.append(average(filtered:faceVeloYFiltered,i:i))
-                    faceVeloYFiltered4update.append(faceVeloYFiltered[i])
-                }else{
-                    var data=eyePosXFiltered4update.last!
-                    eyePosXFiltered4update.append(data)
-                    eyePosXFiltered4update.append(data)
-                    data=eyePosYFiltered4update.last!
-                    eyePosYFiltered4update.append(data)
-                    eyePosYFiltered4update.append(data)
-                    data=eyeVeloXFiltered4update.last!
-                    eyeVeloXFiltered4update.append(data)
-                    eyeVeloXFiltered4update.append(data)
-                    data=eyeVeloYFiltered4update.last!
-                    eyeVeloYFiltered4update.append(data)
-                    eyeVeloYFiltered4update.append(data)
-                    data=faceVeloXFiltered4update.last!
-                    faceVeloXFiltered4update.append(data)
-                    faceVeloXFiltered4update.append(data)
-                    data=faceVeloYFiltered4update.last!
-                    faceVeloYFiltered4update.append(data)
-                    faceVeloYFiltered4update.append(data)
-                }
-            }
-        }else{
-            for i in n1..<n2{
-                if errArray[i]==true{
-                    eyePosXFiltered4update.append(eyePosXFiltered[i])
-                    eyePosYFiltered4update.append(eyePosYFiltered[i])
-                    eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
-                    eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
-//                    if faceMark==true{
-                    faceVeloXFiltered4update.append(faceVeloXFiltered[i])
-                    faceVeloYFiltered4update.append(faceVeloYFiltered[i])
-//                    }
-                }else{
-                    eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
-                    eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
-                    eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
-                    eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
-//                    if faceMark==true{
-                    faceVeloXFiltered4update.append(faceVeloXFiltered4update.last!)
-                    faceVeloYFiltered4update.append(faceVeloYFiltered4update.last!)
-//                    }
-                }
+        
+        for i in n1..<n2{
+            if errArray[i]==true{
+                eyePosXFiltered4update.append(eyePosXFiltered[i])
+                eyePosYFiltered4update.append(eyePosYFiltered[i])
+                eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
+                eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
+                //                    if faceMark==true{
+                faceVeloXFiltered4update.append(faceVeloXFiltered[i])
+                faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+                //                    }
+            }else{
+                eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
+                eyePosYFiltered4update.append(eyePosYFiltered4update.last! )
+                eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
+                eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
+                //                    if faceMark==true{
+                faceVeloXFiltered4update.append(faceVeloXFiltered4update.last!)
+                faceVeloYFiltered4update.append(faceVeloYFiltered4update.last!)
             }
         }
         readingDataNow=false
@@ -2480,7 +2458,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            print("facevelo y:",faceVeloYFiltered4update.count)
 //            print("eyevelo x:",eyeVeloXFiltered4update.count)
             
-            averagingData()
+            averagingData()//結局ここでスムーズになる？
             if self.waveTuple.count > 0{
                 self.nonsavedFlag = true
             }
@@ -2903,8 +2881,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let y1=gyroBoxHeight*3/6
         let y2=gyroBoxHeight*4/6
         var py0:CGFloat=0
-        
-        for n in 1...(pointCount) {
+        var step:Int = 1
+        if fpsIs120==true{
+            step=2
+        }
+        for n in stride(from: 1, to: pointCount, by: step){
+//        for n in 1...(pointCount) {
             if num + n < arrayDataCount && num + n < gyroMovedCnt {
                 let px = dx * CGFloat(n)
                  if calcMode==0{
