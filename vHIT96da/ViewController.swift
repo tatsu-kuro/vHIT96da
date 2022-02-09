@@ -219,7 +219,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogBoxView:UIImageView?//vog
     var vHITDisplayMode:Int=0
 
-    var faceMarkHidden:Bool=true
+    var faceMarkHidden:Bool=false
     //faceMarkSwitchの無いプログラムにするには上行をtrueに
     
     @IBOutlet weak var nextButton: UIButton!
@@ -270,12 +270,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
     var tempTuple = Array<(Int,Int,Int,Int)>()
-    var eyePosXOrig = Array<CGFloat>()//eyePosOrig
+//    var eyePosXOrig = Array<CGFloat>()//eyePosOrig
     var eyePosXFiltered = Array<CGFloat>()//eyePosFiltered
 //    var eyeVeloXOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloXFiltered = Array<CGFloat>()//eyeVeloFiltered
  
-    var eyePosYOrig = Array<CGFloat>()//eyePosOrig
+//    var eyePosYOrig = Array<CGFloat>()//eyePosOrig
     var eyePosYFiltered = Array<CGFloat>()//eyePosFiltered
 //    var eyeVeloYOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
@@ -924,11 +924,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             faceVeloXFiltered.removeAll()
             //            faceVeloYOrig.removeAll()
             faceVeloYFiltered.removeAll()
-            eyePosXOrig.removeAll()
+//            eyePosXOrig.removeAll()
             eyePosXFiltered.removeAll()
             //            eyeVeloXOrig.removeAll()
             eyeVeloXFiltered.removeAll()
-            eyePosYOrig.removeAll()
+//            eyePosYOrig.removeAll()
             eyePosYFiltered.removeAll()
             //            eyeVeloYOrig.removeAll()
             eyeVeloYFiltered.removeAll()
@@ -947,11 +947,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             faceVeloXFiltered.append(0)
             //            faceVeloYOrig.append(0)
             faceVeloYFiltered.append(0)
-            eyePosXOrig.append(0)
+//            eyePosXOrig.append(0)
             eyePosXFiltered.append(0)
             //            eyeVeloXOrig.append(0)
             eyeVeloXFiltered.append(0)
-            eyePosYOrig.append(0)
+//            eyePosYOrig.append(0)
             eyePosYFiltered.append(0)
             //            eyeVeloYOrig.append(0)
             eyeVeloYFiltered.append(0)
@@ -1182,23 +1182,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     
                     if matchingTestMode==false && calcFlag==true{//faceMatchingErrorの時は抜ける
-                        if cvError < 0{
-                            eyePosXOrig.append(eyePosX)
-                            eyePosYOrig.append(eyePosY)
-                            //                            eyeVeloXOrig.append(eyeVeloX)
-                            //                            eyeVeloYOrig.append(eyeVeloY)
-                        }else if cvError==0{
-                            eyePosXOrig.append(eyePosX)
-                            eyePosYOrig.append(eyePosY)
-                            //                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
-                            //                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
-                        }else{
-                            eyePosXOrig.append(eyePosXOrig.last!)
-                            eyePosYOrig.append(eyePosYOrig.last!)
-                            //                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
-                            //                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
-                        }
-                        
+//                        if cvError <= 0{
+//                            eyePosXOrig.append(eyePosX)
+//                            eyePosYOrig.append(eyePosY)
+//                        }else{
+//                            eyePosXOrig.append(eyePosXOrig.last!)
+//                            eyePosYOrig.append(eyePosYOrig.last!)
+//                        }
+//
                         while readingDataNow==true{//--------の間はアレイデータを書き込まない？
                             usleep(1000)//0.001sec
                             print("loop-reeding")
@@ -1214,8 +1205,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         
                         if cvError<0{
                             errArray.append(true)
-                            eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
-                            eyePosYFiltered.append( -1.0*Kalman(value:eyePosYOrig.last!,num:3))
+                            eyePosXFiltered.append( -1.0*Kalman(value:eyePosX,num:2))//eyePosXOrig.last!,num:2))
+                            eyePosYFiltered.append( -1.0*Kalman(value:eyePosY,num:3))//Orig.last!,num:3))
                             let cnt=eyePosXFiltered.count
                             if calcMode != 2{//vHIT
                                 eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
@@ -1227,8 +1218,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }else{
                             errArray.append(false)
                             KalmanInit()
-                            eyePosXFiltered.append( -1.0*eyePosXOrig.last!)
-                            eyePosYFiltered.append( -1.0*eyePosYOrig.last!)
+                            eyePosXFiltered.append(eyePosXFiltered.last!)// -1.0*eyePosXOrig.last!)
+                            eyePosYFiltered.append(eyePosXFiltered.last!)// -1.0*eyePosYOrig.last!)
                             eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                             eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                         }
@@ -1427,13 +1418,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     
                     if calcFlag==true{//faceMatchingErrorの時は抜ける
-                        if cvError <= 0{
-                            eyePosXOrig.append(eyePosX)
-                            eyePosYOrig.append(eyePosY)
-                         }else{
-                            eyePosXOrig.append(eyePosXOrig.last!)
-                            eyePosYOrig.append(eyePosYOrig.last!)
-                          }
+//                        if cvError <= 0{
+//                            eyePosXOrig.append(eyePosX)
+//                            eyePosYOrig.append(eyePosY)
+//                        }else{
+//                            eyePosXOrig.append(eyePosXOrig.last!)
+//                            eyePosYOrig.append(eyePosYOrig.last!)
+//                        }
                         
                         while readingDataNow==true{//--------の間はアレイデータを書き込まない？
                             usleep(1000)//0.001sec
@@ -1443,8 +1434,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                        
                         if cvError<0{
                             errArray.append(true)
-                            eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
-                            eyePosYFiltered.append( -1.0*Kalman(value:eyePosYOrig.last!,num:3))
+                            eyePosXFiltered.append( -1.0*Kalman(value:eyePosX,num:2))
+                            eyePosYFiltered.append( -1.0*Kalman(value:eyePosY,num:3))
                             let cnt=eyePosXFiltered.count
                             if calcMode != 2{//vHIT
                                 eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
@@ -1453,11 +1444,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
                                 eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
                             }
+//                            errArray.append(true)
+//                            eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
+//                            eyePosYFiltered.append( -1.0*Kalman(value:eyePosYOrig.last!,num:3))
+//                            let cnt=eyePosXFiltered.count
+//                            if calcMode != 2{//vHIT
+//                                eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
+//                                eyeVeloYFiltered.append(12*(eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
+//                            }else{//vogでは、２重にフィフターをかけると体裁が良いが、それで良いのだろうか？
+//                                eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+//                                eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+//                            }
                         }else{
                             errArray.append(false)
                             KalmanInit()
-                            eyePosXFiltered.append( -1.0*eyePosXOrig.last!)
-                            eyePosYFiltered.append( -1.0*eyePosYOrig.last!)
+                            eyePosXFiltered.append(eyePosXFiltered.last!)
+                            eyePosYFiltered.append(eyePosYFiltered.last!)
+
+//                            eyePosXFiltered.append( -1.0*eyePosXOrig.last!)
+//                            eyePosYFiltered.append( -1.0*eyePosYOrig.last!)
                             eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                             eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                         }
