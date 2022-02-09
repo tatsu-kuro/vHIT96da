@@ -219,7 +219,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogBoxView:UIImageView?//vog
     var vHITDisplayMode:Int=0
 
-    var faceMarkHidden:Bool=false
+    var faceMarkHidden:Bool=true
     //faceMarkSwitchの無いプログラムにするには上行をtrueに
     
     @IBOutlet weak var nextButton: UIButton!
@@ -1007,8 +1007,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var realframeRatio:Float=fps/240
         //これを設定すると頭出ししてもあまりずれない。
         //どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
-        if fpsIs120==true{
+        if fps<200.0{
+            fpsIs120=true
             realframeRatio=fps/120.0
+        }else{
+            fpsIs120=false
         }
         var reader: AVAssetReader! = nil
         do {
@@ -1304,9 +1307,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var realframeRatio:Float=fps/240
         //これを設定すると頭出ししてもあまりずれない。
         //どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
-        if fpsIs120==true{
+        if fps<200.0{
+            fpsIs120=true
             realframeRatio=fps/120.0
+        }else{
+            fpsIs120=false
         }
+        
         var reader: AVAssetReader! = nil
         do {
             reader = try AVAssetReader(asset: avasset!)
@@ -2109,88 +2116,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
-    
-//           let dImage = drawText(width:mailWidth,height:mailHeight)
-//    func drawResultVOG()
-//    func drawAllvogwaves(width w:CGFloat,height h:CGFloat) ->UIImage{
-//        //        let nx:Int=18//3min 180sec 目盛は10秒毎 18本
-//        let size = CGSize(width:w, height:h)
-//        // イメージ処理の開始
-//        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-//        // パスの初期化
-//        let drawPath = UIBezierPath()
-//
-//        //let wI:Int = Int(w)//2400*18
-//        let wid:CGFloat=w/90.0
-//        for i in 0..<90 {
-//            let xp = CGFloat(i)*wid
-//            drawPath.move(to: CGPoint(x:xp,y:0))
-//            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
-//        }
-//        drawPath.move(to:CGPoint(x:0,y:0))
-//        drawPath.addLine(to: CGPoint(x:w,y:0))
-//        drawPath.move(to:CGPoint(x:0,y:h-120))
-//        drawPath.addLine(to: CGPoint(x:w,y:h-120))
-//        //UIColor.blue.setStroke()
-//        drawPath.lineWidth = 2.0//1.0
-//        drawPath.stroke()
-//        drawPath.removeAllPoints()
-//        var pntListXpos = Array<CGPoint>()
-//        var pntListXvelo = Array<CGPoint>()
-//        var pntListYpos = Array<CGPoint>()
-//        var pntListYvelo = Array<CGPoint>()
-//        let dx = 1// xの間隔
-//
-//        for i in 0..<Int(w) {
-//            if i < eyePosXFiltered.count - 4{
-//                let px = CGFloat(dx * i)
-//                let pyXpos = eyePosXFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)/5 + 120
-//                let pyXvelo = eyeVeloXFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*2/5 + 120
-//                let pyYpos = eyePosYFiltered[i] * CGFloat(posRatio)/20.0 + (h-240)*3/5 + 120
-//                let pyYvelo = eyeVeloYFiltered[i] * CGFloat(veloRatio)/10.0 + (h-240)*4/5 + 120
-//                let pntXpos = CGPoint(x: px, y: pyXpos)
-//                let pntXvelo = CGPoint(x: px, y: pyXvelo)
-//                let pntYpos = CGPoint(x: px, y: pyYpos)
-//                let pntYvelo = CGPoint(x: px, y: pyYvelo)
-//                pntListYpos.append(pntYpos)
-//                pntListYvelo.append(pntYvelo)
-//                pntListXpos.append(pntXpos)
-//                pntListXvelo.append(pntXvelo)
-//            }
-//        }
-//
-//        drawPath.move(to: pntListXpos[0])//move to start
-//        pntListXpos.removeFirst()//remove start point
-//        for pt in pntListXpos {//add points
-//            drawPath.addLine(to: pt)
-//        }
-//
-//        drawPath.move(to: pntListXvelo[0])
-//        pntListXvelo.removeFirst()
-//        for pt in pntListXvelo {
-//            drawPath.addLine(to: pt)
-//        }
-//        drawPath.move(to: pntListYpos[0])
-//        pntListYpos.removeFirst()
-//        for pt in pntListYpos {
-//            drawPath.addLine(to: pt)
-//        }
-//        drawPath.move(to: pntListYvelo[0])
-//        pntListYvelo.removeFirst()
-//        for pt in pntListYvelo {
-//            drawPath.addLine(to: pt)
-//        }
-//        // 線の色
-//        UIColor.black.setStroke()
-//        // 線を描く
-//        drawPath.stroke()
-//        // イメージコンテキストからUIImageを作る
-//        let image = UIGraphicsGetImageFromCurrentImageContext()
-//        // イメージ処理の終了
-//        UIGraphicsEndImageContext()
-//        return image!
-//    }
-    
  
     func drawVogtext(){
         if vogLineView != nil{
