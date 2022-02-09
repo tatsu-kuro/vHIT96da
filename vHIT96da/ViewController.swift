@@ -990,6 +990,305 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         KalmanInit()
         calcStartTime=CFAbsoluteTimeGetCurrent()
         setButtons(mode: false)
+    
+        setArraysData(type: 0)//removeAll
+        setArraysData(type: 1)//append(0)
+    
+        showBoxies(f: true)
+        setWakuImgs(mode: false)
+        waveSlider.isHidden=false
+        videoSlider.isHidden=true
+        vogImage = makeVOGimgWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
+        
+        if wave3View != nil{
+            wave3View?.removeFromSuperview()
+        }
+        if vhitLineView != nil{
+            vhitLineView?.removeFromSuperview()
+        }
+        if gyroLineView != nil{
+            gyroLineView?.removeFromSuperview()
+        }
+        //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
+        readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+        moveGyroData()//gyroDeltastartframe分をズラして
+        timercnt = 0
+        UIApplication.shared.isIdleTimerDisabled = true//not sleep
+        let eyeborder:CGFloat = CGFloat(eyeBorder)
+        //        print("eyeborder:",eyeBorder,faceF)
+        startTimerCalc()//resizerectのチェックの時はここをコメントアウト*********************
+//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
+        calcDate = currentVideoDate.text!
+        //        print("calcdate:",calcDate)
+        let fps=getFPS(videoCurrent)
+        var realframeRatio:Float=fps/240
+        //これを設定すると頭出ししてもあまりずれない。
+        //どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
+        if fpsIs120==true{
+            realframeRatio=fps/120.0
+        }
+        var reader: AVAssetReader! = nil
+        do {
+            reader = try AVAssetReader(asset: avasset!)
+        } catch {
+            #if DEBUG
+            print("could not initialize reader.")
+            #endif
+            return
+        }
+        guard let videoTrack = avasset!.tracks(withMediaType: AVMediaType.video).last else {
+            #if DEBUG
+            print("could not retrieve the video track.")
+            #endif
+            return
+        }
+        
+        let readerOutputSettings: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
+        
+        reader.add(readerOutput)
+        
+        let frameRate = videoTrack.nominalFrameRate
+        //let startframe=startPoints[vhitVideocurrent]
+        let startTime = CMTime(value: CMTimeValue(Float(startFrame)*realframeRatio), timescale: CMTimeScale(frameRate))
+        let timeRange = CMTimeRange(start: startTime, end:CMTime.positiveInfinity)
+
+        reader.timeRange = timeRange //読み込む範囲を`timeRange`で指定
+        reader.startReading()
+        
+        // UnsafeとMutableはまあ調べてもらうとして、eX, eY等は<Int32>が一つ格納されている場所へのポインタとして宣言される。
+        let eX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+        let eY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+        let fX = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+        let fY = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+//        var eyeCGImage:CGImage!
+//        let eyeUIImage:UIImage!
+        var eyeWithBorderCGImage:CGImage!
+        var eyeWithBorderUIImage:UIImage!
+//        var eyeBigCGImage:CGImage!
+//        var eyeBigUIImage:UIImage!
+        var faceCGImage:CGImage!
+        var faceUIImage:UIImage!
+        var faceWithBorderCGImage:CGImage!
+        var faceWithBorderUIImage:UIImage!
+        
+        let eyeRectOnScreen=CGRect(x:wakuE.origin.x, y:wakuE.origin.y, width: wakuE.width, height: wakuE.height)
+        let eyeWithBorderRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: eyeborder)
+        let eyeBigRectOnScreen = expandRectWithBorderWide(rect: eyeRectOnScreen, border: view.bounds.width/5)//10)
+        
+        let faceRectOnScreen=CGRect(x:wakuF.origin.x,y:wakuF.origin.y,width: wakuF.width,height: wakuF.height)
+        let faceWithBorderRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: eyeborder)
+        let faceBigRectOnScreen = expandRectWithBorderWide(rect: faceRectOnScreen, border: view.bounds.width/5)//10)
+
+        let context:CIContext = CIContext.init(options: nil)
+        //            let up = UIImage.Orientation.right
+        var sample:CMSampleBuffer!
+        stopButton.isEnabled = true
+        sample = readerOutput.copyNextSampleBuffer()
+        
+        let pixelBuffer:CVPixelBuffer = CMSampleBufferGetImageBuffer(sample!)!
+        var frameCIImage:CIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(CGImagePropertyOrientation.right)
+//        let videoWidth=startCIImage.extent.size.width
+//        let videoHeight=startCIImage.extent.size.height
+        let eyeRect = resizeR2(eyeRectOnScreen, viewRect:view.frame, image:frameCIImage)
+        var eyeWithBorderRect = resizeR2(eyeWithBorderRectOnScreen, viewRect:view.frame, image:frameCIImage)
+        let eyeBigRect = resizeR2(eyeBigRectOnScreen, viewRect:view.frame, image:frameCIImage)
+        
+        let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:frameCIImage)
+        var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:frameCIImage)
+        let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: frameCIImage)
+        var eyeWithBorderRect0 = eyeWithBorderRect
+        let faceWithBorderRect0 = faceWithBorderRect
+        
+        let eyeCGImage = context.createCGImage(frameCIImage, from: eyeRect)!
+        var eyeUIImage = UIImage.init(cgImage: eyeCGImage)
+        faceCGImage = context.createCGImage(frameCIImage, from: faceRect)!
+        faceUIImage = UIImage.init(cgImage:faceCGImage)
+        
+        let offsetEyeX:CGFloat = (eyeWithBorderRect.size.width - eyeRect.size.width) / 2.0
+        let offsetEyeY:CGFloat = (eyeWithBorderRect.size.height - eyeRect.size.height) / 2.0
+        let offsetFaceX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0
+        let offsetFaceY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0
+//        let offsetBigX:CGFloat = (faceWithBorderRect.size.width - faceRect.size.width) / 2.0
+//        let offsetBigY:CGFloat = (faceWithBorderRect.size.height - faceRect.size.height) / 2.0
+        
+        var maxEyeV:Double = 0
+        var maxFaceV:Double = 0
+        initSum5XY()//平均加算の初期化
+        while reader.status != AVAssetReader.Status.reading {
+            //            sleep(UInt32(0.1))
+            usleep(1000)//0.001sec
+        }
+        let xDiffer=faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
+        let yDiffer=faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
+
+        DispatchQueue.global(qos: .default).async { [self] in
+            while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
+                var eyeVeloX:CGFloat = 0
+                var eyeVeloY:CGFloat = 0
+                var eyePosX:CGFloat = 0
+                var eyePosY:CGFloat = 0
+                var faceVeloX:CGFloat = 0
+                var faceVeloY:CGFloat = 0
+                autoreleasepool{
+                    let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
+                    cvError -= 1
+                    if cvError <= 0{
+                        //orientation.upとrightは所要時間同じ
+                        frameCIImage = CIImage(cvPixelBuffer: pixelBuffer).oriented(.right)
+                        eyeWithBorderCGImage = context.createCGImage(frameCIImage, from: eyeWithBorderRect)!
+                        eyeWithBorderUIImage = UIImage.init(cgImage: eyeWithBorderCGImage)
+                        maxEyeV=openCV.matching(eyeWithBorderUIImage,
+                                                narrow: eyeUIImage,
+                                                x: eX,
+                                                y: eY)
+                        if maxEyeV < 0.90{
+                            if cvError==0{//4回空回りした後は1回だけ空回り
+                                cvError=1
+                            }else{
+                                cvError=5//10/240secはcontinue
+                            }
+                            eyeWithBorderRect=eyeWithBorderRect0//初期位置に戻す
+                        }else{//検出できた時
+                            //eXはポインタなので、".pointee"でそのポインタの内容が取り出せる。Cでいうところの"*"
+                            //上で宣言しているとおりInt32が返ってくるのでCGFloatに変換して代入
+                            eyeVeloX = CGFloat(eX.pointee) - offsetEyeX
+                            eyeVeloY =  -CGFloat(eY.pointee) + offsetEyeY
+                            eyeWithBorderRect.origin.x += eyeVeloX
+                            eyeWithBorderRect.origin.y += eyeVeloY
+                            eyePosX = eyeWithBorderRect.origin.x - eyeWithBorderRect0.origin.x// + ex
+                            eyePosY = eyeWithBorderRect.origin.y - eyeWithBorderRect0.origin.y// + ey
+                            
+                            if faceMark==true{//} && calcMode != 2{
+                                faceWithBorderCGImage = context.createCGImage(frameCIImage, from:faceWithBorderRect)!
+                                faceWithBorderUIImage = UIImage.init(cgImage: faceWithBorderCGImage)
+                                maxFaceV=openCV.matching(faceWithBorderUIImage, narrow: faceUIImage, x: fX, y: fY)
+                                if maxFaceV<0.7{//この時は終了する
+                                    calcFlag=false
+                                    eyeWithBorderRect=eyeWithBorderRect0
+                                }else{
+                                    faceVeloX = CGFloat(fX.pointee) - offsetFaceX
+                                    faceVeloY = -CGFloat(fY.pointee) + offsetFaceY
+                                    faceWithBorderRect.origin.x += faceVeloX
+                                    faceWithBorderRect.origin.y += faceVeloY
+                                }
+                                let x=(faceWithBorderRect.minX+faceWithBorderRect.maxX)/2
+                                let y=(faceWithBorderRect.minY+faceWithBorderRect.maxY)/2
+                                if x<faceBigRect.minX ||
+                                    x>faceBigRect.maxX ||
+                                    y<faceBigRect.minY ||
+                                    y>faceBigRect.maxY{
+                                    
+                                    faceWithBorderRect=faceWithBorderRect0
+                                }
+                            }
+                            let x=(eyeWithBorderRect.minX+eyeWithBorderRect.maxX)/2
+                            let y=(eyeWithBorderRect.minY+eyeWithBorderRect.maxY)/2
+                            if x<eyeBigRect.minX ||
+                                x>eyeBigRect.maxX ||
+                                y<eyeBigRect.minY ||
+                                y>eyeBigRect.maxY{
+                                cvError=5
+                                eyeWithBorderRect=eyeWithBorderRect0
+                            }
+                        }
+                        context.clearCaches()
+                    }
+                    
+                    if matchingTestMode==false && calcFlag==true{//faceMatchingErrorの時は抜ける
+                        if cvError < 0{
+                            eyePosXOrig.append(eyePosX)
+                            eyePosYOrig.append(eyePosY)
+                            //                            eyeVeloXOrig.append(eyeVeloX)
+                            //                            eyeVeloYOrig.append(eyeVeloY)
+                        }else if cvError==0{
+                            eyePosXOrig.append(eyePosX)
+                            eyePosYOrig.append(eyePosY)
+                            //                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
+                            //                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
+                        }else{
+                            eyePosXOrig.append(eyePosXOrig.last!)
+                            eyePosYOrig.append(eyePosYOrig.last!)
+                            //                            eyeVeloXOrig.append(eyeVeloXOrig.last!)
+                            //                            eyeVeloYOrig.append(eyeVeloYOrig.last!)
+                        }
+                        
+                        while readingDataNow==true{//--------の間はアレイデータを書き込まない？
+                            usleep(1000)//0.001sec
+                            print("loop-reeding")
+                        }
+                        writingDataNow=true
+                        if faceMark==true{
+                            faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
+                            faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
+                        }else{
+                            faceVeloXFiltered.append(0)
+                            faceVeloYFiltered.append(0)
+                        }
+                        
+                        if cvError<0{
+                            errArray.append(true)
+                            eyePosXFiltered.append( -1.0*Kalman(value:eyePosXOrig.last!,num:2))
+                            eyePosYFiltered.append( -1.0*Kalman(value:eyePosYOrig.last!,num:3))
+                            let cnt=eyePosXFiltered.count
+                            if calcMode != 2{//vHIT
+                                eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
+                                eyeVeloYFiltered.append(12*(eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
+                            }else{//vogでは、２重にフィフターをかけると体裁が良いが、それで良いのだろうか？
+                                eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+                                eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+                            }
+                        }else{
+                            errArray.append(false)
+                            KalmanInit()
+                            eyePosXFiltered.append( -1.0*eyePosXOrig.last!)
+                            eyePosYFiltered.append( -1.0*eyePosYOrig.last!)
+                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
+                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
+                        }
+                        if fpsIs120==true{
+                            eyePosXFiltered.append(eyePosXFiltered.last!)
+                            eyePosYFiltered.append(eyePosYFiltered.last!)
+                            eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
+                            eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
+                            faceVeloXFiltered.append(faceVeloXFiltered.last!)
+                            faceVeloYFiltered.append(faceVeloYFiltered.last!)
+                            errArray.append(errArray.last!)
+                        }
+                        writingDataNow=false
+                    }
+                    if calcFlag==true{//faceMatchingErrorでない時
+                        while reader.status != AVAssetReader.Status.reading {
+                            usleep(1000)//0.001sec
+                        }
+                        
+                        //マッチングデバッグ用スリープ、デバッグが終わったら削除
+                        if matchingTestMode == true{
+                            usleep(1000)//0.001sec
+                        }
+                    }
+                }
+    
+            }
+            //            print("time:",CFAbsoluteTimeGetCurrent()-st)
+            calcFlag = false//video 終了
+//            print("filtered:",eyeVeloXFiltered.count,faceVeloXFiltered.count)
+            if matchingTestMode==false{
+                nonsavedFlag=true
+            }
+//            }else{
+//            videoSlider.isEnabled=true
+//            }
+        }
+    }
+    
+ /*   func vHITcalcWithMark(){
+        var cvError:Int = 0
+        calcFlag = true
+        KalmanInit()
+        calcStartTime=CFAbsoluteTimeGetCurrent()
+        setButtons(mode: false)
         setArraysData(type: 0)//removeAll
         setArraysData(type: 1)//append(0)
         
@@ -1232,7 +1531,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             calcFlag = false//video 終了
             nonsavedFlag=true
         }
-    }
+    }*/
     
     func vHITcalc(){
         var cvError:Int = 0
@@ -1273,13 +1572,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var realframeRatio:Float=fps/240
         //これを設定すると頭出ししてもあまりずれない。
         //どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
-        if fps<200.0{
-            fpsIs120=true
+        if fpsIs120==true{
             realframeRatio=fps/120.0
-        }else{
-            fpsIs120=false
         }
-         var reader: AVAssetReader! = nil
+        var reader: AVAssetReader! = nil
         do {
             reader = try AVAssetReader(asset: avasset!)
         } catch {
