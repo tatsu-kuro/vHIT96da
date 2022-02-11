@@ -329,9 +329,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBorderInput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             
-            faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
-            markText.frame  = CGRect(x:x2,  y: topY+bh1*5,width:tw,height: bh)
-
+//            faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
+//            markText.frame  = CGRect(x:x2,  y: topY+bh1*5,width:tw,height: bh)
+            faceMarkSwitch.isHidden=true
+            markText.isHidden=true
+            
             parallelButton.isHidden=true
             parallelLabel.isHidden=true
             oppositeLabel.isHidden=true
@@ -421,6 +423,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 //                markText.isHidden=true
 //                faceFbutton.isHidden=true
 //            }
+            faceMarkSwitch.isHidden=false
+            markText.isHidden=false
+
             displayMode()
             vHITLabel.isHidden=false
             VOGLabel.isHidden=true

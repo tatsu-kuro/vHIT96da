@@ -1223,6 +1223,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                             eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                         }
+                        let dx = eyeVeloXFiltered.last! - faceVeloXFiltered.last!
+                        let dy = eyeVeloYFiltered.last! - faceVeloYFiltered.last!
+                        let cnt = eyeVeloXFiltered.count - 1
+                        eyeVeloXFiltered[cnt]=dx
+                        eyeVeloYFiltered[cnt]=dy
                         if fpsIs120==true{
                             eyePosXFiltered.append(eyePosXFiltered.last!)
                             eyePosYFiltered.append(eyePosYFiltered.last!)
@@ -2741,6 +2746,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UserDefaults.standard.set(posRatio, forKey: "posRatio")
         UserDefaults.standard.set(veloRatio, forKey: "veloRatio")
         UserDefaults.standard.set(faceMark,forKey: "faceMark")
+ 
         UserDefaults.standard.set(videoGyroZure,forKey:"videoGyroZure")
         
         UserDefaults.standard.set(Int(wakuE.origin.x), forKey: "wakuE_x")
@@ -2874,6 +2880,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIColor.red.setStroke()
         drawPath0.stroke()
         if faceMark == true{
+            UIColor.green.setStroke()
             drawPath1.stroke()
         }
         UIColor.black.setStroke()
@@ -3667,11 +3674,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wakuE.size.width = CGFloat(wakuLength)
             wakuE.size.height = CGFloat(wakuLength)
             calcMode=ParametersViewController.calcMode
-            
+       
             var chanF=false
             eyeRatio=ParametersViewController.eyeRatio
             gyroRatio=ParametersViewController.gyroRatio
             faceMark=ParametersViewController.faceMark
+            if calcMode==2{//vogの時はfaceMarkはなし
+                faceMark=false
+            }
             videoGyroZure=ParametersViewController.videoGyroZure
             vHITDisplayMode=ParametersViewController.vHITDisplayMode
             if posRatio != ParametersViewController.posRatio ||
