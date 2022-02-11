@@ -287,10 +287,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeVeloXFiltered4update = Array<CGFloat>()
     var eyePosYFiltered4update = Array<CGFloat>()
     var eyeVeloYFiltered4update = Array<CGFloat>()
-//    var faceVeloXOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
-//    var faceVeloYOrig = Array<CGFloat>()//faceVeloOrig
     var faceVeloYFiltered = Array<CGFloat>()//faceVeloFiltered
+    var facePosXFiltered = Array<CGFloat>()//faceVeloFiltered
+    var facePosYFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroHFiltered = Array<CGFloat>()//gyroFiltered
     var gyroVFiltered = Array<CGFloat>()//gyroFiltered
     var gyroMoved = Array<CGFloat>()//gyroVeloFilterd
@@ -920,17 +920,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func setArraysData(type:Int){
         if type==0{//removeAll
-            //            faceVeloXOrig.removeAll()
             faceVeloXFiltered.removeAll()
-            //            faceVeloYOrig.removeAll()
             faceVeloYFiltered.removeAll()
-//            eyePosXOrig.removeAll()
+            facePosXFiltered.removeAll()
+            facePosYFiltered.removeAll()
             eyePosXFiltered.removeAll()
-            //            eyeVeloXOrig.removeAll()
             eyeVeloXFiltered.removeAll()
-//            eyePosYOrig.removeAll()
             eyePosYFiltered.removeAll()
-            //            eyeVeloYOrig.removeAll()
             eyeVeloYFiltered.removeAll()
             gyroMoved.removeAll()
             errArray.removeAll()
@@ -943,17 +939,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             eyeVeloYFiltered4update.removeAll()
             
         }else if type==1{//append(0)
-            //            faceVeloXOrig.append(0)
             faceVeloXFiltered.append(0)
-            //            faceVeloYOrig.append(0)
             faceVeloYFiltered.append(0)
-//            eyePosXOrig.append(0)
+            facePosXFiltered.append(0)
+            facePosYFiltered.append(0)
             eyePosXFiltered.append(0)
-            //            eyeVeloXOrig.append(0)
             eyeVeloXFiltered.append(0)
-//            eyePosYOrig.append(0)
             eyePosYFiltered.append(0)
-            //            eyeVeloYOrig.append(0)
             eyeVeloYFiltered.append(0)
             eyePosXFiltered4update.append(0)
             eyePosYFiltered4update.append(0)
@@ -1116,6 +1108,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 var eyePosY:CGFloat = 0
                 var faceVeloX:CGFloat = 0
                 var faceVeloY:CGFloat = 0
+                var facePosX:CGFloat = 0
+                var facePosY:CGFloat = 0
                 autoreleasepool{
                     let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sample)!//27sec:10sec
                     cvError -= 1
@@ -1156,6 +1150,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                 faceVeloY = -CGFloat(fY.pointee) + offsetFaceY
                                 faceWithBorderRect.origin.x += faceVeloX
                                 faceWithBorderRect.origin.y += faceVeloY
+                                facePosX = faceWithBorderRect.origin.x - faceWithBorderRect0.origin.x// + ex
+                                facePosY = faceWithBorderRect.origin.y - faceWithBorderRect0.origin.y// + ey
+                             
                             }
                             let fx=(faceWithBorderRect.minX+faceWithBorderRect.maxX)/2
                             let fy=(faceWithBorderRect.minY+faceWithBorderRect.maxY)/2
@@ -1192,7 +1189,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         eyePosXFiltered.append( -1.0*Kalman(value:eyePosX,num:2))//eyePosXOrig.last!,num:2))
                         eyePosYFiltered.append( -1.0*Kalman(value:eyePosY,num:3))//Orig.last!,num:3))
                         let cnt=eyePosXFiltered.count
-                        
+//                        eyeVeloXFiltered.append(-12*(eyeVeloX))// eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
+//                        eyeVeloYFiltered.append(-12*(eyeVeloY))//eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
                         eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
                         eyeVeloYFiltered.append(12*(eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
                         
@@ -2849,7 +2847,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIColor.red.setStroke()
         drawPath0.stroke()
         if faceMark == true{
-            UIColor.green.setStroke()
+            UIColor.black.setStroke()
             drawPath1.stroke()
         }
         UIColor.black.setStroke()
