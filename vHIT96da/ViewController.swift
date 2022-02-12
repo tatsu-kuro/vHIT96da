@@ -281,14 +281,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
 //update(timer)では、まずcalc threadを止めてデータをもらってcalc thread再開し、もらったデータを処理する
     //calcとtimerでデータを同時に扱うとエラーが出るようだ
-    var faceVeloXFiltered4update = Array<CGFloat>()
-    var faceVeloYFiltered4update = Array<CGFloat>()
+//    var faceVeloXFiltered4update = Array<CGFloat>()
+//    var faceVeloYFiltered4update = Array<CGFloat>()
     var eyePosXFiltered4update = Array<CGFloat>()
     var eyeVeloXFiltered4update = Array<CGFloat>()
     var eyePosYFiltered4update = Array<CGFloat>()
     var eyeVeloYFiltered4update = Array<CGFloat>()
-    var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
-    var faceVeloYFiltered = Array<CGFloat>()//faceVeloFiltered
+//    var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
+//    var faceVeloYFiltered = Array<CGFloat>()//faceVeloFiltered
 //    var facePosXFiltered = Array<CGFloat>()//faceVeloFiltered
 //    var facePosYFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroHFiltered = Array<CGFloat>()//gyroFiltered
@@ -921,8 +921,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func setArraysData(type:Int){
         if type==0{//removeAll
-            faceVeloXFiltered.removeAll()
-            faceVeloYFiltered.removeAll()
+//            faceVeloXFiltered.removeAll()
+//            faceVeloYFiltered.removeAll()
 //            facePosXFiltered.removeAll()
 //            facePosYFiltered.removeAll()
             eyePosXFiltered.removeAll()
@@ -932,16 +932,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroMoved.removeAll()
             errArray.removeAll()
             //表示用データ
-            faceVeloXFiltered4update.removeAll()
-            faceVeloYFiltered4update.removeAll()
+//            faceVeloXFiltered4update.removeAll()
+//            faceVeloYFiltered4update.removeAll()
             eyePosXFiltered4update.removeAll()
             eyeVeloXFiltered4update.removeAll()
             eyePosYFiltered4update.removeAll()
             eyeVeloYFiltered4update.removeAll()
             
         }else if type==1{//append(0)
-            faceVeloXFiltered.append(0)
-            faceVeloYFiltered.append(0)
+//            faceVeloXFiltered.append(0)
+//            faceVeloYFiltered.append(0)
 //            facePosXFiltered.append(0)
 //            facePosYFiltered.append(0)
             eyePosXFiltered.append(0)
@@ -952,8 +952,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             eyePosYFiltered4update.append(0)
             eyeVeloXFiltered4update.append(0)
             eyeVeloYFiltered4update.append(0)
-            faceVeloXFiltered4update.append(0)
-            faceVeloYFiltered4update.append(0)
+//            faceVeloXFiltered4update.append(0)
+//            faceVeloYFiltered4update.append(0)
             gyroMoved.append(0)
             errArray.append(false)
         }
@@ -1098,9 +1098,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            sleep(UInt32(0.1))
             usleep(1000)//0.001sec
         }
-        let xDiffer=faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
-        let yDiffer=faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
-        
+//        let xDiffer=faceWithBorderRect.origin.x - eyeWithBorderRect.origin.x
+//        let yDiffer=faceWithBorderRect.origin.y - eyeWithBorderRect.origin.y
+    
         DispatchQueue.global(qos: .default).async { [self] in
             while let sample = readerOutput.copyNextSampleBuffer(), self.calcFlag != false {
                 var eyeVeloX:CGFloat = 0
@@ -1182,8 +1182,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         print("loop-reeding")
                     }
                     writingDataNow=true
-                    faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
-                    faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
+//                    faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
+//                    faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
 //                    facePosXFiltered.append(-1.0*Kalman(value: facePosX, num: 4))
 //                    facePosYFiltered.append(-1.0*Kalman(value: facePosY, num: 5))
      
@@ -1215,8 +1215,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         eyePosYFiltered.append(eyePosYFiltered.last!)
                         eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                         eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
-                        faceVeloXFiltered.append(faceVeloXFiltered.last!)
-                        faceVeloYFiltered.append(faceVeloYFiltered.last!)
+//                        faceVeloXFiltered.append(faceVeloXFiltered.last!)
+//                        faceVeloYFiltered.append(faceVeloYFiltered.last!)
                         errArray.append(errArray.last!)
                     }
                     writingDataNow=false
@@ -1441,15 +1441,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                             eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                         }
-                        faceVeloXFiltered.append(0.0)
-                        faceVeloYFiltered.append(0.0)
+//                        faceVeloXFiltered.append(0.0)
+//                        faceVeloYFiltered.append(0.0)
                         if fpsIs120==true{
                             eyePosXFiltered.append(eyePosXFiltered.last!)
                             eyePosYFiltered.append(eyePosYFiltered.last!)
                             eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                             eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
-                            faceVeloXFiltered.append(0.0)
-                            faceVeloYFiltered.append(0.0)
+//                            faceVeloXFiltered.append(0.0)
+//                            faceVeloYFiltered.append(0.0)
                             errArray.append(errArray.last!)
                         }
                         writingDataNow=false
@@ -2190,8 +2190,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for i in 0..<eyeVeloXFiltered4update.count-6{
             eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
             eyeVeloYFiltered4update[i]=average5(filtered: eyeVeloYFiltered4update, i: i)
-            faceVeloXFiltered4update[i]=average5(filtered: faceVeloXFiltered4update, i: i)
-            faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
+//            faceVeloXFiltered4update[i]=average5(filtered: faceVeloXFiltered4update, i: i)
+//            faceVeloYFiltered4update[i]=average5(filtered: faceVeloYFiltered4update, i: i)
         }
     }
     func getArrayData()->Int{//一気にデータ取得して、そのデータをゆっくり？表示用に利用する。
@@ -2212,8 +2212,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 eyeVeloXFiltered4update.append(eyeVeloXFiltered[i])
                 eyeVeloYFiltered4update.append(eyeVeloYFiltered[i])
                 //                    if faceMark==true{
-                faceVeloXFiltered4update.append(faceVeloXFiltered[i])
-                faceVeloYFiltered4update.append(faceVeloYFiltered[i])
+//                faceVeloXFiltered4update.append(faceVeloXFiltered[i])
+//                faceVeloYFiltered4update.append(faceVeloYFiltered[i])
                 //                    }
             }else{
                 eyePosXFiltered4update.append(eyePosXFiltered4update.last!)
@@ -2221,8 +2221,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 eyeVeloXFiltered4update.append(eyeVeloXFiltered4update.last!)
                 eyeVeloYFiltered4update.append(eyeVeloYFiltered4update.last!)
                 //                    if faceMark==true{
-                faceVeloXFiltered4update.append(faceVeloXFiltered4update.last!)
-                faceVeloYFiltered4update.append(faceVeloYFiltered4update.last!)
+//                faceVeloXFiltered4update.append(faceVeloXFiltered4update.last!)
+//                faceVeloYFiltered4update.append(faceVeloYFiltered4update.last!)
             }
         }
         readingDataNow=false
@@ -2764,18 +2764,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 #endif
         // 折れ線にする点の配列
         var pointList0 = Array<CGPoint>()
-        var pointList1 = Array<CGPoint>()
+//        var pointList1 = Array<CGPoint>()
         var pointList2 = Array<CGPoint>()
-        var py1:CGFloat?
-        var point1:CGPoint?
+//        var py1:CGFloat?
+//        var point1:CGPoint?
         let pointCount = Int(w) // 点の個数
         // xの間隔
         let dx:CGFloat = 1//Int(w)/pointCount
 //        let posXCount=getPosXFilteredCount()// eyeVeloXFiltered.count
         let gyroMovedCnt=gyroMoved.count
-        let y0=gyroBoxHeight*2/6
+//        let y0=gyroBoxHeight*2/6
         let y1=gyroBoxHeight*3/6
-        let y2=gyroBoxHeight*4/6
+//        let y2=gyroBoxHeight*4/6
         var py0:CGFloat=0
         var step:Int = 1
         if fpsIs120==true{
@@ -2790,23 +2790,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }else{
                     py0 = eyeVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y1
                 }
-                if faceMark==true{
-                    if calcMode==0{
-                        py1 = faceVeloXFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y2
-                    }else{
-                        py1 = faceVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y2
-                    }
-                }
+//                if faceMark==true{
+//                    if calcMode==0{
+//                        py1 = faceVeloXFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y2
+//                    }else{
+//                        py1 = faceVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y2
+//                    }
+//                }
                 let py2 = -gyroMoved[num + n] * CGFloat(gyroRatio)/150.0 + y1
                 let point0 = CGPoint(x: px, y: py0)
-                if faceMark==true{
-                    point1 = CGPoint(x: px, y: py1!)
-                }
+//                if faceMark==true{
+//                    point1 = CGPoint(x: px, y: py1!)
+//                }
                 let point2 = CGPoint(x: px, y: py2)
                 pointList0.append(point0)
-                if faceMark==true{
-                    pointList1.append(point1!)
-                }
+//                if faceMark==true{
+//                    pointList1.append(point1!)
+//                }
                 pointList2.append(point2)
             }
         }
@@ -2825,15 +2825,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         for pt in pointList0 {
             drawPath0.addLine(to: pt)
         }
-        if faceMark==true{
-            drawPath1.move(to: pointList1[0])
-            // 配列から始点の値を取り除く
-            pointList1.removeFirst()
-            // 配列から点を取り出して連結していく
-            for pt in pointList1 {
-                drawPath1.addLine(to: pt)
-            }
-        }
+//        if faceMark==true{
+//            drawPath1.move(to: pointList1[0])
+//            // 配列から始点の値を取り除く
+//            pointList1.removeFirst()
+//            // 配列から点を取り出して連結していく
+//            for pt in pointList1 {
+//                drawPath1.addLine(to: pt)
+//            }
+//        }
         drawPath2.move(to: pointList2[0])
         // 配列から始点の値を取り除く
         pointList2.removeFirst()
@@ -2850,10 +2850,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // 線を描く
         UIColor.red.setStroke()
         drawPath0.stroke()
-        if faceMark == true{
-            UIColor.black.setStroke()
-            drawPath1.stroke()
-        }
+//        if faceMark == true{
+//            UIColor.black.setStroke()
+//            drawPath1.stroke()
+//        }
         UIColor.black.setStroke()
         drawPath2.stroke()
         let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",arrayDataCount,CGFloat(arrayDataCount)/240.0,videoDura[videoCurrent],timercnt+1)

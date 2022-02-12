@@ -433,7 +433,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
         }
-        print("setbutton:",butw,buth)
+//        print("setbutton:",butw,buth)
         defaultButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
         tovHITButton.frame=CGRect(x:butw+3*sp,y:buty,width:butw,height: buth)
         vHITLabel.frame=CGRect(x:butw+3*sp,y:buty-7,width:butw,height: 5)
