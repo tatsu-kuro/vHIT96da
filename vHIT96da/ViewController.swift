@@ -289,8 +289,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeVeloYFiltered4update = Array<CGFloat>()
     var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
     var faceVeloYFiltered = Array<CGFloat>()//faceVeloFiltered
-    var facePosXFiltered = Array<CGFloat>()//faceVeloFiltered
-    var facePosYFiltered = Array<CGFloat>()//faceVeloFiltered
+//    var facePosXFiltered = Array<CGFloat>()//faceVeloFiltered
+//    var facePosYFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroHFiltered = Array<CGFloat>()//gyroFiltered
     var gyroVFiltered = Array<CGFloat>()//gyroFiltered
     var gyroMoved = Array<CGFloat>()//gyroVeloFilterd
@@ -360,6 +360,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         dispWakus()
         showWakuImages()
+//        UserDefaults.standard.set(startFrame,forKey: "startFrame")
      }
  
     func getPHAssetcollection(albumTitle:String)->PHAssetCollection{
@@ -922,8 +923,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if type==0{//removeAll
             faceVeloXFiltered.removeAll()
             faceVeloYFiltered.removeAll()
-            facePosXFiltered.removeAll()
-            facePosYFiltered.removeAll()
+//            facePosXFiltered.removeAll()
+//            facePosYFiltered.removeAll()
             eyePosXFiltered.removeAll()
             eyeVeloXFiltered.removeAll()
             eyePosYFiltered.removeAll()
@@ -941,8 +942,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if type==1{//append(0)
             faceVeloXFiltered.append(0)
             faceVeloYFiltered.append(0)
-            facePosXFiltered.append(0)
-            facePosYFiltered.append(0)
+//            facePosXFiltered.append(0)
+//            facePosYFiltered.append(0)
             eyePosXFiltered.append(0)
             eyeVeloXFiltered.append(0)
             eyePosYFiltered.append(0)
@@ -1183,18 +1184,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     writingDataNow=true
                     faceVeloXFiltered.append(-12.0*Kalman(value: faceVeloX,num: 0))
                     faceVeloYFiltered.append(-12.0*Kalman(value: faceVeloY,num: 1))
-                    
-                    if cvError<0{
+//                    facePosXFiltered.append(-1.0*Kalman(value: facePosX, num: 4))
+//                    facePosYFiltered.append(-1.0*Kalman(value: facePosY, num: 5))
+     
+                    if cvError<0{//matching well done
                         errArray.append(true)
-                        eyePosXFiltered.append( -1.0*Kalman(value:eyePosX,num:2))//eyePosXOrig.last!,num:2))
-                        eyePosYFiltered.append( -1.0*Kalman(value:eyePosY,num:3))//Orig.last!,num:3))
+                        eyePosXFiltered.append( -1.0*Kalman(value:eyePosX-facePosX,num:2))//eyePosXOrig.last!,num:2))
+                        eyePosYFiltered.append( -1.0*Kalman(value:eyePosY-facePosY,num:3))//Orig.last!,num:3))
                         let cnt=eyePosXFiltered.count
-//                        eyeVeloXFiltered.append(-12*(eyeVeloX))// eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
-//                        eyeVeloYFiltered.append(-12*(eyeVeloY))//eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
-                        eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
-                        eyeVeloYFiltered.append(12*(eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
+                        eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+                        eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+//                        faceVeloXFiltered.append(12*(facePosXFiltered[cnt-1]-facePosXFiltered[cnt-2]))
+//                        faceVeloYFiltered.append(12*(facePosYFiltered[cnt-1]-facePosYFiltered[cnt-2]))
                         
-                    }else{
+                    }else{//matching error
                         errArray.append(false)
                         KalmanInit()
                         eyePosXFiltered.append(eyePosXFiltered.last!)// -1.0*eyePosXOrig.last!)
@@ -1202,11 +1205,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         eyeVeloXFiltered.append(eyeVeloXFiltered.last!)
                         eyeVeloYFiltered.append(eyeVeloYFiltered.last!)
                     }
-                    let dx = eyeVeloXFiltered.last! - faceVeloXFiltered.last!
-                    let dy = eyeVeloYFiltered.last! - faceVeloYFiltered.last!
-                    let cnt = eyeVeloXFiltered.count - 1
-                    eyeVeloXFiltered[cnt]=dx
-                    eyeVeloYFiltered[cnt]=dy
+//                    let dx = eyeVeloXFiltered.last! - faceVeloXFiltered.last!
+//                    let dy = eyeVeloYFiltered.last! - faceVeloYFiltered.last!
+//                    let cnt = eyeVeloXFiltered.count - 1
+//                    eyeVeloXFiltered[cnt]=dx
+//                    eyeVeloYFiltered[cnt]=dy
                     if fpsIs120==true{
                         eyePosXFiltered.append(eyePosXFiltered.last!)
                         eyePosYFiltered.append(eyePosYFiltered.last!)
@@ -1819,6 +1822,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             getAlbumAssets()//完了したら戻ってくるようにしたつもり
             //videcurrentは前回終了時のものを利用する
             videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
+//            startFrame = getUserDefault(str: "startFrame", ret: 0)
             if videoCurrent>videoDate.count-1{
                 videoCurrent=videoDate.count-1
             }
@@ -3646,9 +3650,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             eyeRatio=ParametersViewController.eyeRatio
             gyroRatio=ParametersViewController.gyroRatio
             faceMark=ParametersViewController.faceMark
-            if calcMode==2{//vogの時はfaceMarkはなし
-                faceMark=false
-            }
+//            if calcMode==2{//vogの時はfaceMarkはなし
+//                faceMark=false
+//            }
             videoGyroZure=ParametersViewController.videoGyroZure
             vHITDisplayMode=ParametersViewController.vHITDisplayMode
             if posRatio != ParametersViewController.posRatio ||

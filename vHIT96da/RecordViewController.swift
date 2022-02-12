@@ -618,9 +618,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //start recording
 //        timerCnt=0
 //        setMotion()
-        hideButtons(type: true)
+         hideButtons(type: true)
         stopButton.isHidden=true
         currentTime.isHidden=false
+        sleep(3)
         UIApplication.shared.isIdleTimerDisabled = true//スリープしない
         if speakerSwitch.isOn==true{
             if let soundUrl = URL(string:
