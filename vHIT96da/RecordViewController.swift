@@ -613,23 +613,27 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
   
     var soundIdx:SystemSoundID = 0
+    func sound(){
+        if speakerSwitch.isOn==true{
+                 if let soundUrl = URL(string:
+                                         "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+                     AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+                     AudioServicesPlaySystemSound(soundIdx)
+                 }
+             }
+    }
     
     @IBAction func onClickStartButton(_ sender: Any) {
         //start recording
 //        timerCnt=0
 //        setMotion()
+        sound()
          hideButtons(type: true)
         stopButton.isHidden=true
         currentTime.isHidden=false
         sleep(3)
         UIApplication.shared.isIdleTimerDisabled = true//スリープしない
-        if speakerSwitch.isOn==true{
-            if let soundUrl = URL(string:
-                                    "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
-                AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
-                AudioServicesPlaySystemSound(soundIdx)
-            }
-        }
+        sound()
         try? FileManager.default.removeItem(atPath: TempFilePath)
         
         let fileURL = NSURL(fileURLWithPath: TempFilePath)
