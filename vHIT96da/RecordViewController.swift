@@ -111,6 +111,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         initSession(fps: fps_non_120_240)
         setBars()
+        setFlashlevel(level: LEDBar.value)
     }
     
     @IBOutlet weak var damyBottom: UILabel!
@@ -628,6 +629,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //        timerCnt=0
 //        setMotion()
         sound()
+        
          hideButtons(type: true)
         stopButton.isHidden=true
         currentTime.isHidden=false
