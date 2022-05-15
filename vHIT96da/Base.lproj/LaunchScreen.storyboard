@@ -22,7 +22,7 @@
                                     <constraint firstAttribute="height" constant="75" id="VaV-Nk-e64"/>
                                 </constraints>
                                 <string key="text">Version 5.9
-2022-4-24
+2022-5-15
 Kuroda ENT</string>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="22"/>
                                 <nil key="textColor"/>
@@ -37,7 +37,7 @@ Kuroda ENT</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sora1" translatesAutoresizingMaskIntoConstraints="NO" id="Jrj-j3-EUi">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="top.png" translatesAutoresizingMaskIntoConstraints="NO" id="Jrj-j3-EUi">
                                 <rect key="frame" x="85" y="133" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="TDH-FK-LkH"/>
@@ -77,6 +77,6 @@ Kuroda ENT</string>
         </scene>
     </scenes>
     <resources>
-        <image name="sora1" width="304" height="301"/>
+        <image name="top.png" width="410" height="335"/>
     </resources>
 </document>
