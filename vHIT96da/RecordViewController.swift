@@ -67,43 +67,44 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     
     func setBars(){
-        if cameraType==2{
-            focusBar.value=getUserDefault(str: "zoomValue", ret: 0)
-            setZoom(level: focusBar.value/10)
-            focusFar.text = "ZOOM"
-            focusNear.text = "zoom"
-        }else{
-            focusBar.value=getUserDefault(str: "focusValue", ret: 0)
-            setFocus(focus: focusBar.value)
-            if Locale.preferredLanguages.first!.contains("ja"){
-                focusFar.text = "遠"//false
-                focusNear.text = "近"//isHidden=false
-            }else{
-                focusFar.text = "far"//false
-                focusNear.text = "near"//isHidden=false
-
-            }
-        }
+//        if cameraType==2{
+//            focusBar.value=getUserDefault(str: "zoomValue", ret: 0)
+//            setZoom(level: focusBar.value/10)
+//            focusFar.text = "ZOOM"
+//            focusNear.text = "zoom"
+//        }else{
+//            focusBar.value=getUserDefault(str: "focusValue", ret: 0)
+//            setFocus(focus: focusBar.value)
+//            if Locale.preferredLanguages.first!.contains("ja"){
+//                focusFar.text = "遠"//false
+//                focusNear.text = "近"//isHidden=false
+//            }else{
+//                focusFar.text = "far"//false
+//                focusNear.text = "near"//isHidden=false
+//
+//            }
+//        }
     }
     @IBAction func onCameraChange(_ sender: Any) {//camera>1
-        cameraType=UserDefaults.standard.integer(forKey:"cameraType")
-        if cameraType==0{
-            if telephotoCamera == true{
-                cameraType=1//telephoto
-            }else if ultrawideCamera == true{
-                cameraType=2
-            }
-        }else if cameraType==1{
-            if ultrawideCamera==true{
-                cameraType=2//ultraWide
-            }else{
-                cameraType=0
-            }
-        }else{
-            cameraType=0//wideAngle
-        }
-        print("cameraType",cameraType)
-        UserDefaults.standard.set(cameraType, forKey: "cameraType")
+//        cameraType=UserDefaults.standard.integer(forKey:"cameraType")
+//        if cameraType==0{
+//            if telephotoCamera == true{
+//                cameraType=1//telephoto
+//            }else if ultrawideCamera == true{
+//                cameraType=2
+//            }
+//        }else if cameraType==1{
+//            if ultrawideCamera==true{
+//                cameraType=2//ultraWide
+//            }else{
+//                cameraType=0
+//            }
+//        }else{
+//            cameraType=0//wideAngle
+//        }
+        cameraType=0//wideAngleCameraだけを選択する。
+//        print("cameraType",cameraType)
+//        UserDefaults.standard.set(cameraType, forKey: "cameraType")
          if captureSession.isRunning{
         // セッションが始動中なら止める
             print("isrunning")
@@ -240,7 +241,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         getCameras()
-        cameraType=getUserDefault(str: "cameraType", ret: 0)
+        cameraType=0//getUserDefault(str: "cameraType", ret: 0)
 //        if (UserDefaults.standard.object(forKey: "cameraType") != nil){//keyが設定してなければretをセット
 //            cameraType=UserDefaults.standard.integer(forKey:"cameraType")
 //        }else{
@@ -278,16 +279,18 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.maximumValue = 0.1
         LEDBar.addTarget(self, action: #selector(onLEDValueChange), for: UIControl.Event.valueChanged)
         LEDBar.value=getUserDefault(str: "LEDValue", ret:0)
-        setFlashlevel(level: LEDBar.value)
+        setFlashlevel(level:LEDBar.value)
         
-        focusBar.minimumValue = 0
-        focusBar.maximumValue = 1.0
-        focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
-        setBars()
+//        focusBar.minimumValue = 0
+//        focusBar.maximumValue = 1.0
+//        focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
+//        setBars()
+        setFocus(focus: 0)
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
     }
     
     func setFlashlevel(level:Float){
+        
         if let device = videoDevice{
             do {
                 if device.hasTorch {
@@ -333,13 +336,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         UserDefaults.standard.set(LEDBar.value, forKey: "LEDValue")
     }
     @objc func onSliderValueChange(){
-        if cameraType==2{//ultrawide
-            setZoom(level:focusBar.value/10)
-            UserDefaults.standard.set(focusBar.value,forKey: "zoomValue")
-        }else{
-            setFocus(focus:focusBar.value)
-            UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
-        }
+//        if cameraType==2{//ultrawide
+//            setZoom(level:focusBar.value/10)
+//            UserDefaults.standard.set(focusBar.value,forKey: "zoomValue")
+//        }else{
+//            setFocus(focus:focusBar.value)
+//            UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
+//        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -387,11 +390,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.isHidden=type
         LEDLow.isHidden=type
         LEDHigh.isHidden=type
-        focusBar.isHidden=type
-        focusFar.isHidden=type
-        focusNear.isHidden=type
+//        focusBar.isHidden=type
+//        focusFar.isHidden=type
+//        focusNear.isHidden=type
         exitBut.isHidden=type
-        cameraChangeButton.isHidden=type
+//        cameraChangeButton.isHidden=type
         if ultrawideCamera==false && telephotoCamera==false{
             cameraChangeButton.isHidden=true
         }
@@ -417,9 +420,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         currentTime.layer.masksToBounds = true
         currentTime.layer.cornerRadius = 5
         currentTime.font = UIFont.monospacedDigitSystemFont(ofSize: 25*view.bounds.width/320, weight: .medium)
-
-//        setButtonProperty(button: fps240Button, bw: bw, bh:bh, cx:(10+bw)/2 , cy: bpos-10-bh)
-//        setButtonProperty(button: fps120Button, bw: bw, bh: bh, cx:(10+bw)/2 , cy:bpos)
         
         iroiro.setButtonProperty(fps240Button, x:5,y: y1, w: bw, h:bh,UIColor.gray)
         iroiro.setButtonProperty(fps120Button, x:5,y:y0, w: bw, h: bh,UIColor.gray)
@@ -440,40 +440,43 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
         speakerSwitch.frame=CGRect(x:8,y:y2,width: 47,height: 31)
         speakerImage.frame=CGRect(x:60,y:y2,width: 31,height: 31)
-        iroiro.setLabelProperty(focusNear,x:5,y:y3,w:bw,h:bh/2,UIColor.white)
-        iroiro.setLabelProperty(focusFar,x:x1,y:y3,w:bw,h:bh/2,UIColor.white)
-        iroiro.setLabelProperty(LEDLow,x:5,y:y4,w:bw,h:bh/2,UIColor.gray)
-        iroiro.setLabelProperty(LEDHigh,x:x1,y:y4, w: bw, h:bh/2,UIColor.systemOrange)
-//        setButtonProperty(button:cameraChangeButton, bw: bw, bh:bh/2, cx:ww-5-bw/2, cy:bpos-40-bh*15/4)
-        iroiro.setButtonProperty(cameraChangeButton,x:x1,y:y1, w: bw, h:bh,UIColor.systemOrange)
+//        iroiro.setLabelProperty(focusNear,x:5,y:y3,w:bw,h:bh/2,UIColor.white)
+//        iroiro.setLabelProperty(focusFar,x:x1,y:y3,w:bw,h:bh/2,UIColor.white)
+        iroiro.setLabelProperty(LEDLow,x:5,y:y3,w:bw,h:bh/2,UIColor.gray)
+        iroiro.setLabelProperty(LEDHigh,x:x1,y:y3, w: bw, h:bh/2,UIColor.systemOrange)
+//
+//        iroiro.setButtonProperty(cameraChangeButton,x:x1,y:y1, w: bw, h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(exitBut,x:x1,y:y0, w: bw, h:bh,UIColor.darkGray)
-//        focusBar.frame=CGRect(x:0,y:0,width:ww-bw*2-40,height:bh/2)
-        focusBar.frame=CGRect(x:10+bw+10,y:y3,width: ww-bw*2-40,height:bh/2)
-//        focusBar.layer.position=CGPoint(x:ww/2,y:bpos-20-bh*11/4)
-        LEDBar.frame=CGRect(x:20+bw,y:y4,width:ww-bw*2-40,height:bh/2)
-//        LEDBar.layer.position=CGPoint(x:ww/2,y:bpos-30-bh*13/4)
-        
+
+//        focusBar.frame=CGRect(x:10+bw+10,y:y3,width: ww-bw*2-40,height:bh/2)
+        LEDBar.frame=CGRect(x:20+bw,y:y3,width:ww-bw*2-40,height:bh/2)
+
         startButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
-//        startButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
         stopButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
-//        stopButton.layer.position = CGPoint(x:ww/2,y:bpos-5-bh)
         startButton.isHidden=true
         stopButton.isHidden=true
         stopButton.tintColor=UIColor.orange
+        cameraChangeButton.isHidden=true
+        focusBar.isHidden=true
+//        LEDBar.isHidden=true
+        focusFar.isHidden=true
+        focusNear.isHidden=true
+//        LEDLow.isHidden=true
+//        LEDHigh.isHidden=true
     }
     func initSession(fps:Int) {
         // セッション生成
         captureSession = AVCaptureSession()
         // 入力 : 背面カメラ
-        if cameraType==0{
+//        if cameraType==0{
             videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-        }else if cameraType==1{
-            videoDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back)
-
-        }else if cameraType==2{
-            videoDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
-
-        }
+//        }else if cameraType==1{
+//            videoDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back)
+//
+//        }else if cameraType==2{
+//            videoDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
+//
+//        }
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
         captureSession.addInput(videoInput)
         // ↓ココ重要！！！！！
@@ -563,10 +566,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                 stopButton.tintColor=UIColor.red
             }
         }else{
-            if cameraType != 2{
-                UserDefaults.standard.set(videoDevice?.lensPosition, forKey: "focusValue")
-                focusBar.value=videoDevice!.lensPosition
-            }
+//            if cameraType != 2{
+//                UserDefaults.standard.set(videoDevice?.lensPosition, forKey: "focusValue")
+//                focusBar.value=videoDevice!.lensPosition
+//            }
         }
         if timerCnt > 60*5{
             timer!.invalidate()
