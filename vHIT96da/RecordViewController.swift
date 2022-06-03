@@ -144,10 +144,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             LEDBar.isHidden=false
             LEDHigh.isHidden=false
             LEDLow.isHidden=false
+            speakerImage.isHidden=false
+            speakerSwitch.isHidden=false
         }else{
             LEDBar.isHidden=true
             LEDHigh.isHidden=true
             LEDLow.isHidden=true
+            speakerImage.isHidden=true
+            speakerSwitch.isHidden=true
         }
     }
     // 指定の FPS のフォーマットに切り替える (その FPS で最大解像度のフォーマットを選ぶ)
@@ -389,8 +393,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     func hideButtons(type:Bool){
-        speakerImage.isHidden=type
-        speakerSwitch.isHidden=type
+        speakerImage.isHidden=true
+        speakerSwitch.isHidden=true
         startButton.isHidden=type
         stopButton.isHidden=type
         currentTime.isHidden=type
@@ -472,6 +476,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusNear.isHidden=true
         LEDLow.isHidden=true
         LEDHigh.isHidden=true
+        speakerSwitch.isHidden=true
+        speakerImage.isHidden=true
     }
     func initSession(fps:Int) {
         // セッション生成
