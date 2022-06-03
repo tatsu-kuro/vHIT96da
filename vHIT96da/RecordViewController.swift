@@ -294,7 +294,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.minimumValue = 0
         LEDBar.maximumValue = 0.1
         LEDBar.addTarget(self, action: #selector(onLEDValueChange), for: UIControl.Event.valueChanged)
-        LEDBar.value=getUserDefault(str: "LEDValue", ret:0.04)//初期値はmini12に合わせる
+        LEDBar.value=getUserDefault(str: "LEDValue", ret:0.02)//初期値はmini12に合わせる
         setFlashlevel(level:LEDBar.value)
         print("led:",LEDBar.value)
 //        focusBar.minimumValue = 0
