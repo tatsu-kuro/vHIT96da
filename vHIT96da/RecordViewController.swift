@@ -140,6 +140,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
  
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
+        if startButton.isHidden==true{
+            return
+        }
         if LEDBar.isHidden==true{
             LEDBar.isHidden=false
             LEDHigh.isHidden=false
