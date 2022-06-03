@@ -202,9 +202,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBorder=10
             faceMarkSwitch.isOn=false
             faceMark=false
-            videoGyroZure = 20
-            eyeRatio = 100
-            gyroRatio = 100
+            videoGyroZure = 2
+            eyeRatio = 300
+            gyroRatio = 170
             wakuLength = 3
         }else{
             eyeBorder=10
@@ -355,6 +355,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 //            markText.isHidden = false
 //            faceFbutton.isHidden = false
             vhitpng.isHidden=false
+            if Locale.preferredLanguages.first!.contains("ja"){
+                vhitpng.image=UIImage(named:"vhit_ja")!
+            }else{
+                vhitpng.image=UIImage(named:"vhit")!
+            }
             A2DLabel.isHidden=false
             B2CLabel.isHidden=false
             eyeBorderLabel.isHidden=false
