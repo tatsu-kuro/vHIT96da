@@ -140,6 +140,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
  
     @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
+        if LEDBar.isHidden==true{
+            LEDBar.isHidden=false
+            LEDHigh.isHidden=false
+            LEDLow.isHidden=false
+        }else{
+            LEDBar.isHidden=true
+            LEDHigh.isHidden=true
+            LEDLow.isHidden=true
+        }
     }
     // 指定の FPS のフォーマットに切り替える (その FPS で最大解像度のフォーマットを選ぶ)
     //
@@ -278,9 +287,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.minimumValue = 0
         LEDBar.maximumValue = 0.1
         LEDBar.addTarget(self, action: #selector(onLEDValueChange), for: UIControl.Event.valueChanged)
-        LEDBar.value=getUserDefault(str: "LEDValue", ret:0)
+        LEDBar.value=getUserDefault(str: "LEDValue", ret:0.04)//初期値はmini12に合わせる
         setFlashlevel(level:LEDBar.value)
-        
+        print("led:",LEDBar.value)
 //        focusBar.minimumValue = 0
 //        focusBar.maximumValue = 1.0
 //        focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
@@ -387,9 +396,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         currentTime.isHidden=type
         fps240Button.isHidden=type
         fps120Button.isHidden=type
-        LEDBar.isHidden=type
-        LEDLow.isHidden=type
-        LEDHigh.isHidden=type
+        LEDBar.isHidden=true
+        LEDLow.isHidden=true
+        LEDHigh.isHidden=true
 //        focusBar.isHidden=type
 //        focusFar.isHidden=type
 //        focusNear.isHidden=type
@@ -458,11 +467,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         stopButton.tintColor=UIColor.orange
         cameraChangeButton.isHidden=true
         focusBar.isHidden=true
-//        LEDBar.isHidden=true
+        LEDBar.isHidden=true
         focusFar.isHidden=true
         focusNear.isHidden=true
-//        LEDLow.isHidden=true
-//        LEDHigh.isHidden=true
+        LEDLow.isHidden=true
+        LEDHigh.isHidden=true
     }
     func initSession(fps:Int) {
         // セッション生成
