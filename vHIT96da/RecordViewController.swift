@@ -102,7 +102,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //        }else{
 //            cameraType=0//wideAngle
 //        }
-        cameraType=0//wideAngleCameraだけを選択する。
+//        cameraType=0//wideAngleCameraだけを選択する。
 //        print("cameraType",cameraType)
 //        UserDefaults.standard.set(cameraType, forKey: "cameraType")
          if captureSession.isRunning{
@@ -236,10 +236,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     var telephotoCamera:Bool=false
     var ultrawideCamera:Bool=false
-    var cameraType:Int = 0
+    var cameraType:Int = 0 //0:wideAngle(all） 1:telePhoto 2:ultraWide(12mini)
     func getCameras(){
         if AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back) != nil{
-            ultrawideCamera=true
+            ultrawideCamera=true//12miniに付いている
         }
         if AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back) != nil{
             telephotoCamera=true
@@ -257,7 +257,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         getCameras()
-        cameraType=0//getUserDefault(str: "cameraType", ret: 0)
+        if ultrawideCamera==true{
+            cameraType=2
+        }else{
+            cameraType=0
+        }
+//        cameraType=0//getUserDefault(str: "cameraType", ret: 0)
 //        if (UserDefaults.standard.object(forKey: "cameraType") != nil){//keyが設定してなければretをセット
 //            cameraType=UserDefaults.standard.integer(forKey:"cameraType")
 //        }else{
@@ -302,6 +307,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //        focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
 //        setBars()
         setFocus(focus: 0)
+        setZoom()
+//        if cameraType==0{
+//            setZoom(level: 0)
+//        }else{
+//            setZoom(level: 0.015)//eye:550 head:200 gyro:4
+//        }
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
     }
     
@@ -380,8 +391,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             initSession(fps: fps_non_120_240)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
             setFlashlevel(level: LEDBar.value)
+            setZoom()
+//            if cameraType==0{
+//                setZoom(level: 0)
+//            }else{
+//                setZoom(level: 0.007)
+//            }
         }
     }
+    
     @IBAction func onClick240fps(_ sender: Any) {
         if fps_non_120_240==2{
             return
@@ -393,6 +411,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             initSession(fps: fps_non_120_240)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
             setFlashlevel(level: LEDBar.value)
+//            if cameraType==0{
+//                setZoom(level: 0)
+//            }else{
+//                setZoom(level: 0.015)
+//            }
+            setZoom()
         }
     }
     func hideButtons(type:Bool){
@@ -486,15 +510,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // セッション生成
         captureSession = AVCaptureSession()
         // 入力 : 背面カメラ
-//        if cameraType==0{
+        if cameraType==0{
             videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
 //        }else if cameraType==1{
 //            videoDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back)
+
+        }else if cameraType==2{
+            videoDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
 //
-//        }else if cameraType==2{
-//            videoDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
-//
-//        }
+        }
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
         captureSession.addInput(videoInput)
         // ↓ココ重要！！！！！
@@ -598,14 +622,22 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
     }
-    func setZoom(level:Float){//
-       print("zoom:::::",level)
+    func setZoom(){//level:Float){//
+    
+        var zoom:Float=0
+        if cameraType==2{
+            if fps_non_120_240==1{
+                zoom=0.007
+            }else{
+                zoom=0.015
+            }
+        }
         if let device = videoDevice {
         do {
-            print("zoom:::::",level)
+            
             try device.lockForConfiguration()
                 device.ramp(
-                    toVideoZoomFactor: (device.minAvailableVideoZoomFactor) + CGFloat(level) * ((device.maxAvailableVideoZoomFactor) - (device.minAvailableVideoZoomFactor)),
+                    toVideoZoomFactor: (device.minAvailableVideoZoomFactor) + CGFloat(zoom) * ((device.maxAvailableVideoZoomFactor) - (device.minAvailableVideoZoomFactor)),
                     withRate: 30.0)
             device.unlockForConfiguration()
             } catch {
