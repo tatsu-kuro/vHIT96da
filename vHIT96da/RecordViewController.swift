@@ -257,18 +257,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         getCameras()
-        if ultrawideCamera==true{
+        if ultrawideCamera==true{//12mini
             cameraType=2
-        }else{
+        }else{//ipodTouch
             cameraType=0
         }
-//        cameraType=0//getUserDefault(str: "cameraType", ret: 0)
-//        if (UserDefaults.standard.object(forKey: "cameraType") != nil){//keyが設定してなければretをセット
-//            cameraType=UserDefaults.standard.integer(forKey:"cameraType")
-//        }else{
-//            cameraType=0
-//            UserDefaults.standard.set(cameraType, forKey: "cameraType")
-//        }
         let sound=getUserDefault(str: "recordSound", ret: 1)
         if sound==0{
             speakerSwitch.isOn=false
@@ -279,7 +272,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         print("cameraType",cameraType)
         self.view.backgroundColor = .black
-//        print("maxFps,fps2:",maxFps,fps_non_120_240)
         
         if UserDefaults.standard.object(forKey: "maxFps") != nil{
              maxFps = Double(UserDefaults.standard.integer(forKey:"maxFps"))
@@ -305,14 +297,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 //        focusBar.minimumValue = 0
 //        focusBar.maximumValue = 1.0
 //        focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
-//        setBars()
         setFocus(focus: 0)
         setZoom()
-//        if cameraType==0{
-//            setZoom(level: 0)
-//        }else{
-//            setZoom(level: 0.015)//eye:550 head:200 gyro:4
-//        }
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
     }
     
@@ -451,7 +437,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let y1=y0-bh-10
         let y2=y1-bh
         let y3=y2-10-bh/2
-        let y4=y3-10-bh/2
+//        let y4=y3-10-bh/2
         let x1=ww-5-bw
         
         currentTime.frame   = CGRect(x:0,   y: 0 ,width: bw*1.5, height: bh/2)
@@ -629,7 +615,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             if fps_non_120_240==1{
                 zoom=0.007
             }else{
-                zoom=0.015
+                zoom=0.014
             }
         }
         if let device = videoDevice {
