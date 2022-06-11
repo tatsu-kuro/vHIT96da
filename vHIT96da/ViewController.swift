@@ -2898,7 +2898,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawPath.addLine(to: pt)
             }
             // 線の色
-            UIColor.red.setStroke()
+            UIColor.blue.setStroke()
             // 線幅
             drawPath.lineWidth = 0.3*r
             pointList.removeAll()
@@ -2930,7 +2930,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawPath.addLine(to: pt)
             }
             // 線の色
-            UIColor.blue.setStroke()
+            UIColor.red.setStroke()
             // 線幅
             drawPath.lineWidth = 0.3*r
             pointList.removeAll()
@@ -4162,9 +4162,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        }
         //下のように変更すると小さな波も拾える
         if g1>3 && g2>g1 && g3>g2 && ga>sl && gb>sl && gc < -sl && gd < -sl  {
-            return 1
-        }else if g1 < -3 && g2<g1 && g3<g2 && ga < -sl && gb < -sl && gc>sl && gd>sl{
             return 0
+        }else if g1 < -3 && g2<g1 && g3<g2 && ga < -sl && gb < -sl && gc>sl && gd>sl{
+            return 1
         }
         return -1
     }
