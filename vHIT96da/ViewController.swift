@@ -3143,7 +3143,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func drawvhitWaves(width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
-        var r:CGFloat=1
+        var r:CGFloat=1//r:倍率magnification
         if w==500*4{//mail
            r=4
         }
