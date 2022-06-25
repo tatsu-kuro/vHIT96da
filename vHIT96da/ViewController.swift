@@ -2878,7 +2878,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vHITDisplayMode==0{//up down
             posY0=90*r
         }
+        //15(+12)frame 62.5msでの値を集める
+        let gainPoint:Int=27
+        print("LR:eye,gyro:*******")
+        for i in 0..<waveTuple.count{
+            if waveTuple[i].2==0{
+                continue
+            }
+            print("LR:eye,gyro:",waveTuple[i].0,":", eyeWs[i][gainPoint],gyroWs[i][gainPoint])
+        }
+        
         for i in 0..<waveTuple.count{//blue vHIT
+            //if hide or leftside(red) return
+//            var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
+
             if waveTuple[i].2 == 0 || waveTuple[i].0 == 0{//waveTuple[i].2==0/hide ==1/disp
                 continue
             }
