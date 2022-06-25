@@ -4123,7 +4123,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                      }else{
                         waveTuple[temp].2 = 1//disp
                     }
-                    print("waveTuple:",waveTuple[temp].2)
+//                    print("waveTuple:",waveTuple[temp].2)
                 }
                 drawVHITwaves()
             }
