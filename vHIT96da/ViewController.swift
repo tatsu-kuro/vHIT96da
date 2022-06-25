@@ -2868,15 +2868,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
-//    var svvArray = Array<Double>()//delta Subjective Visual Vertical
-//    svvAvNor=getAve(array: svvArrayNor)
-//    svvSdNor=getSD(array:svvArrayNor,svvAv: svvAvNor)
-    var redVORGainArray = Array<Double>()
-    var blueVORGainArray = Array<Double>()
-    var redGainAv:Double=0// =getAve(array: redVORGainArray)
-    var redGainSd:Double=0//=getSD(array:redVORGainArray,svvAv: redGainAv)
-    var blueGainAv:Double=0//=getAve(array: blueVORGainArray)
-    var blueGainSd:Double=0//=getSD(array:blueVORGainArray,svvAv: blueGainAv)
+
     var redGainStr:String=""
     var blueGainStr:String=""
     func getAve(array:Array<Double>)->Double{
@@ -2896,6 +2888,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return svvSd
     }
     func draw1wave(r:CGFloat){//just vHIT
+        var redVORGainArray = Array<Double>()
+        var blueVORGainArray = Array<Double>()
+
         var pointList = Array<CGPoint>()
         let drawPath = UIBezierPath()
         var rlPt:CGFloat = 0
@@ -2904,36 +2899,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if vHITDisplayMode==0{//up down
             posY0=90*r
         }
-        //15(+12)frame 62.5msでの値を集める
-        redVORGainArray.removeAll()
-        blueVORGainArray.removeAll()
+        //15(+12)frame 62.5msでの値(eyeSpeed/headSpeed)を集める.EyeSeeCamに準じて
         let gainPoint:Int=27
-        print("LR:eye,gyro:*******")
-        for i in 0..<waveTuple.count{
-            if waveTuple[i].2==0{
+          for i in 0..<waveTuple.count{
+            if waveTuple[i].2==0{//hidden vhit
                 continue
             }
             let tempGain=Double(-eyeWs[i][gainPoint])/Double(gyroWs[i][gainPoint])
-            if waveTuple[i].0==0{
+            if waveTuple[i].0==0{//
                      redVORGainArray.append(tempGain)
             }else{
                 blueVORGainArray.append(tempGain)
             }
-//            print("LR:eye,gyro:",waveTuple[i].0,":", eyeWs[i][gainPoint],gyroWs[i][gainPoint],tempGain)
         }
-        redGainAv=getAve(array: redVORGainArray)
-        redGainSd=getSD(array:redVORGainArray,svvAv: redGainAv)
-        blueGainAv=getAve(array: blueVORGainArray)
-        blueGainSd=getSD(array:blueVORGainArray,svvAv: blueGainAv)
-        print ("redn,avv,sd:",redGainAv,redGainSd,redVORGainArray.count)
-        print ("bluen,avv,sd:",blueGainAv,blueGainSd,blueVORGainArray.count)
-        redGainStr = String(format: "Gain at 60ms     %.2f sd:%.2f",redGainAv,redGainSd)
-        print("redgainTxt:",redGainStr)
-        blueGainStr = String(format:"Gain at 60ms     %.2f sd:%.2f",blueGainAv,blueGainSd)
-        print("bluegainTxt:",blueGainStr)
-
-//        String(format:"%.1fs",asset.duration)
-        
+        let redGainAv=getAve(array: redVORGainArray)
+        let redGainSd=getSD(array:redVORGainArray,svvAv: redGainAv)
+        let blueGainAv=getAve(array: blueVORGainArray)
+        let blueGainSd=getSD(array:blueVORGainArray,svvAv: blueGainAv)
+        redGainStr = String(format: "(%d) Gain at 60ms     %.2f sd:%.2f",redVORGainArray.count,redGainAv,redGainSd)
+        blueGainStr = String(format:"(%d) Gain at 60ms     %.2f sd:%.2f",blueVORGainArray.count,blueGainAv,blueGainSd)
         
         for i in 0..<waveTuple.count{//blue vHIT
             //if hide or leftside(red) return
@@ -3261,29 +3245,29 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawPath.stroke()
         drawPath.removeAllPoints()
         draw1wave(r: r)//just vHIT
-        var riln:Int = 0
-        var leln:Int = 0
-        for i in 0..<waveTuple.count{
-            if waveTuple[i].2 == 1{
-                if waveTuple[i].0 == 0 {
-                    riln += 1
-                }else{
-                    leln += 1
-                }
-            }
-        }
-        "\(riln)".draw(at: CGPoint(x: 3*r, y: 0), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
-        "\(leln)".draw(at: CGPoint(x: 263*r, y: 0), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
- 
-//        str1="Gain at 60ms "
-        blueGainStr.draw(at: CGPoint(x: 263*r, y: 167*r), withAttributes: [
+//        var riln:Int = 0
+//        var leln:Int = 0
+//        for i in 0..<waveTuple.count{
+//            if waveTuple[i].2 == 1{
+//                if waveTuple[i].0 == 0 {
+//                    riln += 1
+//                }else{
+//                    leln += 1
+//                }
+//            }
+//        }
+//        "\(riln)".draw(at: CGPoint(x: 3*r, y: 0), withAttributes: [
+//            NSAttributedString.Key.foregroundColor : UIColor.black,
+//            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
+//        "\(leln)".draw(at: CGPoint(x: 263*r, y: 0), withAttributes: [
+//            NSAttributedString.Key.foregroundColor : UIColor.black,
+//            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
+//
+
+        blueGainStr.draw(at: CGPoint(x: 263*r, y: 167*r-167*r), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 12*r, weight: UIFont.Weight.regular)])
-        redGainStr.draw(at: CGPoint(x: 3*r, y: 167*r), withAttributes: [
+        redGainStr.draw(at: CGPoint(x: 3*r, y: 167*r-167*r), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 12*r, weight: UIFont.Weight.regular)])
 
