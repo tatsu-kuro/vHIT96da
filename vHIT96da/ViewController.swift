@@ -2868,7 +2868,33 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
-    
+//    var svvArray = Array<Double>()//delta Subjective Visual Vertical
+//    svvAvNor=getAve(array: svvArrayNor)
+//    svvSdNor=getSD(array:svvArrayNor,svvAv: svvAvNor)
+    var redVORGainArray = Array<Double>()
+    var blueVORGainArray = Array<Double>()
+    var redGainAv:Double=0// =getAve(array: redVORGainArray)
+    var redGainSd:Double=0//=getSD(array:redVORGainArray,svvAv: redGainAv)
+    var blueGainAv:Double=0//=getAve(array: blueVORGainArray)
+    var blueGainSd:Double=0//=getSD(array:blueVORGainArray,svvAv: blueGainAv)
+    var redGainStr:String=""
+    var blueGainStr:String=""
+    func getAve(array:Array<Double>)->Double{
+        var ave:Double=0
+        for i in 0..<array.count{
+            ave += array[i]
+        }
+        return ave/Double(array.count)
+    }
+    func getSD(array:Array<Double>,svvAv:Double)->Double{
+        var svvSd:Double=0
+        for i in 0..<array.count {
+            svvSd += (array[i]-svvAv)*(array[i]-svvAv)
+        }
+        svvSd=svvSd/Double(array.count)
+        svvSd = sqrt(svvSd)
+        return svvSd
+    }
     func draw1wave(r:CGFloat){//just vHIT
         var pointList = Array<CGPoint>()
         let drawPath = UIBezierPath()
@@ -2879,14 +2905,35 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             posY0=90*r
         }
         //15(+12)frame 62.5msでの値を集める
+        redVORGainArray.removeAll()
+        blueVORGainArray.removeAll()
         let gainPoint:Int=27
         print("LR:eye,gyro:*******")
         for i in 0..<waveTuple.count{
             if waveTuple[i].2==0{
                 continue
             }
-            print("LR:eye,gyro:",waveTuple[i].0,":", eyeWs[i][gainPoint],gyroWs[i][gainPoint])
+            let tempGain=Double(-eyeWs[i][gainPoint])/Double(gyroWs[i][gainPoint])
+            if waveTuple[i].0==0{
+                     redVORGainArray.append(tempGain)
+            }else{
+                blueVORGainArray.append(tempGain)
+            }
+//            print("LR:eye,gyro:",waveTuple[i].0,":", eyeWs[i][gainPoint],gyroWs[i][gainPoint],tempGain)
         }
+        redGainAv=getAve(array: redVORGainArray)
+        redGainSd=getSD(array:redVORGainArray,svvAv: redGainAv)
+        blueGainAv=getAve(array: blueVORGainArray)
+        blueGainSd=getSD(array:blueVORGainArray,svvAv: blueGainAv)
+        print ("redn,avv,sd:",redGainAv,redGainSd,redVORGainArray.count)
+        print ("bluen,avv,sd:",blueGainAv,blueGainSd,blueVORGainArray.count)
+        redGainStr = String(format: "Gain at 60ms     %.2f sd:%.2f",redGainAv,redGainSd)
+        print("redgainTxt:",redGainStr)
+        blueGainStr = String(format:"Gain at 60ms     %.2f sd:%.2f",blueGainAv,blueGainSd)
+        print("bluegainTxt:",blueGainStr)
+
+//        String(format:"%.1fs",asset.duration)
+        
         
         for i in 0..<waveTuple.count{//blue vHIT
             //if hide or leftside(red) return
@@ -3231,6 +3278,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         "\(leln)".draw(at: CGPoint(x: 263*r, y: 0), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
+ 
+//        str1="Gain at 60ms "
+        blueGainStr.draw(at: CGPoint(x: 263*r, y: 167*r), withAttributes: [
+            NSAttributedString.Key.foregroundColor : UIColor.black,
+            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 12*r, weight: UIFont.Weight.regular)])
+        redGainStr.draw(at: CGPoint(x: 3*r, y: 167*r), withAttributes: [
+            NSAttributedString.Key.foregroundColor : UIColor.black,
+            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 12*r, weight: UIFont.Weight.regular)])
+
         // イメージコンテキストからUIImageを作る
         let image = UIGraphicsGetImageFromCurrentImageContext()
         // イメージ処理の終了
