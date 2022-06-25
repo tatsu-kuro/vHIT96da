@@ -2875,17 +2875,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var rlPt:CGFloat = 0
         //r:4(mail)  r:1(screen)
         var posY0=135*r
-        if vHITDisplayMode==0{
+        if vHITDisplayMode==0{//up down
             posY0=90*r
         }
-        for i in 0..<waveTuple.count{//右のvHIT
-            if waveTuple[i].2 == 0 || waveTuple[i].0 == 0{
+        for i in 0..<waveTuple.count{//blue vHIT
+            if waveTuple[i].2 == 0 || waveTuple[i].0 == 0{//waveTuple[i].2==0/hide ==1/disp
                 continue
             }
             for n in 0..<120 {
                 let px = 260*r + CGFloat(n)*2*r//260 or 0
                 var py:CGFloat = 0
-                py = CGFloat(eyeWs[i][n])*r + posY0
+                if vHITDisplayMode==1{
+                    py = -CGFloat(eyeWs[i][n])*r + posY0
+                }else{
+                    py = CGFloat(eyeWs[i][n])*r + posY0
+                }
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
             }
@@ -2906,15 +2910,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawPath.stroke()
         drawPath.removeAllPoints()
         var py:CGFloat=0
-        for i in 0..<waveTuple.count{//左のvHIT
+        for i in 0..<waveTuple.count{//red vHIT
             if waveTuple[i].2 == 0 || waveTuple[i].0 == 1{
                 continue
             }
             for n in 0..<120 {
                 let px = CGFloat(n*2)*r//260 or 0
 //                var py:CGFloat = 0
-                if vHITDisplayMode==1{
-                    py = -CGFloat(eyeWs[i][n])*r + posY0//表示変更
+                if vHITDisplayMode==1{//up down red
+                    py = CGFloat(eyeWs[i][n])*r + posY0//表示変更
                 }else{
                     py = CGFloat(eyeWs[i][n])*r + posY0
                 }
@@ -2938,10 +2942,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawPath.stroke()
         drawPath.removeAllPoints()
         for i in 0..<waveTuple.count{//左右のgyroWsを表示
-            if waveTuple[i].2 == 0{
+            if waveTuple[i].2 == 0{//.2 hide
                 continue
             }
-            if waveTuple[i].0 == 0{
+            if waveTuple[i].0 == 0{//gyro leftside
                 rlPt=0
             }else{
                 rlPt=260
@@ -2958,15 +2962,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             
             for n in 0..<120 {
                 let px = rlPt*r + CGFloat(n*2)*r
-                if vHITDisplayMode==1{
-                    py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
-                    if waveTuple[i].0 == 0{
+                if vHITDisplayMode==1{//up up
+//                    py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
+                    if waveTuple[i].0 == 0{//left side gyro
+                        py = -CGFloat(gyroWs[i][n])*r + posY0
+                    }else{//right side gyro
                         py = CGFloat(gyroWs[i][n])*r + posY0
+
                     }
-                }else{
+                }else{//up down
                     py = CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
-//                    if waveTuple[i].0 == 0{
-//                        py = -CGFloat(gyroWs[i][n])*r + posY0
+//                    if waveTuple[i].0 == 0{//left side gyro
+//                        py = CGFloat(gyroWs[i][n])*r + posY0
+//                    }else{//right side gyro
+//                        py = CGFloat(gyroWs[i][n])*r + posY0
 //                    }
                 }
                 let point = CGPoint(x:px,y:py)
@@ -2988,18 +2997,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         for i in 0..<waveTuple.count{//太く表示する
             if waveTuple[i].3 == 1 || (waveTuple[i].3 == 2 && waveTuple[i].2 == 1){
-                if waveTuple[i].0 == 0{
+                if waveTuple[i].0 == 0{//left side gyro
                     rlPt=0
                 }else{
                     rlPt=260
                 }
                 for n in 0..<120 {
                     let px = rlPt*r + CGFloat( n*2)*r
-                    if vHITDisplayMode==1{
-                    py = -CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
-                    if waveTuple[i].0 == 0{
-                        py = CGFloat(gyroWs[i][n])*r + posY0
-                    }
+                    if vHITDisplayMode==1{//up up
+                        py = CGFloat(gyroWs[i][n])*r + posY0//以下４行　表示変更
+                        if waveTuple[i].0 == 0{
+                            py = -CGFloat(gyroWs[i][n])*r + posY0
+                        }
                     }else{
                         py = CGFloat(gyroWs[i][n])*r + posY0
                     }
@@ -3016,10 +3025,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 pointList.removeAll()
                 for n in 0..<120 {
                     let px = rlPt*r + CGFloat(n*2)*r
-                    if vHITDisplayMode==1{
-                        py = CGFloat(eyeWs[i][n])*r + posY0//以下４行　表示変更
+                    if vHITDisplayMode==1{//up up
+                        py = -CGFloat(eyeWs[i][n])*r + posY0//以下４行　表示変更
                         if waveTuple[i].0 == 0{
-                            py = -CGFloat(eyeWs[i][n])*r + posY0
+                            py = CGFloat(eyeWs[i][n])*r + posY0
                         }
                     }else{
                         py = CGFloat(eyeWs[i][n])*r + posY0
@@ -4057,10 +4066,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let temp = checksetPos(pos:lastVhitpoint + Int(loc.x),mode: 2)
                 if temp >= 0{
                     if waveTuple[temp].2 == 1{
-                        waveTuple[temp].2 = 0
-                    }else{
-                        waveTuple[temp].2 = 1
+                        waveTuple[temp].2 = 0//hide
+                     }else{
+                        waveTuple[temp].2 = 1//disp
                     }
+                    print("waveTuple:",waveTuple[temp].2)
                 }
                 drawVHITwaves()
             }
