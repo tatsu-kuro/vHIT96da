@@ -1076,11 +1076,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let faceRect = resizeR2(faceRectOnScreen, viewRect: view.frame, image:frameCIImage)
         var faceWithBorderRect = resizeR2(faceWithBorderRectOnScreen, viewRect:view.frame, image:frameCIImage)
         let faceBigRect = resizeR2(faceBigRectOnScreen, viewRect: view.frame,image: frameCIImage)
-        var eyeWithBorderRect0 = eyeWithBorderRect
+        let eyeWithBorderRect0 = eyeWithBorderRect
         let faceWithBorderRect0 = faceWithBorderRect
         
         let eyeCGImage = context.createCGImage(frameCIImage, from: eyeRect)!
-        var eyeUIImage = UIImage.init(cgImage: eyeCGImage)
+        let eyeUIImage = UIImage.init(cgImage: eyeCGImage)
         faceCGImage = context.createCGImage(frameCIImage, from: faceRect)!
         faceUIImage = UIImage.init(cgImage:faceCGImage)
         
@@ -1602,9 +1602,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         let eye0UIImage = UIImage.init(cgImage: eye0CGImage)
                         let face0CGImage = context.createCGImage(lastCIImage, from: faceWithBorderRect0)
                         let face0UIImage = UIImage.init(cgImage:face0CGImage!)
-                        DispatchQueue.main.async {
-                            if wakuEyeFace==0{
-                                wakuImg2.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width,height:eyeWithBorderRect.size.height)
+                        DispatchQueue.main.async { [self] in
+                            if self.wakuEyeFace==0{
+                                self.wakuImg2.frame=CGRect(x:x,y:y,width:eyeWithBorderRect.size.width,height:eyeWithBorderRect.size.height)
                                 wakuImg2.image=eyeWithBorderUIImage
                                 x += eyeWithBorderRect.size.width
                                 wakuImg3.frame=CGRect(x:x,y:y,width:eyeWithBorderRect0.size.width,height:eyeWithBorderRect0.size.height)
