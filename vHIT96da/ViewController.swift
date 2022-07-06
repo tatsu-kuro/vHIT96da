@@ -3124,11 +3124,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let drawImage = drawvhitWaves(width:500*4,height:200*4)
             
             //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
-            saveImage2path(image: drawImage, path: "temp.png")
-            while existFile(aFile: "temp.png") == false{
+            saveJpegImage2path(image: drawImage, path: "temp.jpeg")
+            while existFile(aFile: "temp.jpeg") == false{
                 sleep(UInt32(0.1))
             }
-            savePath2album(name:Wave96da,path: "temp.png")
+            savePath2album(name:Wave96da,path: "temp.jpeg")
             calcDrawVHIT(tuple: false)//idnumber表示のため,waveTupleは変更しない
             // イメージビューに設定する
 //            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
@@ -3174,11 +3174,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let imgWithText=getVOGText(orgImg: drawImage, width: mailWidth , height: mailHeight,mail:true)
             
             //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
-            saveImage2path(image: imgWithText, path: "temp.png")
-            while existFile(aFile: "temp.png") == false{
+            saveJpegImage2path(image: imgWithText, path: "temp.jpeg")
+            while existFile(aFile: "temp.jpeg") == false{
                 sleep(UInt32(0.1))
             }
-            savePath2album(name:Wave96da,path: "temp.png")
+            savePath2album(name:Wave96da,path: "temp.jpeg")
             nonsavedFlag = false //解析結果がsaveされたのでfalse
         }
         
@@ -3665,8 +3665,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-
-    func saveImage2path(image:UIImage,path:String) {//imageを保存
+//gyroDataは劣化のないPngで保存
+    func savePngImage2path(image:UIImage,path:String) {//imageを保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             let path_url = dir.appendingPathComponent( path )
             let pngImageData = image.pngData()
@@ -3678,7 +3678,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    
+    //結果画像はJpegで保存。Pngだと背景色黒で保存されてしまう。
+    func saveJpegImage2path(image:UIImage,path:String) {//imageを保存
+        if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
+            let path_url = dir.appendingPathComponent( path )
+            let jpegImageData = image.jpegData(compressionQuality: 1.0)
+            do {
+                try jpegImageData!.write(to: path_url, options: .atomic)
+//                saving2pathFlag=false
+            } catch {
+                print("gyroData.txt write err")//エラー処理
+            }
+        }
+    }
     func existFile(aFile:String)->Bool{
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
             
@@ -3831,7 +3843,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let eyeImage = iroiro.getThumb(avasset: avasset!)
                 let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
                 //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
-                saveImage2path(image: gyroImage!, path: "temp.png")
+                savePngImage2path(image: gyroImage!, path: "temp.png")
                 while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
