@@ -4222,7 +4222,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func upDownp(i:Int)->Int{
         let naf:Int=waveWidth*240/1000
         let raf:Int=Int(Float(widthRange)*240.0/1000.0)
-        let sl:CGFloat=10//slope:傾き
+        let sl:CGFloat=5//slope:傾き　遠藤様の検査で捕まらないので10->5に変更してみる
         let g1=g5(st:i+1)-g5(st:i)
         let g2=g5(st:i+2)-g5(st:i+1)
         let g3=g5(st:i+3)-g5(st:i+2)
