@@ -115,7 +115,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         setFlashlevel(level: LEDBar.value)
     }
     
-    @IBOutlet weak var damyBottom: UILabel!
+
     @IBAction func onClickStopButton(_ sender: Any) {
         
         if self.fileOutput.isRecording {
@@ -429,7 +429,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func setButtons(){//type:Bool){
         // recording button
         let ww=view.bounds.width
-        let wh=damyBottom.frame.maxY// view.bounds.height
+        let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
+        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
+  
+        let wh=view.bounds.height-bottom
         let bw=(ww/4)-8
         //        let bd=Int(ww/5/4)
         let bh:CGFloat=60

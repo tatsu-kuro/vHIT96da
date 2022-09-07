@@ -149,8 +149,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var backwardButton: UIButton!
-    
-    @IBOutlet weak var damyBottom: UILabel!
+
  
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
@@ -2901,13 +2900,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         //15(+12)frame 62.5msでの値(eyeSpeed/headSpeed)を集める.EyeSeeCamに準じて
         let gainPoint:Int=27
-          for i in 0..<waveTuple.count{
+        for i in 0..<waveTuple.count{
             if waveTuple[i].2==0{//hidden vhit
                 continue
             }
             let tempGain=Double(-eyeWs[i][gainPoint])/Double(gyroWs[i][gainPoint])
             if waveTuple[i].0==0{//
-                     redVORGainArray.append(tempGain)
+                redVORGainArray.append(tempGain)
             }else{
                 blueVORGainArray.append(tempGain)
             }
@@ -3206,15 +3205,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let drawPath = UIBezierPath()
         
         let str1 = calcDate.components(separatedBy: ":")
-        let str2 = "ID:" + idString + "  " + str1[0] + ":" + str1[1]
-        let str3 = "vHIT96da"
+        let str2 = "ID:" + idString + "  "// + str1[0] + ":" + str1[1]
+        let str3 = str1[0] + ":" + str1[1]// + "   vHIT96da"
+        let str4 = "vHIT96da"
         str2.draw(at: CGPoint(x: 5*r, y: 180*r), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: 428*r, y: 180*r), withAttributes: [
+        str3.draw(at: CGPoint(x: 258*r, y: 180*r), withAttributes: [
             NSAttributedString.Key.foregroundColor : UIColor.black,
             NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
-        
+        str4.draw(at: CGPoint(x: 425*r, y: 180*r), withAttributes: [
+            NSAttributedString.Key.foregroundColor : UIColor.black,
+            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
+
         UIColor.black.setStroke()
         var pList = Array<CGPoint>()
         pList.append(CGPoint(x:0,y:0))
@@ -3442,14 +3445,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     */
-  
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let topPadding = self.view.safeAreaInsets.top
+        let bottomPadding = self.view.safeAreaInsets.bottom
+        UserDefaults.standard.set(topPadding, forKey: "top")
+        UserDefaults.standard.set(bottomPadding, forKey: "bottom")
+        //        setButtons_first()
+    }
     func setButtons_first(){
 //        print("setbuttons_first")
         let ww=view.bounds.width
+        let wh=view.bounds.height
         var bw=(ww-30)/4//vhit,camera,vogのボタンの幅
         let distance:CGFloat=4//最下段のボタンとボタンの距離
-        let bottomY=damyBottom.frame.minY
 
+        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
+        let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
+        let bottomY=wh-bottom-10
         let bh:CGFloat=(ww-20-6*distance)/7//最下段のボタンの高さ、幅と同じ
         let bh1=bottomY-5-bh-bh//2段目
         let bh2=bottomY-10-2.9*bh//videoSlider
@@ -4222,7 +4235,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func upDownp(i:Int)->Int{
         let naf:Int=waveWidth*240/1000
         let raf:Int=Int(Float(widthRange)*240.0/1000.0)
-        let sl:CGFloat=5//slope:傾き　遠藤様の検査で捕まらないので10->5に変更してみる
+        let sl:CGFloat=5//slope:傾き　遠藤様の検査で捕まらないので10->5に変更してみる 20220715
         let g1=g5(st:i+1)-g5(st:i)
         let g2=g5(st:i+2)-g5(st:i+1)
         let g3=g5(st:i+3)-g5(st:i+2)
@@ -4236,9 +4249,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            return 0
 //        }
         //下のように変更すると小さな波も拾える
-        if g1>3 && g2>g1 && g3>g2 && ga>sl && gb>sl && gc < -sl && gd < -sl  {
+        if /*g1>1 &&*/ g2>g1 && g3>g2 && ga>sl && gb>sl && gc < -sl && gd < -sl  {
             return 0
-        }else if g1 < -3 && g2<g1 && g3<g2 && ga < -sl && gb < -sl && gc>sl && gd>sl{
+        }else if /*g1 < -1 &&*/ g2<g1 && g3<g2 && ga < -sl && gb < -sl && gc>sl && gd>sl{
             return 1
         }
         return -1
@@ -4247,16 +4260,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func SetWave2wP(number:Int) -> Int {//-1:波なし 0:上向き波？ 1:その反対向きの波
         let flatwidth:Int = 12//12frame-50ms
         let t = upDownp(i: number + flatwidth)
-        //        let t = Getupdownp(num: number,flatwidth:flatwidth)
-        //      print("getupdownp:",t)
         if t != -1 {
             let ws = number// - flatwidth + 12;//波表示開始位置 wavestartpoint
             waveTuple.append((t,ws,1,0))//L/R,frameNumber,disp,current)
             let num=waveTuple.count-1
-//            while writingDataNow==true{//--------の間はアレイデータを書き込まない？
-//                usleep(100)//0.0001sec
-//            }
-//            readingDataNow=true
+            
             if calcMode==0{
                 for k1 in ws..<ws + 120{
                     eyeWs[num][k1 - ws] = Int(eyeVeloXFiltered4update[k1]*CGFloat(eyeRatio)/300.0)
@@ -4266,7 +4274,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     eyeWs[num][k1 - ws] = Int(eyeVeloYFiltered4update[k1]*CGFloat(eyeRatio)/300.0)
                 }
             }
-//            readingDataNow=false
+
             for k2 in ws..<ws + 120{
                 gyroWs[num][k2 - ws] = Int(gyroMoved[k2]*CGFloat(gyroRatio)/100.0)
             }//ここでエラーが出るようだ？
@@ -4302,16 +4310,5 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
         drawVHITwaves()
-    }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let topPadding = self.view.safeAreaInsets.top
-        let bottomPadding = self.view.safeAreaInsets.bottom
-//        let leftPadding = self.view.safeAreaInsets.left
-//        let rightPadding = self.view.safeAreaInsets.righ
-        UserDefaults.standard.set(topPadding, forKey: "top")
-        UserDefaults.standard.set(bottomPadding, forKey: "bottom")
-//        UserDefaults.standard.set(leftPadding, forKey: "left")
-//        UserDefaults.standard.set(rightPadding, forKey: "right")
     }
 }

@@ -282,15 +282,6 @@
                                     <action selector="onEraseButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FJL-Jr-gU0"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jL1-T4-URC">
-                                <rect key="frame" x="0.0" y="852" width="414" height="10"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="10" id="i1U-lr-hK3"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="9Yc-Dg-y1f">
                                 <rect key="frame" x="153" y="617" width="118" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -336,15 +327,12 @@
                             <constraint firstItem="LZQ-Ez-rYI" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" constant="5" id="35q-nb-BQZ"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="top" secondItem="0q7-O3-Ich" secondAttribute="bottom" id="5cp-XU-Cr2"/>
                             <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="WVy-FW-eP4" secondAttribute="trailing" constant="5" id="65Q-R2-8VM"/>
-                            <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="jL1-T4-URC" secondAttribute="trailing" id="AHv-77-Yxx"/>
-                            <constraint firstItem="jL1-T4-URC" firstAttribute="bottom" secondItem="uIe-Wh-aZk" secondAttribute="bottom" id="B6C-OM-KBz"/>
                             <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="fee-9L-VIg" secondAttribute="trailing" constant="5" id="CMO-Vn-FNt"/>
                             <constraint firstItem="LZQ-Ez-rYI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CRr-oI-MBz"/>
                             <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="0q7-O3-Ich" secondAttribute="trailing" id="Ghd-6I-3P1"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="trailing" secondItem="uIe-Wh-aZk" secondAttribute="trailing" id="UXU-uA-NDy"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="V4x-mg-ors"/>
                             <constraint firstItem="fee-9L-VIg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="bF3-q0-2lB"/>
-                            <constraint firstItem="jL1-T4-URC" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="jaB-cr-2Db"/>
                             <constraint firstItem="WVy-FW-eP4" firstAttribute="top" secondItem="6oH-Ur-nDk" secondAttribute="bottom" constant="5" id="nVd-pt-WcX"/>
                             <constraint firstItem="0q7-O3-Ich" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="z7J-NG-hcc"/>
                         </constraints>
@@ -360,7 +348,6 @@
                         <outlet property="cameraButton" destination="w2G-cJ-1fV" id="bJm-SI-8sf"/>
                         <outlet property="changeModeButton" destination="XhS-eE-NWD" id="sXQ-mD-lpc"/>
                         <outlet property="currentVideoDate" destination="0q7-O3-Ich" id="Lv3-7t-LiK"/>
-                        <outlet property="damyBottom" destination="jL1-T4-URC" id="KLc-ZX-cis"/>
                         <outlet property="eraseButton" destination="WVy-FW-eP4" id="1mR-HG-0Sd"/>
                         <outlet property="eyeWaku_image" destination="3KZ-x3-xdg" id="W38-c9-yno"/>
                         <outlet property="faceWaku_image" destination="8Nc-UQ-RY5" id="c7S-Ij-XHD"/>
@@ -466,15 +453,6 @@
                                     <action selector="onClick240fps:" destination="eZj-22-ehM" eventType="touchUpInside" id="CpG-pp-uGn"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yPU-jJ-jUT">
-                                <rect key="frame" x="0.0" y="852" width="414" height="10"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="10" id="fgf-5K-50N"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Oa-WH-xL2">
                                 <rect key="frame" x="169" y="731" width="83" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -559,11 +537,6 @@
                         <viewLayoutGuide key="safeArea" id="hJU-5A-9nT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstItem="yPU-jJ-jUT" firstAttribute="bottom" secondItem="hJU-5A-9nT" secondAttribute="bottom" id="EEZ-f6-Lrb"/>
-                            <constraint firstItem="hJU-5A-9nT" firstAttribute="trailing" secondItem="yPU-jJ-jUT" secondAttribute="trailing" id="EIL-Mk-h9Z"/>
-                            <constraint firstItem="yPU-jJ-jUT" firstAttribute="leading" secondItem="hJU-5A-9nT" secondAttribute="leading" id="hEG-B4-5fV"/>
-                        </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="NTP-MH-QeC" appends="YES" id="oHU-yE-CKH"/>
                         </connections>
@@ -576,7 +549,6 @@
                         <outlet property="cameraChangeButton" destination="r9f-Ef-4jz" id="uaS-MT-oWr"/>
                         <outlet property="cameraView" destination="9sR-p0-hC8" id="uLr-D8-lcZ"/>
                         <outlet property="currentTime" destination="6Oa-WH-xL2" id="Tds-3J-cr1"/>
-                        <outlet property="damyBottom" destination="yPU-jJ-jUT" id="gXz-wg-3ki"/>
                         <outlet property="exitBut" destination="NG3-VA-Sxk" id="VBu-CG-sZA"/>
                         <outlet property="focusBar" destination="e3l-UL-j2F" id="Jfy-Gc-C9z"/>
                         <outlet property="focusFar" destination="z8v-v3-JoQ" id="mec-Mw-SGc"/>
