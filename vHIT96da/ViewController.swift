@@ -1866,22 +1866,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func makeBoxies(){
         let ww=view.bounds.width
-        let wh=view.bounds.height
+//        let wh=view.bounds.height
         if waveBoxView == nil {//vHITboxView vogboxView
             
             var boxImage = makeBox(width: ww, height: ww*2/5)
             vHITBoxView = UIImageView(image: boxImage)
-            vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+//            vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
             view.addSubview(vHITBoxView!)
     
             boxImage = makeBox(width: ww, height: ww*9/16)
             waveBoxView = UIImageView(image: boxImage)
-            waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+//            waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
             view.addSubview(waveBoxView!)
             
             boxImage = makeBox(width: ww, height:ww*2/3)
             vogBoxView = UIImageView(image: boxImage)
-            vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
+//            vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
             view.addSubview(vogBoxView!)
         }
     }
@@ -3441,6 +3441,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let by0=wh-bottom-2*sp-bh
         let by1=by0-bh-sp//2段目
         let by2=by1-bh-sp//videoSlider
+        vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+        waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+        vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
+
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
         videoSlider.frame = CGRect(x: 10, y:by2, width: ww - 20, height: bh)
@@ -3462,6 +3466,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         iroiro.setButtonProperty(playButton,x:sp*7+bw*5,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(forwardButton,x:sp*8+bw*6,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(changeModeButton,x:sp*2,y:by1,w:bh*3+sp*2,h:bh,UIColor.darkGray)
+        
+        vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+        waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+        vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
+
+        
+        
+        
         if videoDate.count == 0{
             playButton.isEnabled=false
             forwardButton.isEnabled=false
