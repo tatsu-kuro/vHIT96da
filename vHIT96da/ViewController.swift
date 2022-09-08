@@ -210,9 +210,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var gyroBoxYcenter:CGFloat=0
     var mailWidth:CGFloat=0//VOG
     var mailHeight:CGFloat=0//VOG
-    var gyroBoxView: UIImageView?//vhit realtime
+    var waveBoxView: UIImageView?//vhit realtime
     var gyroLineView: UIImageView?//vhit realtime
-    var vhitBoxView: UIImageView?//vhits
+    var vHITBoxView: UIImageView?//vhits
     var vhitLineView: UIImageView?//vhits
     var vogLineView:UIImageView?//vog
     var vogBoxView:UIImageView?//vog
@@ -729,9 +729,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogBoxView?.isHidden = false
             vogLineView?.isHidden = false
             wave3View?.isHidden=false
-            vhitBoxView?.isHidden = true
+            vHITBoxView?.isHidden = true
             vhitLineView?.isHidden = true
-            gyroBoxView?.isHidden = true
+            waveBoxView?.isHidden = true
             gyroLineView?.isHidden = true
             setBacknext(f: false)
             eraseButton.isHidden=true
@@ -741,9 +741,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogBoxView?.isHidden = true
             vogLineView?.isHidden = true
             wave3View?.isHidden=true
-            vhitBoxView?.isHidden = false
+            vHITBoxView?.isHidden = false
             vhitLineView?.isHidden = false
-            gyroBoxView?.isHidden = false
+            waveBoxView?.isHidden = false
             gyroLineView?.isHidden = false
             setBacknext(f: false)
             eraseButton.isHidden=true
@@ -753,9 +753,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogBoxView?.isHidden = true
             vogLineView?.isHidden = true
             wave3View?.isHidden=true
-            vhitBoxView?.isHidden = true
+            vHITBoxView?.isHidden = true
             vhitLineView?.isHidden = true
-            gyroBoxView?.isHidden = true
+            waveBoxView?.isHidden = true
             gyroLineView?.isHidden = true
             setBacknext(f: true)
             if videoDate.count>0{
@@ -771,7 +771,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     //checkDispMode() 1-vHIT 2-VOG 3-non
     func checkDispMode()->Int{
-        if vhitBoxView?.isHidden==false {//vHIT on
+        if vHITBoxView?.isHidden==false {//vHIT on
             return 1
         }else if vogBoxView?.isHidden==false{//VOG on
             return 2
@@ -1874,33 +1874,40 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func makeBoxies(){
-        let vw=view.bounds.width
-        let vh=view.bounds.height
-        vhitBoxHeight=vw*2/5
-           vhitBoxYmin=160*vh/568-vogBoxHeight/2
-           vhitBoxYcenter=160*vh/568
-        gyroBoxHeight=180*vw/320
-          gyroBoxYmin=340*vh/568-vogBoxHeight/2
-          gyroBoxYcenter=340*vh/568
-        if gyroBoxView == nil {//vHITboxView vogboxView
-   
-               var boxImage = makeBox(width: vw, height: vhitBoxHeight)//128
-            vhitBoxView = UIImageView(image: boxImage)
-            vhitBoxView?.center = CGPoint(x:vw/2,y:vhitBoxYcenter)//vh/4)//160)// view.center
-            view.addSubview(vhitBoxView!)
+        let ww=view.bounds.width
+        let wh=view.bounds.height
+        vhitBoxHeight=ww*2/5
+        vhitBoxYmin=160*wh/568-vogBoxHeight/2
+        vhitBoxYcenter=160*wh/568
+        gyroBoxHeight=180*ww/320
+        gyroBoxYmin=340*wh/568-vogBoxHeight/2
+        gyroBoxYcenter=340*wh/568
+        if waveBoxView == nil {//vHITboxView vogboxView
             
-              boxImage = makeBox(width: vw, height: gyroBoxHeight)
-            gyroBoxView = UIImageView(image: boxImage)
-            gyroBoxView?.center = CGPoint(x:vw/2,y:gyroBoxYcenter)//340)
-            view.addSubview(gyroBoxView!)
+            var boxImage = makeBox(width: ww, height: vhitBoxHeight)//128
+            vHITBoxView = UIImageView(image: boxImage)
+            vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+//            vHITBoxView?.center = CGPoint(x:ww/2,y:vhitBoxYcenter)//vh/4)//160)// view.center
+            view.addSubview(vHITBoxView!)
             
-            vogBoxHeight=vw*16/24
-            vogBoxYmin=vh/2-vogBoxHeight/2
-            vogBoxYcenter=vh/2
-            boxImage = makeBox(width: vw, height:vogBoxHeight)
+            
+            
+//
+//
+            
+            boxImage = makeBox(width: ww, height: gyroBoxHeight)
+            waveBoxView = UIImageView(image: boxImage)
+            waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+//            waveBoxView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)//340)
+            view.addSubview(waveBoxView!)
+            
+            vogBoxHeight=ww*16/24
+            vogBoxYmin=wh/2-vogBoxHeight/2
+            vogBoxYcenter=wh/2
+            boxImage = makeBox(width: ww, height:vogBoxHeight)
             vogBoxView = UIImageView(image: boxImage)
             
-            vogBoxView?.center = CGPoint(x:vw/2,y:vogBoxYcenter)
+            vogBoxView?.center = CGPoint(x:ww/2,y:vogBoxYcenter)
             view.addSubview(vogBoxView!)
         }
     }
@@ -3107,7 +3114,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if waveTuple.count < 1 {
             return
         }
-        if vhitBoxView?.isHidden == true{
+        if vHITBoxView?.isHidden == true{
             showBoxies(f: true)
         }
         
@@ -3454,53 +3461,42 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        setButtons_first()
     }
     func setButtons_first(){
-//        print("setbuttons_first")
         let ww=view.bounds.width
         let wh=view.bounds.height
-        var bw=(ww-30)/4//vhit,camera,vogのボタンの幅
-        let distance:CGFloat=4//最下段のボタンとボタンの距離
-
-        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
+//        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
         let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
-        let bottomY=wh-bottom-10
-        let bh:CGFloat=(ww-20-6*distance)/7//最下段のボタンの高さ、幅と同じ
-        let bh1=bottomY-5-bh-bh//2段目
-        let bh2=bottomY-10-2.9*bh//videoSlider
+        let sp:CGFloat=5
+        let bw:CGFloat=(ww-10*sp)/7//最下段のボタンの高さ、幅と同じ
+        let bh=bw
+        let by0=wh-bottom-2*sp-bh
+        let by1=by0-bh-sp//2段目
+        let by2=by1-bh-sp//videoSlider
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
-        videoSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
+        videoSlider.frame = CGRect(x: 10, y:by2, width: ww - 20, height: bh)
         videoSlider.thumbTintColor=UIColor.systemYellow
-        waveSlider.frame = CGRect(x: 10, y:bh2, width: ww - 20, height: bh)
+        waveSlider.frame = CGRect(x: 10, y:by2, width: ww - 20, height: bh)
         waveSlider.thumbTintColor=UIColor.systemBlue
-        bw=bh//bhは冒頭で決めている。上２段のボタンの高さと同じ。
-        let bwd=bw+distance
-        let bh0=bottomY-bh//wh-10-bw/2
-        iroiro.setButtonProperty(listButton,x:10+bwd*0,y:bh0,w:bw,h:bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(saveButton,x:10+bwd*1,y:bh0,w:bw,h:bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(waveButton,x:10+bwd*2,y:bh0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(listButton,x:sp*2,y:by0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(saveButton,x:sp*3+bw*1,y:by0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(waveButton,x:sp*4+bw*2,y:by0,w:bw,h:bh,UIColor.systemBlue)
 
-//        calcButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
-//        stopButton.frame = CGRect(x:10+bwd*3-5,y:bh0-bh/2-distance/2-5,width:bw+10,height: bh+10)
-        iroiro.setButtonProperty(calcButton,x:10+bwd*3,y:bh0-bh/2-distance/2,w:bw,h: bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(stopButton,x:10+bwd*3,y:bh0-bh/2-distance/2,w:bw,h: bh,UIColor.systemBlue)
-//        stopButton.frame = CGRect(x:10+bwd*3,y:bh0-bh/2-distance/2,width:bw,height: bh)
+        iroiro.setButtonProperty(calcButton,x:sp*5+bw*3,y:by0-sp/2-bh/2,w:bw,h: bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(stopButton,x:sp*5+bw*3,y:by0-sp/2-bh/2,w:bw,h: bh,UIColor.systemBlue)
 
-        iroiro.setButtonProperty(paraButton,x:10+bwd*4,y:bh0,w:bw,h:bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(helpButton,x:10+bwd*5,y:bh0,w:bw,h:bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(cameraButton,x:10+bwd*6,y:bh0,w:bw,h:bh,UIColor.systemRed)
+        iroiro.setButtonProperty(paraButton,x:sp*6+bw*4,y:by0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(helpButton,x:sp*7+bw*5,y:by0,w:bw,h:bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(cameraButton,x:sp*8+bw*6,y:by0,w:bw,h:bh,UIColor.systemRed)
         
-        iroiro.setButtonProperty(backwardButton,x:10+bwd*4,y:bh1,w:bw,h:bh,UIColor.systemOrange)
-        iroiro.setButtonProperty(playButton,x:10+bwd*5,y:bh1,w:bw,h:bh,UIColor.systemOrange)
-        iroiro.setButtonProperty(forwardButton,x:10+bwd*6,y:bh1,w:bw,h:bh,UIColor.systemOrange)
-        iroiro.setButtonProperty(changeModeButton,x:10,y:bh1,w:bh*3+distance*2,h:bh,UIColor.darkGray)
+        iroiro.setButtonProperty(backwardButton,x:sp*6+bw*4,y:by1,w:bw,h:bh,UIColor.systemOrange)
+        iroiro.setButtonProperty(playButton,x:sp*7+bw*5,y:by1,w:bw,h:bh,UIColor.systemOrange)
+        iroiro.setButtonProperty(forwardButton,x:sp*8+bw*6,y:by1,w:bw,h:bh,UIColor.systemOrange)
+        iroiro.setButtonProperty(changeModeButton,x:sp*2,y:by1,w:bh*3+sp*2,h:bh,UIColor.darkGray)
         if videoDate.count == 0{
             playButton.isEnabled=false
             forwardButton.isEnabled=false
             backwardButton.isEnabled=false
-//            currentVideoDate.text="tap button in lower right corner"
-//            videoFps.text="to record the video of the eye"
         }
-//        showVideoIroiro(num: 0)
     }
 
     override var prefersHomeIndicatorAutoHidden: Bool {
@@ -3645,8 +3641,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func removeBoxies(){
-        gyroBoxView?.isHidden = true
-        vhitBoxView?.isHidden = true
+        waveBoxView?.isHidden = true
+        vHITBoxView?.isHidden = true
         vhitLineView?.isHidden = true //removeFromSuperview()
         gyroLineView?.isHidden = true //removeFromSuperview()
     }
@@ -4002,7 +3998,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{//遅いのでやめました
             }
         } else if sender.state == .changed {
-            if calcMode != 2 && vhitBoxView?.isHidden == false{//vhit
+            if calcMode != 2 && vHITBoxView?.isHidden == false{//vhit
                 if sender.location(in: view).y<view.bounds.height*2/5{
                     
                 }else{
@@ -4093,7 +4089,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else if sender.state == .ended{
             setUserDefaults()
-            if vhitBoxView?.isHidden == false{//結果が表示されている時
+            if vHITBoxView?.isHidden == false{//結果が表示されている時
                 if waveTuple.count>0 {
                     for i in 0..<waveTuple.count{
                         if waveTuple[i].3 == 1{
@@ -4121,13 +4117,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //checkDispMode() 1-vHIT 2-VOG 0-non
         let vHIT_VOG=checkDispMode()
         if vHIT_VOG==1 {//vhit
-            if loc.y<vhitBoxView!.frame.minY || (loc.y>vhitBoxView!.frame.maxY && loc.y<gyroBoxView!.frame.minY) ||
-                (loc.y>gyroBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
+            if loc.y<vHITBoxView!.frame.minY || (loc.y>vHITBoxView!.frame.maxY && loc.y<waveBoxView!.frame.minY) ||
+                (loc.y>waveBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
                 if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
                     onWaveButton(0)
                     return
                 }
-            }else if loc.y>vhitBoxView!.frame.minY && loc.y<vhitBoxView!.frame.maxY{//vhit表示モード変更
+            }else if loc.y>vHITBoxView!.frame.minY && loc.y<vHITBoxView!.frame.maxY{//vhit表示モード変更
                 vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:1)
                 if vHITDisplayMode==0{
                     vHITDisplayMode=1
@@ -4139,7 +4135,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 calcDrawVHIT(tuple: false)
                 drawOnewave(startcount: vhitCurpoint)
                 return
-            }else if loc.y<gyroBoxView!.frame.maxY && waveTuple.count>0{
+            }else if loc.y<waveBoxView!.frame.maxY && waveTuple.count>0{
                 //上に中央vHITwaveをタップで表示させるタップ範囲を設定
                 let temp = checksetPos(pos:lastVhitpoint + Int(loc.x),mode: 2)
                 if temp >= 0{
