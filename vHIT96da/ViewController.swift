@@ -203,8 +203,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var mailHeight:CGFloat=0//VOG
     var waveBoxView: UIImageView?//vhit realtime
     var gyroLineView: UIImageView?//vhit realtime
-    var vHITBoxView: UIImageView?//vhits
-    var vhitLineView: UIImageView?//vhits
+    @IBOutlet weak var vHITBoxView: UIImageView!
+//    var vHITBoxView: UIImageView?//vhits
+//    var vhitLineView: UIImageView?//vhits
     var vogLineView:UIImageView?//vog
     var vogBoxView:UIImageView?//vog
     var vHITDisplayMode:Int=0
@@ -547,7 +548,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  
 
     @IBAction func onBackVideoButton(_ sender: Any) {
-        if vhitLineView?.isHidden == false{
+        if vHITBoxView?.isHidden == false{
             return
         }
         startFrame=0
@@ -556,7 +557,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showVideoIroiro(num: -1)
     }
     @IBAction func onNextVideoButton(_ sender: Any) {
-        if vhitLineView?.isHidden == false{
+        if vHITBoxView?.isHidden == false{
             return
         }
         startFrame=0
@@ -721,7 +722,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogLineView?.isHidden = false
             wave3View?.isHidden=false
             vHITBoxView?.isHidden = true
-            vhitLineView?.isHidden = true
+//            vhitLineView?.isHidden = true
             waveBoxView?.isHidden = true
             gyroLineView?.isHidden = true
             setBacknext(f: false)
@@ -733,7 +734,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogLineView?.isHidden = true
             wave3View?.isHidden=true
             vHITBoxView?.isHidden = false
-            vhitLineView?.isHidden = false
+//            vhitLineView?.isHidden = false
             waveBoxView?.isHidden = false
             gyroLineView?.isHidden = false
             setBacknext(f: false)
@@ -745,7 +746,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vogLineView?.isHidden = true
             wave3View?.isHidden=true
             vHITBoxView?.isHidden = true
-            vhitLineView?.isHidden = true
+//            vhitLineView?.isHidden = true
             waveBoxView?.isHidden = true
             gyroLineView?.isHidden = true
             setBacknext(f: true)
@@ -968,9 +969,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if wave3View != nil{
             wave3View?.removeFromSuperview()
         }
-        if vhitLineView != nil{
-            vhitLineView?.removeFromSuperview()
-        }
+//        if vhitLineView != nil{
+//            vhitLineView?.removeFromSuperview()
+//        }
         if gyroLineView != nil{
             gyroLineView?.removeFromSuperview()
         }
@@ -1243,9 +1244,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if wave3View != nil{
             wave3View?.removeFromSuperview()
         }
-        if vhitLineView != nil{
-            vhitLineView?.removeFromSuperview()
-        }
+//        if vhitLineView != nil{
+//            vhitLineView?.removeFromSuperview()
+//        }
         if gyroLineView != nil{
             gyroLineView?.removeFromSuperview()
         }
@@ -1870,9 +1871,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if waveBoxView == nil {//vHITboxView vogboxView
             
             var boxImage = makeBox(width: ww, height: ww*2/5)
-            vHITBoxView = UIImageView(image: boxImage)
-//            vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
-            view.addSubview(vHITBoxView!)
+//            vHITBoxView = UIImageView(image: boxImage)
+////            vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+//            view.addSubview(vHITBoxView!)
+//
     
             boxImage = makeBox(width: ww, height: ww*9/16)
             waveBoxView = UIImageView(image: boxImage)
@@ -2090,21 +2092,27 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // 画面に表示する
         view.addSubview(vogLineView!)
     }
-
+    var initDrawVhitF:Bool=true
     func drawVHITwaves(){//解析結果のvHITwavesを表示する
         let ww=view.bounds.width
         let wh=view.bounds.height
-        if vhitLineView != nil{
-            vhitLineView?.removeFromSuperview()
-        }
+//        if vhitLineView != nil{
+//            vhitLineView?.removeFromSuperview()
+//        }
         //        let drawImage = drawWaves(width:view.bounds.width,height: view.bounds.width*2/5)
         let drawImage = drawvhitWaves(width:500,height:200)
         let dImage = drawImage.resize(size: CGSize(width:ww, height:ww*2/5))//view.bounds.width*2/5))
-        vhitLineView = UIImageView(image: dImage)
+//        let View = UIImageView(image: dImage)
 //        vhitLineView?.center =  CGPoint(x:0,y:0,width:ww,y:ww*2/5)
-        vhitLineView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+//        vhitLineView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         // 画面に表示する
-        view.addSubview(vhitLineView!)
+        if initDrawVhitF==true{
+            initDrawVhitF=false
+        }else{
+            vHITBoxView.layer.sublayers?.removeLast()
+        }
+        vHITBoxView.addSubview(UIImageView(image: dImage))
+        vHITBoxView.isHidden=false
         //   showVog(f: true)
     }
     func drawRealwave(){//vHIT_eye_head
@@ -3440,16 +3448,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let bh=bw
         let by0=wh-bottom-2*sp-bh
         let by1=by0-bh-sp//2段目
-        let by2=by1-bh-sp//videoSlider
         vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+//        vHITBView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
+        
         waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
         vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
 
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
-        videoSlider.frame = CGRect(x: 10, y:by2, width: ww - 20, height: bh)
+        videoSlider.frame = CGRect(x: sp*2, y:0, width: ww - 20, height: bh)//temp
+        let sliderHeight=videoSlider.frame.height
+        videoSlider.frame=CGRect(x:sp*2,y:(waveBoxView!.frame.maxY+by1)/2-sliderHeight/2,width:ww-sp*4,height:sliderHeight)
+        waveSlider.frame=videoSlider.frame
+        
         videoSlider.thumbTintColor=UIColor.systemYellow
-        waveSlider.frame = CGRect(x: 10, y:by2, width: ww - 20, height: bh)
         waveSlider.thumbTintColor=UIColor.systemBlue
         iroiro.setButtonProperty(listButton,x:sp*2,y:by0,w:bw,h:bh,UIColor.systemBlue)
         iroiro.setButtonProperty(saveButton,x:sp*3+bw*1,y:by0,w:bw,h:bh,UIColor.systemBlue)
@@ -3625,7 +3637,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func removeBoxies(){
         waveBoxView?.isHidden = true
         vHITBoxView?.isHidden = true
-        vhitLineView?.isHidden = true //removeFromSuperview()
+//        vhitLineView?.isHidden = true //removeFromSuperview()
         gyroLineView?.isHidden = true //removeFromSuperview()
     }
     var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為

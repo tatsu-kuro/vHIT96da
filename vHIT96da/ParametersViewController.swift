@@ -28,6 +28,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var faceMarkSwitch: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
+    @IBAction func toARKitButton(_ sender: Any) {
+    }
     @IBOutlet weak var greenItemLabel: UILabel!
     @IBOutlet weak var vHITLabel: UILabel!
     @IBOutlet weak var toVOGButton: UIButton!
@@ -283,8 +285,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let bh:CGFloat=25
         let bh1=bh+7
         
-//        wakuLengthLabel.text = "width of rectangle to be detected"
-//        eyeBorderLabel.text = "maximum moving width / frame"
         let tw:CGFloat=ww-bw-10
         let x1:CGFloat=3
         let x2=x1+bw+5
@@ -376,12 +376,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             oppositeLabel.isHidden=false
             oppositeButton.isHidden=false
             vhitDisplayLabel.isHidden=false
-
-//            A2BLabel.text = "(1) time(ms) from A to D"
-//            B2CLabel.text = "(2) time(ms) from B to C"
-//            eyeVelocityLabel.text = "(1*)height of eye waveform ％"
-//            headVelocityLabel.text = "(1*)height of head waveform ％"
-//            timeLagLabel.text = "(1*)time lag: eye & head waveforms"
             
             eyeVelocityLabel.backgroundColor=UIColor.white
             eyeVelocityLabel.textColor=UIColor.systemGreen
@@ -392,7 +386,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vhitDisplayLabel.textColor=UIColor.systemGreen
             vhitDisplayLabel.backgroundColor=UIColor.white
             
-//            markText.text = "use of the mark on face"
             A2DLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
             B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
             eyeVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*0 ,width: tw, height: bh)
@@ -423,13 +416,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.layer.cornerRadius = 3
             faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*10+vhitpngH-5 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*10+vhitpngH-5,width:tw,height: bh)
-//            greenItemLabel.isHidden=true
-//            if noFaceMark==true{
-//                markText.isHidden=true
-//                faceFbutton.isHidden=true
-//            }
-//            faceMarkSwitch.isHidden=false
-//            markText.isHidden=false
 
             displayMode()
             vHITLabel.isHidden=false
@@ -438,7 +424,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
         }
-//        print("setbutton:",butw,buth)
+
         defaultButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
         tovHITButton.frame=CGRect(x:butw+3*sp,y:buty,width:butw,height: buth)
         vHITLabel.frame=CGRect(x:butw+3*sp,y:buty-7,width:butw,height: 5)

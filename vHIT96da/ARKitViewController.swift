@@ -9,7 +9,19 @@
 import UIKit
 
 class ARKitViewController: UIViewController {
-
+    @IBOutlet weak var progressFaceView: UIProgressView!
+    @IBOutlet weak var progressEyeView: UIProgressView!
+    @IBOutlet weak var labelButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var waveBoxView: UIImageView!
+    @IBOutlet weak var vHITBoxView: UIImageView!
+    @IBOutlet weak var helpButton: UIButton!
+    @IBOutlet weak var settingButton: UIButton!
+    @IBOutlet weak var ARKitButton: UIButton!
+    @IBOutlet weak var pauseButton: UIButton!
+    @IBOutlet weak var mailButton: UIButton!
+    @IBOutlet weak var waveSlider: UISlider!
     override func viewDidLoad() {
         super.viewDidLoad()
 

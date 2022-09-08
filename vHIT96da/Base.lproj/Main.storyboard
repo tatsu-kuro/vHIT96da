@@ -87,6 +87,11 @@
                                 <rect key="frame" x="131" y="212" width="59" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LF5-TY-uR4">
+                                <rect key="frame" x="87" y="384" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i5c-dW-a9a">
                                 <rect key="frame" x="130" y="98" width="59" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -359,6 +364,7 @@
                         <outlet property="playButton" destination="4bc-dn-f4s" id="bzE-g7-4XG"/>
                         <outlet property="saveButton" destination="ldV-kl-ghp" id="ocV-PC-sYh"/>
                         <outlet property="stopButton" destination="sqt-I0-fRF" id="uIR-70-WpH"/>
+                        <outlet property="vHITBoxView" destination="LF5-TY-uR4" id="wIh-rl-KVn"/>
                         <outlet property="videoFps" destination="6oH-Ur-nDk" id="EUJ-xJ-mml"/>
                         <outlet property="videoSlider" destination="rzY-7a-f2q" id="ge5-Op-ylX"/>
                         <outlet property="wakuImg1" destination="jhl-W2-Rd7" id="La3-kk-kYg"/>
@@ -874,6 +880,19 @@ Tap the waveforms to change the (2*).</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d81-YQ-ILY">
+                                <rect key="frame" x="311" y="762" width="67" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="ARKit">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="toARKitButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="RAS-5K-C7T"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
@@ -1029,6 +1048,21 @@ Tap the waveforms to change the (2*).</string>
                         <viewLayoutGuide key="safeArea" id="RCl-fo-Vm6"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                     </view>
+                    <connections>
+                        <outlet property="ARKitButton" destination="5ca-VO-mwS" id="t1v-AK-sjn"/>
+                        <outlet property="deleteButton" destination="1Pf-J0-eQ3" id="t3u-15-uyg"/>
+                        <outlet property="helpButton" destination="fdf-wp-qbG" id="N5B-ju-lvW"/>
+                        <outlet property="labelButton" destination="2Xt-XH-etN" id="Vj4-5e-qOm"/>
+                        <outlet property="mailButton" destination="gZG-X3-cHS" id="xXt-re-vMH"/>
+                        <outlet property="pauseButton" destination="iXL-fJ-Kgq" id="nbq-WZ-8sv"/>
+                        <outlet property="progressEyeView" destination="A8E-zb-bS9" id="ZC0-eP-b35"/>
+                        <outlet property="progressFaceView" destination="env-4t-0qd" id="VDC-VS-oMN"/>
+                        <outlet property="saveButton" destination="aN8-fa-BQ5" id="r28-F2-TND"/>
+                        <outlet property="settingButton" destination="c4S-vS-12c" id="hrE-AU-fxU"/>
+                        <outlet property="vHITBoxView" destination="YQu-16-yh9" id="fbZ-vC-kvC"/>
+                        <outlet property="waveBoxView" destination="bCO-cD-P2h" id="ywq-jm-1Uq"/>
+                        <outlet property="waveSlider" destination="c97-iK-9np" id="kls-rl-r3S"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cmx-AD-yAt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
