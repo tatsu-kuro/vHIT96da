@@ -201,11 +201,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var mailWidth:CGFloat=0//VOG
     var mailHeight:CGFloat=0//VOG
-    var waveBoxView: UIImageView?//vhit realtime
+    
+    @IBOutlet weak var waveBoxView: UIImageView!
+//    var waveBoxView: UIImageView?//vhit realtime
     var gyroLineView: UIImageView?//vhit realtime
     @IBOutlet weak var vHITBoxView: UIImageView!
-//    var vHITBoxView: UIImageView?//vhits
-//    var vhitLineView: UIImageView?//vhits
     var vogLineView:UIImageView?//vog
     var vogBoxView:UIImageView?//vog
     var vHITDisplayMode:Int=0
@@ -1868,20 +1868,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func makeBoxies(){
         let ww=view.bounds.width
 //        let wh=view.bounds.height
-        if waveBoxView == nil {//vHITboxView vogboxView
+        if vogBoxView == nil {//vHITboxView vogboxView
             
-            var boxImage = makeBox(width: ww, height: ww*2/5)
-//            vHITBoxView = UIImageView(image: boxImage)
-////            vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
-//            view.addSubview(vHITBoxView!)
-//
-    
-            boxImage = makeBox(width: ww, height: ww*9/16)
-            waveBoxView = UIImageView(image: boxImage)
-//            waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
-            view.addSubview(waveBoxView!)
             
-            boxImage = makeBox(width: ww, height:ww*2/3)
+            let boxImage = makeBox(width: ww, height:ww*2/3)
             vogBoxView = UIImageView(image: boxImage)
 //            vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
             view.addSubview(vogBoxView!)

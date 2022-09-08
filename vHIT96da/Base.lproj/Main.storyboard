@@ -92,6 +92,11 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jmg-cq-3ff">
+                                <rect key="frame" x="69" y="265" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i5c-dW-a9a">
                                 <rect key="frame" x="130" y="98" width="59" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -373,6 +378,7 @@
                         <outlet property="wakuImg4" destination="i5c-dW-a9a" id="1wZ-Uk-56k"/>
                         <outlet property="wakuShowEye_image" destination="ac1-F6-YXh" id="xbD-VV-AMd"/>
                         <outlet property="wakuShowFace_image" destination="dKd-kY-X4M" id="e6q-bn-W00"/>
+                        <outlet property="waveBoxView" destination="jmg-cq-3ff" id="hec-lR-9Ac"/>
                         <outlet property="waveButton" destination="Q2m-D3-Mdm" id="hsZ-Du-slr"/>
                         <outlet property="waveSlider" destination="9Yc-Dg-y1f" id="NE6-av-baw"/>
                     </connections>
