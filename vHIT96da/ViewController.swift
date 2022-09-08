@@ -204,7 +204,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBOutlet weak var waveBoxView: UIImageView!
 //    var waveBoxView: UIImageView?//vhit realtime
-    var gyroLineView: UIImageView?//vhit realtime
+//    var gyroLineView: UIImageView?//vhit realtime
     @IBOutlet weak var vHITBoxView: UIImageView!
     var vogLineView:UIImageView?//vog
     var vogBoxView:UIImageView?//vog
@@ -724,7 +724,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vHITBoxView?.isHidden = true
 //            vhitLineView?.isHidden = true
             waveBoxView?.isHidden = true
-            gyroLineView?.isHidden = true
+//            gyroLineView?.isHidden = true
             setBacknext(f: false)
             eraseButton.isHidden=true
             playButton.isEnabled=false
@@ -736,7 +736,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vHITBoxView?.isHidden = false
 //            vhitLineView?.isHidden = false
             waveBoxView?.isHidden = false
-            gyroLineView?.isHidden = false
+//            gyroLineView?.isHidden = false
             setBacknext(f: false)
             eraseButton.isHidden=true
             playButton.isEnabled=false
@@ -748,7 +748,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             vHITBoxView?.isHidden = true
 //            vhitLineView?.isHidden = true
             waveBoxView?.isHidden = true
-            gyroLineView?.isHidden = true
+//            gyroLineView?.isHidden = true
             setBacknext(f: true)
             if videoDate.count>0{
                 playButton.isEnabled=true
@@ -972,9 +972,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        if vhitLineView != nil{
 //            vhitLineView?.removeFromSuperview()
 //        }
-        if gyroLineView != nil{
-            gyroLineView?.removeFromSuperview()
-        }
+//        if gyroLineView != nil{
+//            gyroLineView?.removeFromSuperview()
+//        }
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
         moveGyroData()//gyroDeltastartframe分をズラして
@@ -1247,9 +1247,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        if vhitLineView != nil{
 //            vhitLineView?.removeFromSuperview()
 //        }
-        if gyroLineView != nil{
-            gyroLineView?.removeFromSuperview()
-        }
+//        if gyroLineView != nil{
+//            gyroLineView?.removeFromSuperview()
+//        }
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
         moveGyroData()//gyroDeltastartframe分をズラして
@@ -2109,10 +2109,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func drawRealwave(){//vHIT_eye_head
         let ww=view.bounds.width
         let wh=view.bounds.height
-        if gyroLineView != nil{//これが無いとエラーがでる。
-            gyroLineView?.removeFromSuperview()
-            //            lineView?.isHidden = false
-        }
+//        if gyroLineView != nil{//これが無いとエラーがでる。
+//            gyroLineView?.removeFromSuperview()
+//            //            lineView?.isHidden = false
+//        }
         var startcnt:Int
         if arrayDataCount < Int(ww){//横幅以内なら０からそこまで表示
             startcnt = 0
@@ -2144,10 +2144,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if startcnt < 0 {
             startcnt = 0
         }
-        if gyroLineView != nil{//これが無いとエラーがでる。
-            gyroLineView?.removeFromSuperview()
-            //            lineView?.isHidden = false
-        }
+//        if gyroLineView != nil{//これが無いとエラーがでる。
+//            gyroLineView?.removeFromSuperview()
+//            //            lineView?.isHidden = false
+//        }
 //        let posXCount=getPosXFilteredCount()
         if arrayDataCount < Int(ww){//横幅以内なら０からそこまで表示
             startcnt = 0
@@ -3636,7 +3636,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         waveBoxView?.isHidden = true
         vHITBoxView?.isHidden = true
 //        vhitLineView?.isHidden = true //removeFromSuperview()
-        gyroLineView?.isHidden = true //removeFromSuperview()
+//        gyroLineView?.isHidden = true //removeFromSuperview()
     }
     var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為
     func savePath2album(name:String,path:String){
