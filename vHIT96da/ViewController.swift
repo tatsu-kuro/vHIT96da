@@ -2105,6 +2105,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vHITBoxView.isHidden=false
         //   showVog(f: true)
     }
+    var initDrawRealF:Bool=true
     func drawRealwave(){//vHIT_eye_head
         let ww=view.bounds.width
         let wh=view.bounds.height
@@ -2121,13 +2122,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //波形を時間軸で表示
         let drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)//180)
         // イメージビューに設定する
-        gyroLineView = UIImageView(image: drawImage)
-        //       lineView?.center = self.view.center
-        
-        gyroLineView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
-
+//        gyroLineView = UIImageView(image: drawImage)
+//        //       lineView?.center = self.view.center
+//
+//        gyroLineView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+        if initDrawRealF==true{
+            initDrawRealF=false
+        }else{
+            waveBoxView.layer.sublayers?.removeLast()
+        }
 //        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)//340)//ここらあたりを変更se~7plusの大きさにも対応できた。
-        view.addSubview(gyroLineView!)
+        waveBoxView.addSubview(UIImageView(image: drawImage))
         //      showBoxies(f: true)
         //        print("count----" + "\(view.subviews.count)")
     }
@@ -2152,14 +2157,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //波形を時間軸で表示
         let drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
         // イメージビューに設定する
-        gyroLineView = UIImageView(image: drawImage)
-        //       lineView?.center = self.view.center
-//        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)// 340)
-        
-        gyroLineView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
-
-        //ここらあたりを変更se~7plusの大きさにも対応できた。
-        view.addSubview(gyroLineView!)
+//        gyroLineView = UIImageView(image: drawImage)
+//        //       lineView?.center = self.view.center
+////        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)// 340)
+//
+//        gyroLineView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+//
+        if initDrawRealF==true{
+            initDrawRealF=false
+        }else{
+            waveBoxView.layer.sublayers?.removeLast()
+        }      //ここらあたりを変更se~7plusの大きさにも対応できた。
+        waveBoxView.addSubview(UIImageView(image: drawImage))
         //        print("count----" + "\(view.subviews.count)")
     }
     var arrayDataCount:Int=0
@@ -3439,7 +3448,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let by0=wh-bottom-2*sp-bh
         let by1=by0-bh-sp//2段目
         vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
-//        vHITBView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         
         waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
         vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
