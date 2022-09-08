@@ -202,10 +202,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var vogBoxHeight:CGFloat=0
     var vogBoxYmin:CGFloat=0
     var vogBoxYcenter:CGFloat=0
-    var vhitBoxHeight:CGFloat=0
+//    var vhitBoxHeight:CGFloat=0
     var vhitBoxYmin:CGFloat=0
     var vhitBoxYcenter:CGFloat=0
-    var gyroBoxHeight:CGFloat=0
+//    var gyroBoxHeight:CGFloat=0
     var gyroBoxYmin:CGFloat=0
     var gyroBoxYcenter:CGFloat=0
     var mailWidth:CGFloat=0//VOG
@@ -1876,15 +1876,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func makeBoxies(){
         let ww=view.bounds.width
         let wh=view.bounds.height
-        vhitBoxHeight=ww*2/5
+//        vhitBoxHeight=ww*2/5
         vhitBoxYmin=160*wh/568-vogBoxHeight/2
-        vhitBoxYcenter=160*wh/568
-        gyroBoxHeight=180*ww/320
+//        vhitBoxYcenter=160*wh/568
+//        gyroBoxHeight=180*ww/320
         gyroBoxYmin=340*wh/568-vogBoxHeight/2
-        gyroBoxYcenter=340*wh/568
+//        gyroBoxYcenter=340*wh/568
         if waveBoxView == nil {//vHITboxView vogboxView
             
-            var boxImage = makeBox(width: ww, height: vhitBoxHeight)//128
+            var boxImage = makeBox(width: ww, height: ww*2/5)
             vHITBoxView = UIImageView(image: boxImage)
             vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
 //            vHITBoxView?.center = CGPoint(x:ww/2,y:vhitBoxYcenter)//vh/4)//160)// view.center
@@ -1895,7 +1895,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //
 //
             
-            boxImage = makeBox(width: ww, height: gyroBoxHeight)
+            boxImage = makeBox(width: ww, height: ww*9/16)
             waveBoxView = UIImageView(image: boxImage)
             waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
 //            waveBoxView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)//340)
@@ -2117,35 +2117,39 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 
     func drawVHITwaves(){//解析結果のvHITwavesを表示する
+        let ww=view.bounds.width
+        let wh=view.bounds.height
         if vhitLineView != nil{
             vhitLineView?.removeFromSuperview()
         }
         //        let drawImage = drawWaves(width:view.bounds.width,height: view.bounds.width*2/5)
         let drawImage = drawvhitWaves(width:500,height:200)
-        let dImage = drawImage.resize(size: CGSize(width:view.bounds.width, height:vhitBoxHeight))//view.bounds.width*2/5))
+        let dImage = drawImage.resize(size: CGSize(width:ww, height:ww*2/5))//view.bounds.width*2/5))
         vhitLineView = UIImageView(image: dImage)
-        vhitLineView?.center =  CGPoint(x:view.bounds.width/2,y:vhitBoxYcenter)
+//        vhitLineView?.center =  CGPoint(x:0,y:0,width:ww,y:ww*2/5)
+        vhitLineView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         // 画面に表示する
         view.addSubview(vhitLineView!)
         //   showVog(f: true)
     }
     func drawRealwave(){//vHIT_eye_head
+        let ww=view.bounds.width
         if gyroLineView != nil{//これが無いとエラーがでる。
             gyroLineView?.removeFromSuperview()
             //            lineView?.isHidden = false
         }
         var startcnt:Int
-        if arrayDataCount < Int(self.view.bounds.width){//横幅以内なら０からそこまで表示
+        if arrayDataCount < Int(ww){//横幅以内なら０からそこまで表示
             startcnt = 0
         }else{//横幅超えたら、新しい横幅分を表示
-            startcnt = arrayDataCount - Int(self.view.bounds.width)
+            startcnt = arrayDataCount - Int(ww)
         }
         //波形を時間軸で表示
-        let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:gyroBoxHeight)//180)
+        let drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)//180)
         // イメージビューに設定する
         gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:gyroBoxYcenter)//340)//ここらあたりを変更se~7plusの大きさにも対応できた。
+        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)//340)//ここらあたりを変更se~7plusの大きさにも対応できた。
         view.addSubview(gyroLineView!)
         //      showBoxies(f: true)
         //        print("count----" + "\(view.subviews.count)")
@@ -2153,6 +2157,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func drawOnewave(startcount:Int){//vHIT_eye_head
         var startcnt = startcount
+        let ww=view.bounds.width
         if startcnt < 0 {
             startcnt = 0
         }
@@ -2161,17 +2166,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            lineView?.isHidden = false
         }
 //        let posXCount=getPosXFilteredCount()
-        if arrayDataCount < Int(self.view.bounds.width){//横幅以内なら０からそこまで表示
+        if arrayDataCount < Int(ww){//横幅以内なら０からそこまで表示
             startcnt = 0
-        }else if startcnt > arrayDataCount - Int(self.view.bounds.width){
-            startcnt = arrayDataCount - Int(self.view.bounds.width)
+        }else if startcnt > arrayDataCount - Int(ww){
+            startcnt = arrayDataCount - Int(ww)
         }
         //波形を時間軸で表示
-        let drawImage = drawLine(num:startcnt,width:self.view.bounds.width,height:gyroBoxHeight)// 180)
+        let drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
         // イメージビューに設定する
         gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyroLineView?.center = CGPoint(x:view.bounds.width/2,y:gyroBoxYcenter)// 340)
+        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)// 340)
         //ここらあたりを変更se~7plusの大きさにも対応できた。
         view.addSubview(gyroLineView!)
         //        print("count----" + "\(view.subviews.count)")
@@ -2770,49 +2775,31 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 #endif
         // 折れ線にする点の配列
         var pointList0 = Array<CGPoint>()
-//        var pointList1 = Array<CGPoint>()
         var pointList2 = Array<CGPoint>()
-//        var py1:CGFloat?
-//        var point1:CGPoint?
         let pointCount = Int(w) // 点の個数
         // xの間隔
         let dx:CGFloat = 1//Int(w)/pointCount
-//        let posXCount=getPosXFilteredCount()// eyeVeloXFiltered.count
         let gyroMovedCnt=gyroMoved.count
-//        let y0=gyroBoxHeight*2/6
-        let y1=gyroBoxHeight*3/6
-//        let y2=gyroBoxHeight*4/6
+        let y1=view.bounds.width*9/32
         var py0:CGFloat=0
         var step:Int = 1
         if fpsIs120==true{
             step=2
         }
         for n in stride(from: 1, to: pointCount, by: step){
-//        for n in 1...(pointCount) {
             if num + n < arrayDataCount && num + n < gyroMovedCnt {
                 let px = dx * CGFloat(n)
-                 if calcMode==0{
+                if calcMode==0{
                     py0 = eyeVeloXFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y1
                 }else{
                     py0 = eyeVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y1
                 }
-//                if faceMark==true{
-//                    if calcMode==0{
-//                        py1 = faceVeloXFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y2
-//                    }else{
-//                        py1 = faceVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y2
-//                    }
-//                }
+                
                 let py2 = -gyroMoved[num + n] * CGFloat(gyroRatio)/150.0 + y1
                 let point0 = CGPoint(x: px, y: py0)
-//                if faceMark==true{
-//                    point1 = CGPoint(x: px, y: py1!)
-//                }
+                
                 let point2 = CGPoint(x: px, y: py2)
                 pointList0.append(point0)
-//                if faceMark==true{
-//                    pointList1.append(point1!)
-//                }
                 pointList2.append(point2)
             }
         }
