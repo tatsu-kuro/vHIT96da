@@ -199,15 +199,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var wakuImg3: UIImageView!
     @IBOutlet weak var wakuImg4: UIImageView!
     
-    var vogBoxHeight:CGFloat=0
-    var vogBoxYmin:CGFloat=0
-    var vogBoxYcenter:CGFloat=0
-//    var vhitBoxHeight:CGFloat=0
-    var vhitBoxYmin:CGFloat=0
-    var vhitBoxYcenter:CGFloat=0
-//    var gyroBoxHeight:CGFloat=0
-    var gyroBoxYmin:CGFloat=0
-    var gyroBoxYcenter:CGFloat=0
     var mailWidth:CGFloat=0//VOG
     var mailHeight:CGFloat=0//VOG
     var waveBoxView: UIImageView?//vhit realtime
@@ -1876,38 +1867,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func makeBoxies(){
         let ww=view.bounds.width
         let wh=view.bounds.height
-//        vhitBoxHeight=ww*2/5
-        vhitBoxYmin=160*wh/568-vogBoxHeight/2
-//        vhitBoxYcenter=160*wh/568
-//        gyroBoxHeight=180*ww/320
-        gyroBoxYmin=340*wh/568-vogBoxHeight/2
-//        gyroBoxYcenter=340*wh/568
         if waveBoxView == nil {//vHITboxView vogboxView
             
             var boxImage = makeBox(width: ww, height: ww*2/5)
             vHITBoxView = UIImageView(image: boxImage)
             vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
-//            vHITBoxView?.center = CGPoint(x:ww/2,y:vhitBoxYcenter)//vh/4)//160)// view.center
             view.addSubview(vHITBoxView!)
-            
-            
-            
-//
-//
-            
+    
             boxImage = makeBox(width: ww, height: ww*9/16)
             waveBoxView = UIImageView(image: boxImage)
             waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
-//            waveBoxView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)//340)
             view.addSubview(waveBoxView!)
             
-            vogBoxHeight=ww*16/24
-            vogBoxYmin=wh/2-vogBoxHeight/2
-            vogBoxYcenter=wh/2
-            boxImage = makeBox(width: ww, height:vogBoxHeight)
+            boxImage = makeBox(width: ww, height:ww*2/3)
             vogBoxView = UIImageView(image: boxImage)
-            
-            vogBoxView?.center = CGPoint(x:ww/2,y:vogBoxYcenter)
+            vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
             view.addSubview(vogBoxView!)
         }
     }
@@ -1919,7 +1893,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wave3View?.removeFromSuperview()
         }
         let ww=view.bounds.width
-        let drawImage = vogImage!.resize(size: CGSize(width:ww*18, height:vogBoxHeight))
+        let drawImage = vogImage!.resize(size: CGSize(width:ww*18, height:ww*2/3))
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
         view.addSubview(wave3View!)
@@ -1927,7 +1901,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if CGFloat(end) < 2400{
             endPos=0
         }
-        wave3View!.frame=CGRect(x:-endPos*ww/mailWidth,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+        wave3View!.frame=CGRect(x:-endPos*ww/mailWidth,y:(vogBoxView?.frame.minY)!,width:ww*18,height:ww*2/3)
      }
  
     func drawVogall(){//すべてのvogを画面に表示 unwindから呼ばれる
@@ -1940,11 +1914,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let ww=view.bounds.width
         vogImage=makeVOGimgWakulines(width: mailWidth*18,height: mailHeight)
         vogImage = makeVOGImage(startImg:vogImage!,width:0, height:0, start:0, end:eyePosXFiltered4update.count)
-        let drawImage = vogImage!.resize(size: CGSize(width:ww*18, height:vogBoxHeight))
+        let drawImage = vogImage!.resize(size: CGSize(width:ww*18, height:ww*2/3))
         // 画面に表示する
         wave3View = UIImageView(image: drawImage)
         view.addSubview(wave3View!)
-        wave3View!.frame=CGRect(x:0,y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+        wave3View!.frame=CGRect(x:0,y:vogBoxView!.frame.minY,width:view.bounds.width*18,height:ww*2/3)
     }
 
     func getVOGText(orgImg:UIImage,width w:CGFloat,height h:CGFloat,mail:Bool) -> UIImage {
@@ -2105,13 +2079,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
  
     func drawVogtext(){
+        let ww=view.bounds.width
         if vogLineView != nil{
             vogLineView?.removeFromSuperview()
         }
         let dImage = getVOGText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
-        let drawImage = dImage.resize(size: CGSize(width:view.bounds.width, height:vogBoxHeight))
+        let drawImage = dImage.resize(size: CGSize(width:ww, height:ww*2/3))
         vogLineView = UIImageView(image: drawImage)
-        vogLineView?.center =  CGPoint(x:view.bounds.width/2,y:view.bounds.height/2)
+        vogLineView?.center =  CGPoint(x:ww/2,y:view.bounds.height/2)
         // 画面に表示する
         view.addSubview(vogLineView!)
     }
@@ -2134,6 +2109,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     func drawRealwave(){//vHIT_eye_head
         let ww=view.bounds.width
+        let wh=view.bounds.height
         if gyroLineView != nil{//これが無いとエラーがでる。
             gyroLineView?.removeFromSuperview()
             //            lineView?.isHidden = false
@@ -2149,7 +2125,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // イメージビューに設定する
         gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)//340)//ここらあたりを変更se~7plusの大きさにも対応できた。
+        
+        gyroLineView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+
+//        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)//340)//ここらあたりを変更se~7plusの大きさにも対応できた。
         view.addSubview(gyroLineView!)
         //      showBoxies(f: true)
         //        print("count----" + "\(view.subviews.count)")
@@ -2158,6 +2137,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func drawOnewave(startcount:Int){//vHIT_eye_head
         var startcnt = startcount
         let ww=view.bounds.width
+        let wh=view.bounds.height
         if startcnt < 0 {
             startcnt = 0
         }
@@ -2176,7 +2156,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // イメージビューに設定する
         gyroLineView = UIImageView(image: drawImage)
         //       lineView?.center = self.view.center
-        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)// 340)
+//        gyroLineView?.center = CGPoint(x:ww/2,y:gyroBoxYcenter)// 340)
+        
+        gyroLineView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
+
         //ここらあたりを変更se~7plusの大きさにも対応できた。
         view.addSubview(gyroLineView!)
         //        print("count----" + "\(view.subviews.count)")
@@ -2301,6 +2284,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var lastVhitpoint:Int = -2//これはなんだろう→あとでチェック！！！
     @objc func onWaveSliderValueChange(){
         let mode=checkDispMode()
+        let ww=view.bounds.width
 //        print("modes:",mode,calcMode)
         if mode==1{//vhit
             vhitCurpoint=Int(waveSlider.value*(waveSlider.maximumValue-Float(view.bounds.width))/waveSlider.maximumValue)
@@ -2309,7 +2293,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             lastVhitpoint = vhitCurpoint
             if waveTuple.count>0{
                 //setするだけか？
-                checksetPos(pos: lastVhitpoint + Int(self.view.bounds.width/2), mode:1)
+                checksetPos(pos: lastVhitpoint + Int(ww/2), mode:1)
                 drawVHITwaves()
             }
         }else if mode==2{//vogalc
@@ -2318,7 +2302,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             let r = view.bounds.width/CGFloat(mailWidth)
             vogCurpoint = -Int(Float(r)*waveSlider.value*Float(eyePosXFiltered4update.count-2400))/eyePosXFiltered4update.count
-            wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxYmin,width:view.bounds.width*18,height:vogBoxHeight)
+            wave3View!.frame=CGRect(x:CGFloat(vogCurpoint),y:vogBoxView!.frame.minY,width:ww*18,height:ww*2/3)
         }
     }
     func setWaveSlider(){
@@ -3450,7 +3434,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func setButtons_first(){
         let ww=view.bounds.width
         let wh=view.bounds.height
-//        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
         let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
         let sp:CGFloat=5
         let bw:CGFloat=(ww-10*sp)/7//最下段のボタンの高さ、幅と同じ
