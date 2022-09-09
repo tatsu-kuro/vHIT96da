@@ -1867,13 +1867,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func makeBoxies(){
         let ww=view.bounds.width
-//        let wh=view.bounds.height
         if vogBoxView == nil {//vHITboxView vogboxView
-            
-            
             let boxImage = makeBox(width: ww, height:ww*2/3)
             vogBoxView = UIImageView(image: boxImage)
-//            vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
             view.addSubview(vogBoxView!)
         }
     }
@@ -3357,79 +3353,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                                                 handler: nil))
         present(alertController, animated: true)
     }
-    // アルバムが既にあるか確認し
-//    func albumExists(albumTitle: String) -> Bool {
-//        // ここで以下のようなエラーが出るが、なぜか問題なくアルバムが取得できている
-//        // [core] "Error returned from daemon: Error Domain=com.apple.accounts Code=7 "(null)""
-//        let albums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype:
-//                                                                PHAssetCollectionSubtype.albumRegular, options: nil)
-//        for i in 0 ..< albums.count {
-//            let album = albums.object(at: i)
-//            if album.localizedTitle != nil && album.localizedTitle == albumTitle {
-////                vHIT96daAlbum = album
-//                return true
-//            }
-//        }
-//        return false
-//    }
-//    
-    //何も返していないが、ここで見つけたor作成したalbumを返したい。そうすればグローバル変数にアクセスせずに済む
-//    func createNewAlbum(albumTitle: String, callback: @escaping (Bool) -> Void) {
-//        if iroiro.albumExists(albumTitle) {
-//            callback(true)
-//        } else {
-//            PHPhotoLibrary.shared().performChanges({
-//                _ = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumTitle)
-//            }) { (isSuccess, error) in
-//                callback(isSuccess)
-//            }
-//        }
-//    }
 
-//    var checkLibraryAuthrizedFlag:Int=0
-  /*  func checkLibraryAuthorized(){
-        //iOS14に対応
-        self.checkLibraryAuthrizedFlag=0//0：ここの処理が終わっていないとき　1：許可　−１：拒否
-        if #available(iOS 14.0, *) {
-            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
-                switch status {
-                case .limited:
-                    self.checkLibraryAuthrizedFlag=1
-                    print("14制限あり")
-                    break
-                case .authorized:
-                    self.checkLibraryAuthrizedFlag=1
-                    print("14許可ずみ")
-                    break
-                case .denied:
-                    self.checkLibraryAuthrizedFlag = -1
-                    print("14拒否ずみ")
-                    break
-                default:
-                    self.checkLibraryAuthrizedFlag = -1
-                    break
-                }
-            }
-        }
-        else  {
-            if PHPhotoLibrary.authorizationStatus() != .authorized {
-                PHPhotoLibrary.requestAuthorization { status in
-                    if status == .authorized {
-                        self.checkLibraryAuthrizedFlag=1
-                        print("許可ずみ")
-                    } else if status == .denied {
-                        self.checkLibraryAuthrizedFlag = -1
-                        print("拒否ずみ")
-                    }else{
-                        self.checkLibraryAuthrizedFlag = -1
-                    }
-                }
-            } else {
-                self.checkLibraryAuthrizedFlag=1
-            }
-        }
-    }
-    */
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let topPadding = self.view.safeAreaInsets.top
@@ -3476,13 +3400,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         iroiro.setButtonProperty(playButton,x:sp*7+bw*5,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(forwardButton,x:sp*8+bw*6,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(changeModeButton,x:sp*2,y:by1,w:bh*3+sp*2,h:bh,UIColor.darkGray)
-        
-        vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
-        waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
-        vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
-
-        
-        
         
         if videoDate.count == 0{
             playButton.isEnabled=false
@@ -3635,8 +3552,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func removeBoxies(){
         waveBoxView?.isHidden = true
         vHITBoxView?.isHidden = true
-//        vhitLineView?.isHidden = true //removeFromSuperview()
-//        gyroLineView?.isHidden = true //removeFromSuperview()
     }
     var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為
     func savePath2album(name:String,path:String){
