@@ -14,25 +14,9 @@
             filePath = "vHIT96da/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1777"
-            endingLineNumber = "1777"
+            startingLineNumber = "1778"
+            endingLineNumber = "1778"
             landmarkName = "drawVogall()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A3FDE819-DE9E-4457-B2DF-CC1C0152D6B1"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "vHIT96da/ViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2759"
-            endingLineNumber = "2759"
-            landmarkName = "saveResult_vog(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
