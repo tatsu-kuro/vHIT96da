@@ -507,7 +507,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcMode != 2{
             if eyePosXFiltered.count>0 && videoCurrent != -1{
                 vhitCurpoint=0
-                drawOnewave(startcount: 0)
+                drawOneWave(startcount: 0)
                 calcDrawVHIT(tuple: false)
             }
         }
@@ -1909,19 +1909,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
- 
+    var initDrawVogTextFlag:Bool=true
     func drawVogtext(){
         let ww=view.bounds.width
-
-        let dImage = getVOGText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
-        let drawImage = dImage.resize(size: CGSize(width:ww, height:ww*2/3))
-        // 画面に表示する
-        view.addSubview( UIImageView(image: drawImage))
+        let imageWithText = getVOGText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
+        let drawImage = imageWithText.resize(size: CGSize(width:ww, height:ww*2/3))
+//        var imgView=UIImageView(image: drawImage)
+//        imgView.frame=vogBoxView.frame
+//        // 画面に表示する
+        if initDrawVogTextFlag==true{
+            initDrawVogTextFlag=false
+        }else{
+            vogBoxView.layer.sublayers?.removeLast()
+        }
+        vogBoxView.addSubview(UIImageView(image: drawImage))
+//        view.addSubview( imgView)
     }
     var initDrawVhitF:Bool=true
     func drawVHITwaves(){//解析結果のvHITwavesを表示する
         let ww=view.bounds.width
-        let wh=view.bounds.height
         let drawImage = drawvhitWaves(width:500,height:200)
         let dImage = drawImage.resize(size: CGSize(width:ww, height:ww*2/5))//view.bounds.width*2/5))
         // 画面に表示する
@@ -1933,32 +1939,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vHITBoxView.addSubview(UIImageView(image: dImage))
         vHITBoxView.isHidden=false
     }
-    var initDrawRealF:Bool=true
-    func drawRealwave(){//vHIT_eye_head
-        let ww=view.bounds.width
-        let wh=view.bounds.height
-
-        var startcnt:Int
-        if arrayDataCount < Int(ww){//横幅以内なら０からそこまで表示
-            startcnt = 0
-        }else{//横幅超えたら、新しい横幅分を表示
-            startcnt = arrayDataCount - Int(ww)
-        }
-        //波形を時間軸で表示
-        let drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)//180)
-        // イメージビューに設定する
-        if initDrawRealF==true{
-            initDrawRealF=false
-        }else{
-            waveBoxView.layer.sublayers?.removeLast()
-        }
-        waveBoxView.addSubview(UIImageView(image: drawImage))
-      }
     
-    func drawOnewave(startcount:Int){//vHIT_eye_head
+    var initDrawOneFlag:Bool=true
+    func drawOneWave(startcount:Int){//vHIT_eye_head
         var startcnt = startcount
         let ww=view.bounds.width
-        let wh=view.bounds.height
+ 
         if startcnt < 0 {
             startcnt = 0
         }
@@ -1971,8 +1957,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
         // イメージビューに設定する
 
-        if initDrawRealF==true{
-            initDrawRealF=false
+        if initDrawOneFlag==true{
+            initDrawOneFlag=false
         }else{
             waveBoxView.layer.sublayers?.removeLast()
         }      //ここらあたりを変更se~7plusの大きさにも対応できた。
@@ -2075,7 +2061,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if mode==1{//vhit
             vhitCurpoint=Int(waveSlider.value*(waveSlider.maximumValue-Float(view.bounds.width))/waveSlider.maximumValue)
 //            print(vhitCurpoint)p
-            drawOnewave(startcount: vhitCurpoint)
+            drawOneWave(startcount: vhitCurpoint)
             lastVhitpoint = vhitCurpoint
             if waveTuple.count>0{
                 //setするだけか？
@@ -2137,14 +2123,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        let tmpCount=getPosXFilteredCount()
         vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
         lastArraycount=arrayDataCount
-        drawRealwave()
+//        drawRealwave()
+        drawOneWave(startcount: arrayDataCount)
         timercnt += 1
         #if DEBUG
         print("debug-update",timercnt)
         #endif
         calcDrawVHIT(tuple: true)//waveTupleは更新する。
         if calcFlag==false{
-            drawOnewave(startcount: 0)
+            drawOneWave(startcount: 0)
         }
     }
     
@@ -3168,7 +3155,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if calcMode != 2{//データがありそうな時は表示
                     moveGyroData()
                     calcDrawVHIT(tuple: false)
-                    drawOnewave(startcount: vhitCurpoint)//gyroFileがないとエラー
+                    drawOneWave(startcount: vhitCurpoint)//gyroFileがないとエラー
                 }else{
                     if chanF==true{
                         vogCurpoint=0
@@ -3454,7 +3441,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 moveGyroData()
                 calcDrawVHIT(tuple: false)
-                drawOnewave(startcount: vhitCurpoint)
+                drawOneWave(startcount: vhitCurpoint)
                 }
 //                print("vhit-1:",videoGyroZure,eyeRatio,gyroRatio)
             }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
@@ -3525,7 +3512,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 UserDefaults.standard.set(vHITDisplayMode,forKey: "vHITDisplayMode")
                 moveGyroData()
                 calcDrawVHIT(tuple: false)
-                drawOnewave(startcount: vhitCurpoint)
+                drawOneWave(startcount: vhitCurpoint)
                 return
             }else if loc.y<waveBoxView!.frame.maxY && waveTuple.count>0{
                 //上に中央vHITwaveをタップで表示させるタップ範囲を設定
