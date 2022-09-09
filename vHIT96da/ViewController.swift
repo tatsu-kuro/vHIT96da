@@ -153,16 +153,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
-//        if checkDispMode() != 0{
-//            return
-//        }
-//        if checkDispMode()==0{
-//            showBoxies(f: true)
-            setVideoButtons(mode: true)
-//        }
+
+        setVideoButtons(mode: true)
+
         showBoxies(f: false)
         videoPlayMode=0
-//        stopTimerVideo()
+
         startTimerVideo()
         if (videoPlayer.rate != 0) && (videoPlayer.error == nil) {//playing
             videoPlayer.pause()
@@ -177,7 +173,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if checkDispMode() != 0{
             return
         }
-//        stopTimerVideo()
         startTimerVideo()
         if videoDate.count == 0{
             return
@@ -259,27 +254,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
     var tempTuple = Array<(Int,Int,Int,Int)>()
-//    var eyePosXOrig = Array<CGFloat>()//eyePosOrig
     var eyePosXFiltered = Array<CGFloat>()//eyePosFiltered
-//    var eyeVeloXOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloXFiltered = Array<CGFloat>()//eyeVeloFiltered
- 
-//    var eyePosYOrig = Array<CGFloat>()//eyePosOrig
     var eyePosYFiltered = Array<CGFloat>()//eyePosFiltered
-//    var eyeVeloYOrig = Array<CGFloat>()//eyeVeloOrig
     var eyeVeloYFiltered = Array<CGFloat>()//eyeVeloFiltered
 //update(timer)では、まずcalc threadを止めてデータをもらってcalc thread再開し、もらったデータを処理する
     //calcとtimerでデータを同時に扱うとエラーが出るようだ
-//    var faceVeloXFiltered4update = Array<CGFloat>()
-//    var faceVeloYFiltered4update = Array<CGFloat>()
     var eyePosXFiltered4update = Array<CGFloat>()
     var eyeVeloXFiltered4update = Array<CGFloat>()
     var eyePosYFiltered4update = Array<CGFloat>()
     var eyeVeloYFiltered4update = Array<CGFloat>()
-//    var faceVeloXFiltered = Array<CGFloat>()//faceVeloFiltered
-//    var faceVeloYFiltered = Array<CGFloat>()//faceVeloFiltered
-//    var facePosXFiltered = Array<CGFloat>()//faceVeloFiltered
-//    var facePosYFiltered = Array<CGFloat>()//faceVeloFiltered
     var gyroHFiltered = Array<CGFloat>()//gyroFiltered
     var gyroVFiltered = Array<CGFloat>()//gyroFiltered
     var gyroMoved = Array<CGFloat>()//gyroVeloFilterd
@@ -292,10 +276,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
     var initialFlag:Bool=true//:Int = 0
     func playCurrentVideo(){//nextVideo
-//        let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-//        let avasset = AVURLAsset(url: video, options: options)
-//        let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset)
-//        let videoDuration=Float(CMTimeGetSeconds(avasset.duration))
 //        print("videoCurrent:",videoCurrent, videoPHAsset.count,videoDate.count)
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
 //        print("avasset:",avasset)
@@ -349,7 +329,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         dispWakus()
         showWakuImages()
-//        UserDefaults.standard.set(startFrame,forKey: "startFrame")
      }
  
     func getPHAssetcollection(albumTitle:String)->PHAssetCollection{
@@ -367,7 +346,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return assetCollections.object(at:0)
     }
     @IBAction func onEraseButton(_ sender: Any) {
- //       videoAsset[videoCurrent]
+ 
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
@@ -519,9 +498,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else{
             calcMode=0
         }
-//        if calcMode==2{//VOGの時はwakuはeyeにする
-//            wakuEyeFace=0
-//        }
+
         showModeText()
         setButtons(mode: true)
         dispWakus()
@@ -533,13 +510,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawOnewave(startcount: 0)
                 calcDrawVHIT(tuple: false)
             }
-//        }else{
-//            wakuEyeFace=0
-//            if eyePosXFiltered.count>0  && videoCurrent != -1{
-//                vogCurpoint=0
-//                drawVOG2endPt(end: 0)
-//                drawVogtext()
-//            }
         }
         showBoxies(f:boxiesFlag)
     }
@@ -577,8 +547,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDura.count == 0{
 //            print("none!!!!!!!!!")
             setVideoButtons(mode: false)
-//            currentVideoDate.text="tap button in lower right corner"
-//            videoFps.text="to record the video of the eye"
             return
         }
 //        print("showvideoiroiro***********")
