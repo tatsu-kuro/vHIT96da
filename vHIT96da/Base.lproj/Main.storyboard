@@ -899,7 +899,7 @@ Tap the waveforms to change the (2*).</string>
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="LGJ-5M-CKr" kind="unwind" identifier="backParams" unwindAction="unwind:" id="lAv-ar-qFV"/>
+                                    <action selector="onExitButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="4iL-za-3Q1"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ktc-fi-Lu2">
@@ -911,6 +911,15 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nyP-Lg-EwR">
+                                <rect key="frame" x="339" y="544" width="64" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="segue"/>
+                                <connections>
+                                    <segue destination="LGJ-5M-CKr" kind="unwind" identifier="fromParamsToMain" unwindAction="unwind:" id="wD8-g0-7kd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>

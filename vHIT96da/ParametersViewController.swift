@@ -47,9 +47,17 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
       dispParam()
       setTexts()
     }
+    
+    @IBAction func onExitButton(_ sender: Any) {
+        
+        if calcMode != 3{
+        performSegue(withIdentifier: "fromParamsToMain", sender: nil)
+        }else{
+        print("333333rrrr")
+        }
+    }
     @IBAction func toARKitButton(_ sender: Any) {
-  
-          if calcMode == 3{
+        if calcMode == 3{
             return
         }
         calcMode=3

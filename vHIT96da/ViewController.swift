@@ -3115,6 +3115,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
+        print("ssssssssssssssssssssssss")
         if let vc = segue.source as? ParametersViewController {
             let ParametersViewController:ParametersViewController = vc
             // segueから遷移先のResultViewControllerを取得する
