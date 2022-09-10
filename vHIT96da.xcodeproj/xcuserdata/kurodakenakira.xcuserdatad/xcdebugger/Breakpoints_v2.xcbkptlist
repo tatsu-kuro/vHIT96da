@@ -3,4 +3,70 @@
    uuid = "51BFF675-7D48-4EAA-A74C-C5F93311F866"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "05B78CDA-3057-408D-AD8B-3B6498C6D393"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "vHIT96da/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2747"
+            endingLineNumber = "2747"
+            landmarkName = "saveResult_vog(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "05B78CDA-3057-408D-AD8B-3B6498C6D393 - 62566c93afa09185"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.UIAlertAction&gt;) -&gt; () in vHIT96da.ViewController.saveResult_vog(Any) -&gt; ()"
+                  moduleName = "vHIT96da"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kurodakenakira/Documents/GitHub/vHIT96da/vHIT96da/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "2748"
+                  endingLineNumber = "2748"
+                  offsetFromSymbolStart = "1016">
+               </Location>
+               <Location
+                  uuid = "05B78CDA-3057-408D-AD8B-3B6498C6D393 - 62566c93afa09185"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__C.UIAlertAction&gt;) -&gt; () in vHIT96da.ViewController.saveResult_vog(Any) -&gt; ()"
+                  moduleName = "vHIT96da"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kurodakenakira/Documents/GitHub/vHIT96da/vHIT96da/ViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "2748"
+                  endingLineNumber = "2748"
+                  offsetFromSymbolStart = "1064">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7FDDAB11-5B94-48AB-97C0-5269FE6B3074"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "vHIT96da/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2746"
+            endingLineNumber = "2746"
+            landmarkName = "saveResult_vog(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

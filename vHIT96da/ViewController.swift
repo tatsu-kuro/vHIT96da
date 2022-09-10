@@ -2011,6 +2011,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             autoreleasepool{
                 UIApplication.shared.isIdleTimerDisabled = false//do sleep
                 vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: arrayDataCount)
+//                vogCurpoint=0
+                var x=CGFloat(arrayDataCount-2400)*view.bounds.width/mailWidth
+                if x<0{
+                    x=0
+                }
                 vogCurpoint=0
                 drawVog(vogCurpoint)
                 setWaveSlider()
@@ -2024,7 +2029,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             autoreleasepool{
                 vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-10, end: arrayDataCount)
                 lastArraycount=arrayDataCount
-                drawVog(arrayDataCount*148/3349)
+                var x=CGFloat(arrayDataCount-2400)*view.bounds.width/mailWidth
+                if x<0{
+                    x=0
+                }
+                drawVog(Int(x))
             }
         }
     }
@@ -2051,7 +2060,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             let r = view.bounds.width/CGFloat(mailWidth)
             vogCurpoint = Int(Float(r)*waveSlider.value*Float(eyePosXFiltered4update.count-2400))/eyePosXFiltered4update.count
             drawVog(    vogCurpoint)
-            print("vogCurpoint:",vogCurpoint,eyePosXFiltered4update.count)
+            print("vogCurpoint:",vogCurpoint,eyePosXFiltered4update.count,waveSlider.value)
         }
     }
     func setWaveSlider(){
