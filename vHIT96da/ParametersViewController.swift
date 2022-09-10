@@ -22,22 +22,36 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
              bottomPadding = self.view.safeAreaInsets.bottom
 //            UserDefaults.standard.set(bottomPadding,forKey: "bottomPadding")
         }
+        
         setTexts()
+//        vHITARKitLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+
     }
     @IBOutlet weak var markText: UILabel!
     @IBOutlet weak var faceMarkSwitch: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
-    @IBAction func toARKitButton(_ sender: Any) {
-    }
+    @IBOutlet weak var arkitButton: UIButton!
+    
+    @IBOutlet weak var vHITARKitLabel: UILabel!
     @IBOutlet weak var greenItemLabel: UILabel!
     @IBOutlet weak var vHITLabel: UILabel!
+    @IBOutlet weak var arkitLabel: UILabel!
     @IBOutlet weak var toVOGButton: UIButton!
     @IBAction func onTovHITButton(_ sender: Any) {
         if calcMode == 0{
+          return
+      }
+      calcMode=0
+      dispParam()
+      setTexts()
+    }
+    @IBAction func toARKitButton(_ sender: Any) {
+  
+          if calcMode == 3{
             return
         }
-        calcMode=0
+        calcMode=3
         dispParam()
         setTexts()
     }
@@ -198,6 +212,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func setDefault(_ sender: Any) {
+        if calcMode==3{
+            return
+        }
         if calcMode != 2{
             widthRange = 30
             waveWidth = 80
@@ -242,7 +259,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
  
     @IBAction func ratio1Button(_ sender: Any) {
-        if calcMode != 2{
+        if calcMode == 0 || calcMode==3{
             eyeRatio = Field2value(field: eyeVelocityInput)
         }else{
             posRatio = Field2value(field: eyeVelocityInput)
@@ -250,7 +267,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func ratio2Button(_ sender: Any) {
-        if calcMode != 2{
+        if calcMode == 0 || calcMode==3{
             gyroRatio = Field2value(field: headVelocityInput)
         }else{
             veloRatio = Field2value(field: headVelocityInput)
@@ -262,10 +279,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.A2DInput.text = "\(waveWidth)"
         self.eyeBorderInput.text = "\(eyeBorder)"
         self.timeLagInput.text = "\(videoGyroZure)"
-        if calcMode != 2{//vHIT
+        if calcMode == 0 || calcMode==3{//vHIT
             self.eyeVelocityInput.text = "\(eyeRatio)"
             self.headVelocityInput.text = "\(gyroRatio)"
-        }else{
+        }else{//vog
             self.eyeVelocityInput.text = "\(posRatio)"
             self.headVelocityInput.text = "\(veloRatio)"
         }
@@ -279,7 +296,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
   
     func setTexts(){
         let topY = keyDown.frame.minY// vhitpng.frame.minY
-        let ww:CGFloat=view.bounds.width
+        let ww=view.bounds.width
+        let wh=view.bounds.height
+        let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
+
         //        let wh:CGFloat=view.bounds.height
         let bw:CGFloat=55
         let bh:CGFloat=25
@@ -292,12 +312,16 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let sp:CGFloat=5
         let butw=(view.bounds.width-sp*7)/4
         let buth=butw/2
-        let buty=view.bounds.height-sp-buth-bottomPadding
+        let buty=view.bounds.height-sp-buth-bottom
+        let butw1=(view.bounds.width-sp*8)/5
+        let buth1=butw1/2
+        let buty1=view.bounds.height-sp-buth1-bottom
+
         eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
         headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
         eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
         eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
-
+        vHITARKitLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
         if calcMode==2{//VOG
             eyeVelocityLabel.isHidden=true
             headVelocityLabel.isHidden=true
@@ -307,8 +331,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeVelocityLabel.textColor=UIColor.black
             headVelocityLabel.backgroundColor=UIColor.white
             headVelocityLabel.textColor=UIColor.black
-//            markText.isHidden = true
-//            faceFbutton.isHidden = true
             vhitpng.isHidden=true
             A2DLabel.isHidden=true
             B2CLabel.isHidden=true
@@ -331,8 +353,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             
             faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*5,width:tw,height: bh)
-//            faceMarkSwitch.isHidden=true
-//            markText.isHidden=true
             
             parallelButton.isHidden=true
             parallelLabel.isHidden=true
@@ -342,18 +362,15 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
                         
             vHITLabel.isHidden=true
             VOGLabel.isHidden=false
+            arkitLabel.isHidden=true
             greenItemLabel.isHidden=true
         }else{//vhit
             eyeVelocityLabel.isHidden=false
             headVelocityLabel.isHidden=false
             eyePositionLabelVOG.isHidden=true
             eyeVelocityLabelVOG.isHidden=true
-
             gyroText.isHidden=true
-
             greenItemLabel.isHidden=false
-//            markText.isHidden = false
-//            faceFbutton.isHidden = false
             vhitpng.isHidden=false
             if Locale.preferredLanguages.first!.contains("ja"){
                 vhitpng.image=UIImage(named:"vhit_ja")!
@@ -420,18 +437,30 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             displayMode()
             vHITLabel.isHidden=false
             VOGLabel.isHidden=true
+            arkitLabel.isHidden=true
             vHITLabel.layer.masksToBounds=true
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
         }
+        if calcMode==3{
+            vHITLabel.isHidden=true
+            VOGLabel.isHidden=false
+            arkitLabel.isHidden=true
+            vHITLabel.isHidden=true
+            VOGLabel.isHidden=true
+            arkitLabel.isHidden=false
+            vHITARKitLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+        }
 
-        defaultButton.frame=CGRect(x:2*sp,y:buty,width:butw,height: buth)
-        tovHITButton.frame=CGRect(x:butw+3*sp,y:buty,width:butw,height: buth)
-        vHITLabel.frame=CGRect(x:butw+3*sp,y:buty-7,width:butw,height: 5)
-        toVOGButton.frame=CGRect(x:butw*2+4*sp,y:buty,width:butw,height: buth)
-        VOGLabel.frame=CGRect(x:butw*2+4*sp,y:buty-7,width:butw,height: 5)
-        exitButton.frame=CGRect(x:butw*3+5*sp,y:buty,width:butw,height: buth)
-    }
+        defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
+        tovHITButton.frame=CGRect(x:butw1+3*sp,y:buty1,width:butw1,height: buth1)
+        vHITLabel.frame=CGRect(   x:butw1+3*sp,y:buty1-7,width:butw1,height: 5)
+        arkitButton.frame=CGRect( x:butw1*2+4*sp,y:buty1,width:butw1,height: buth1)
+        arkitLabel.frame=CGRect(  x:butw1*2+4*sp,y:buty1-7,width:butw1,height: 5)
+        toVOGButton.frame=CGRect( x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
+        VOGLabel.frame=CGRect(    x:butw1*3+5*sp,y:buty1-7,width:butw1,height: 5)
+        exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
+     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -460,8 +489,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         keyDown.layer.cornerRadius = 5
         toVOGButton.layer.cornerRadius=5
         tovHITButton.layer.cornerRadius=5
+        arkitButton.layer.cornerRadius=5
         keyDown.isHidden = true
         setMaxMin()//念の為パラメータを正常範囲にしておく。
+//        vhitDisplayLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
+//        vhitDisplayLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+        vHITARKitLabel.frame=CGRect(x:0,y:0,width: 0,height:0)//view.bounds.width,height: view.bounds.height)
+
+
     }
 
     override func didReceiveMemoryWarning() {
