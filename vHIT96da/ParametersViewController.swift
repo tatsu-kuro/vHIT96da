@@ -31,9 +31,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var faceMarkSwitch: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
+    @IBOutlet weak var arkitVHITButtonLabel: UIButton!
     @IBOutlet weak var arkitButton: UIButton!
     
-    @IBOutlet weak var vHITARKitLabel: UILabel!
+//    @IBOutlet weak var vHITARKitLabel: UILabel!
     @IBOutlet weak var greenItemLabel: UILabel!
     @IBOutlet weak var vHITLabel: UILabel!
     @IBOutlet weak var arkitLabel: UILabel!
@@ -295,12 +296,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
   
     func setTexts(){
-        let topY = keyDown.frame.minY// vhitpng.frame.minY
         let ww=view.bounds.width
-        let wh=view.bounds.height
+//        let wh=view.bounds.height
         let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
 
+        let sp:CGFloat=5
         //        let wh:CGFloat=view.bounds.height
+        let topY = CGFloat( UserDefaults.standard.float(forKey: "top"))+sp*2//keyDown.frame.minY// vhitpng.frame.minY
         let bw:CGFloat=55
         let bh:CGFloat=25
         let bh1=bh+7
@@ -309,19 +311,20 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let x1:CGFloat=3
         let x2=x1+bw+5
         
-        let sp:CGFloat=5
         let butw=(view.bounds.width-sp*7)/4
         let buth=butw/2
-        let buty=view.bounds.height-sp-buth-bottom
+//        let buty=view.bounds.height-sp-buth-bottom
         let butw1=(view.bounds.width-sp*8)/5
         let buth1=butw1/2
         let buty1=view.bounds.height-sp-buth1-bottom
 
+        keyDown.frame=CGRect(x:ww-butw-sp*2,y:topY,width: butw,height: buth)
         eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
         headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
         eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
         eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
-        vHITARKitLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
+        arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
+        arkitVHITButtonLabel.isHidden=true
         if calcMode==2{//VOG
             eyeVelocityLabel.isHidden=true
             headVelocityLabel.isHidden=true
@@ -449,7 +452,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vHITLabel.isHidden=true
             VOGLabel.isHidden=true
             arkitLabel.isHidden=false
-            vHITARKitLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+            arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+            arkitVHITButtonLabel.isHidden=false
         }
 
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
@@ -494,7 +498,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         setMaxMin()//念の為パラメータを正常範囲にしておく。
 //        vhitDisplayLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
 //        vhitDisplayLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-        vHITARKitLabel.frame=CGRect(x:0,y:0,width: 0,height:0)//view.bounds.width,height: view.bounds.height)
+        arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: 0,height:0)//view.bounds.width,height: view.bounds.height)
+        arkitVHITButtonLabel.isHidden=true
 
 
     }

@@ -817,14 +817,14 @@ Tap the waveforms to change the (2*).</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="vHIT using ARKit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hi6-DN-ib8">
-                                <rect key="frame" x="0.0" y="44" width="414" height="20.5"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Db-Xx-7hu">
+                                <rect key="frame" x="283" y="696" width="151" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="ARKit vHIT (未完成)"/>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DZA-EA-S6I">
                                 <rect key="frame" x="94" y="822" width="62" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -928,6 +928,7 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="VOGLabel" destination="ifV-06-obi" id="zkC-t8-lZh"/>
                         <outlet property="arkitButton" destination="d81-YQ-ILY" id="q6D-Zd-MvM"/>
                         <outlet property="arkitLabel" destination="ktc-fi-Lu2" id="ygd-dR-bbH"/>
+                        <outlet property="arkitVHITButtonLabel" destination="2Db-Xx-7hu" id="Xj9-Al-nN4"/>
                         <outlet property="defaultButton" destination="5sT-gS-ZO9" id="oOY-AU-z6c"/>
                         <outlet property="exitButton" destination="ut3-ve-Fe7" id="IR0-BQ-SVI"/>
                         <outlet property="eyeBorderInput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
@@ -951,7 +952,6 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="timeLagLabel" destination="69E-lo-wOt" id="25e-FT-cVH"/>
                         <outlet property="toVOGButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
                         <outlet property="tovHITButton" destination="DZA-EA-S6I" id="eba-4P-chM"/>
-                        <outlet property="vHITARKitLabel" destination="Hi6-DN-ib8" id="p1Y-QV-ny8"/>
                         <outlet property="vHITLabel" destination="QNY-eg-azz" id="6mA-db-m2a"/>
                         <outlet property="vhitDisplayLabel" destination="bwj-An-8NO" id="L4A-8c-FfO"/>
                         <outlet property="vhitpng" destination="EJg-35-yLr" id="juY-rW-Ebq"/>
