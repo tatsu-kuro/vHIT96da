@@ -1745,20 +1745,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func drawVog(_ curPoint:Int){
         let ww=view.bounds.width
         // 画面に表示する
-        let img = getVogImgWithText(vogImage!,curPoint:curPoint)
+        let img = getVogImgWithText(vogImage!,curPoint:curPoint,mailFlag: false)
         let drawImage = img .resize(size: CGSize(width:ww, height:ww*2/3))
         drawVogBoxView(drawImage!)
     }
 
     func getVOGText(orgImg:UIImage,width w:CGFloat,height h:CGFloat,mail:Bool) -> UIImage {
         // イメージ処理の開始]
-        if mail{//mailの時は直に貼り付ける
+//        if mail{//mailの時は直に貼り付ける
             UIGraphicsBeginImageContext(orgImg.size)
             orgImg.draw(at:CGPoint.zero)
-        }else{
-            let size = CGSize(width:w, height:h)
-            UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        }// パスの初期化
+//        }else{
+//            let size = CGSize(width:w, height:h)
+//            UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+//        }// パスの初期化
         let drawPath = UIBezierPath()
         if !mail{//mailの時は時間経過は表示しない
             let time=Int(CFAbsoluteTimeGetCurrent()-calcStartTime)+1
@@ -1896,12 +1896,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          }
          vogBoxView.addSubview(UIImageView(image: img))
     }
-    func drawVogtext(){
-        let ww=view.bounds.width
-        let imageWithText = getVOGText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
-        let drawImage = imageWithText.resize(size: CGSize(width:ww, height:ww*2/3))
-        drawVogBoxView(drawImage!)
-    }
+//    func drawVogtext(){
+//        let ww=view.bounds.width
+//        let imageWithText = getVOGText(orgImg:vogImage!,width:mailWidth,height:mailHeight,mail: false)
+//        let drawImage = imageWithText.resize(size: CGSize(width:ww, height:ww*2/3))
+//        drawVogBoxView(drawImage!)
+//    }
     
     var initDrawVhitF:Bool=true
     func drawVHITwaves(){//解析結果のvHITwavesを表示する
@@ -2710,11 +2710,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return trimImage
     }
     
-    func getVogImgWithText(_ image:UIImage,curPoint:Int)->UIImage{
+    func getVogImgWithText(_ image:UIImage,curPoint:Int,mailFlag:Bool)->UIImage{
         let pos = CGFloat(curPoint)*mailWidth/view.bounds.width
         let imgRef = image.cgImage?.cropping(to: CGRect(x:pos,y:0,width: mailWidth,height: mailHeight))
         let trimImage = UIImage(cgImage: imgRef!, scale: image.scale, orientation: image.imageOrientation)
-        let imgWithText=getVOGText(orgImg: trimImage, width: mailWidth , height: mailHeight,mail:true)
+        let imgWithText=getVOGText(orgImg: trimImage, width: mailWidth , height: mailHeight,mail:mailFlag)
         return imgWithText
     }
     
@@ -2734,13 +2734,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("\(String(describing: textField.text))")
             #endif
             idString = textField.text!
-            drawVogtext()//画面にID表示。
+            drawVog(vogCurpoint)//画面にID表示。
   // イメージビューに設定する
-            let trimImgWithText=getVogImgWithText(vogImage!, curPoint: vogCurpoint)
-//            let pos = -CGFloat(vogCurpoint)*mailWidth/view.bounds.width
-//            let drawImage=trimmingImage(vogImage!, trimmingArea: CGRect(x:pos,y:0,width: mailWidth,height: mailHeight))
-//            let imgWithText=getVOGText(orgImg: drawImage, width: mailWidth , height: mailHeight,mail:true)
-//
+            let trimImgWithText=getVogImgWithText(vogImage!, curPoint: vogCurpoint,mailFlag: true)
             //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
             saveJpegImage2path(image: trimImgWithText, path: "temp.jpeg")
             while existFile(aFile: "temp.jpeg") == false{
