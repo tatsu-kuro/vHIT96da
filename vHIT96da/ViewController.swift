@@ -2011,7 +2011,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             autoreleasepool{
                 UIApplication.shared.isIdleTimerDisabled = false//do sleep
                 vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: arrayDataCount)
-                drawVog(arrayDataCount*148/3349)
+                vogCurpoint=0
+                drawVog(vogCurpoint)
                 setWaveSlider()
             }
             //終わり直前で認識されたvhitdataが認識されないこともあるかもしれない
