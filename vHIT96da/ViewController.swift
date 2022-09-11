@@ -478,20 +478,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     //calcMode 0:hori.  1:vert. 2:vog
-    func showModeText(){
-        if calcMode==0{
-//            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
-//            changeModeButton.setTitle(" vHIT hoirizontal", for: .normal)
-        }
-        else if calcMode==1{
-//            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
-//            changeModeButton.setTitle(" vHIT vertical", for: .normal)
-        }
-        else{
-//            changeModeButton.setImage(  UIImage(systemName:""), for: .normal)//ないものを指定
-//            changeModeButton1.setTitle(" VOG hor. & vert.", for: .normal)
-        }
-    }
+//    func showModeText(){
+//        if calcMode==0{
+////            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
+////            changeModeButton.setTitle(" vHIT hoirizontal", for: .normal)
+//        }
+//        else if calcMode==1{
+////            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
+////            changeModeButton.setTitle(" vHIT vertical", for: .normal)
+//        }
+//        else{
+////            changeModeButton.setImage(  UIImage(systemName:""), for: .normal)//ないものを指定
+////            changeModeButton1.setTitle(" VOG hor. & vert.", for: .normal)
+//        }
+//    }
     @IBAction func onChangeModeButton1(_ sender: Any) {
         if calcFlag == true || calcMode == 2 || videoDate.count == 0{
             return
@@ -503,7 +503,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             calcMode=0
         }
 
-        showModeText()
+//        showModeText()
         setButtons_first()
         setButtons(mode: true)
         dispWakus()
@@ -529,7 +529,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             calcMode=1
         }
 
-        showModeText()
+//        showModeText()
         setButtons_first()
         setButtons(mode: true)
         dispWakus()
@@ -1697,7 +1697,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         getUserDefaults()
         setButtons(mode: true)
         stopButton.isHidden = true
-        showModeText()
+//        showModeText()
         showBoxies(f: false)//isVHITに応じてviewを表示
         if PHPhotoLibrary.authorizationStatus() != .authorized {
             PHPhotoLibrary.requestAuthorization { status in
@@ -1811,7 +1811,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         str2.draw(at: CGPoint(x: 20, y: h-100), withAttributes: [
                     NSAttributedString.Key.foregroundColor : UIColor.black,
                     NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: w-280, y: h-100), withAttributes: [
+        str3.draw(at: CGPoint(x: w-360, y: h-100), withAttributes: [
                     NSAttributedString.Key.foregroundColor : UIColor.black,
                     NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
         drawPath.stroke()
@@ -2940,18 +2940,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             changeModeButton2.isHidden=false
-            changeModeButton.frame=CGRect(x:sp*2,y:by1-sp/2-5,width:bh*3/2+sp/2,height: 5)
+            iroiro.setButtonProperty(changeModeButton,x:sp*2,y:by1-sp/2-1,w:bh*3/2+sp/2,h:5,UIColor.systemRed)
+//            changeModeButton.frame=CGRect(x:sp*2,y:by1-sp/2-2,width:bh*3/2+sp/2,height: 5)
             changeModeButton1.setTitle("vHIT hori.", for: .normal)
             changeModeButton2.setTitle("vHIT vert.", for: .normal)
             changeModeButton.isHidden=false
         }else if calcMode == 1{
-                iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
-                iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
-                changeModeButton2.isHidden=false
-                changeModeButton.frame=CGRect(x:sp*2+bh*3/2+sp*3/2,y:by1-sp/2-5,width:bh*3/2+sp/2,height:5)
-
-                changeModeButton1.setTitle("vHIT hori.", for: .normal)
-                changeModeButton2.setTitle("vHIT vert.", for: .normal)
+            iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
+            iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
+            changeModeButton2.isHidden=false
+            iroiro.setButtonProperty(changeModeButton,x:sp*2+bh*3/2+sp*3/2,y:by1-sp/2-1,w:bh*3/2+sp/2,h:5,UIColor.systemRed)
+            changeModeButton1.setTitle("vHIT hori.", for: .normal)
+            changeModeButton2.setTitle("vHIT vert.", for: .normal)
             changeModeButton.isHidden=false
 
        }else{
@@ -3215,7 +3215,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 showBoxies(f: true)
             }
-            showModeText()
+//            showModeText()
             #if DEBUG
             print("TATSUAKI-unwind from para")
             #endif
