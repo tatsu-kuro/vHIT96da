@@ -47,7 +47,7 @@
 "b3H-GH-mSd.text" = "眼球位置波形の高さ %";
 "utK-j7-SyA.text" = "眼球速度波形の高さ %";
 /* Class = "UIButton"; normalTitle = " MODE"; ObjectID = "XhS-eE-NWD"; */
-"XhS-eE-NWD.normalTitle" = " MODE";
+/*"XhS-eE-NWD.normalTitle" = " MODE";*/
 
 /* Class = "UILabel"; text = "皮膚上マークの動きによる補正"; ObjectID = "aD3-jN-jML"; */
 "aD3-jN-jML.text" = "皮膚上マークの動きによる補正";

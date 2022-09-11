@@ -146,10 +146,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var boxiesFlag:Bool=false
 //    @IBOutlet weak var modeDispButton: UIButton!
     @IBOutlet weak var changeModeButton: UIButton!
+    @IBOutlet weak var changeModeButton1: UIButton!
     
+    @IBOutlet weak var changeModeButton2: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var backwardButton: UIButton!
 
+ 
  
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
@@ -474,32 +477,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+    //calcMode 0:hori.  1:vert. 2:vog
     func showModeText(){
         if calcMode==0{
-            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
-            changeModeButton.setTitle(" vHIT hoirizontal", for: .normal)
+//            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
+//            changeModeButton.setTitle(" vHIT hoirizontal", for: .normal)
         }
         else if calcMode==1{
-            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
-            changeModeButton.setTitle(" vHIT vertical", for: .normal)
+//            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
+//            changeModeButton.setTitle(" vHIT vertical", for: .normal)
         }
         else{
-            changeModeButton.setImage(  UIImage(systemName:""), for: .normal)//ないものを指定
-            changeModeButton.setTitle(" VOG hor. & vert.", for: .normal)
+//            changeModeButton.setImage(  UIImage(systemName:""), for: .normal)//ないものを指定
+//            changeModeButton1.setTitle(" VOG hor. & vert.", for: .normal)
         }
     }
-    @IBAction func onChangeModeButton(_ sender: Any) {
+    @IBAction func onChangeModeButton1(_ sender: Any) {
         if calcFlag == true || calcMode == 2 || videoDate.count == 0{
             return
         }
 
         if calcMode==0{
-            calcMode=1
+            return
         }else{
             calcMode=0
         }
 
         showModeText()
+        setButtons_first()
         setButtons(mode: true)
         dispWakus()
         showWakuImages()
@@ -512,6 +517,57 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
         showBoxies(f:boxiesFlag)
+    }
+    @IBAction func onChangeModeButton2(_ sender: Any) {
+        if calcFlag == true || calcMode == 2 || videoDate.count == 0{
+            return
+        }
+
+        if calcMode==1{
+            return
+        }else{
+            calcMode=1
+        }
+
+        showModeText()
+        setButtons_first()
+        setButtons(mode: true)
+        dispWakus()
+        showWakuImages()
+        calcStartTime=CFAbsoluteTimeGetCurrent()//所要時間の起点 update_vog
+        if calcMode != 2{
+            if eyePosXFiltered.count>0 && videoCurrent != -1{
+                vhitCurpoint=0
+                drawOneWave(startcount: 0)
+                calcDrawVHIT(tuple: false)
+            }
+        }
+        showBoxies(f:boxiesFlag)
+    }
+    @IBAction func onChangeModeButton(_ sender: Any) {
+//        if calcFlag == true || calcMode == 2 || videoDate.count == 0{
+//            return
+//        }
+//
+//        if calcMode==0{
+//            calcMode=1
+//        }else{
+//            calcMode=0
+//        }
+//
+//        showModeText()
+//        setButtons(mode: true)
+//        dispWakus()
+//        showWakuImages()
+//        calcStartTime=CFAbsoluteTimeGetCurrent()//所要時間の起点 update_vog
+//        if calcMode != 2{
+//            if eyePosXFiltered.count>0 && videoCurrent != -1{
+//                vhitCurpoint=0
+//                drawOneWave(startcount: 0)
+//                calcDrawVHIT(tuple: false)
+//            }
+//        }
+//        showBoxies(f:boxiesFlag)
     }
  
 
@@ -766,7 +822,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 setVideoButtons(mode: false)
             }
-            changeModeButton.isEnabled = true
+            changeModeButton1.isEnabled = true
+            changeModeButton2.isEnabled = true
             cameraButton.isEnabled = true
         }else{
             calcButton.isHidden = true
@@ -778,9 +835,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.isEnabled = false
             helpButton.isEnabled = false
             setVideoButtons(mode: false)
-            changeModeButton.isEnabled = false
+            changeModeButton1.isEnabled = false
             cameraButton.isEnabled = false
-            cameraButton.isEnabled = false// backgroundColor=UIColor.gray
+            cameraButton.isEnabled = false
          }
     }
     @IBAction func onCalcButton(_ sender: Any) {
@@ -2904,8 +2961,31 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         iroiro.setButtonProperty(backwardButton,x:sp*6+bw*4,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(playButton,x:sp*7+bw*5,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(forwardButton,x:sp*8+bw*6,y:by1,w:bw,h:bh,UIColor.systemOrange)
-        iroiro.setButtonProperty(changeModeButton,x:sp*2,y:by1,w:bh*3+sp*2,h:bh,UIColor.darkGray)
-        
+        //calcMode 0:hori.  1:vert. 2:vog
+        if calcMode == 0{
+            iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
+            iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
+            changeModeButton2.isHidden=false
+            changeModeButton.frame=CGRect(x:sp*2,y:by1-sp/2-5,width:bh*3/2+sp/2,height: 5)
+            changeModeButton1.setTitle("vHIT hori.", for: .normal)
+            changeModeButton2.setTitle("vHIT vert.", for: .normal)
+            changeModeButton.isHidden=false
+        }else if calcMode == 1{
+                iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
+                iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
+                changeModeButton2.isHidden=false
+                changeModeButton.frame=CGRect(x:sp*2+bh*3/2+sp*3/2,y:by1-sp/2-5,width:bh*3/2+sp/2,height:5)
+
+                changeModeButton1.setTitle("vHIT hori.", for: .normal)
+                changeModeButton2.setTitle("vHIT vert.", for: .normal)
+            changeModeButton.isHidden=false
+
+       }else{
+            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
+            changeModeButton1.setTitle("VOG hor. & vert.", for: .normal)
+            changeModeButton2.isHidden=true
+           changeModeButton.isHidden=true
+        }
         if videoDate.count == 0{
             playButton.isEnabled=false
             forwardButton.isEnabled=false
