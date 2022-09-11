@@ -544,32 +544,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         showBoxies(f:boxiesFlag)
     }
-    @IBAction func onChangeModeButton(_ sender: Any) {
-//        if calcFlag == true || calcMode == 2 || videoDate.count == 0{
-//            return
-//        }
-//
-//        if calcMode==0{
-//            calcMode=1
-//        }else{
-//            calcMode=0
-//        }
-//
-//        showModeText()
-//        setButtons(mode: true)
-//        dispWakus()
-//        showWakuImages()
-//        calcStartTime=CFAbsoluteTimeGetCurrent()//所要時間の起点 update_vog
-//        if calcMode != 2{
-//            if eyePosXFiltered.count>0 && videoCurrent != -1{
-//                vhitCurpoint=0
-//                drawOneWave(startcount: 0)
-//                calcDrawVHIT(tuple: false)
-//            }
-//        }
-//        showBoxies(f:boxiesFlag)
-    }
- 
 
     @IBAction func onBackVideoButton(_ sender: Any) {
         if vHITBoxView?.isHidden == false{
