@@ -69,12 +69,7 @@ class ARKitViewController: UIViewController {
         let temp=vHIT(isRight: isRight,frameN: frameN, dispOn: dispOn, currDispOn: currDispOn,eye:vHITwave,face:vHITwave)
         vHITs.append(temp)
     }
-    
-    
-    
-    
-    
-    
+
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -86,8 +81,8 @@ class ARKitViewController: UIViewController {
         waves.removeAll()
         multiEye = iroiro.getUserDefaultCGFloat(str: "multiEye", ret: 100)
         multiFace = iroiro.getUserDefaultCGFloat(str: "multiFace", ret: 100)
-        //        timer = Timer.scheduledTimer(timeInterval: 1.0/60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-        //        session.delegate = self
+                timer = Timer.scheduledTimer(timeInterval: 1.0/60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+        session.delegate = self
         
         waveSlider.minimumTrackTintColor=UIColor.gray
         waveSlider.maximumTrackTintColor=UIColor.gray
@@ -637,9 +632,9 @@ class ARKitViewController: UIViewController {
     //下のviewDidAppearの３行もエラーが出ずに動く？
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //        let configuration = ARFaceTrackingConfiguration()
-        //        configuration.isLightEstimationEnabled = true
-        //        session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+                let configuration = ARFaceTrackingConfiguration()
+                configuration.isLightEstimationEnabled = true
+                session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
     }
     var lastTime=CFAbsoluteTimeGetCurrent()
     
@@ -760,7 +755,7 @@ class ARKitViewController: UIViewController {
        alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
        alert.addAction(saveAction)
        present(alert, animated: true, completion: nil)
-   }
+    }
     @IBAction func onPauseButton(_ sender: Any) {
         if arKitFlag==true && waves.count>60{
             session.pause()
@@ -773,17 +768,17 @@ class ARKitViewController: UIViewController {
             drawVHITBox()
         }
     }
-     @IBAction func onARKitButton(_ sender: Any) {
+    @IBAction func onARKitButton(_ sender: Any) {
         getVHITWaves()
         if arKitFlag==true && waves.count>60{
-//            session.pause()
-//            arKitFlag=false
-//            setWaveSlider()
-//            waveSlider.isEnabled=true
-//            waveSlider.minimumTrackTintColor=UIColor.blue
-//            waveSlider.maximumTrackTintColor=UIColor.blue
-//            getVHITWaves()
-//            drawVHITBox()
+            session.pause()
+            arKitFlag=false
+            setWaveSlider()
+            waveSlider.isEnabled=true
+            waveSlider.minimumTrackTintColor=UIColor.blue
+            waveSlider.maximumTrackTintColor=UIColor.blue
+            getVHITWaves()
+            drawVHITBox()
         }else{
             let configuration = ARFaceTrackingConfiguration()
             configuration.isLightEstimationEnabled = true
@@ -806,8 +801,8 @@ class ARKitViewController: UIViewController {
         }
     }
 }
-/*
-extension ViewController: ARSessionDelegate {
+
+extension ARKitViewController: ARSessionDelegate {
  
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         guard let faceAnchor = frame.anchors.first(where: { $0 is ARFaceAnchor }) as? ARFaceAnchor else {
@@ -841,4 +836,4 @@ extension ViewController: ARSessionDelegate {
     }
     
 }
- */
+ 
