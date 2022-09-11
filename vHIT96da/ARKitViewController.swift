@@ -628,6 +628,13 @@ class ARKitViewController: UIViewController {
         }
         drawWaveBox()
     }
+    
+    //viewDidLoadの中の下行がエラーです。
+    //session.delegate = self
+    //ここが上手くいけば、
+    //８１０行のextension ViewController: ARSessionDelegate {
+    //もエラーがでず
+    //下のviewDidAppearの３行もエラーが出ずに動く？
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         //        let configuration = ARFaceTrackingConfiguration()
@@ -834,16 +841,4 @@ extension ViewController: ARSessionDelegate {
     }
     
 }
- */
-/*
-
- final class ViewController: UIViewController {
-
-  
-     
- 
-
- //    var initOnWaveSlideF:Bool=true
- 
- }
  */
