@@ -1173,12 +1173,25 @@ Tap the waveforms to change the (2*).</string>
                                     <segue destination="qlp-zf-PaW" kind="unwind" unwindAction="unwindArkit:" id="X3v-a1-wQ8"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ARKit vHIT (未完成)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YzR-0o-yei">
+                                <rect key="frame" x="0.0" y="398" width="414" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="mZc-ft-S5I"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ldy-jw-9MG"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="YzR-0o-yei" firstAttribute="centerX" secondItem="lwZ-mW-I86" secondAttribute="centerX" id="1l3-Y6-Rlj"/>
                             <constraint firstItem="Ldy-jw-9MG" firstAttribute="bottom" secondItem="47f-Fi-KoO" secondAttribute="bottom" constant="10" id="J5a-uw-s5N"/>
+                            <constraint firstItem="YzR-0o-yei" firstAttribute="leading" secondItem="Ldy-jw-9MG" secondAttribute="leading" id="JGe-Mr-91t"/>
                             <constraint firstItem="Ldy-jw-9MG" firstAttribute="trailing" secondItem="47f-Fi-KoO" secondAttribute="trailing" constant="10" id="N9A-Dp-uGY"/>
+                            <constraint firstItem="Ldy-jw-9MG" firstAttribute="trailing" secondItem="YzR-0o-yei" secondAttribute="trailing" id="XJw-gg-ypX"/>
+                            <constraint firstItem="YzR-0o-yei" firstAttribute="centerY" secondItem="lwZ-mW-I86" secondAttribute="centerY" id="v9u-Ej-kFe"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ldX-lZ-UEg"/>
