@@ -47,14 +47,19 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
       dispParam()
       setTexts()
     }
-    
+    @IBAction func unwindPara(_ segue: UIStoryboardSegue) {
+        calcMode=3
+    }
     @IBAction func onExitButton(_ sender: Any) {
-        
         if calcMode != 3{
         performSegue(withIdentifier: "fromParamsToMain", sender: nil)
         }else{
-        print("333333rrrr")
+        onSegueToArkitButton(0)
         }
+    }
+    
+    @IBOutlet weak var segueToArkitButton: UIButton!
+    @IBAction func onSegueToArkitButton(_ sender: Any) {
     }
     @IBAction func toARKitButton(_ sender: Any) {
         if calcMode == 3{
@@ -333,6 +338,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
         arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
         arkitVHITButtonLabel.isHidden=true
+        segueToArkitButton.isHidden=true
         if calcMode==2{//VOG
             eyeVelocityLabel.isHidden=true
             headVelocityLabel.isHidden=true
@@ -461,7 +467,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             VOGLabel.isHidden=true
             arkitLabel.isHidden=false
             arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-            arkitVHITButtonLabel.isHidden=false
+            arkitVHITButtonLabel.isHidden=false//buttonLabelなどを隠す
+            segueToArkitButton.isHidden=false//Exitの上に載せて、ArkitViewContへsegueする
         }
 
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
@@ -472,6 +479,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         toVOGButton.frame=CGRect( x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
         VOGLabel.frame=CGRect(    x:butw1*3+5*sp,y:buty1-7,width:butw1,height: 5)
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
+        segueToArkitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
      }
     
     override func viewDidLoad() {
@@ -498,6 +506,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
+        segueToArkitButton.layer.cornerRadius=5
         keyDown.layer.cornerRadius = 5
         toVOGButton.layer.cornerRadius=5
         tovHITButton.layer.cornerRadius=5

@@ -912,12 +912,25 @@ Tap the waveforms to change the (2*).</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nyP-Lg-EwR">
-                                <rect key="frame" x="339" y="544" width="64" height="31"/>
+                                <rect key="frame" x="317" y="544" width="109" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="segue"/>
+                                <buttonConfiguration key="configuration" style="plain" title="segueToMain"/>
                                 <connections>
                                     <segue destination="LGJ-5M-CKr" kind="unwind" identifier="fromParamsToMain" unwindAction="unwind:" id="wD8-g0-7kd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RsZ-ce-yvy">
+                                <rect key="frame" x="349" y="411" width="48" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Exit">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <segue destination="1VO-Zl-WBN" kind="show" id="ybs-uw-EQG"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -957,6 +970,7 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="oppositeLabel" destination="i3U-lw-sar" id="hTw-07-F5J"/>
                         <outlet property="parallelButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
                         <outlet property="parallelLabel" destination="vXE-sa-v6F" id="Nnc-ZI-dhn"/>
+                        <outlet property="segueToArkitButton" destination="RsZ-ce-yvy" id="Iel-aG-MHL"/>
                         <outlet property="timeLagInput" destination="FYu-Qu-Gex" id="MPg-6E-bbA"/>
                         <outlet property="timeLagLabel" destination="69E-lo-wOt" id="25e-FT-cVH"/>
                         <outlet property="toVOGButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
@@ -983,7 +997,7 @@ Tap the waveforms to change the (2*).</string>
             <objects>
                 <viewController id="1VO-Zl-WBN" customClass="ARKitViewController" customModule="vHIT96da" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zF3-Xt-82F">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aN8-fa-BQ5">
@@ -1009,14 +1023,6 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="paperplane" catalog="system"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c4S-vS-12c">
-                                <rect key="frame" x="244" y="836" width="21" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="gearshape" catalog="system"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fdf-wp-qbG">
                                 <rect key="frame" x="292" y="836" width="20" height="22"/>
@@ -1070,10 +1076,22 @@ Tap the waveforms to change the (2*).</string>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="playpause" catalog="system"/>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c4S-vS-12c">
+                                <rect key="frame" x="225" y="664" width="65" height="117"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="gearshape" catalog="system"/>
+                                <connections>
+                                    <segue destination="r8T-yT-R0T" kind="unwind" unwindAction="unwindPara:" id="OyZ-SI-KWb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="RCl-fo-Vm6"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                     </view>
+                    <navigationItem key="navigationItem" id="vzd-h3-pgU"/>
                     <connections>
                         <outlet property="ARKitButton" destination="5ca-VO-mwS" id="t1v-AK-sjn"/>
                         <outlet property="deleteButton" destination="1Pf-J0-eQ3" id="t3u-15-uyg"/>
@@ -1091,6 +1109,7 @@ Tap the waveforms to change the (2*).</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cmx-AD-yAt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="r8T-yT-R0T" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1804.3478260869567" y="592.63392857142856"/>
         </scene>
