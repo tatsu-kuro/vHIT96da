@@ -517,6 +517,14 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         button.layer.cornerRadius = 5
         button.backgroundColor = color
     }
+    func getUserDefaultCGFloat(str:String,ret:CGFloat) -> CGFloat{
+        if (UserDefaults.standard.object(forKey: str) != nil){
+            return CGFloat(UserDefaults.standard.float(forKey: str))
+        }else{//keyが設定してなければretをセット
+            UserDefaults.standard.set(ret, forKey: str)
+            return ret
+        }
+    }
     func getUserDefaultInt(str:String,ret:Int) -> Int{
         if (UserDefaults.standard.object(forKey: str) != nil){//keyが設定してなければretをセット
             return UserDefaults.standard.integer(forKey:str)

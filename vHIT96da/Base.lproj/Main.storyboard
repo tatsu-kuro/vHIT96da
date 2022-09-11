@@ -1007,6 +1007,9 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="folder" catalog="system"/>
+                                <connections>
+                                    <action selector="onSaveButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="g5y-Aw-Dis"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iXL-fJ-Kgq">
                                 <rect key="frame" x="120" y="836" width="39" height="22"/>
@@ -1015,6 +1018,9 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="pause" catalog="system"/>
+                                <connections>
+                                    <action selector="onPauseButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="lHF-Wq-m3D"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZG-X3-cHS">
                                 <rect key="frame" x="43" y="836" width="21" height="22"/>
@@ -1042,6 +1048,9 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="clear" catalog="system"/>
+                                <connections>
+                                    <action selector="onDeleteButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="q6h-zz-RQ1"/>
+                                </connections>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="env-4t-0qd">
                                 <rect key="frame" x="120" y="87" width="150" height="4"/>
@@ -1080,6 +1089,9 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="playpause" catalog="system"/>
+                                <connections>
+                                    <action selector="onARKitButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="7UL-r7-Tsz"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c4S-vS-12c">
                                 <rect key="frame" x="225" y="664" width="65" height="117"/>
@@ -1095,6 +1107,11 @@ Tap the waveforms to change the (2*).</string>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="RCl-fo-Vm6"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="B78-bG-ZZF" appends="YES" id="NFK-jm-G3t"/>
+                            <outletCollection property="gestureRecognizers" destination="M4d-OV-rnO" appends="YES" id="icT-YS-WQQ"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="vzd-h3-pgU"/>
                     <connections>
@@ -1115,6 +1132,16 @@ Tap the waveforms to change the (2*).</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cmx-AD-yAt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="r8T-yT-R0T" userLabel="Exit" sceneMemberID="exit"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="B78-bG-ZZF">
+                    <connections>
+                        <action selector="panGesture:" destination="1VO-Zl-WBN" id="kiX-qe-fHp"/>
+                    </connections>
+                </panGestureRecognizer>
+                <tapGestureRecognizer id="M4d-OV-rnO">
+                    <connections>
+                        <action selector="tapGesture:" destination="1VO-Zl-WBN" id="6iN-cc-cpN"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1804.3478260869567" y="592.63392857142856"/>
         </scene>
