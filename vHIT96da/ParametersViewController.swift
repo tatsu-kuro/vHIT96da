@@ -480,15 +480,16 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
         tovHITButton.frame=CGRect(x:butw1+3*sp,y:buty1,width:butw1,height: buth1)
-        vHITLabel.frame=CGRect(   x:butw1+3*sp,y:buty1-7,width:butw1,height: 5)
+        iroiro.setLabelProperty1(vHITLabel,   x:butw1+3*sp,y:buty1-5,w:butw1,h: 4)
         arkitButton.frame=CGRect( x:butw1*2+4*sp,y:buty1,width:butw1,height: buth1)
-        arkitLabel.frame=CGRect(  x:butw1*2+4*sp,y:buty1-7,width:butw1,height: 5)
+        iroiro.setLabelProperty1(arkitLabel,x:butw1*2+4*sp,y:buty1-5,w:butw1,h: 4)
         toVOGButton.frame=CGRect( x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
-        VOGLabel.frame=CGRect(    x:butw1*3+5*sp,y:buty1-7,width:butw1,height: 5)
+        iroiro.setLabelProperty1(VOGLabel,x:butw1*3+5*sp,y:buty1-5,w:butw1,h: 4)
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
         segueToArkitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
      }
-    
+    let iroiro = myFunctions(albumName: "vHIT_VOG")
+
     override func viewDidLoad() {
         super.viewDidLoad()
         if faceMarkHidden==true{

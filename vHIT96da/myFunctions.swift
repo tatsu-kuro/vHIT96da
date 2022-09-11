@@ -509,6 +509,14 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         label.layer.cornerRadius = 5
         label.backgroundColor = color
     }
+    func setLabelProperty1(_ label:UILabel,x:CGFloat,y:CGFloat,w:CGFloat,h:CGFloat){
+        label.frame = CGRect(x:x, y:y, width: w, height: h)
+//        label.layer.borderColor = UIColor.black.cgColor
+//        label.layer.borderWidth = 1.0
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 4
+//        label.backgroundColor = color
+    }
     //button.backgroundColor = color
     func setButtonProperty(_ button:UIButton,x:CGFloat,y:CGFloat,w:CGFloat,h:CGFloat,_ color:UIColor){
         button.frame   = CGRect(x:x, y:y, width: w, height: h)
@@ -517,6 +525,7 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         button.layer.cornerRadius = 5
         button.backgroundColor = color
     }
+
     func getUserDefaultCGFloat(str:String,ret:CGFloat) -> CGFloat{
         if (UserDefaults.standard.object(forKey: str) != nil){
             return CGFloat(UserDefaults.standard.float(forKey: str))
