@@ -1188,7 +1188,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
           startTimerCalc()//resizerectのチェックの時はここをコメントアウト*********************
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
         calcDate = currentVideoDate.text!
-         let fps=getFPS(videoCurrent)
+        let fps=getFPS(videoCurrent)
         var realframeRatio:Float=fps/240
         //これを設定すると頭出ししてもあまりずれない。
         //どのようにデータを作ったのか読み直すのも面倒なので、取り敢えずやってみたら、いい具合。
@@ -1804,7 +1804,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let str0 = calcDate.components(separatedBy: ":")
         let str1 = str0[0] + ":" + str0[1]
         let str2 = "ID:" + idString
-        let str3 = "2s/scale"
+        let str3 = "2sec/scale"
         str1.draw(at: CGPoint(x: w/2, y: h-100), withAttributes: [
                     NSAttributedString.Key.foregroundColor : UIColor.black,
                     NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
