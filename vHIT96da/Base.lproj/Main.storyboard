@@ -1031,6 +1031,9 @@ Tap the waveforms to change the (2*).</string>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="questionmark.app" catalog="system"/>
+                                <connections>
+                                    <segue destination="l3a-Ut-FhC" kind="show" id="0wg-2c-lQT"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Pf-J0-eQ3">
                                 <rect key="frame" x="351" y="836" width="20" height="22"/>
@@ -1115,6 +1118,49 @@ Tap the waveforms to change the (2*).</string>
             </objects>
             <point key="canvasLocation" x="-1804.3478260869567" y="592.63392857142856"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="bLV-hN-1Q4">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="l3a-Ut-FhC" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lwZ-mW-I86">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="47f-Fi-KoO">
+                                <rect key="frame" x="324" y="812" width="80" height="40"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="0pB-uU-xsB"/>
+                                    <constraint firstAttribute="width" constant="80" id="diN-rb-CUF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Exit"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="qlp-zf-PaW" kind="unwind" unwindAction="unwindArkit:" id="X3v-a1-wQ8"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Ldy-jw-9MG"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Ldy-jw-9MG" firstAttribute="bottom" secondItem="47f-Fi-KoO" secondAttribute="bottom" constant="10" id="J5a-uw-s5N"/>
+                            <constraint firstItem="Ldy-jw-9MG" firstAttribute="trailing" secondItem="47f-Fi-KoO" secondAttribute="trailing" constant="10" id="N9A-Dp-uGY"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="ldX-lZ-UEg"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HVv-H1-LkQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="qlp-zf-PaW" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-1759" y="704"/>
+        </scene>
         <!--Helpj View Controller-->
         <scene sceneID="hFD-w5-waW">
             <objects>
@@ -1123,10 +1169,6 @@ Tap the waveforms to change the (2*).</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="ElE-cI-fEF">
-                                <rect key="frame" x="0.0" y="44" width="414" height="773"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPw-uT-6g8">
                                 <rect key="frame" x="329" y="817" width="80" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1151,6 +1193,10 @@ Tap the waveforms to change the (2*).</string>
                                     <action selector="langChan:" destination="jcX-Lf-HTi" eventType="touchUpInside" id="d97-Fs-pdZ"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="ElE-cI-fEF">
+                                <rect key="frame" x="82" y="315" width="414" height="773"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E8V-fc-BMe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1159,6 +1205,7 @@ Tap the waveforms to change the (2*).</string>
                             <outletCollection property="gestureRecognizers" destination="rPR-0i-zqS" appends="YES" id="Iun-H0-kIV"/>
                         </connections>
                     </view>
+                    <navigationItem key="navigationItem" id="cpi-GF-08g"/>
                     <connections>
                         <outlet property="exitButton" destination="fPw-uT-6g8" id="8qq-Wh-wiQ"/>
                         <outlet property="helpView" destination="ElE-cI-fEF" id="d5L-br-cKP"/>
@@ -1173,7 +1220,7 @@ Tap the waveforms to change the (2*).</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1120.2898550724638" y="656.25"/>
+            <point key="canvasLocation" x="-868" y="815"/>
         </scene>
     </scenes>
     <resources>

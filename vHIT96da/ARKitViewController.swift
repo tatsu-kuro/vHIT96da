@@ -47,6 +47,9 @@ class ARKitViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
+    @IBAction func unwindArkit(_ segue: UIStoryboardSegue) {
+        
+    }
     func setButtons(){
         
         let ww=view.bounds.width
