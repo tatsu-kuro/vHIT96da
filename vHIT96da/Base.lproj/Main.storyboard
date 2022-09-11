@@ -1118,10 +1118,10 @@ Tap the waveforms to change the (2*).</string>
             </objects>
             <point key="canvasLocation" x="-1804.3478260869567" y="592.63392857142856"/>
         </scene>
-        <!--View Controller-->
+        <!--Kit Help View-->
         <scene sceneID="bLV-hN-1Q4">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="l3a-Ut-FhC" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="l3a-Ut-FhC" customClass="ARKitHelpView" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lwZ-mW-I86">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
