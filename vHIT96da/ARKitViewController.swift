@@ -31,7 +31,7 @@ class ARKitViewController: UIViewController {
     @IBOutlet weak var pauseButton: UIButton!
     @IBOutlet weak var mailButton: UIButton!
     @IBOutlet weak var waveSlider: UISlider!
-    
+    var arKitDisplayMode:Bool=true
     var multiEye:CGFloat=100
     var multiFace:CGFloat=100
     var displayLinkF:Bool=false
@@ -77,8 +77,10 @@ class ARKitViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         waves.removeAll()
+
+//        UserDefaults.standard.set(arKitDisplayMode,forKey: "arKitDisplayMode")
+        arKitDisplayMode = iroiro.getUserDefaultBool(str: "arKitDisplayMode", ret:true)
         multiEye = iroiro.getUserDefaultCGFloat(str: "multiEye", ret: 100)
         multiFace = iroiro.getUserDefaultCGFloat(str: "multiFace", ret: 100)
                 timer = Timer.scheduledTimer(timeInterval: 1.0/60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
@@ -319,12 +321,13 @@ class ARKitViewController: UIViewController {
         var pointListFace = Array<CGPoint>()
         let dx0=CGFloat(245.0/30.0)
         //r:4(mail)  r:1(screen)
-        var posY0=135*r
-        let vHITDisplayMode=0
-        if vHITDisplayMode==0{//up down
+        
+        
+        var posY0=135*r//faceEye upUp
+        if arKitDisplayMode==true{//faceEye upDown
             posY0=90*r
         }
-        
+        print(posY0)
         let drawPathEye = UIBezierPath()
         let drawPathFace = UIBezierPath()
         var rightCnt:Int=0
@@ -342,8 +345,17 @@ class ARKitViewController: UIViewController {
             }
             for n in 0..<30{
                 let px = dx + CGFloat(n)*dx0*r
-                let py1 = vHITs[i].eye[n]*r*multiEye + posY0
-                let py2 = vHITs[i].face[n]*r*multiFace + posY0
+                var py1 = vHITs[i].eye[n]*r*multiEye// + posY0
+                var py2 = vHITs[i].face[n]*r*multiFace// + posY0
+                if arKitDisplayMode==false{
+                    py2 = -py2
+                }
+                if vHITs[i].isRight==false{
+                    py1 = -py1
+                    py2 = -py2
+                }
+                py1 += posY0
+                py2 += posY0
                 let point1 = CGPoint(x:px,y:py1)
                 let point2 = CGPoint(x:px,y:py2)
                 pointListEye.append(point1)
@@ -707,11 +719,17 @@ class ARKitViewController: UIViewController {
         //        print("multiEye:",multiEye,multiFace)
     }
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
-        if arKitFlag==true{
-            return
+        if arKitFlag==false{
+            let loc=sender.location(in: view)
+            if loc.y < vHITBoxView.frame.maxY{
+                UserDefaults.standard.set(!arKitDisplayMode,forKey: "arKitDisplayMode")
+                arKitDisplayMode = iroiro.getUserDefaultBool(str: "arKitDisplayMode", ret:true)
+                drawVHITBox()
+            }else{
+                setDispONToggle()
+                drawVHITBox()
+            }
         }
-        setDispONToggle()
-        drawVHITBox()
     }
     @IBAction func onSaveButton(_ sender: Any) {
        if waves.count<1{
