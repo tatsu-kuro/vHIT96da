@@ -509,18 +509,25 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         label.layer.cornerRadius = 5
         label.backgroundColor = color
     }
-    func setLabelProperty1(_ label:UILabel,x:CGFloat,y:CGFloat,w:CGFloat,h:CGFloat){
-        label.frame = CGRect(x:x, y:y, width: w, height: h)
-        label.layer.masksToBounds = true
-        label.layer.cornerRadius = 4
-    }
-    //button.backgroundColor = color
+   
     func setButtonProperty(_ button:UIButton,x:CGFloat,y:CGFloat,w:CGFloat,h:CGFloat,_ color:UIColor){
         button.frame   = CGRect(x:x, y:y, width: w, height: h)
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.borderWidth = 1.0
         button.layer.cornerRadius = 5
         button.backgroundColor = color
+    }
+    func setButtonTopRectangle(_ ui:UIButton, rect:CGRect,_ color:UIColor ){
+        ui.frame   = CGRect(x:rect.minX, y:rect.minY-5, width: rect.width, height: 4)
+        ui.layer.masksToBounds = true
+        ui.layer.cornerRadius = 5
+        ui.backgroundColor = color
+    }
+    func setLabelTopRectangle(_ ui:UILabel, rect:CGRect,_ color:UIColor ){
+        ui.frame   = CGRect(x:rect.minX, y:rect.minY-5, width: rect.width, height: 4)
+        ui.layer.masksToBounds = true
+        ui.layer.cornerRadius = 5
+        ui.backgroundColor = color
     }
 
     func getUserDefaultCGFloat(str:String,ret:CGFloat) -> CGFloat{

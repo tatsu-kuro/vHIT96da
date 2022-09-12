@@ -2940,8 +2940,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             changeModeButton2.isHidden=false
-            iroiro.setButtonProperty(changeModeButton,x:sp*2,y:by1-sp/2-1,w:bh*3/2+sp/2,h:5,UIColor.systemRed)
-//            changeModeButton.frame=CGRect(x:sp*2,y:by1-sp/2-2,width:bh*3/2+sp/2,height: 5)
+            iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton1.frame,UIColor.systemRed)
             changeModeButton1.setTitle("vHIT hori.", for: .normal)
             changeModeButton2.setTitle("vHIT vert.", for: .normal)
             changeModeButton.isHidden=false
@@ -2949,7 +2948,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             changeModeButton2.isHidden=false
-            iroiro.setButtonProperty(changeModeButton,x:sp*2+bh*3/2+sp*3/2,y:by1-sp/2-1,w:bh*3/2+sp/2,h:5,UIColor.systemRed)
+            iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton2.frame,UIColor.systemRed)
             changeModeButton1.setTitle("vHIT hori.", for: .normal)
             changeModeButton2.setTitle("vHIT vert.", for: .normal)
             changeModeButton.isHidden=false

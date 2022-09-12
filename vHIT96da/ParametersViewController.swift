@@ -64,7 +64,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         onSegueToArkitButton(0)
         }
     }
-    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     @IBOutlet weak var segueToArkitButton: UIButton!
     @IBAction func onSegueToArkitButton(_ sender: Any) {
     }
@@ -480,11 +482,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
         tovHITButton.frame=CGRect(x:butw1+3*sp,y:buty1,width:butw1,height: buth1)
-        iroiro.setLabelProperty1(vHITLabel,   x:butw1+3*sp,y:buty1-5,w:butw1,h: 4)
+        iroiro.setLabelTopRectangle(vHITLabel, rect: tovHITButton.frame, UIColor.systemRed)
         arkitButton.frame=CGRect( x:butw1*2+4*sp,y:buty1,width:butw1,height: buth1)
-        iroiro.setLabelProperty1(arkitLabel,x:butw1*2+4*sp,y:buty1-5,w:butw1,h: 4)
+        iroiro.setLabelTopRectangle(arkitLabel, rect: arkitButton.frame, UIColor.systemRed)
         toVOGButton.frame=CGRect( x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
-        iroiro.setLabelProperty1(VOGLabel,x:butw1*3+5*sp,y:buty1-5,w:butw1,h: 4)
+        iroiro.setLabelTopRectangle(VOGLabel, rect: toVOGButton.frame, UIColor.systemRed)
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
         segueToArkitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
      }

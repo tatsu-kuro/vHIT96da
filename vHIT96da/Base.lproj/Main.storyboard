@@ -1229,6 +1229,10 @@ Tap the waveforms to change the (2*).</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="ElE-cI-fEF">
+                                <rect key="frame" x="82" y="315" width="414" height="773"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPw-uT-6g8">
                                 <rect key="frame" x="329" y="817" width="80" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1253,10 +1257,6 @@ Tap the waveforms to change the (2*).</string>
                                     <action selector="langChan:" destination="jcX-Lf-HTi" eventType="touchUpInside" id="d97-Fs-pdZ"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="ElE-cI-fEF">
-                                <rect key="frame" x="82" y="315" width="414" height="773"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E8V-fc-BMe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -70,7 +70,9 @@ class ARKitViewController: UIViewController {
         vHITs.append(temp)
     }
 
-    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setButtons()
