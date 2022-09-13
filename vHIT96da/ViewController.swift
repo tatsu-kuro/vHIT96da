@@ -3633,6 +3633,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         wakuImg3.isHidden = !mode
         wakuImg4.isHidden = !mode
     }
+    
+
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
         if videoDate.count==0{
             return
@@ -3662,15 +3664,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawOneWave(startcount: vhitCurpoint)
                 return
             }else if loc.y<waveBoxView!.frame.maxY && waveTuple.count>0{
-                //上に中央vHITwaveをタップで表示させるタップ範囲を設定
-                let temp = checksetPos(pos:lastVhitpoint + Int(loc.x),mode: 2)
-                if temp >= 0{
-                    if waveTuple[temp].2 == 1{
-                        waveTuple[temp].2 = 0//hide
-                     }else{
-                        waveTuple[temp].2 = 1//disp
+                let cnt=waveTuple.count
+                for i in 0..<cnt {
+                    if waveTuple[i].3 == 1{
+                        if waveTuple[i].2 == 0{
+                            waveTuple[i].2 = 1
+                        }else{
+                            waveTuple[i].2 = 0
+                        }
                     }
-//                    print("waveTuple:",waveTuple[temp].2)
                 }
                 drawVHITwaves()
             }
