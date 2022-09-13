@@ -2503,6 +2503,110 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func draw1wave(r:CGFloat){//just vHIT
         var redVORGainArray = Array<Double>()
         var blueVORGainArray = Array<Double>()
+        
+        var pointList1 = Array<CGPoint>()
+        var pointList2 = Array<CGPoint>()
+        let drawPathEye = UIBezierPath()
+        let drawPathFace = UIBezierPath()
+//        var rlPt:CGFloat = 0
+        //r:4(mail)  r:1(screen)
+        var posY0=135*r
+        if vHITDisplayMode==0{//up down
+            posY0=90*r
+        }
+        //15(+12)frame 62.5msでの値(eyeSpeed/headSpeed)を集める.EyeSeeCamに準じて
+        let gainPoint:Int=27
+        for i in 0..<waveTuple.count{
+            if waveTuple[i].2==0{//hidden vhit
+                continue
+            }
+            let tempGain=Double(-eyeWs[i][gainPoint])/Double(gyroWs[i][gainPoint])
+            if waveTuple[i].0==0{//
+                redVORGainArray.append(tempGain)
+            }else{
+                blueVORGainArray.append(tempGain)
+            }
+        }
+        let redGainAv=getAve(array: redVORGainArray)
+        let redGainSd=getSD(array:redVORGainArray,svvAv: redGainAv)
+        let blueGainAv=getAve(array: blueVORGainArray)
+        let blueGainSd=getSD(array:blueVORGainArray,svvAv: blueGainAv)
+        redGainStr = String(format: "(%d) Gain at 60ms     %.2f sd:%.2f",redVORGainArray.count,redGainAv,redGainSd)
+        blueGainStr = String(format:"(%d) Gain at 60ms     %.2f sd:%.2f",blueVORGainArray.count,blueGainAv,blueGainSd)
+        
+        for i in 0..<waveTuple.count{//blue vHIT
+            pointList1.removeAll()
+            pointList2.removeAll()
+            
+            for n in 0..<120 {
+                var px = 260*r + CGFloat(n)*2*r
+                var py1 = CGFloat(eyeWs[i][n])*r + posY0
+                var py2 = CGFloat(gyroWs[i][n])*r + posY0
+                if vHITDisplayMode==1 && waveTuple[i].0==0{
+                    py2 = -CGFloat(gyroWs[i][n])*r + posY0
+                }else if vHITDisplayMode==1 && waveTuple[i].0==1{
+                    py1 = -CGFloat(eyeWs[i][n])*r + posY0
+                }
+                if waveTuple[i].0==0{
+                    px -= 260*r
+                }
+                let point1 = CGPoint(x:px,y:py1)
+                pointList1.append(point1)
+                let point2 = CGPoint(x:px,y:py2)
+                pointList2.append(point2)
+            }
+            // 始点に移動する
+            drawPathEye.move(to: pointList1[0])
+            // 配列から始点の値を取り除く
+            pointList1.removeFirst()
+            // 配列から点を取り出して連結していく
+            for pt in pointList1 {
+                drawPathEye.addLine(to: pt)
+            }
+            drawPathFace.move(to: pointList2[0])
+            // 配列から始点の値を取り除く
+            pointList2.removeFirst()
+            // 配列から点を取り出して連結していく
+            for pt in pointList2 {
+                drawPathFace.addLine(to: pt)
+            }
+            if waveTuple[i].3==1 && waveTuple[i].2==1 {//rl,framenum,disp onoff,current disp onoff
+                drawPathEye.lineWidth = 2
+                drawPathFace.lineWidth = 2
+            }else if waveTuple[i].3==1 && waveTuple[i].2==0 {
+                drawPathEye.lineWidth = 0.3
+                drawPathFace.lineWidth = 0.3
+            }else if waveTuple[i].3==0 && waveTuple[i].2==1 {
+                drawPathEye.lineWidth = 0.3
+                drawPathFace.lineWidth = 0.3
+            }else if waveTuple[i].3==0 && waveTuple[i].2==0 {
+                drawPathEye.lineWidth = 0
+                drawPathFace.lineWidth = 0
+            }
+            if r==4 && waveTuple[i].2==1{
+                drawPathEye.lineWidth = 0.3
+                drawPathFace.lineWidth = 0.3
+            }else if r==4 {
+                drawPathEye.lineWidth = 0
+                drawPathFace.lineWidth = 0
+            }
+            // 線の色
+            if waveTuple[i].0==0{
+                UIColor.red.setStroke()
+            }else{
+                UIColor.blue.setStroke()
+            }
+            drawPathEye.stroke()
+            UIColor.black.setStroke()
+            drawPathFace.stroke()
+            drawPathEye.removeAllPoints()
+            drawPathFace.removeAllPoints()
+        }
+    }
+
+    func draw1wave_old(r:CGFloat){//just vHIT
+        var redVORGainArray = Array<Double>()
+        var blueVORGainArray = Array<Double>()
 
         var pointList = Array<CGPoint>()
         let drawPath = UIBezierPath()
