@@ -275,8 +275,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var timerCalc: Timer!
     var timerVideo:Timer!
     
-    var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
-    var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
+    var eyeWs = [[CGFloat]](repeating:[CGFloat](repeating:0,count:125),count:80)
+    var gyroWs = [[CGFloat]](repeating:[CGFloat](repeating:0,count:125),count:80)
     var initialFlag:Bool=true//:Int = 0
     func playCurrentVideo(){//nextVideo
 //        print("videoCurrent:",videoCurrent, videoPHAsset.count,videoDate.count)
@@ -2081,7 +2081,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             lastVhitpoint = vhitCurpoint
             if waveTuple.count>0{
                 //setするだけか？
-                checksetPos(pos: lastVhitpoint + Int(ww/2), mode:1)
+                setCurrVHIT(pos: lastVhitpoint + Int(ww/2))//, mode:1)
                 drawVHITwaves()
             }
         }else if mode==2{//vogalc
@@ -2539,16 +2539,27 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             pointList2.removeAll()
             
             for n in 0..<120 {
-                var px = 260*r + CGFloat(n)*2*r
-                var py1 = CGFloat(eyeWs[i][n])*r + posY0
-                var py2 = CGFloat(gyroWs[i][n])*r + posY0
+                var px = CGFloat(n)*2*r
+ //以下はなかなか上手くいかない
+//                var py1 = vHITs[i].eye[n]*r + posY0
+//                var py2 = vHITs[i].face[n]*r + posY0
+//                if vHITDisplayMode==1 && waveTuple[i].0==0{
+//                    py2 = -vHITs[i].face[n]*r + posY0
+//                }else if vHITDisplayMode==1 && waveTuple[i].0==1{
+//                    py1 = -vHITs[i].eye[n]*r + posY0
+//                }
+                
+                var py1 = eyeWs[i][n]*r + posY0
+                var py2 = gyroWs[i][n]*r + posY0
                 if vHITDisplayMode==1 && waveTuple[i].0==0{
-                    py2 = -CGFloat(gyroWs[i][n])*r + posY0
+                    py2 = -gyroWs[i][n]*r + posY0
                 }else if vHITDisplayMode==1 && waveTuple[i].0==1{
-                    py1 = -CGFloat(eyeWs[i][n])*r + posY0
+                    py1 = -eyeWs[i][n]*r + posY0
                 }
-                if waveTuple[i].0==0{
-                    px -= 260*r
+
+                  
+                if waveTuple[i].0==1{
+                    px += 260*r
                 }
                 let point1 = CGPoint(x:px,y:py1)
                 pointList1.append(point1)
@@ -2574,8 +2585,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawPathEye.lineWidth = 2
                 drawPathFace.lineWidth = 2
             }else if waveTuple[i].3==1 && waveTuple[i].2==0 {
-                drawPathEye.lineWidth = 0.3
-                drawPathFace.lineWidth = 0.3
+                drawPathEye.lineWidth = 0.6
+                drawPathFace.lineWidth = 0.6
             }else if waveTuple[i].3==0 && waveTuple[i].2==1 {
                 drawPathEye.lineWidth = 0.3
                 drawPathFace.lineWidth = 0.3
@@ -2584,8 +2595,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawPathFace.lineWidth = 0
             }
             if r==4 && waveTuple[i].2==1{
-                drawPathEye.lineWidth = 0.3
-                drawPathFace.lineWidth = 0.3
+                drawPathEye.lineWidth = 1.2
+                drawPathFace.lineWidth = 1.2
             }else if r==4 {
                 drawPathEye.lineWidth = 0
                 drawPathFace.lineWidth = 0
@@ -2603,7 +2614,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawPathFace.removeAllPoints()
         }
     }
-
+    struct vHIT {
+        var isRight : Bool
+        var frameN : Int
+        var dispOn : Bool
+        var currDispOn : Bool
+        var eye = [CGFloat](repeating:0,count:121)
+        var face = [CGFloat](repeating:0,count:121)
+    }
+//    struct wave{
+//        var ltEye:CGFloat
+//        var rtEye:CGFloat
+//        var face:CGFloat
+//        var date:String
+//    }
+//    var waves=[wave]()
+//
+    var vHITs = [vHIT]()
+    var vHITsTemp = [vHIT]()
+    var vHITEye = [CGFloat](repeating: 0, count: 121)
+    var vHITFace = [CGFloat](repeating: 0, count: 121)
+    func append_vHITs(isRight:Bool,frameN:Int,dispOn:Bool,currDispOn:Bool){
+        let temp=vHIT(isRight: isRight,frameN: frameN, dispOn: dispOn, currDispOn: currDispOn,eye:vHITEye,face:vHITFace)
+        vHITs.append(temp)
+    }
+    func append_vHITs(isRight:Bool,frameN:Int,dispOn:Bool,currDispOn:Bool,eye:[CGFloat],face:[CGFloat]){
+        let temp=vHIT(isRight: isRight,frameN: frameN, dispOn: dispOn, currDispOn: currDispOn,eye:eye,face:face)
+        vHITs.append(temp)
+    }
     func draw1wave_old(r:CGFloat){//just vHIT
         var redVORGainArray = Array<Double>()
         var blueVORGainArray = Array<Double>()
@@ -2645,9 +2683,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let px = 260*r + CGFloat(n)*2*r//260 or 0
                 var py:CGFloat = 0
                 if vHITDisplayMode==1{
-                    py = -CGFloat(eyeWs[i][n])*r + posY0
+                    py = -eyeWs[i][n]*r + posY0
                 }else{
-                    py = CGFloat(eyeWs[i][n])*r + posY0
+                    py = eyeWs[i][n]*r + posY0
                 }
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
@@ -2677,9 +2715,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let px = CGFloat(n*2)*r//260 or 0
 //                var py:CGFloat = 0
                 if vHITDisplayMode==1{//up down red
-                    py = CGFloat(eyeWs[i][n])*r + posY0//表示変更
+                    py = eyeWs[i][n]*r + posY0//表示変更
                 }else{
-                    py = CGFloat(eyeWs[i][n])*r + posY0
+                    py = eyeWs[i][n]*r + posY0
                 }
                 let point = CGPoint(x:px,y:py)
                 pointList.append(point)
@@ -2773,12 +2811,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 for n in 0..<120 {
                     let px = rlPt*r + CGFloat(n*2)*r
                     if vHITDisplayMode==1{//up up
-                        py = -CGFloat(eyeWs[i][n])*r + posY0//以下４行　表示変更
+                        py = -eyeWs[i][n]*r + posY0//以下４行　表示変更
                         if waveTuple[i].0 == 0{
-                            py = CGFloat(eyeWs[i][n])*r + posY0
+                            py = eyeWs[i][n]*r + posY0
                         }
                     }else{
-                        py = CGFloat(eyeWs[i][n])*r + posY0
+                        py = eyeWs[i][n]*r + posY0
                     }
                     let point = CGPoint(x:px,y:py)
                     pointList.append(point)
@@ -3615,16 +3653,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else if sender.state == .ended{
             setUserDefaults()
-            if vHITBoxView?.isHidden == false{//結果が表示されている時
-                if waveTuple.count>0 {
-                    for i in 0..<waveTuple.count{
-                        if waveTuple[i].3 == 1{
-                            waveTuple[i].3 = 2
-                        }
-                    }
-                    drawVHITwaves()
-                }
-            }
+//            if vHITBoxView?.isHidden == false{//結果が表示されている時
+//                if waveTuple.count>0 {
+//                    for i in 0..<waveTuple.count{
+//                        if waveTuple[i].3 == 1{
+//                            waveTuple[i].3 = 2
+//                        }
+//                    }
+//                    drawVHITwaves()
+//                }
+//            }
         }
     }
     func setWakuImgs(mode:Bool){
@@ -3725,28 +3763,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    
-    func checksetPos(pos:Int,mode:Int) -> Int{
+    func setCurrVHIT(pos:Int){
         let cnt=waveTuple.count
-        var return_n = -2
         if cnt>0{
             for i in 0..<cnt{
                 if waveTuple[i].1<pos && waveTuple[i].1+120>pos{
-                    waveTuple[i].3 = mode //sellected
-                    return_n = i
-                    break
-                }
-                waveTuple[i].3 = 0//not sellected
-            }
-            if return_n > -1 && return_n < cnt{
-                for n in (return_n + 1)..<cnt{
-                    waveTuple[n].3 = 0
+                    waveTuple[i].3 = 1 //sellected
+                }else{
+                    waveTuple[i].3 = 0//not sellected
                 }
             }
-        }else{
-            return -1
         }
-        return return_n
     }
     
     func g5(st:Int)->CGFloat{
@@ -3787,34 +3814,84 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if t != -1 {
             let ws = number// - flatwidth + 12;//波表示開始位置 wavestartpoint
             waveTuple.append((t,ws,1,0))//L/R,frameNumber,disp,current)
-            let num=waveTuple.count-1
             
-            if calcMode==0{
-                for k1 in ws..<ws + 120{
-                    eyeWs[num][k1 - ws] = Int(eyeVeloXFiltered4update[k1]*CGFloat(eyeRatio)/300.0)
-                }
-            }else{
-                for k1 in ws..<ws + 120{
-                    eyeWs[num][k1 - ws] = Int(eyeVeloYFiltered4update[k1]*CGFloat(eyeRatio)/300.0)
+
+//            if t==1{
+//                append_vHITs(isRight:true,frameN:number,dispOn:true,currDispOn:false)
+//            }else{
+//                append_vHITs(isRight:false,frameN:number,dispOn:true,currDispOn:false)
+//            }
+            let n=waveTuple.count-1
+            for i in 0..<120{//number..<number + 120{
+                if calcMode==0{
+//                    let a=eyeVeloXFiltered4update[ws+i]*CGFloat(eyeRatio)/300.0
+//                    let b=gyroMoved[ws+i]*CGFloat(gyroRatio)/100.0
+//                    vHITEye[i]=a//eyeVeloXFiltered4update[ws+i]*CGFloat(eyeRatio)/300.0
+//                    vHITFace[i]=b//gyroMoved[ws+i]*CGFloat(gyroRatio)/100.0
+                    eyeWs[n][i]=eyeVeloXFiltered4update[ws+i]*CGFloat(eyeRatio)/300.0
+                    gyroWs[n][i]=gyroMoved[ws+i]*CGFloat(gyroRatio)/100.0
+                }else{
+//                    let a=eyeVeloYFiltered4update[ws+i]*CGFloat(eyeRatio)/300.0
+//                    let b=gyroMoved[ws+i]*CGFloat(gyroRatio)/100.0
+//                    vHITEye[i]=a//eyeVeloXFiltered4update[ws+i]*CGFloat(eyeRatio)/300.0
+//                    vHITFace[i]=b//gyroMoved[ws+i]*CGFloat(gyroRatio)/100.0]
+                    eyeWs[n][i]=eyeVeloYFiltered4update[ws+i]*CGFloat(eyeRatio)/300.0
+                    gyroWs[n][i]=gyroMoved[ws+i]*CGFloat(gyroRatio)/100.0
                 }
             }
-
-            for k2 in ws..<ws + 120{
-                gyroWs[num][k2 - ws] = Int(gyroMoved[k2]*CGFloat(gyroRatio)/100.0)
-            }//ここでエラーが出るようだ？
+//            if t==1{
+//                vHITs.append(vHIT(isRight: true,frameN:ws,dispOn: true, currDispOn: false,eye:vHITEye,face:vHITFace))
+//            }else{
+//                vHITs.append(vHIT(isRight: false,frameN: ws, dispOn: true, currDispOn: false,eye:vHITEye,face:vHITFace))
+//                vHITs.append(vHIT(isRight: false,frameN: ws, dispOn: true, currDispOn: false,eye:vHITEye,face:vHITFace))
+//            }
+            
+//            let num=waveTuple.count-1
+//
+//            if calcMode==0{
+//                for k in 0..<120{
+//                    eyeWs[num][k] = eyeVeloXFiltered4update[ws+k]*CGFloat(eyeRatio)/300.0
+//                }
+//            }else{
+//                for k in 0..<120{
+//                    eyeWs[num][k] = eyeVeloYFiltered4update[ws+k]*CGFloat(eyeRatio)/300.0
+//                }
+//            }
+//
+//            for k in 0..<120{
+//                gyroWs[num][k] = gyroMoved[ws+k]*CGFloat(gyroRatio)/100.0
+//            }//ここでエラーが出るようだ？
             
         }
         return t
     }
+//    func setVHITWaves(number:Int) -> Int {//0:波なし 1:上向き波？ -1:その反対向きの波
+//        let flatwidth:Int = 2//12frame-50ms
+//        let t = upDownp(i: number + flatwidth)
+//        if t != 0 {
+//            if t==1{
+//                append_vHITs(isRight:true,frameN:number,dispOn:true,currDispOn:false)
+//            }else{
+//                append_vHITs(isRight:false,frameN:number,dispOn:true,currDispOn:false)
+//            }
+//            let n=vHITs.count-1
+//            for i in 0..<31{//number..<number + 120{
+//                vHITs[n].eye[i]=waves[number+i].ltEye
+//                vHITs[n].face[i]=waves[number+i].face
+//            }
+//        }
+//        return t
+//    }
+//
    //wavetuple変更の有無、高さ(%)表示変更の時はwavetupleは変更しない。
     func calcDrawVHIT(tuple:Bool){//true:
         tempTuple.removeAll()
+//        vHITsTemp.removeAll()
         for i in 0..<waveTuple.count{
             tempTuple.append(waveTuple[i])
+//            vHITsTemp.append(vHITs[i])
         }
-//        print(tempTuple.count,waveTuple.count)
         waveTuple.removeAll()
-//        print(tempTuple.count,waveTuple.count)
         if arrayDataCount < 400 {
             return
         }
@@ -3829,8 +3906,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         if tuple==false{
             waveTuple.removeAll()
+//            vHITs.removeAll()
             for i in 0..<tempTuple.count{
                 waveTuple.append(tempTuple[i])
+//                vHITs.append(vHITsTemp[i])
             }
         }
         drawVHITwaves()

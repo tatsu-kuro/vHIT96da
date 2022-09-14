@@ -42,10 +42,10 @@ class ARKitViewController: UIViewController {
     var rtEyeX:CGFloat=0
     private let session = ARSession()
     //vhit
-    var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
-    var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
-    var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
-    var tempTuple = Array<(Int,Int,Int,Int)>()
+//    var eyeWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
+//    var gyroWs = [[Int]](repeating:[Int](repeating:0,count:125),count:80)
+//    var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
+//    var tempTuple = Array<(Int,Int,Int,Int)>()
     var timer:Timer!
     struct vHIT {
         var isRight : Bool
@@ -392,8 +392,8 @@ class ARKitViewController: UIViewController {
                 drawPathEye.lineWidth = 2
                 drawPathFace.lineWidth = 2
             }else if vHITs[i].currDispOn==true && vHITs[i].dispOn==false {
-                drawPathEye.lineWidth = 0.3
-                drawPathFace.lineWidth = 0.3
+                drawPathEye.lineWidth = 0.6
+                drawPathFace.lineWidth = 0.6
             }else if vHITs[i].currDispOn==false && vHITs[i].dispOn==true {
                 drawPathEye.lineWidth = 0.3
                 drawPathFace.lineWidth = 0.3
@@ -402,8 +402,8 @@ class ARKitViewController: UIViewController {
                 drawPathFace.lineWidth = 0
             }
             if r==4 && vHITs[i].dispOn==true{
-                drawPathEye.lineWidth = 0.3
-                drawPathFace.lineWidth = 0.3
+                drawPathEye.lineWidth = 1.2
+                drawPathFace.lineWidth = 1.2
             }else if r==4 {
                 drawPathEye.lineWidth = 0
                 drawPathFace.lineWidth = 0
