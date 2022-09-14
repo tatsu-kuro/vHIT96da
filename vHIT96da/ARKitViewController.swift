@@ -83,8 +83,8 @@ class ARKitViewController: UIViewController {
 
 //        UserDefaults.standard.set(arKitDisplayMode,forKey: "arKitDisplayMode")
         arKitDisplayMode = iroiro.getUserDefaultBool(str: "arKitDisplayMode", ret:true)
-        multiEye = iroiro.getUserDefaultCGFloat(str: "multiEye", ret: 100)
-        multiFace = iroiro.getUserDefaultCGFloat(str: "multiFace", ret: 100)
+        multiEye = iroiro.getUserDefaultCGFloat(str: "multiEye", ret: 600)
+        multiFace = iroiro.getUserDefaultCGFloat(str: "multiFace", ret: 600)
                 timer = Timer.scheduledTimer(timeInterval: 1.0/60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
         session.delegate = self
         
@@ -590,6 +590,7 @@ class ARKitViewController: UIViewController {
     var startMultiEye:CGFloat=0
     var startCnt:Int=0
     @objc func onWaveSliderValueChange(){
+        print("multi:",multiEye,multiFace)
         if waves.count<60{
             return
         }
