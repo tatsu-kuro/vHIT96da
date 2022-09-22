@@ -16,7 +16,8 @@ class HelpjViewController: UIViewController{
     @IBOutlet weak var langButton: UIButton!
     var currentImageName:String!
     func setHelpImage(){
-        let topPadding=CGFloat(UserDefaults.standard.float(forKey: "top"))
+        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
+//        let bottom=CGFloat(UserDefaults.standard.float(forKey: "bottom"))
 //        let bottomPadding=CGFloat(UserDefaults.standard.float(forKey: "bottom"))
         if jap_eng==1{
             if calcMode != 2{
@@ -38,9 +39,29 @@ class HelpjViewController: UIViewController{
         let imgHeight:CGFloat = image.size.height
         // 画像サイズをスクリーン幅に合わせる
         let scale:CGFloat = imgHeight / imgWidth
-        helpView.frame=CGRect(x:0,y:topPadding,width:view.bounds.width,height: view.bounds.width*scale)
-        helpHlimit=view.bounds.width*scale-view.bounds.height+50
+        helpView.frame=CGRect(x:0,y:top,width:view.bounds.width,height: view.bounds.width*scale)
+//        helpHlimit=view.bounds.width*scale-view.bounds.height+50
     }
+    
+    /*
+     
+     func setHelpImage(){
+         let left=CGFloat(UserDefaults.standard.float(forKey: "left"))
+         let right=CGFloat(UserDefaults.standard.float(forKey: "right"))
+
+         helpView.image = UIImage(named:helpImageName)!
+         let image:UIImage = UIImage(named:helpImageName)!
+         // 画像の縦横サイズを取得
+         let imgWidth:CGFloat = image.size.width
+         let imgHeight:CGFloat = image.size.height
+         // 画像サイズをスクリーン幅に合わせる
+         let scale:CGFloat = imgHeight / imgWidth
+         helpView.frame=CGRect(x:left,y:0,width:view.bounds.width-left-right,height: view.bounds.width*scale)
+         helpHlimit=(view.bounds.width-left-right)*scale-view.bounds.height+50
+     }
+     */
+    
+    
     @IBAction func langChan(_ sender: Any) {
         if jap_eng==0{
             jap_eng=1
@@ -74,10 +95,56 @@ class HelpjViewController: UIViewController{
             return ret
         }
     }
-
-    var helpHlimit:CGFloat=0
+    /*//fushiki
+     @IBAction func panGesture(_ sender: UIPanGestureRecognizer) {
+         let move:CGPoint = sender.translation(in: self.view)
+         let height=helpView.frame.size.height
+         let exitY=exitButton.frame.minY
+         if sender.state == .began {
+             posYlast=helpView.frame.origin.y
+         }else if sender.state == .changed {
+             helpView.frame.origin.y = posYlast + move.y
+             if helpView.frame.origin.y > 0{
+                 helpView.frame.origin.y=0
+             }else if helpView.frame.origin.y < -height+exitY{
+                 helpView.frame.origin.y = -height+exitY//view.bounds.height-exitY
+             }
+             print("helpview:",helpView.frame.origin.y,move.y)
+         }else if sender.state == .ended{
+         }
+     }
+ */
+//    var helpHlimit:CGFloat=0
     var posYlast:CGFloat=0
     @IBAction func panGestuer(_ sender: UIPanGestureRecognizer) {
+        let move=sender.translation(in: self.view)
+        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
+        let height=helpView.frame.size.height
+        let exitY=exitButton.frame.minY
+        if height < exitY-top{
+            return
+        }
+        if sender.state == .began {
+            posYlast=helpView.frame.origin.y
+        }else if sender.state == .changed {
+//            helpView.frame.origin.y=posYlast + move.y
+            let temp=posYlast+move.y
+            if temp>top{
+                helpView.frame.origin.y=top
+            }else if temp+height < exitY{//} && height < exitY-top{
+                helpView.frame.origin.y = -height+exitY
+            }else{
+                helpView.frame.origin.y=temp
+            }
+            print("helpview:",helpView.frame.origin.y,move.y)
+            
+            //            }
+        }else if sender.state == .ended{
+        }
+    }
+    /*
+    @IBAction func panGestuer(_ sender: UIPanGestureRecognizer) {
+        let move=sender.translation(in: self.view)
         if sender.state == .began {
             posYlast=sender.location(in: self.view).y
         }else if sender.state == .changed {
@@ -89,7 +156,7 @@ class HelpjViewController: UIViewController{
             }
         }else if sender.state == .ended{
         }
-    }
+    }*/
     func setButtons(){
         let bottomPadding=CGFloat(UserDefaults.standard.float(forKey: "bottom"))
         let sp:CGFloat=5

@@ -51,7 +51,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         calcMode=3
         if let vc = segue.source as? ARKitViewController {
             let ARKitViewController:ARKitViewController = vc
-            ARKitViewController.onPauseButton(0)
+            ARKitViewController.onClearButton(0)
             ARKitViewController.timer.invalidate()
             print("unwindFromARKit")
         }

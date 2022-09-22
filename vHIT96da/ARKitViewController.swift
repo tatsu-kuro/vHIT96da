@@ -21,14 +21,14 @@ class ARKitViewController: UIViewController {
     @IBOutlet weak var progressFaceView: UIProgressView!
     @IBOutlet weak var progressEyeView: UIProgressView!
     @IBOutlet weak var labelButton: UIButton!
-    @IBOutlet weak var deleteButton: UIButton!
+    @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var waveBoxView: UIImageView!
     @IBOutlet weak var vHITBoxView: UIImageView!
     @IBOutlet weak var helpButton: UIButton!
     @IBOutlet weak var settingButton: UIButton!
     @IBOutlet weak var ARKitButton: UIButton!
-    @IBOutlet weak var pauseButton: UIButton!
+    @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var mailButton: UIButton!
     @IBOutlet weak var waveSlider: UISlider!
     var arKitDisplayMode:Bool=true
@@ -112,13 +112,13 @@ class ARKitViewController: UIViewController {
         
         iroiro.setButtonProperty(mailButton,x:sp*2+bw*0,y:by0,w:bw,h:bh,UIColor.systemBlue)
         iroiro.setButtonProperty(saveButton,x:sp*3+bw*1,y:by0,w:bw,h:bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(pauseButton,x:sp*4+bw*2,y:by0,w:bw,h: bh,UIColor.systemBlue)
+        iroiro.setButtonProperty(clearButton,x:sp*4+bw*2,y:by0,w:bw,h: bh,UIColor.systemRed)
         //        iroiro.setButtonProperty(calcButton,x:sp*5+bw*3,y:by0-sp/2-bh/2,w:bw,h: bh,UIColor.systemBlue)
         iroiro.setButtonProperty(labelButton, x: sp*2, y: by1, w: bw*3+sp*2, h: bh, UIColor.darkGray)
         iroiro.setButtonProperty(ARKitButton,x:sp*5+bw*3,y:by0-sp/2-bh/2,w:bw,h:bh,UIColor.systemBlue)
         iroiro.setButtonProperty(settingButton,x:sp*6+bw*4,y:by0,w:bw,h: bh,UIColor.systemBlue)
         iroiro.setButtonProperty(helpButton,x:sp*7+bw*5,y:by0,w:bw,h: bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(deleteButton,x:sp*8+bw*6,y:by0,w:bw,h: bh,UIColor.systemRed)
+        iroiro.setButtonProperty(cameraButton,x:sp*8+bw*6,y:by0,w:bw,h: bh,UIColor.systemRed)
         waveBoxView.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
         vHITBoxView.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         waveSlider.frame=CGRect(x:sp*2,y:by2,width: ww-sp*4,height:20)//とりあえず
@@ -170,7 +170,7 @@ class ARKitViewController: UIViewController {
     }
     func getVHITWaves(){
         vHITs.removeAll()
-        if waves.count < 60 {// <1sec 16.7ms*60=1002ms
+        if waves.count < 71 {// <1sec 16.7ms*60=1002ms
             return
         }
         var skipCnt:Int = 0
@@ -615,11 +615,12 @@ class ARKitViewController: UIViewController {
     var rtEyeVeloX0:CGFloat=0
     var initFlag:Bool=true
     
-    
+    var timerCnt:Int=0
     @objc func update(tm: Timer) {
         if arKitFlag==false{
             return
         }
+        timerCnt += 1
         if faceAnchorFlag==true{//} && faceAnchorFlag == lastFlag{
             let date = Date()
             let df = DateFormatter()
@@ -637,6 +638,10 @@ class ARKitViewController: UIViewController {
             waves.remove(at: 0)
         }
         drawWaveBox()
+        if timerCnt%60==0{
+            getVHITWaves()
+            drawVHITBox()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -771,17 +776,27 @@ class ARKitViewController: UIViewController {
        alert.addAction(saveAction)
        present(alert, animated: true, completion: nil)
     }
-    @IBAction func onPauseButton(_ sender: Any) {
-        if arKitFlag==true && waves.count>60{
-            session.pause()
-            arKitFlag=false
-            setWaveSlider()
-            waveSlider.isEnabled=true
-            waveSlider.minimumTrackTintColor=UIColor.blue
-            waveSlider.maximumTrackTintColor=UIColor.blue
-            getVHITWaves()
-            drawVHITBox()
+    @IBAction func onClearButton(_ sender: Any) {
+        if waves.count>59{
+            waves.removeAll()
+            vHITs.removeAll()
+            drawVHITBox()//(width: 500, height: 200)
+            drawWaveBox()//(startCnt: 0, endCnt: 0)
+            waveSlider.isEnabled=false
+            waveSlider.minimumTrackTintColor=UIColor.gray
+            waveSlider.maximumTrackTintColor=UIColor.gray
         }
+        
+//        if arKitFlag==true && waves.count>60{
+//            session.pause()
+//            arKitFlag=false
+//            setWaveSlider()
+//            waveSlider.isEnabled=true
+//            waveSlider.minimumTrackTintColor=UIColor.blue
+//            waveSlider.maximumTrackTintColor=UIColor.blue
+//            getVHITWaves()
+//            drawVHITBox()
+//        }
     }
     @IBAction func onARKitButton(_ sender: Any) {
         getVHITWaves()
@@ -789,6 +804,8 @@ class ARKitViewController: UIViewController {
             session.pause()
             arKitFlag=false
             setWaveSlider()
+            ARKitButton.setImage(  UIImage(systemName:"play.circle"), for: .normal)
+
             waveSlider.isEnabled=true
             waveSlider.minimumTrackTintColor=UIColor.blue
             waveSlider.maximumTrackTintColor=UIColor.blue
@@ -800,21 +817,23 @@ class ARKitViewController: UIViewController {
             session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
             arKitFlag=true
             waveSlider.isEnabled=false
+            ARKitButton.setImage(  UIImage(systemName:"stop.circle"), for: .normal)
+
             waveSlider.minimumTrackTintColor=UIColor.gray
             waveSlider.maximumTrackTintColor=UIColor.gray
         }
     }
-    @IBAction func onDeleteButton(_ sender: Any) {
-        if waves.count>59{
-            waves.removeAll()
-            vHITs.removeAll()
-            drawVHITBox()//(width: 500, height: 200)
-            drawWaveBox()//(startCnt: 0, endCnt: 0)
-            waveSlider.isEnabled=false
-            waveSlider.minimumTrackTintColor=UIColor.gray
-            waveSlider.maximumTrackTintColor=UIColor.gray
-        }
-    }
+//    @IBAction func onDeleteButton(_ sender: Any) {
+//        if waves.count>59{
+//            waves.removeAll()
+//            vHITs.removeAll()
+//            drawVHITBox()//(width: 500, height: 200)
+//            drawWaveBox()//(startCnt: 0, endCnt: 0)
+//            waveSlider.isEnabled=false
+//            waveSlider.minimumTrackTintColor=UIColor.gray
+//            waveSlider.maximumTrackTintColor=UIColor.gray
+//        }
+//    }
 }
 
 extension ARKitViewController: ARSessionDelegate {

@@ -129,12 +129,12 @@
                                 </connections>
                             </button>
                             <button opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZn-CJ-Yxe">
-                                <rect key="frame" x="199" y="794" width="45" height="43"/>
+                                <rect key="frame" x="199" y="777" width="45" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="record.circle" catalog="system"/>
+                                <state key="normal" image="play.circle" catalog="system"/>
                                 <connections>
                                     <action selector="onCalcButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1P8-eL-Cbp"/>
                                 </connections>
@@ -1037,12 +1037,12 @@ Tap the waveforms to change the (2*).</string>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iXL-fJ-Kgq">
                                 <rect key="frame" x="120" y="836" width="39" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                <color key="backgroundColor" systemColor="systemRedColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="pause" catalog="system"/>
+                                <state key="normal" image="clear" catalog="system"/>
                                 <connections>
-                                    <action selector="onPauseButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="lHF-Wq-m3D"/>
+                                    <action selector="onClearButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="sBF-PN-PfX"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZG-X3-cHS">
@@ -1064,16 +1064,13 @@ Tap the waveforms to change the (2*).</string>
                                     <segue destination="l3a-Ut-FhC" kind="show" id="0wg-2c-lQT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Pf-J0-eQ3">
-                                <rect key="frame" x="351" y="836" width="20" height="22"/>
+                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Pf-J0-eQ3">
+                                <rect key="frame" x="349" y="836" width="25" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                <color key="backgroundColor" systemColor="systemRedColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="clear" catalog="system"/>
-                                <connections>
-                                    <action selector="onDeleteButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="q6h-zz-RQ1"/>
-                                </connections>
+                                <state key="normal" image="camera" catalog="system"/>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="env-4t-0qd">
                                 <rect key="frame" x="120" y="87" width="150" height="4"/>
@@ -1105,13 +1102,13 @@ Tap the waveforms to change the (2*).</string>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="ARKit vHIT"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ca-VO-mwS">
-                                <rect key="frame" x="188" y="836" width="26" height="22"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ca-VO-mwS">
+                                <rect key="frame" x="191" y="836" width="20" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="playpause" catalog="system"/>
+                                <state key="normal" image="stop.circle" catalog="system"/>
                                 <connections>
                                     <action selector="onARKitButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="7UL-r7-Tsz"/>
                                 </connections>
@@ -1139,11 +1136,11 @@ Tap the waveforms to change the (2*).</string>
                     <navigationItem key="navigationItem" id="vzd-h3-pgU"/>
                     <connections>
                         <outlet property="ARKitButton" destination="5ca-VO-mwS" id="t1v-AK-sjn"/>
-                        <outlet property="deleteButton" destination="1Pf-J0-eQ3" id="t3u-15-uyg"/>
+                        <outlet property="cameraButton" destination="1Pf-J0-eQ3" id="t3u-15-uyg"/>
+                        <outlet property="clearButton" destination="iXL-fJ-Kgq" id="nbq-WZ-8sv"/>
                         <outlet property="helpButton" destination="fdf-wp-qbG" id="N5B-ju-lvW"/>
                         <outlet property="labelButton" destination="2Xt-XH-etN" id="Vj4-5e-qOm"/>
                         <outlet property="mailButton" destination="gZG-X3-cHS" id="xXt-re-vMH"/>
-                        <outlet property="pauseButton" destination="iXL-fJ-Kgq" id="nbq-WZ-8sv"/>
                         <outlet property="progressEyeView" destination="A8E-zb-bS9" id="ZC0-eP-b35"/>
                         <outlet property="progressFaceView" destination="env-4t-0qd" id="VDC-VS-oMN"/>
                         <outlet property="saveButton" destination="aN8-fa-BQ5" id="r28-F2-TND"/>
@@ -1280,7 +1277,7 @@ Tap the waveforms to change the (2*).</string>
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-868" y="815"/>
+            <point key="canvasLocation" x="-1054" y="741"/>
         </scene>
     </scenes>
     <resources>
@@ -1298,12 +1295,10 @@ Tap the waveforms to change the (2*).</string>
         <image name="globe" catalog="system" width="128" height="123"/>
         <image name="largecircle.fill.circle" catalog="system" width="128" height="123"/>
         <image name="paperplane" catalog="system" width="128" height="119"/>
-        <image name="pause" catalog="system" width="88" height="128"/>
-        <image name="playpause" catalog="system" width="128" height="79"/>
+        <image name="play.circle" catalog="system" width="128" height="123"/>
         <image name="playpause.fill" catalog="system" width="128" height="69"/>
         <image name="questionmark.app" catalog="system" width="128" height="114"/>
         <image name="questionmark.circle" catalog="system" width="128" height="123"/>
-        <image name="record.circle" catalog="system" width="128" height="123"/>
         <image name="speaker.wave.2.circle" catalog="system" width="128" height="123"/>
         <image name="stop.circle" catalog="system" width="128" height="123"/>
         <image name="trash.circle" catalog="system" width="128" height="123"/>

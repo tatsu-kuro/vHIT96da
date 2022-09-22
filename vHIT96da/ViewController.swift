@@ -2885,29 +2885,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         iroiro.setButtonProperty(backwardButton,x:sp*6+bw*4,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(playButton,x:sp*7+bw*5,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(forwardButton,x:sp*8+bw*6,y:by1,w:bw,h:bh,UIColor.systemOrange)
-        //calcMode 0:hori.  1:vert. 2:vog
+        //calcMode 0:hori.  1:vert. 2:vog 3:arkit
         if calcMode == 0{
             iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
-            changeModeButton2.isHidden=false
-            iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton1.frame,UIColor.systemRed)
-            changeModeButton1.setTitle("vHIT hori.", for: .normal)
-            changeModeButton2.setTitle("vHIT vert.", for: .normal)
-            changeModeButton.isHidden=false
+             iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton1.frame,UIColor.systemRed)
+              setButtos4mode(calcMode!)
         }else if calcMode == 1{
             iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
-            changeModeButton2.isHidden=false
-            iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton2.frame,UIColor.systemRed)
-            changeModeButton1.setTitle("vHIT hori.", for: .normal)
-            changeModeButton2.setTitle("vHIT vert.", for: .normal)
-            changeModeButton.isHidden=false
-
-       }else{
+             iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton2.frame,UIColor.systemRed)
+              setButtos4mode(calcMode!)
+        }else if calcMode==2{
             iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
-            changeModeButton1.setTitle("VOG hor. & vert.", for: .normal)
-            changeModeButton2.isHidden=true
-           changeModeButton.isHidden=true
+             setButtos4mode(calcMode!)
+        }else{
+            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
+             setButtos4mode(calcMode!)
         }
         if videoDate.count == 0{
             playButton.isEnabled=false
@@ -2915,7 +2909,46 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             backwardButton.isEnabled=false
         }
     }
+    func setButtos4mode(_ mode:Int){
+        if mode==3{
+            changeModeButton1.setTitle("ARKit vHIT", for: .normal)
+            changeModeButton2.isHidden=true
+            changeModeButton.isHidden=true
 
+            backwardButton.isHidden=true
+            playButton.isHidden=true
+            forwardButton.isHidden=true
+            waveButton.setImage(  UIImage(systemName:"clear"), for: .normal)
+            waveButton.backgroundColor=UIColor.red
+            cameraButton.isEnabled=false
+            cameraButton.alpha=0.6
+        }else if mode==0 || mode==1{
+            changeModeButton1.setTitle("vHIT hori.", for: .normal)
+            changeModeButton2.setTitle("vHIT vert.", for: .normal)
+            changeModeButton2.isHidden=false
+            changeModeButton.isHidden=false
+            backwardButton.isHidden=false
+            playButton.isHidden=false
+            forwardButton.isHidden=false
+            waveButton.setImage(  UIImage(systemName:"waveform.path.ecg.rectangle"), for: .normal)
+            waveButton.backgroundColor=UIColor.systemBlue
+            cameraButton.isEnabled=true
+            cameraButton.alpha=1
+        }else{
+            changeModeButton1.setTitle("VOG hor. & vert.", for: .normal)
+            changeModeButton2.isHidden=true
+            changeModeButton.isHidden=true
+
+            backwardButton.isHidden=false
+            playButton.isHidden=false
+            forwardButton.isHidden=false
+            waveButton.setImage(  UIImage(systemName:"waveform.path.ecg.rectangle"), for: .normal)
+            waveButton.backgroundColor=UIColor.systemBlue
+            cameraButton.isEnabled=true
+            cameraButton.alpha=1
+        }
+        
+    }
     override var prefersHomeIndicatorAutoHidden: Bool {
         get {
             return true
