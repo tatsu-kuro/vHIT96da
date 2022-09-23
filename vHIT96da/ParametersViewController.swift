@@ -527,8 +527,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 //        vhitDisplayLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
         arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: 0,height:0)//view.bounds.width,height: view.bounds.height)
         arkitVHITButtonLabel.isHidden=true
-
-
+        arkitVHITButtonLabel.titleLabel!.lineBreakMode = NSLineBreakMode.byWordWrapping
+        arkitVHITButtonLabel.titleLabel!.numberOfLines = 3
+        arkitVHITButtonLabel.titleLabel!.textAlignment = NSTextAlignment.center
+        arkitVHITButtonLabel.setTitle("ARKit vHIT\non iPhoneX or later models\n(under construction)", for: .normal)
+   
     }
 
     override func didReceiveMemoryWarning() {
