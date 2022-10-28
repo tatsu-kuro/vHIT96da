@@ -85,7 +85,7 @@ class ARKitViewController: UIViewController {
         arKitDisplayMode = iroiro.getUserDefaultBool(str: "arKitDisplayMode", ret:true)
         multiEye = iroiro.getUserDefaultCGFloat(str: "multiEye", ret: 600)
         multiFace = iroiro.getUserDefaultCGFloat(str: "multiFace", ret: 600)
-                timer = Timer.scheduledTimer(timeInterval: 1.0/60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0/60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
         session.delegate = self
         
         waveSlider.minimumTrackTintColor=UIColor.gray
