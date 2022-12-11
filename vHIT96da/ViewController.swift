@@ -1981,26 +1981,34 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func average5(filtered:[CGFloat],i:Int)->CGFloat{
         return (filtered[i]+filtered[i+1]+filtered[i+2]+filtered[i+3]+filtered[i+4])/5
     }
-     func averagingData(){
-         let filterCnt=UserDefaults.standard.integer(forKey:"lowPassFilterCnt")
-         if filterCnt==0{
-             return
-         }else if filterCnt==1{
-             for i in 0..<eyeVeloXFiltered4update.count-6{
-                 eyeVeloXFiltered4update[i]=(eyeVeloXFiltered4update[i]+eyeVeloXFiltered4update[i+1])/2
-                 eyeVeloYFiltered4update[i]=(eyeVeloYFiltered4update[i]+eyeVeloYFiltered4update[i+1])/2
-             }
-         }else if filterCnt==2{
-             for i in 0..<eyeVeloXFiltered4update.count-6{
-                 eyeVeloXFiltered4update[i]=(eyeVeloXFiltered4update[i]+eyeVeloXFiltered4update[i+1]+eyeVeloXFiltered4update[i+1])/3
-                 eyeVeloYFiltered4update[i]=(eyeVeloYFiltered4update[i]+eyeVeloYFiltered4update[i+1]+eyeVeloYFiltered4update[i+1])/3
-             }
-         }else {
-             for i in 0..<eyeVeloXFiltered4update.count-6{
-                 eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
-                 eyeVeloYFiltered4update[i]=average5(filtered: eyeVeloYFiltered4update, i: i)
-             }
-         }
+    func average4(filtered:[CGFloat],i:Int)->CGFloat{
+        return (filtered[i]+filtered[i+1]+filtered[i+2]+filtered[i+3])/4
+    }
+    func averagingData(){
+        let filterCnt=UserDefaults.standard.integer(forKey:"lowPassFilterCnt")
+        if filterCnt==0{
+            return
+        }else if filterCnt==1{
+            for i in 0..<eyeVeloXFiltered4update.count-6{
+                eyeVeloXFiltered4update[i]=(eyeVeloXFiltered4update[i]+eyeVeloXFiltered4update[i+1])/2
+                eyeVeloYFiltered4update[i]=(eyeVeloYFiltered4update[i]+eyeVeloYFiltered4update[i+1])/2
+            }
+        }else if filterCnt==2{
+            for i in 0..<eyeVeloXFiltered4update.count-6{
+                eyeVeloXFiltered4update[i]=(eyeVeloXFiltered4update[i]+eyeVeloXFiltered4update[i+1]+eyeVeloXFiltered4update[i+1])/3
+                eyeVeloYFiltered4update[i]=(eyeVeloYFiltered4update[i]+eyeVeloYFiltered4update[i+1]+eyeVeloYFiltered4update[i+1])/3
+            }
+        }else if filterCnt==3{
+            for i in 0..<eyeVeloXFiltered4update.count-6{
+                eyeVeloXFiltered4update[i]=average4(filtered: eyeVeloXFiltered4update, i: i)
+                eyeVeloYFiltered4update[i]=average4(filtered: eyeVeloYFiltered4update, i: i)
+            }
+        }else{
+            for i in 0..<eyeVeloXFiltered4update.count-6{
+                eyeVeloXFiltered4update[i]=average5(filtered: eyeVeloXFiltered4update, i: i)
+                eyeVeloYFiltered4update[i]=average5(filtered: eyeVeloYFiltered4update, i: i)
+            }
+        }
     }
     func getArrayData()->Int{//一気にデータ取得して、そのデータをゆっくり？表示用に利用する。
         while writingDataNow==true{
