@@ -474,7 +474,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.layer.masksToBounds = true
             greenItemLabel.layer.cornerRadius = 3
             faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*10+vhitpngH-5 ,width: bw, height: bh)
-            lowPassFilterSwitch.frame =     CGRect(x:x1,y: topY+bh1*11+vhitpngH-5 ,width: bw*3, height: bh)
+            lowPassFilterSwitch.frame =     CGRect(x:x1,y: faceMarkSwitch.frame.maxY+sp ,width: bw*3, height: bh)
             lowPassText.frame=CGRect(x:lowPassFilterSwitch.frame.maxX+sp,y: topY+bh1*11+vhitpngH-5 ,width: bw*3, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*10+vhitpngH-5,width:tw,height: bh)
 
