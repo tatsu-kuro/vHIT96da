@@ -31,6 +31,22 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var faceMarkSwitch: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
+    @IBOutlet weak var lowPassText: UILabel!
+    @IBOutlet weak var lowPassFilterSwitch: UISegmentedControl!
+    func getUserDefault(str:String,ret:Int) -> Int{//getUserDefault_one
+        if (UserDefaults.standard.object(forKey: str) != nil){//keyが設定してなければretをセット
+            return UserDefaults.standard.integer(forKey:str)
+        }else{
+            UserDefaults.standard.set(ret, forKey: str)
+            return ret
+        }
+    }
+    @IBAction func onLowPassFilterSwitch(_ sender: UISegmentedControl) {
+        let index=sender.selectedSegmentIndex
+        UserDefaults.standard.set(index, forKey: "lowPassFilterCnt")
+        print("selectedSegmentIndex",index)
+    }
+  
     @IBOutlet weak var arkitVHITButtonLabel: UIButton!
     @IBOutlet weak var arkitButton: UIButton!
     
@@ -458,6 +474,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             greenItemLabel.layer.masksToBounds = true
             greenItemLabel.layer.cornerRadius = 3
             faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*10+vhitpngH-5 ,width: bw, height: bh)
+            lowPassFilterSwitch.frame =     CGRect(x:x1,y: topY+bh1*11+vhitpngH-5 ,width: bw*3, height: bh)
+            lowPassText.frame=CGRect(x:lowPassFilterSwitch.frame.maxX+sp,y: topY+bh1*11+vhitpngH-5 ,width: bw*3, height: bh)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*10+vhitpngH-5,width:tw,height: bh)
 
             displayMode()
@@ -505,7 +523,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         eyeVelocityInput.delegate = self
         headVelocityInput.delegate = self
         wakuLengthInput.delegate = self
-
+        lowPassFilterSwitch.selectedSegmentIndex=getUserDefault(str: "lowPassFilterCnt", ret: 4)
         self.B2CInput.keyboardType = UIKeyboardType.numberPad
         self.A2DInput.keyboardType = UIKeyboardType.numberPad
         self.eyeBorderInput.keyboardType = UIKeyboardType.numberPad

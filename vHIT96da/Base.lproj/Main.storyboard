@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -956,6 +956,27 @@ Tap the waveforms to change the (2*).</string>
                                     <segue destination="1VO-Zl-WBN" kind="show" id="ybs-uw-EQG"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="cjT-c1-5ay">
+                                <rect key="frame" x="23" y="697" width="131" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="1"/>
+                                    <segment title="2"/>
+                                    <segment title="3"/>
+                                    <segment title="4"/>
+                                    <segment title="5"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onLowPassFilterSwitch:" destination="jFt-gZ-HXu" eventType="valueChanged" id="VrX-MF-B35"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="移動平均" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VUD-4d-LTF">
+                                <rect key="frame" x="179" y="702" width="70" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
@@ -988,6 +1009,8 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="headVelocityInput" destination="PBe-Ga-pXd" id="PGy-ii-8Mc"/>
                         <outlet property="headVelocityLabel" destination="Wre-qf-59d" id="8WU-o2-e4F"/>
                         <outlet property="keyDown" destination="pMb-F1-KQb" id="9ax-j5-bsU"/>
+                        <outlet property="lowPassFilterSwitch" destination="cjT-c1-5ay" id="j0d-4C-NjV"/>
+                        <outlet property="lowPassText" destination="VUD-4d-LTF" id="0Ah-IN-Vx9"/>
                         <outlet property="markText" destination="aD3-jN-jML" id="cLB-AB-x5I"/>
                         <outlet property="oppositeButton" destination="p30-4I-jic" id="atM-HJ-i7U"/>
                         <outlet property="oppositeLabel" destination="i3U-lw-sar" id="hTw-07-F5J"/>

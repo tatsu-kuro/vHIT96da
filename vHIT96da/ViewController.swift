@@ -2315,6 +2315,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func getUserDefaults(){
+        let lowPassFilterCnt=getUserDefault(str: "lowPassFilterCnt", ret: 4)//とりあえず作っておく
+        print("lowPassFilterCnt",lowPassFilterCnt)
         widthRange = getUserDefault(str: "widthRange", ret: 30)
         waveWidth = getUserDefault(str: "waveWidth", ret: 80)
         eyeBorder = getUserDefault(str: "eyeBorder", ret: 10)
