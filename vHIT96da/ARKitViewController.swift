@@ -329,7 +329,7 @@ class ARKitViewController: UIViewController {
         if arKitDisplayMode==true{//faceEye upDown
             posY0=90*r
         }
-        print(posY0)
+//        print(posY0)
         let drawPathEye = UIBezierPath()
         let drawPathFace = UIBezierPath()
         var rightCnt:Int=0
@@ -842,6 +842,7 @@ extension ARKitViewController: ARSessionDelegate {
         guard let faceAnchor = frame.anchors.first(where: { $0 is ARFaceAnchor }) as? ARFaceAnchor else {
             return
         }
+  
         faceAnchorFlag=faceAnchor.isTracked
         let faceXTemp=CGFloat(asin(faceAnchor.transform.columns.2.x))
         let rtEyeXTemp=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
@@ -852,6 +853,18 @@ extension ARKitViewController: ARSessionDelegate {
         lastFaceX=faceXTemp
         lastLtEyeX=ltEyeXTemp
         lastRtEyeX=rtEyeXTemp
+  //by ken kuroda
+        let temp = SCNNode(geometry: nil)
+        temp.simdTransform = faceAnchor.leftEyeTransform
+//        print("1",temp.rotation.x,temp.rotation.y)
+//        print("2",faceAnchor.leftEyeTransform.columns.2.x)
+        let temp1 = SCNNode(geometry: nil)
+
+        temp1.simdTransform = faceAnchor.transform
+        print("1",temp1.rotation.x,temp1.rotation.y,temp1.rotation.z)
+        print("2",faceAnchor.transform.columns.2.x)
+
+        
 #if DEBUG
         let lag=CFAbsoluteTimeGetCurrent()-lastTime
         print(lag)

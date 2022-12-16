@@ -364,6 +364,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
         arkitVHITButtonLabel.isHidden=true
         segueToArkitButton.isHidden=true
+        lowPassText.isHidden=true
+        lowPassFilterSwitch.isHidden=true
         if calcMode==2{//VOG
             eyeVelocityLabel.isHidden=true
             headVelocityLabel.isHidden=true
@@ -406,9 +408,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             VOGLabel.isHidden=false
             arkitLabel.isHidden=true
             greenItemLabel.isHidden=true
-        }else{//vhit
+        }else if calcMode==0{//vhit
             eyeVelocityLabel.isHidden=false
             headVelocityLabel.isHidden=false
+            lowPassText.isHidden=false
+            lowPassFilterSwitch.isHidden=false
             eyePositionLabelVOG.isHidden=true
             eyeVelocityLabelVOG.isHidden=true
             gyroText.isHidden=true
@@ -485,8 +489,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             vHITLabel.layer.masksToBounds=true
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
-        }
-        if calcMode==3{
+        }else{//calcmode==3 arkit
             vHITLabel.isHidden=true
             VOGLabel.isHidden=false
             arkitLabel.isHidden=true
