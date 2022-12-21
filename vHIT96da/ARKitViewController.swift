@@ -21,7 +21,7 @@ class ARKitViewController: UIViewController {
     @IBOutlet weak var progressFaceView: UIProgressView!
     @IBOutlet weak var progressEyeView: UIProgressView!
     @IBOutlet weak var labelButton: UIButton!
-    @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var dataTypeButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var waveBoxView: UIImageView!
     @IBOutlet weak var vHITBoxView: UIImageView!
@@ -118,7 +118,7 @@ class ARKitViewController: UIViewController {
         iroiro.setButtonProperty(ARKitButton,x:sp*5+bw*3,y:by0-sp/2-bh/2,w:bw,h:bh,UIColor.systemBlue)
         iroiro.setButtonProperty(settingButton,x:sp*6+bw*4,y:by0,w:bw,h: bh,UIColor.systemBlue)
         iroiro.setButtonProperty(helpButton,x:sp*7+bw*5,y:by0,w:bw,h: bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(cameraButton,x:sp*8+bw*6,y:by0,w:bw,h: bh,UIColor.systemRed)
+        iroiro.setButtonProperty(dataTypeButton,x:sp*8+bw*6,y:by0,w:bw,h: bh,UIColor.systemRed)
         waveBoxView.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
         vHITBoxView.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         waveSlider.frame=CGRect(x:sp*2,y:by2,width: ww-sp*4,height:20)//とりあえず
@@ -820,17 +820,16 @@ class ARKitViewController: UIViewController {
             waveSlider.maximumTrackTintColor=UIColor.gray
         }
     }
-//    @IBAction func onDeleteButton(_ sender: Any) {
-//        if waves.count>59{
-//            waves.removeAll()
-//            vHITs.removeAll()
-//            drawVHITBox()//(width: 500, height: 200)
-//            drawWaveBox()//(startCnt: 0, endCnt: 0)
-//            waveSlider.isEnabled=false
-//            waveSlider.minimumTrackTintColor=UIColor.gray
-//            waveSlider.maximumTrackTintColor=UIColor.gray
-//        }
-//    }
+    var dataType:Int=0
+
+    @IBAction func onDataTypeButton(_ sender: Any) {
+        dataType += 1
+        if dataType>4{
+            dataType=0
+        }
+        dataTypeButton.setTitle(dataType.description, for: .normal)
+    }
+ 
 }
 
 extension ARKitViewController: ARSessionDelegate {
@@ -841,8 +840,8 @@ extension ARKitViewController: ARSessionDelegate {
         }
  
         faceAnchorFlag=faceAnchor.isTracked
-        let typeHIT:Int=3
-        if typeHIT==0{ //original
+//        let HIT:Int=3
+        if dataType==0{ //original
             let faceXTemp=CGFloat(asin(faceAnchor.transform.columns.2.x))
             let rtEyeXTemp=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
             let ltEyeXTemp=CGFloat(asin(faceAnchor.leftEyeTransform.columns.2.x))
@@ -852,42 +851,42 @@ extension ARKitViewController: ARSessionDelegate {
             lastFaceX=faceXTemp
             lastLtEyeX=ltEyeXTemp
             lastRtEyeX=rtEyeXTemp
-        }else if typeHIT==1{
+        }else if dataType==1{
             faceVeloX0=CGFloat(asin(faceAnchor.transform.columns.2.x))
             rtEyeVeloX0=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
             ltEyeVeloX0=CGFloat(asin(faceAnchor.leftEyeTransform.columns.2.x))
-        }else if typeHIT==2{
-            let faceXTemp=CGFloat(faceAnchor.transform.columns.2.x)
-            let rtEyeXTemp=CGFloat(faceAnchor.rightEyeTransform.columns.2.x)
-            let ltEyeXTemp=CGFloat(faceAnchor.leftEyeTransform.columns.2.x)
-        }else if typeHIT==3{
+        }else if dataType==2{
+            faceVeloX0=CGFloat(faceAnchor.transform.columns.2.x)
+            rtEyeVeloX0=CGFloat(faceAnchor.rightEyeTransform.columns.2.x)
+            ltEyeVeloX0=CGFloat(faceAnchor.leftEyeTransform.columns.2.x)
+        }else if dataType==3{
             let temp0 = SCNNode(geometry: nil)
-            temp0.simdTransform = faceAnchor.transform
             let temp1 = SCNNode(geometry: nil)
-            temp1.simdTransform = faceAnchor.rightEyeTransform
             let temp2 = SCNNode(geometry: nil)
+            temp0.simdTransform = faceAnchor.transform
+            temp1.simdTransform = faceAnchor.rightEyeTransform
             temp2.simdTransform = faceAnchor.leftEyeTransform
             //        print("1",temp.rotation.x,temp.rotation.y)
             let faceXTemp=CGFloat(temp0.rotation.x)/10
-            let rtEyeXTemp=CGFloat(temp1.rotation.x)/20
-            let ltEyeXTemp=CGFloat(temp2.rotation.x)/20
+            let rtEyeXTemp=CGFloat(temp1.rotation.x)/10
+            let ltEyeXTemp=CGFloat(temp2.rotation.x)/10
             faceVeloX0=faceXTemp//-lastFaceX
             rtEyeVeloX0=rtEyeXTemp//-lastRtEyeX
             ltEyeVeloX0=ltEyeXTemp//-lastLtEyeX
             lastFaceX=faceXTemp
             lastLtEyeX=ltEyeXTemp
             lastRtEyeX=rtEyeXTemp
-        }else if typeHIT==4{
+        }else if dataType==4{
             let temp0 = SCNNode(geometry: nil)
-            temp0.simdTransform = faceAnchor.transform
             let temp1 = SCNNode(geometry: nil)
-            temp1.simdTransform = faceAnchor.rightEyeTransform
             let temp2 = SCNNode(geometry: nil)
+            temp0.simdTransform = faceAnchor.transform
+            temp1.simdTransform = faceAnchor.rightEyeTransform
             temp2.simdTransform = faceAnchor.leftEyeTransform
             //        print("1",temp.rotation.x,temp.rotation.y)
             let faceXTemp=CGFloat(temp0.rotation.y)/10
-            let rtEyeXTemp=CGFloat(temp1.rotation.y)/20
-            let ltEyeXTemp=CGFloat(temp2.rotation.y)/20
+            let rtEyeXTemp=CGFloat(temp1.rotation.y)/10
+            let ltEyeXTemp=CGFloat(temp2.rotation.y)/10
             faceVeloX0=faceXTemp//-lastFaceX
             rtEyeVeloX0=rtEyeXTemp//-lastRtEyeX
             ltEyeVeloX0=ltEyeXTemp//-lastLtEyeX

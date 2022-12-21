@@ -1087,13 +1087,16 @@ Tap the waveforms to change the (2*).</string>
                                     <segue destination="l3a-Ut-FhC" kind="show" id="0wg-2c-lQT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Pf-J0-eQ3">
-                                <rect key="frame" x="349" y="836" width="25" height="22"/>
+                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Pf-J0-eQ3">
+                                <rect key="frame" x="347" y="830" width="30" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemRedColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="camera" catalog="system"/>
+                                <state key="normal" title="0"/>
+                                <connections>
+                                    <action selector="onDataTypeButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="EXk-3r-7Gg"/>
+                                </connections>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="env-4t-0qd">
                                 <rect key="frame" x="120" y="87" width="150" height="4"/>
@@ -1161,8 +1164,8 @@ Tap the waveforms to change the (2*).</string>
                     <navigationItem key="navigationItem" id="vzd-h3-pgU"/>
                     <connections>
                         <outlet property="ARKitButton" destination="5ca-VO-mwS" id="t1v-AK-sjn"/>
-                        <outlet property="cameraButton" destination="1Pf-J0-eQ3" id="t3u-15-uyg"/>
                         <outlet property="clearButton" destination="iXL-fJ-Kgq" id="nbq-WZ-8sv"/>
+                        <outlet property="dataTypeButton" destination="1Pf-J0-eQ3" id="t3u-15-uyg"/>
                         <outlet property="helpButton" destination="fdf-wp-qbG" id="N5B-ju-lvW"/>
                         <outlet property="labelButton" destination="2Xt-XH-etN" id="Vj4-5e-qOm"/>
                         <outlet property="mailButton" destination="gZG-X3-cHS" id="xXt-re-vMH"/>
