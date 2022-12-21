@@ -660,7 +660,6 @@ class ARKitViewController: UIViewController {
         if sender.state == .began {
             moveThumX=0
             moveThumY=0
-            
             if sender.location(in: view).y>view.bounds.height*2/5{
                 if sender.location(in: view).x<view.bounds.width/3{
                     tapPosleftRight=0
@@ -694,8 +693,6 @@ class ARKitViewController: UIViewController {
                     //                    print("x:",move.x)
                     waveSlider.value=Float(endCnt)
                 }else{
-                    
-                    
                     if tapPosleftRight==0{
                         multiEye=startMultiEye - move.y
                     }else if tapPosleftRight==1{
@@ -842,27 +839,72 @@ extension ARKitViewController: ARSessionDelegate {
         guard let faceAnchor = frame.anchors.first(where: { $0 is ARFaceAnchor }) as? ARFaceAnchor else {
             return
         }
-  
+ 
         faceAnchorFlag=faceAnchor.isTracked
-        let faceXTemp=CGFloat(asin(faceAnchor.transform.columns.2.x))
-        let rtEyeXTemp=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
-        let ltEyeXTemp=CGFloat(asin(faceAnchor.leftEyeTransform.columns.2.x))
-        faceVeloX0=faceXTemp-lastFaceX
-        rtEyeVeloX0=rtEyeXTemp-lastRtEyeX
-        ltEyeVeloX0=ltEyeXTemp-lastLtEyeX
-        lastFaceX=faceXTemp
-        lastLtEyeX=ltEyeXTemp
-        lastRtEyeX=rtEyeXTemp
+        let typeHIT:Int=3
+        if typeHIT==0{ //original
+            let faceXTemp=CGFloat(asin(faceAnchor.transform.columns.2.x))
+            let rtEyeXTemp=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
+            let ltEyeXTemp=CGFloat(asin(faceAnchor.leftEyeTransform.columns.2.x))
+            faceVeloX0=faceXTemp-lastFaceX
+            rtEyeVeloX0=rtEyeXTemp-lastRtEyeX
+            ltEyeVeloX0=ltEyeXTemp-lastLtEyeX
+            lastFaceX=faceXTemp
+            lastLtEyeX=ltEyeXTemp
+            lastRtEyeX=rtEyeXTemp
+        }else if typeHIT==1{
+            faceVeloX0=CGFloat(asin(faceAnchor.transform.columns.2.x))
+            rtEyeVeloX0=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
+            ltEyeVeloX0=CGFloat(asin(faceAnchor.leftEyeTransform.columns.2.x))
+        }else if typeHIT==2{
+            let faceXTemp=CGFloat(faceAnchor.transform.columns.2.x)
+            let rtEyeXTemp=CGFloat(faceAnchor.rightEyeTransform.columns.2.x)
+            let ltEyeXTemp=CGFloat(faceAnchor.leftEyeTransform.columns.2.x)
+        }else if typeHIT==3{
+            let temp0 = SCNNode(geometry: nil)
+            temp0.simdTransform = faceAnchor.transform
+            let temp1 = SCNNode(geometry: nil)
+            temp1.simdTransform = faceAnchor.rightEyeTransform
+            let temp2 = SCNNode(geometry: nil)
+            temp2.simdTransform = faceAnchor.leftEyeTransform
+            //        print("1",temp.rotation.x,temp.rotation.y)
+            let faceXTemp=CGFloat(temp0.rotation.x)/10
+            let rtEyeXTemp=CGFloat(temp1.rotation.x)/20
+            let ltEyeXTemp=CGFloat(temp2.rotation.x)/20
+            faceVeloX0=faceXTemp//-lastFaceX
+            rtEyeVeloX0=rtEyeXTemp//-lastRtEyeX
+            ltEyeVeloX0=ltEyeXTemp//-lastLtEyeX
+            lastFaceX=faceXTemp
+            lastLtEyeX=ltEyeXTemp
+            lastRtEyeX=rtEyeXTemp
+        }else if typeHIT==4{
+            let temp0 = SCNNode(geometry: nil)
+            temp0.simdTransform = faceAnchor.transform
+            let temp1 = SCNNode(geometry: nil)
+            temp1.simdTransform = faceAnchor.rightEyeTransform
+            let temp2 = SCNNode(geometry: nil)
+            temp2.simdTransform = faceAnchor.leftEyeTransform
+            //        print("1",temp.rotation.x,temp.rotation.y)
+            let faceXTemp=CGFloat(temp0.rotation.y)/10
+            let rtEyeXTemp=CGFloat(temp1.rotation.y)/20
+            let ltEyeXTemp=CGFloat(temp2.rotation.y)/20
+            faceVeloX0=faceXTemp//-lastFaceX
+            rtEyeVeloX0=rtEyeXTemp//-lastRtEyeX
+            ltEyeVeloX0=ltEyeXTemp//-lastLtEyeX
+            lastFaceX=faceXTemp
+            lastLtEyeX=ltEyeXTemp
+            lastRtEyeX=rtEyeXTemp
+        }
   //by ken kuroda
-        let temp = SCNNode(geometry: nil)
-        temp.simdTransform = faceAnchor.leftEyeTransform
+ //       let temp = SCNNode(geometry: nil)
+   //     temp.simdTransform = faceAnchor.leftEyeTransform
 //        print("1",temp.rotation.x,temp.rotation.y)
 //        print("2",faceAnchor.leftEyeTransform.columns.2.x)
-        let temp1 = SCNNode(geometry: nil)
+     //   let temp1 = SCNNode(geometry: nil)
 
-        temp1.simdTransform = faceAnchor.transform
-        print("1",temp1.rotation.x,temp1.rotation.y,temp1.rotation.z)
-        print("2",faceAnchor.transform.columns.2.x)
+       // temp1.simdTransform = faceAnchor.transform
+        //print("1",temp1.rotation.x,temp1.rotation.y,temp1.rotation.z)
+        //print("2",faceAnchor.transform.columns.2.x)
 
         
 #if DEBUG
