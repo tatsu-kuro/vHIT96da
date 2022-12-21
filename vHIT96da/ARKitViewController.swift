@@ -894,17 +894,6 @@ extension ARKitViewController: ARSessionDelegate {
             lastLtEyeX=ltEyeXTemp
             lastRtEyeX=rtEyeXTemp
         }
-  //by ken kuroda
- //       let temp = SCNNode(geometry: nil)
-   //     temp.simdTransform = faceAnchor.leftEyeTransform
-//        print("1",temp.rotation.x,temp.rotation.y)
-//        print("2",faceAnchor.leftEyeTransform.columns.2.x)
-     //   let temp1 = SCNNode(geometry: nil)
-
-       // temp1.simdTransform = faceAnchor.transform
-        //print("1",temp1.rotation.x,temp1.rotation.y,temp1.rotation.z)
-        //print("2",faceAnchor.transform.columns.2.x)
-
         
 #if DEBUG
         let lag=CFAbsoluteTimeGetCurrent()-lastTime
