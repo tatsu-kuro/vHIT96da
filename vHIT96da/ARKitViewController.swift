@@ -824,14 +824,37 @@ class ARKitViewController: UIViewController {
 
     @IBAction func onDataTypeButton(_ sender: Any) {
         dataType += 1
-        if dataType>4{
+        if dataType>1{
             dataType=0
         }
         dataTypeButton.setTitle(dataType.description, for: .normal)
     }
  
 }
+/*
+ let face = simd_quatf(faceAnchor.transform)
+        let rEye = simd_quatf(faceAnchor.rightEyeTransform)
+        let lEye = simd_quatf(faceAnchor.leftEyeTransform)
 
+        let fRoll = atan2f(2.0 * (face.axis.z * face.angle + face.axis.x * face.axis.y),
+                       face.axis.x * face.axis.x - face.axis.y * face.axis.y - face.axis.z * face.axis.z + face.angle * face.angle)
+        let fPitch = asin(2.0 * (face.axis.x * face.axis.z - face.axis.y * face.angle))
+        let fYaw = atan2f(2.0 * (face.axis.y * face.axis.z + face.axis.x * face.angle),
+                          face.axis.x*face.axis.x + face.axis.y * face.axis.y - face.axis.z * face.axis.z - face.angle * face.angle)
+
+        let rRoll = atan2f(2.0 * (rEye.axis.z * rEye.angle + rEye.axis.x * rEye.axis.y),
+                       rEye.axis.x * rEye.axis.x - rEye.axis.y * rEye.axis.y - rEye.axis.z * rEye.axis.z + rEye.angle * rEye.angle)
+        let rPitch = asin(2.0 * (rEye.axis.x * rEye.axis.z - rEye.axis.y * rEye.angle))
+        let rYaw = atan2f(2.0 * (rEye.axis.y * rEye.axis.z + rEye.axis.x * rEye.angle),
+                         rEye.axis.x*rEye.axis.x + rEye.axis.y * rEye.axis.y - rEye.axis.z * rEye.axis.z - rEye.angle * rEye.angle)
+
+        let lRoll = atan2f(2.0 * (lEye.axis.z * lEye.angle + lEye.axis.x * lEye.axis.y),
+                     lEye.axis.x * lEye.axis.x - lEye.axis.y * lEye.axis.y - lEye.axis.z * lEye.axis.z + lEye.angle * lEye.angle)
+        let lPitch = asin(2.0 * (lEye.axis.x * lEye.axis.z - lEye.axis.y * lEye.angle))
+        let lYaw = atan2f(2.0 * (lEye.axis.y * lEye.axis.z + lEye.axis.x * lEye.angle),
+                       lEye.axis.x*lEye.axis.x + lEye.axis.y * lEye.axis.y - lEye.axis.z * lEye.axis.z - lEye.angle * lEye.angle)
+
+ */
 extension ARKitViewController: ARSessionDelegate {
  
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
@@ -840,26 +863,25 @@ extension ARKitViewController: ARSessionDelegate {
         }
  
         faceAnchorFlag=faceAnchor.isTracked
-//        let HIT:Int=3
-        if dataType==0{ //original
+        if dataType==2{ //original
             let faceXTemp=CGFloat(asin(faceAnchor.transform.columns.2.x))
             let rtEyeXTemp=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
             let ltEyeXTemp=CGFloat(asin(faceAnchor.leftEyeTransform.columns.2.x))
             faceVeloX0=faceXTemp-lastFaceX
             rtEyeVeloX0=rtEyeXTemp-lastRtEyeX
-            ltEyeVeloX0=ltEyeXTemp-lastLtEyeX
+            ltEyeVeloX0=ltEyeXTemp-lastLtEyeX+faceVeloX0
             lastFaceX=faceXTemp
             lastLtEyeX=ltEyeXTemp
             lastRtEyeX=rtEyeXTemp
-        }else if dataType==1{
+        }else if dataType==3{
             faceVeloX0=CGFloat(asin(faceAnchor.transform.columns.2.x))
             rtEyeVeloX0=CGFloat(asin(faceAnchor.rightEyeTransform.columns.2.x))
             ltEyeVeloX0=CGFloat(asin(faceAnchor.leftEyeTransform.columns.2.x))
-        }else if dataType==2{
+        }else if dataType==4{
             faceVeloX0=CGFloat(faceAnchor.transform.columns.2.x)
             rtEyeVeloX0=CGFloat(faceAnchor.rightEyeTransform.columns.2.x)
             ltEyeVeloX0=CGFloat(faceAnchor.leftEyeTransform.columns.2.x)
-        }else if dataType==3{
+        }else if dataType==5{
             let temp0 = SCNNode(geometry: nil)
             let temp1 = SCNNode(geometry: nil)
             let temp2 = SCNNode(geometry: nil)
@@ -876,7 +898,7 @@ extension ARKitViewController: ARSessionDelegate {
             lastFaceX=faceXTemp
             lastLtEyeX=ltEyeXTemp
             lastRtEyeX=rtEyeXTemp
-        }else if dataType==4{
+        }else if dataType==6{
             let temp0 = SCNNode(geometry: nil)
             let temp1 = SCNNode(geometry: nil)
             let temp2 = SCNNode(geometry: nil)
@@ -893,7 +915,51 @@ extension ARKitViewController: ARSessionDelegate {
             lastFaceX=faceXTemp
             lastLtEyeX=ltEyeXTemp
             lastRtEyeX=rtEyeXTemp
-        }
+        }else if dataType==0{
+            let face = simd_quatf(faceAnchor.transform)
+   //         let rEye = simd_quatf(faceAnchor.rightEyeTransform)
+            let lEye = simd_quatf(faceAnchor.leftEyeTransform)
+//            faceVeloX0 = CGFloat(atan2f(2.0 * (face.axis.z * face.angle + face.axis.x * face.axis.y),
+//                                        face.axis.x * face.axis.x - face.axis.y * face.axis.y - face.axis.z * face.axis.z + face.angle * face.angle))/10//Roll
+
+//         faceVeloX0 = CGFloat(asin(2.0 * (face.axis.x * face.axis.z - face.axis.y * face.angle)))/50//Pitch
+  
+            faceVeloX0 = CGFloat(atan2f(2.0 * (face.axis.y * face.axis.z + face.axis.x * face.angle),
+                                         face.axis.x*face.axis.x + face.axis.y * face.axis.y - face.axis.z * face.axis.z - face.angle * face.angle))/10//Yaw
+
+ //           ltEyeVeloX0 = CGFloat(atan2f(2.0 * (lEye.axis.z * lEye.angle + lEye.axis.x * lEye.axis.y),
+//                               lEye.axis.x * lEye.axis.x - lEye.axis.y * lEye.axis.y - lEye.axis.z * lEye.axis.z + lEye.angle * lEye.angle))/50//+faceVeloX0
+//          ltEyeVeloX0 = asin(2.0 * (lEye.axis.x * lEye.axis.z - lEye.axis.y * lEye.angle))
+          ltEyeVeloX0 = CGFloat(atan2f(2.0 * (lEye.axis.y * lEye.axis.z + lEye.axis.x * lEye.angle),
+                              lEye.axis.x*lEye.axis.x + lEye.axis.y * lEye.axis.y - lEye.axis.z * lEye.axis.z - lEye.angle * lEye.angle))/10
+   //         ltEyeVeloX0 += faceVeloX0
+            
+    }else if dataType==1{
+        let face = simd_quatf(faceAnchor.transform)
+//         let rEye = simd_quatf(faceAnchor.rightEyeTransform)
+        let lEye = simd_quatf(faceAnchor.leftEyeTransform)
+        //これが頭部 Roll Pitch Yaw
+//            faceVeloX0 = CGFloat(atan2f(2.0 * (face.axis.z * face.angle + face.axis.x * face.axis.y),
+//                                        face.axis.x * face.axis.x - face.axis.y * face.axis.y - face.axis.z * face.axis.z + face.angle * face.angle))/50
+
+//         faceVeloX0 = CGFloat(asin(2.0 * (face.axis.x * face.axis.z - face.axis.y * face.angle)))/50
+
+        faceVeloX0 = CGFloat(atan2f(2.0 * (face.axis.y * face.axis.z + face.axis.x * face.angle),
+                                     face.axis.x*face.axis.x + face.axis.y * face.axis.y - face.axis.z * face.axis.z - face.angle * face.angle))/50
+//
+//            let rRoll = atan2f(2.0 * (rEye.axis.z * rEye.angle + rEye.axis.x * rEye.axis.y),
+//                               rEye.axis.x * rEye.axis.x - rEye.axis.y * rEye.axis.y - rEye.axis.z * rEye.axis.z + rEye.angle * rEye.angle)
+//            let rPitch = asin(2.0 * (rEye.axis.x * rEye.axis.z - rEye.axis.y * rEye.angle))
+//            let rYaw = atan2f(2.0 * (rEye.axis.y * rEye.axis.z + rEye.axis.x * rEye.angle),
+//                              rEye.axis.x*rEye.axis.x + rEye.axis.y * rEye.axis.y - rEye.axis.z * rEye.axis.z - rEye.angle * rEye.angle)
+//
+        ltEyeVeloX0 = CGFloat(atan2f(2.0 * (lEye.axis.z * lEye.angle + lEye.axis.x * lEye.axis.y),
+                           lEye.axis.x * lEye.axis.x - lEye.axis.y * lEye.axis.y - lEye.axis.z * lEye.axis.z + lEye.angle * lEye.angle))/50//+faceVeloX0
+//            let lPitch = asin(2.0 * (lEye.axis.x * lEye.axis.z - lEye.axis.y * lEye.angle))
+//            let lYaw = atan2f(2.0 * (lEye.axis.y * lEye.axis.z + lEye.axis.x * lEye.angle),
+//                              lEye.axis.x*lEye.axis.x + lEye.axis.y * lEye.axis.y - lEye.axis.z * lEye.axis.z - lEye.angle * lEye.angle)
+        
+    }
         
 #if DEBUG
         let lag=CFAbsoluteTimeGetCurrent()-lastTime
