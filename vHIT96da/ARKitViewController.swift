@@ -737,41 +737,41 @@ class ARKitViewController: UIViewController {
         }
     }
     @IBAction func onSaveButton(_ sender: Any) {
-       if waves.count<1{
-           return
-       }
-       let alert = UIAlertController(title: "input ID", message: "", preferredStyle: .alert)
-       let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
-           
-           // 入力したテキストをコンソールに表示
-           let textField = alert.textFields![0] as UITextField
-           #if DEBUG
-           print("\(String(describing: textField.text))")
-           #endif
-           self.idString = textField.text!// Field2value(field: textField)
-           
-//            let textField = alert.textFields![0] as UITextField
- //            idString = textField.text!
-           let drawImage = drawVHIT(width:500*4,height:200*4)
-           //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
-           saveImage2path(image: drawImage, path: "temp.jpeg")
-           while existFile(aFile: "temp.jpeg") == false{
-               sleep(UInt32(0.1))
-           }
-           savePath2album(path: "temp.jpeg")
-           drawVHITBox()
+        if waves.count<1{
+            return
         }
-       let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
-           self.idString = ""//キャンセルしてもここは通らない？
-       }
-       // UIAlertControllerにtextFieldを追加
-       alert.addTextField { (textField:UITextField!) -> Void in
-           textField.keyboardType = UIKeyboardType.default//numbersAndPunctuation// decimalPad// default// denumberPad
-           
-       }
-       alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
-       alert.addAction(saveAction)
-       present(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "input ID", message: "", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
+            
+            // 入力したテキストをコンソールに表示
+            let textField = alert.textFields![0] as UITextField
+#if DEBUG
+            print("\(String(describing: textField.text))")
+#endif
+            self.idString = textField.text!// Field2value(field: textField)
+            
+            //            let textField = alert.textFields![0] as UITextField
+            //            idString = textField.text!
+            let drawImage = drawVHIT(width:500*4,height:200*4)
+            //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
+            saveImage2path(image: drawImage, path: "temp.jpeg")
+            while existFile(aFile: "temp.jpeg") == false{
+                sleep(UInt32(0.1))
+            }
+            savePath2album(path: "temp.jpeg")
+            drawVHITBox()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+            self.idString = ""//キャンセルしてもここは通らない？
+        }
+        // UIAlertControllerにtextFieldを追加
+        alert.addTextField { (textField:UITextField!) -> Void in
+            textField.keyboardType = UIKeyboardType.default//numbersAndPunctuation// decimalPad// default// denumberPad
+            
+        }
+        alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
+        alert.addAction(saveAction)
+        present(alert, animated: true, completion: nil)
     }
     @IBAction func onClearButton(_ sender: Any) {
         if waves.count>59{
