@@ -41,8 +41,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             return ret
         }
     }
-    @IBAction func onLowPassFilterSwitch(_ sender: UISegmentedControl) {
-        let index=sender.selectedSegmentIndex
+    
+    @IBAction func onLowPassFilterSwitch(_ sender: Any) {
+        let index=lowPassFilterSwitch.selectedSegmentIndex
         UserDefaults.standard.set(index, forKey: "lowPassFilterCnt")
         print("selectedSegmentIndex",index)
     }
@@ -264,13 +265,18 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeRatio = 300
             gyroRatio = 170
             wakuLength = 3
+            lowPassFilterSwitch.selectedSegmentIndex=4//getUserDefault(str: "lowPassFilterCnt", ret: 4)
+            onLowPassFilterSwitch(0)
         }else{
             eyeBorder=10
             faceMarkSwitch.isOn=false
             posRatio = 100
             veloRatio = 100
             wakuLength = 3
+            lowPassFilterSwitch.selectedSegmentIndex=4//getUserDefault(str: "lowPassFilterCnt", ret: 4)
+            onLowPassFilterSwitch(0)
         }
+        
         dispParam()
     }
     func Field2value(field:UITextField) -> Int {
