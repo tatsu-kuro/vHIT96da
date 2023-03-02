@@ -22,18 +22,18 @@
                                     <constraint firstAttribute="height" constant="75" id="VaV-Nk-e64"/>
                                 </constraints>
                                 <string key="text">Version 5.9
-2023-1-15
+2023-3-2
 Kuroda ENT</string>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="vHIT96da" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEA-rJ-xd7">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="iPhone vHIT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEA-rJ-xd7">
                                 <rect key="frame" x="10" y="295" width="300" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="csw-6s-ZO1"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="47"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="37"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>

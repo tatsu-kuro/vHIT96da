@@ -1254,56 +1254,37 @@ Tap the waveforms to change the (2*).</string>
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="ElE-cI-fEF">
-                                <rect key="frame" x="82" y="315" width="414" height="773"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b66-p5-x4T">
+                                <rect key="frame" x="87" y="156" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPw-uT-6g8">
-                                <rect key="frame" x="329" y="817" width="80" height="40"/>
+                                <viewLayoutGuide key="contentLayoutGuide" id="X9h-al-gjl"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="n1G-Um-YLm"/>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPw-uT-6g8">
+                                <rect key="frame" x="359" y="826" width="20" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="Exit">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="multiply.circle" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <segue destination="Qpl-Z7-gTZ" kind="unwind" unwindAction="unwind:" id="pFc-0D-QS7"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qiw-FJ-LWg">
-                                <rect key="frame" x="5" y="817" width="80" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="globe" catalog="system">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="langChan:" destination="jcX-Lf-HTi" eventType="touchUpInside" id="d97-Fs-pdZ"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E8V-fc-BMe"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="rPR-0i-zqS" appends="YES" id="Iun-H0-kIV"/>
-                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="cpi-GF-08g"/>
                     <connections>
                         <outlet property="exitButton" destination="fPw-uT-6g8" id="8qq-Wh-wiQ"/>
-                        <outlet property="helpView" destination="ElE-cI-fEF" id="d5L-br-cKP"/>
-                        <outlet property="langButton" destination="Qiw-FJ-LWg" id="wnH-Ef-Ga1"/>
+                        <outlet property="scrollView" destination="b66-p5-x4T" id="1EQ-UL-9dt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8AV-xf-OhK" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Qpl-Z7-gTZ" userLabel="Exit" sceneMemberID="exit"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="rPR-0i-zqS">
-                    <connections>
-                        <action selector="panGestuer:" destination="jcX-Lf-HTi" id="0LO-Pu-MBy"/>
-                    </connections>
-                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1054" y="741"/>
         </scene>
@@ -1320,8 +1301,8 @@ Tap the waveforms to change the (2*).</string>
         <image name="folder" catalog="system" width="128" height="96"/>
         <image name="forward.frame.fill" catalog="system" width="128" height="91"/>
         <image name="gear" catalog="system" width="128" height="122"/>
-        <image name="globe" catalog="system" width="128" height="123"/>
         <image name="largecircle.fill.circle" catalog="system" width="128" height="123"/>
+        <image name="multiply.circle" catalog="system" width="128" height="123"/>
         <image name="paperplane" catalog="system" width="128" height="119"/>
         <image name="play.circle" catalog="system" width="128" height="123"/>
         <image name="playpause.fill" catalog="system" width="128" height="69"/>
