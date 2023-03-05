@@ -104,7 +104,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="8Nc-UQ-RY5">
-                                <rect key="frame" x="15" y="167" width="34" height="46"/>
+                                <rect key="frame" x="-308" y="167" width="212" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldV-kl-ghp">
@@ -316,7 +316,7 @@
                                 <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </slider>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NjV-Ob-HQy">
-                                <rect key="frame" x="255" y="779" width="43" height="32"/>
+                                <rect key="frame" x="255" y="608" width="43" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -354,6 +354,14 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labelkkkkkk" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KWu-m1-6Fe">
+                                <rect key="frame" x="60" y="198" width="294" height="484"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="uIe-Wh-aZk"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -367,9 +375,13 @@
                             <constraint firstItem="LZQ-Ez-rYI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CRr-oI-MBz"/>
                             <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="0q7-O3-Ich" secondAttribute="trailing" id="Ghd-6I-3P1"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="trailing" secondItem="uIe-Wh-aZk" secondAttribute="trailing" id="UXU-uA-NDy"/>
+                            <constraint firstItem="KWu-m1-6Fe" firstAttribute="top" secondItem="uIe-Wh-aZk" secondAttribute="top" constant="150" id="UcD-sU-66i"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="V4x-mg-ors"/>
                             <constraint firstItem="fee-9L-VIg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="bF3-q0-2lB"/>
+                            <constraint firstItem="KWu-m1-6Fe" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" constant="60" id="fEC-ju-YX7"/>
                             <constraint firstItem="WVy-FW-eP4" firstAttribute="top" secondItem="6oH-Ur-nDk" secondAttribute="bottom" constant="5" id="nVd-pt-WcX"/>
+                            <constraint firstItem="uIe-Wh-aZk" firstAttribute="bottom" secondItem="KWu-m1-6Fe" secondAttribute="bottom" constant="180" id="ofB-MQ-j2v"/>
+                            <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="KWu-m1-6Fe" secondAttribute="trailing" constant="60" id="vov-5R-YE4"/>
                             <constraint firstItem="0q7-O3-Ich" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="z7J-NG-hcc"/>
                         </constraints>
                         <connections>
@@ -386,6 +398,7 @@
                         <outlet property="changeModeButton1" destination="ljP-WQ-bdT" id="oyi-64-Gnq"/>
                         <outlet property="changeModeButton2" destination="qBS-1Q-PWv" id="WwZ-ji-yin"/>
                         <outlet property="currentVideoDate" destination="0q7-O3-Ich" id="Lv3-7t-LiK"/>
+                        <outlet property="declarationLabel" destination="KWu-m1-6Fe" id="Gp1-6O-4nh"/>
                         <outlet property="eraseButton" destination="WVy-FW-eP4" id="1mR-HG-0Sd"/>
                         <outlet property="eyeWaku_image" destination="3KZ-x3-xdg" id="W38-c9-yno"/>
                         <outlet property="faceWaku_image" destination="8Nc-UQ-RY5" id="c7S-Ij-XHD"/>

@@ -140,7 +140,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoCurrent:Int=0
 
     //album関連、ここまで
-    
+     
+    @IBOutlet weak var declarationLabel: UILabel!
     var vogImage:UIImage?
     @IBOutlet weak var cameraButton: UIButton!
     var boxiesFlag:Bool=false
@@ -1732,6 +1733,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             waveSlider.isHidden=true
         }
+        declarationLabel.text="The vHIT test using this app and goggles\nhas been approved for research use in Japan.\n\nIt is not approved as a medical device and is for research use only.\n\n\nOK"
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -3539,6 +3541,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
 
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
+        declarationLabel.alpha=0
         if videoDate.count==0{
             return
         }
