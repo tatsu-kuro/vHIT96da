@@ -246,7 +246,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-eE-NWD">
-                                <rect key="frame" x="91" y="784" width="30" height="27"/>
+                                <rect key="frame" x="91" y="134.5" width="30" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemRedColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -354,11 +354,12 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KWu-m1-6Fe">
-                                <rect key="frame" x="60" y="198" width="294" height="484"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KWu-m1-6Fe">
+                                <rect key="frame" x="73" y="114" width="94" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGray6Color"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -375,13 +376,9 @@
                             <constraint firstItem="LZQ-Ez-rYI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CRr-oI-MBz"/>
                             <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="0q7-O3-Ich" secondAttribute="trailing" id="Ghd-6I-3P1"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="trailing" secondItem="uIe-Wh-aZk" secondAttribute="trailing" id="UXU-uA-NDy"/>
-                            <constraint firstItem="KWu-m1-6Fe" firstAttribute="top" secondItem="uIe-Wh-aZk" secondAttribute="top" constant="150" id="UcD-sU-66i"/>
                             <constraint firstItem="6oH-Ur-nDk" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="V4x-mg-ors"/>
                             <constraint firstItem="fee-9L-VIg" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="bF3-q0-2lB"/>
-                            <constraint firstItem="KWu-m1-6Fe" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" constant="60" id="fEC-ju-YX7"/>
                             <constraint firstItem="WVy-FW-eP4" firstAttribute="top" secondItem="6oH-Ur-nDk" secondAttribute="bottom" constant="5" id="nVd-pt-WcX"/>
-                            <constraint firstItem="uIe-Wh-aZk" firstAttribute="bottom" secondItem="KWu-m1-6Fe" secondAttribute="bottom" constant="180" id="ofB-MQ-j2v"/>
-                            <constraint firstItem="uIe-Wh-aZk" firstAttribute="trailing" secondItem="KWu-m1-6Fe" secondAttribute="trailing" constant="60" id="vov-5R-YE4"/>
                             <constraint firstItem="0q7-O3-Ich" firstAttribute="leading" secondItem="uIe-Wh-aZk" secondAttribute="leading" id="z7J-NG-hcc"/>
                         </constraints>
                         <connections>

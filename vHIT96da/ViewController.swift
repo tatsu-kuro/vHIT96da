@@ -1734,9 +1734,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveSlider.isHidden=true
         }
         if Locale.preferredLanguages.first!.contains("ja"){
-            declarationLabel.text="このアプリとゴーグルを使ったvHIT検査は\n日本国内で研究用として承認を受けています。\n\n医療機器として認可されておらず、研究用としてのみ利用できます。\n\n\nOK"
+            declarationLabel.text="このアプリとゴーグルを\n使ったvHIT検査は\n日本国内で研究用として\n承認を受けています。\n\n医療機器として認可されて\nおらず、研究用としてのみ\n利用できます。\n\nOK"
         }else{
-            declarationLabel.text="The vHIT test using this app and goggles\nhas been approved for research use in Japan.\n\nIt is not approved as a medical device and is for research use only.\n\n\nOK"
+            declarationLabel.text="The vHIT test using\nthis app and goggles\nhas been approved for\nresearch use in Japan.\n\nIt is not approved as\na medical device and is\nfor research use only.\n\nOK"
 
         }
     }
@@ -2939,6 +2939,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             forwardButton.isEnabled=false
             backwardButton.isEnabled=false
         }
+        declarationLabel.frame=CGRect(x:sp*2,y:vHITBoxView.frame.minY,width:ww-sp*4,height: videoSlider.frame.minY-vHITBoxView.frame.minY-2*sp)
     }
     func setButtos4mode(_ mode:Int){
         if mode==3{
