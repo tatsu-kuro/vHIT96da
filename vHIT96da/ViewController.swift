@@ -1733,7 +1733,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             waveSlider.isHidden=true
         }
-        declarationLabel.text="The vHIT test using this app and goggles\nhas been approved for research use in Japan.\n\nIt is not approved as a medical device and is for research use only.\n\n\nOK"
+        if Locale.preferredLanguages.first!.contains("ja"){
+            declarationLabel.text="このアプリとゴーグルを使ったvHIT検査は\n日本国内で研究用として承認を受けています。\n\n医療機器として認可されておらず、研究用としてのみ利用できます。\n\n\nOK"
+        }else{
+            declarationLabel.text="The vHIT test using this app and goggles\nhas been approved for research use in Japan.\n\nIt is not approved as a medical device and is for research use only.\n\n\nOK"
+
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
