@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		690F57C1277DAAF300135F5D /* myFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690F57C0277DAAF300135F5D /* myFunctions.swift */; };
 		6932D4C4240A7D97008A03D9 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D4C3240A7D97008A03D9 /* RecordViewController.swift */; };
+		6946E56329B5FD44004DECFA /* top.png in Resources */ = {isa = PBXBuildFile; fileRef = 6946E56229B5FD44004DECFA /* top.png */; };
 		698A19372785CE18004C4CE9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 698A19362785CE18004C4CE9 /* InfoPlist.strings */; };
 		69ABBB1328C9FAA500AB528B /* ARKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69ABBB1228C9FAA500AB528B /* ARKitViewController.swift */; };
-		69D2410728312CAB003C018E /* top.png in Resources */ = {isa = PBXBuildFile; fileRef = 69D2410628312CAB003C018E /* top.png */; };
 		8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */; };
 		8E495CC6202FE7880030748C /* ParametersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E495CC5202FE7880030748C /* ParametersViewController.swift */; };
 		8EA90BE32038208200D042D0 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EA90BE22038208200D042D0 /* opencv2.framework */; };
@@ -27,11 +27,11 @@
 /* Begin PBXFileReference section */
 		690F57C0277DAAF300135F5D /* myFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myFunctions.swift; sourceTree = "<group>"; };
 		6932D4C3240A7D97008A03D9 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
+		6946E56229B5FD44004DECFA /* top.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top.png; sourceTree = "<group>"; };
 		6987E75B2785E45D00934BC1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
 		6987E75C2785E45D00934BC1 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		698A19362785CE18004C4CE9 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		69ABBB1228C9FAA500AB528B /* ARKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARKitViewController.swift; sourceTree = "<group>"; };
-		69D2410628312CAB003C018E /* top.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = top.png; path = Assets.xcassets/top.imageset/top.png; sourceTree = "<group>"; };
 		8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
 		8E495CC5202FE7880030748C /* ParametersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersViewController.swift; sourceTree = "<group>"; };
 		8EA90BE22038208200D042D0 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 				8EE2C01C202F32440064ED6F /* AppDelegate.swift */,
 				8EBC227F2182D6A100EF040C /* HelpjViewController.swift */,
 				69ABBB1228C9FAA500AB528B /* ARKitViewController.swift */,
-				69D2410628312CAB003C018E /* top.png */,
+				6946E56229B5FD44004DECFA /* top.png */,
 				8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */,
 				8EE2C020202F32440064ED6F /* Main.storyboard */,
 				8EE2C01E202F32440064ED6F /* ViewController.swift */,
@@ -164,8 +164,8 @@
 			files = (
 				8EE2C027202F32440064ED6F /* LaunchScreen.storyboard in Resources */,
 				8EE2C022202F32440064ED6F /* Main.storyboard in Resources */,
-				69D2410728312CAB003C018E /* top.png in Resources */,
 				8EB6E0F9208E1CB0000A85EB /* Assets.xcassets in Resources */,
+				6946E56329B5FD44004DECFA /* top.png in Resources */,
 				698A19372785CE18004C4CE9 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,7 +337,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.0.6;
+				CURRENT_PROJECT_VERSION = 2.0.8;
 				DEVELOPMENT_TEAM = YKSHGZ7H3T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -365,7 +365,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.0.6;
+				CURRENT_PROJECT_VERSION = 2.0.8;
 				DEVELOPMENT_TEAM = YKSHGZ7H3T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
