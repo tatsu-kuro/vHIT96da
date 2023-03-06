@@ -37,7 +37,7 @@ Kuroda ENT</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="top.png" translatesAutoresizingMaskIntoConstraints="NO" id="Jrj-j3-EUi">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="topImg" translatesAutoresizingMaskIntoConstraints="NO" id="Jrj-j3-EUi">
                                 <rect key="frame" x="85" y="133" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="TDH-FK-LkH"/>
@@ -77,6 +77,6 @@ Kuroda ENT</string>
         </scene>
     </scenes>
     <resources>
-        <image name="top.png" width="380" height="361"/>
+        <image name="topImg" width="380" height="361"/>
     </resources>
 </document>
