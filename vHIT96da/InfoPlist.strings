@@ -6,4 +6,4 @@
   Copyright © 2022 tatsuaki.kuroda. All rights reserved.
 */
 NSCameraUsageDescription = "目の動画を撮影し、アルバム(vHIT_VOG)に保存します。";
-NSPhotoLibraryUsageDescription = "アルバム(vHIT_VOZG, Wave96da)を作成し、そこに目の動画、静止画を保存します。";
+NSPhotoLibraryUsageDescription = "アルバム(vHIT_VOG, Wave96da)を作成し、そこに目の動画、静止画を保存します。";

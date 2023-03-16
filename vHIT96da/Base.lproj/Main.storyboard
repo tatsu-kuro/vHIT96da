@@ -354,15 +354,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KWu-m1-6Fe">
-                                <rect key="frame" x="73" y="114" width="94" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemGray6Color"/>
-                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="uIe-Wh-aZk"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -395,7 +386,6 @@
                         <outlet property="changeModeButton1" destination="ljP-WQ-bdT" id="oyi-64-Gnq"/>
                         <outlet property="changeModeButton2" destination="qBS-1Q-PWv" id="WwZ-ji-yin"/>
                         <outlet property="currentVideoDate" destination="0q7-O3-Ich" id="Lv3-7t-LiK"/>
-                        <outlet property="declarationLabel" destination="KWu-m1-6Fe" id="Gp1-6O-4nh"/>
                         <outlet property="eraseButton" destination="WVy-FW-eP4" id="1mR-HG-0Sd"/>
                         <outlet property="eyeWaku_image" destination="3KZ-x3-xdg" id="W38-c9-yno"/>
                         <outlet property="faceWaku_image" destination="8Nc-UQ-RY5" id="c7S-Ij-XHD"/>
@@ -1334,9 +1324,6 @@ Tap the waveforms to change the (2*).</string>
         </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

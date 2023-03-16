@@ -141,7 +141,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
     //album関連、ここまで
      
-    @IBOutlet weak var declarationLabel: UILabel!
+//    @IBOutlet weak var declarationLabel: UILabel!
     var vogImage:UIImage?
     @IBOutlet weak var cameraButton: UIButton!
     var boxiesFlag:Bool=false
@@ -1684,12 +1684,59 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func printR(str:String,cnt:Int,max:Double,rct1:CGRect,rct2:CGRect){
         print("\(str)",String(format: "%d %.2f-%.0f,%.0f %.0f,%.0f",cnt,max,rct1.origin.x,rct1.origin.y,rct2.origin.x,rct2.origin.y))
     }
-     
+//    var YESorNO:Bool=false
+    func alertYESorNO() {
+        var mess="This application is used by physicians and physical therapists. It is approved for research use in Japan.\nAre you a physician or physical therapist who can perform vHIT?"
+        if Locale.preferredLanguages.first!.contains("ja"){
+            mess="このアプリは医師、理学療法士が利用します。日本国内で研究用として承認されています。\nあなたはvHITを行える医師もしくは理学療法士ですか？"
+        }
+        let alert = UIAlertController(title: "vHIT", message:mess, preferredStyle: .alert)
+        
+        let yes = UIAlertAction(title: "YES", style: .default, handler: { (action) -> Void in
+            print("Delete button tapped")
+            UserDefaults.standard.set(true,forKey: "YESorNO")
+        })
+        let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
+            print("Cancel button tapped")
+            self.allisEnabled()
+            UserDefaults.standard.set(false,forKey: "YESorNO")
+        })
+        alert.addAction(yes)
+        alert.addAction(no)
+        self.present(alert, animated: true, completion: nil)
+    }
+    func allisEnabled(){
+        self.cameraButton.isEnabled=false
+        self.calcButton.isEnabled=false
+        self.helpButton.isEnabled=false
+        self.waveButton.isEnabled=false
+        self.listButton.isEnabled=false
+        self.changeModeButton.isEnabled=false
+        self.changeModeButton1.isEnabled=false
+        self.changeModeButton2.isEnabled=false
+        self.saveButton.isEnabled=false
+        self.paraButton.isEnabled=false
+        self.playButton.isEnabled=false
+        self.backButton.isEnabled=false
+        self.nextButton.isEnabled=false
+        self.eraseButton.isEnabled=false
+        self.forwardButton.isEnabled=false
+        self.backwardButton.isEnabled=false
+        self.videoSlider.isEnabled=false
+        self.waveSlider.isEnabled=false
+   //     self.button
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         #if DEBUG
         print("viewDidLoad******")
         #endif
+//        onSaveButton(0)
+//        alertDidLoad()
+ //       alert2()
+//        while alert2tapped==false{
+//            sleep(UInt32(0.1))
+//        }
         dispFilesindoc()//for debug
            //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
@@ -1733,18 +1780,35 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             waveSlider.isHidden=true
         }
-        if Locale.preferredLanguages.first!.contains("ja"){
-            declarationLabel.text="このアプリとゴーグルを\n使ったvHIT検査は\n日本国内で研究用として\n承認を受けています。\n\n医療機器として認可されて\nおらず、研究用としてのみ\n利用できます。\n\nOK"
-        }else{
-            declarationLabel.text="The vHIT test using\nthis app and goggles\nhas been approved for\nresearch use in Japan.\n\nIt is not approved as\na medical device and is\nfor research use only.\n\nOK"
-
+//        if Locale.preferredLanguages.first!.contains("ja"){
+//            declarationLabel.text="このアプリとゴーグルを\n使ったvHIT検査は\n日本国内で研究用として\n承認を受けています。\n\n医療機器として認可されて\nおらず、研究用としてのみ\n利用できます。\n\nOK"
+//        }else{
+//            declarationLabel.text="The vHIT test using\nthis app and goggles\nhas been approved for\nresearch use in Japan.\n\nIt is not approved as\na medical device and is\nfor research use only.\n\nOK"
+//
+//        }
+//        noItemAlert()
+//print("didload****************************")
+    }
+    func getUserDefaultBool(str:String,ret:Bool) -> Bool{
+        if (UserDefaults.standard.object(forKey: str) != nil){
+            return UserDefaults.standard.bool(forKey: str)
+        }else{//keyが設定してなければretをセット
+            UserDefaults.standard.set(ret, forKey: str)
+            return ret
         }
     }
-    
     override func viewDidAppear(_ animated: Bool) {
         dispWakus()
         setButtons_first()
         showWakuImages()
+        if UserDefaults.standard.object(forKey: "YESorNO") == nil{
+            alertYESorNO()
+//            UserDefaults.standard.set(true,forKey: "YESorNO")
+        }else{
+            if UserDefaults.standard.bool(forKey: "YESorNO")==false{
+                allisEnabled()
+            }
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -2335,14 +2399,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-    func getUserDefaultBool(str:String,ret:Bool) -> Bool{
-        if (UserDefaults.standard.object(forKey: str) != nil){
-            return UserDefaults.standard.bool(forKey: str)
-        }else{//keyが設定してなければretをセット
-            UserDefaults.standard.set(ret, forKey: str)
-            return ret
-        }
-    }
+//    func getUserDefaultBool(str:String,ret:Bool) -> Bool{
+//        if (UserDefaults.standard.object(forKey: str) != nil){
+//            return UserDefaults.standard.bool(forKey: str)
+//        }else{//keyが設定してなければretをセット
+//            UserDefaults.standard.set(ret, forKey: str)
+//            return ret
+//        }
+//    }
     func getUserDefaults(){
         let lowPassFilterCnt=getUserDefault(str: "lowPassFilterCnt", ret: 4)//とりあえず作っておく
         print("lowPassFilterCnt",lowPassFilterCnt)
@@ -2677,7 +2741,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func onSaveButton(_ sender: Any) {//vhit
-        
+ 
         if calcFlag == true{
             return
         }
@@ -2726,6 +2790,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         present(alert, animated: true, completion: nil)
         
     }
+    
+    func alertDidLoad() {
+        
+        let alert = UIAlertController(title: "vHIT96da", message: "Input ID", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
+          
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+        }
+        // UIAlertControllerにtextFieldを追加
+
+        alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
+        alert.addAction(saveAction)
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
     func trimmingImage(_ image: UIImage, trimmingArea: CGRect) -> UIImage {
         let imgRef = image.cgImage?.cropping(to: trimmingArea)
         let trimImage = UIImage(cgImage: imgRef!, scale: image.scale, orientation: image.imageOrientation)
@@ -2939,7 +3021,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             forwardButton.isEnabled=false
             backwardButton.isEnabled=false
         }
-        declarationLabel.frame=CGRect(x:sp*2,y:vHITBoxView.frame.minY,width:ww-sp*4,height: videoSlider.frame.minY-vHITBoxView.frame.minY-2*sp)
+//        declarationLabel.frame=CGRect(x:sp*2,y:vHITBoxView.frame.minY,width:ww-sp*4,height: videoSlider.frame.minY-vHITBoxView.frame.minY-2*sp)
+//        declarationLabel.frame=CGRect(x:sp*2,y:sp*2,width:ww-sp*4,height:wh)
     }
     func setButtos4mode(_ mode:Int){
         if mode==3{
@@ -3061,13 +3144,27 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("none?")
         }
     }
-  
+    func noItemAlert (){
+        print("アラート表示")
+        // アラートを作成
+        let alert = UIAlertController(
+            title: "TA･SU･KE",
+            message: "バッグにアイテムがありません。\nこの画面を閉じます",
+            preferredStyle: .alert)
+        
+        // アラートにボタンをつける
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
+        // アラート表示
+        self.present(alert, animated: true, completion: nil)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      
         // segueから遷移先のResultViewControllerを取得する
         //      tempCalcflag = calcFlag//別ページに移る時が計算中かどうか
         if let vc = segue.destination as? ParametersViewController {
@@ -3547,7 +3644,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
 
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
-        declarationLabel.alpha=0
+//        declarationLabel.alpha=0
+//        alert2()
         if videoDate.count==0{
             return
         }
