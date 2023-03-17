@@ -1699,8 +1699,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let yes = UIAlertAction(title: "YES", style: .default, handler: { (action) -> Void in
             print("Delete button tapped")
             UserDefaults.standard.set(true,forKey: "YESorNO")
-            self.launchButton.frame=CGRect(x:0,y:0,width:0,height:0)
-
+            self.launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
         })
         let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
             print("Cancel button tapped")
@@ -1809,18 +1808,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     override func viewDidAppear(_ animated: Bool) {
-        print("didappear*********:")
         dispWakus()
         setButtons_first()
         showWakuImages()
         if UserDefaults.standard.object(forKey: "YESorNO") == nil{
             alertYESorNO()
-//            UserDefaults.standard.set(true,forKey: "YESorNO")
         }else{
             if UserDefaults.standard.bool(forKey: "YESorNO")==false{
-//                allisEnabled()
                 launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-
+            }else{
+                launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
             }
         }
     }
@@ -2984,7 +2981,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let bh=bw
         let by0=wh-bottom-2*sp-bh
         let by1=by0-bh-sp//2段目
-        launchButton.frame=CGRect(x:0,y:0,width: 0,height: 0)
+        launchButton.frame=CGRect(x:-200,y:0,width: 0,height: 0)
         vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         
         waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
