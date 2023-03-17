@@ -585,9 +585,6 @@
                         <viewLayoutGuide key="safeArea" id="hJU-5A-9nT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <gestureRecognizers/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="NTP-MH-QeC" appends="YES" id="oHU-yE-CKH"/>
-                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="P43-38-M0S"/>
                     <connections>
@@ -611,11 +608,6 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xP2-lK-f6j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="6Lu-RF-ASw" userLabel="Exit" sceneMemberID="exit"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="NTP-MH-QeC">
-                    <connections>
-                        <action selector="tapGes:" destination="eZj-22-ehM" id="vXc-Rs-cDj"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-413.04347826086962" y="656.25"/>
         </scene>

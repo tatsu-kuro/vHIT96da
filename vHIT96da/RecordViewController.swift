@@ -66,97 +66,35 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     
-    func setBars(){
-//        if cameraType==2{
-//            focusBar.value=getUserDefault(str: "zoomValue", ret: 0)
-//            setZoom(level: focusBar.value/10)
-//            focusFar.text = "ZOOM"
-//            focusNear.text = "zoom"
-//        }else{
-//            focusBar.value=getUserDefault(str: "focusValue", ret: 0)
-//            setFocus(focus: focusBar.value)
-//            if Locale.preferredLanguages.first!.contains("ja"){
-//                focusFar.text = "遠"//false
-//                focusNear.text = "近"//isHidden=false
-//            }else{
-//                focusFar.text = "far"//false
-//                focusNear.text = "near"//isHidden=false
-//
-//            }
-//        }
-    }
     @IBAction func onCameraChange(_ sender: Any) {//camera>1
-//        cameraType=UserDefaults.standard.integer(forKey:"cameraType")
-//        if cameraType==0{
-//            if telephotoCamera == true{
-//                cameraType=1//telephoto
-//            }else if ultrawideCamera == true{
-//                cameraType=2
-//            }
-//        }else if cameraType==1{
-//            if ultrawideCamera==true{
-//                cameraType=2//ultraWide
-//            }else{
-//                cameraType=0
-//            }
-//        }else{
-//            cameraType=0//wideAngle
-//        }
-//        cameraType=0//wideAngleCameraだけを選択する。
-//        print("cameraType",cameraType)
-//        UserDefaults.standard.set(cameraType, forKey: "cameraType")
-         if captureSession.isRunning{
-        // セッションが始動中なら止める
+        if captureSession.isRunning{
+            // セッションが始動中なら止める
             print("isrunning")
             captureSession.stopRunning()
         }
         initSession(fps: fps_non_120_240)
-        setBars()
         setFlashlevel(level: LEDBar.value)
     }
     
 
     @IBAction func onClickStopButton(_ sender: Any) {
-        
         if self.fileOutput.isRecording {
-             motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
-            //        recordedFPS=getFPS(url: outputFileURL)
-            //        topImage=getThumb(url: outputFileURL)
-            
+            motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
             if timer?.isValid == true {
                 timer!.invalidate()
             }
             if speakerSwitch.isOn==true{
-            if let soundUrl = URL(string:
-                               "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
-                 AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
-                 AudioServicesPlaySystemSound(soundIdx)
-             }
+                if let soundUrl = URL(string:
+                                        "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
+                    AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
+                    AudioServicesPlaySystemSound(soundIdx)
+                }
             }
             print("ストップボタンを押した。")
             fileOutput.stopRecording()
         }
-
     }
  
-    @IBAction func tapGes(_ sender: UITapGestureRecognizer) {
-        if startButton.isHidden==true{
-            return
-        }
-        if LEDBar.isHidden==true{
-            LEDBar.isHidden=false
-            LEDHigh.isHidden=false
-            LEDLow.isHidden=false
-            speakerImage.isHidden=false
-            speakerSwitch.isHidden=false
-        }else{
-            LEDBar.isHidden=true
-            LEDHigh.isHidden=true
-            LEDLow.isHidden=true
-            speakerImage.isHidden=true
-            speakerSwitch.isHidden=true
-        }
-    }
     // 指定の FPS のフォーマットに切り替える (その FPS で最大解像度のフォーマットを選ぶ)
     //
     // - Parameters:
@@ -293,10 +231,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.addTarget(self, action: #selector(onLEDValueChange), for: UIControl.Event.valueChanged)
         LEDBar.value=getUserDefault(str: "LEDValue", ret:0.03)//初期値はmini12に合わせる
         setFlashlevel(level:LEDBar.value)
-        print("led:",LEDBar.value)
-//        focusBar.minimumValue = 0
-//        focusBar.maximumValue = 1.0
-//        focusBar.addTarget(self, action: #selector(onSliderValueChange), for: UIControl.Event.valueChanged)
         setFocus(focus: 0)
         setZoom()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
@@ -349,15 +283,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         UserDefaults.standard.set(LEDBar.value, forKey: "LEDValue")
         print("led:",LEDBar.value)
     }
-    @objc func onSliderValueChange(){
-//        if cameraType==2{//ultrawide
-//            setZoom(level:focusBar.value/10)
-//            UserDefaults.standard.set(focusBar.value,forKey: "zoomValue")
-//        }else{
-//            setFocus(focus:focusBar.value)
-//            UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
-//        }
-    }
 
     override func viewDidAppear(_ animated: Bool) {
         setButtons()//type: true)
@@ -367,6 +292,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         if maxFps==120{
             fps240Button.isHidden=true
         }
+        LEDBar.isHidden=false
+        LEDHigh.isHidden=false
+        LEDLow.isHidden=false
+        speakerImage.isHidden=false
+        speakerSwitch.isHidden=false
     }
     @IBAction func onClick120fps(_ sender: Any) {
         if fps_non_120_240==1{
@@ -379,11 +309,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
             setFlashlevel(level: LEDBar.value)
             setZoom()
-//            if cameraType==0{
-//                setZoom(level: 0)
-//            }else{
-//                setZoom(level: 0.007)
-//            }
         }
     }
     
@@ -398,11 +323,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             initSession(fps: fps_non_120_240)
             UserDefaults.standard.set(fps_non_120_240,forKey: "fps_non_120_240")
             setFlashlevel(level: LEDBar.value)
-//            if cameraType==0{
-//                setZoom(level: 0)
-//            }else{
-//                setZoom(level: 0.015)
-//            }
             setZoom()
         }
     }
@@ -417,11 +337,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.isHidden=true
         LEDLow.isHidden=true
         LEDHigh.isHidden=true
-//        focusBar.isHidden=type
-//        focusFar.isHidden=type
-//        focusNear.isHidden=type
         exitBut.isHidden=type
-//        cameraChangeButton.isHidden=type
         if ultrawideCamera==false && telephotoCamera==false{
             cameraChangeButton.isHidden=true
         }
@@ -434,14 +350,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
   
         let wh=view.bounds.height-bottom
         let bw=(ww/4)-8
-        //        let bd=Int(ww/5/4)
         let bh:CGFloat=60
-//        let bpos=wh-bh/2-10
         let y0=wh-bh-10
         let y1=y0-bh-10
         let y2=y1-bh
         let y3=y2-10-bh/2
-//        let y4=y3-10-bh/2
         let x1=ww-5-bw
         
         currentTime.frame   = CGRect(x:0,   y: 0 ,width: bw*1.5, height: bh/2)
@@ -470,15 +383,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
         speakerSwitch.frame=CGRect(x:8,y:y2,width: 47,height: 31)
         speakerImage.frame=CGRect(x:60,y:y2,width: 31,height: 31)
-//        iroiro.setLabelProperty(focusNear,x:5,y:y3,w:bw,h:bh/2,UIColor.white)
-//        iroiro.setLabelProperty(focusFar,x:x1,y:y3,w:bw,h:bh/2,UIColor.white)
         iroiro.setLabelProperty(LEDLow,x:5,y:y3,w:bw,h:bh/2,UIColor.gray)
         iroiro.setLabelProperty(LEDHigh,x:x1,y:y3, w: bw, h:bh/2,UIColor.systemOrange)
-//
-//        iroiro.setButtonProperty(cameraChangeButton,x:x1,y:y1, w: bw, h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(exitBut,x:x1,y:y0, w: bw, h:bh,UIColor.darkGray)
-
-//        focusBar.frame=CGRect(x:10+bw+10,y:y3,width: ww-bw*2-40,height:bh/2)
         LEDBar.frame=CGRect(x:20+bw,y:y3,width:ww-bw*2-40,height:bh/2)
 
         startButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
@@ -502,12 +409,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // 入力 : 背面カメラ
         if cameraType==0{
             videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-//        }else if cameraType==1{
-//            videoDevice = AVCaptureDevice.default(.builtInTelephotoCamera, for: .video, position: .back)
-
         }else if cameraType==2{
             videoDevice = AVCaptureDevice.default(.builtInUltraWideCamera, for: .video, position: .back)
-//
         }
         let videoInput = try! AVCaptureDeviceInput.init(device: videoDevice!)
         captureSession.addInput(videoInput)
@@ -524,17 +427,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         // ファイル出力設定
         fileOutput = AVCaptureMovieFileOutput()
-//        fileOutput.maxRecordedDuration = CMTimeMake(value:5*60, timescale: 1)//最長録画時間
         captureSession.addOutput(fileOutput)
         //手振れ補正はデフォルトがoff
-//        fileOutput.connections[0].preferredVideoStabilizationMode=AVCaptureVideoStabilizationMode.off
         let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         videoLayer.frame = self.view.bounds
         videoLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill//無くても同じ
-        //self.view.layer.addSublayer(videoLayer)
         cameraView.layer.addSublayer(videoLayer)
-        // zooming slider
-        // セッションを開始する (録画開始とは別)
+         // セッションを開始する (録画開始とは別)
         captureSession.startRunning()
     }
     func checkinitSession() {//maxFpsを設定
@@ -557,7 +456,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         // ファイル出力設定
         fileOutput = AVCaptureMovieFileOutput()
-//        fileOutput.maxRecordedDuration = CMTimeMake(value: 5*60, timescale: 1)//最長録画時間
         captureSession.addOutput(fileOutput)
         
         let videoLayer : AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -590,18 +488,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         
         if fileOutput.isRecording{
-//            timerCnt += 1
             currentTime.text=String(format:"%02d",timerCnt/60) + ":" + String(format: "%02d",timerCnt%60)
             if timerCnt%2==0{
                 stopButton.tintColor=UIColor.orange
             }else{
                 stopButton.tintColor=UIColor.red
             }
-        }else{
-//            if cameraType != 2{
-//                UserDefaults.standard.set(videoDevice?.lensPosition, forKey: "focusValue")
-//                focusBar.value=videoDevice!.lensPosition
-//            }
         }
         if timerCnt > 60*5{
             timer!.invalidate()
@@ -668,11 +560,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     
     @IBAction func onClickStartButton(_ sender: Any) {
-        //start recording
-//        timerCnt=0
-//        setMotion()
+
         sound()
-        
          hideButtons(type: true)
         stopButton.isHidden=true
         currentTime.isHidden=false
@@ -683,7 +572,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
         let fileURL = NSURL(fileURLWithPath: TempFilePath)
         //下３行の様にしたら、ビデオとジャイロのズレが安定した。zure:10
-//        setMotion()
         sleep(UInt32(1.0))
         fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
         timerCnt=0
@@ -697,7 +585,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         for i in 0 ..< albums.count {
             let album = albums.object(at: i)
             if album.localizedTitle != nil && album.localizedTitle == albumName {
-//                vHIT96daAlbum = album
                 return true
             }
         }
@@ -718,27 +605,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         return assetCollections.object(at:0)
     }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-//        if let soundUrl = URL(string:
-//                          "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
-//            AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
-//            AudioServicesPlaySystemSound(soundIdx)
-//        }
-
-//        print("終了ボタン、最大を超えた時もここを通る")
-//        UIApplication.shared.isIdleTimerDisabled = false//スリープする
         
-//        for _ in 0...20{
-//            self.gyro.append(CFAbsoluteTimeGetCurrent()-self.recStart)
-//            self.gyro.append(0)//
-//        }
-
-//        motionManager.stopDeviceMotionUpdates()//ここで止めたが良さそう。
-//        //        recordedFPS=getFPS(url: outputFileURL)
-//        //        topImage=getThumb(url: outputFileURL)
-//
-//        if timer?.isValid == true {
-//            timer!.invalidate()
-//        }
         if albumExists(albumName: vHIT_VOG)==true{
             recordedFlag=true
             PHPhotoLibrary.shared().performChanges({ [self] in
@@ -752,16 +619,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }) { [self] (isSuccess, error) in
                 if isSuccess {
                     // 保存した画像にアクセスする為のimageIDを返却
-                    //completionBlock(imageID)
                     print("success")
                     self.saved2album=true
                 } else {
-                    //failureBlock(error)
                     print("fail")
-                    //                print(error)
                     self.saved2album=true
                 }
-                //            _ = try? FileManager.default.removeItem(atPath: self.TempFilePath)
             }
         }else{
             startButton.isHidden=true
@@ -775,6 +638,5 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
         setMotion()//ここにしても安定したような
-//        print("録画開始")
     }
 }
