@@ -218,6 +218,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var calcFlag:Bool = false//calc中かどうか
     var nonsavedFlag:Bool = false //calcしてなければfalse, calcしたらtrue, saveしたらfalse
     //vHITeyeがちゃんと読めない瞬間が生じるようだ
+    
+    @IBOutlet weak var launchButton: UIButton!
     @IBOutlet weak var videoFps: UILabel!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var helpButton: UIButton!
@@ -1686,51 +1688,60 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 //    var YESorNO:Bool=false
     func alertYESorNO() {
-        var mess="This application is used by physicians and physical therapists. It is approved for research use in Japan.\nAre you a physician or physical therapist who can perform vHIT?"
+        var title="Are you a physician or physical therapist?"
+        var mess="This application is used by physicians and physical therapists. vHIT inspections can be performed with an iPhone and a pair of goggles that can be made by the user. It is approved for research use in Japan."
         if Locale.preferredLanguages.first!.contains("ja"){
-            mess="このアプリは医師、理学療法士が利用します。日本国内で研究用として承認されています。\nあなたはvHITを行える医師もしくは理学療法士ですか？"
+            title="あなたは医師もしくは理学療法士ですか？"
+            mess="このアプリは医師、理学療法士が利用します。自作可能なゴーグルとiPhoneでvHIT検査が行えます。日本国内で研究用として承認されています。"
         }
-        let alert = UIAlertController(title: "vHIT", message:mess, preferredStyle: .alert)
+        let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
         
         let yes = UIAlertAction(title: "YES", style: .default, handler: { (action) -> Void in
             print("Delete button tapped")
             UserDefaults.standard.set(true,forKey: "YESorNO")
+            self.launchButton.frame=CGRect(x:0,y:0,width:0,height:0)
+
         })
         let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
             print("Cancel button tapped")
-            self.allisEnabled()
+//            self.allisEnabled()
+            self.launchButton.frame=CGRect(x:0,y:0,width: self.view.bounds.width,height: self.view.bounds.height)
+
             UserDefaults.standard.set(false,forKey: "YESorNO")
         })
         alert.addAction(yes)
         alert.addAction(no)
         self.present(alert, animated: true, completion: nil)
     }
-    func allisEnabled(){
-        self.cameraButton.isEnabled=false
-        self.calcButton.isEnabled=false
-        self.helpButton.isEnabled=false
-        self.waveButton.isEnabled=false
-        self.listButton.isEnabled=false
-        self.changeModeButton.isEnabled=false
-        self.changeModeButton1.isEnabled=false
-        self.changeModeButton2.isEnabled=false
-        self.saveButton.isEnabled=false
-        self.paraButton.isEnabled=false
-        self.playButton.isEnabled=false
-        self.backButton.isEnabled=false
-        self.nextButton.isEnabled=false
-        self.eraseButton.isEnabled=false
-        self.forwardButton.isEnabled=false
-        self.backwardButton.isEnabled=false
-        self.videoSlider.isEnabled=false
-        self.waveSlider.isEnabled=false
-   //     self.button
-    }
+//    func allisEnabled(){
+//        /*
+//        self.cameraButton.isEnabled=false
+//        self.calcButton.isEnabled=false
+//        self.helpButton.isEnabled=false
+//        self.waveButton.isEnabled=false
+//        self.listButton.isEnabled=false
+//        self.changeModeButton.isEnabled=false
+//        self.changeModeButton1.isEnabled=false
+//        self.changeModeButton2.isEnabled=false
+//        self.saveButton.isEnabled=false
+//        self.paraButton.isEnabled=false
+//        self.playButton.isEnabled=false
+//        self.backButton.isEnabled=false
+//        self.nextButton.isEnabled=false
+//        self.eraseButton.isEnabled=false
+//        self.forwardButton.isEnabled=false
+//        self.backwardButton.isEnabled=false
+//        self.videoSlider.isEnabled=false
+//        self.waveSlider.isEnabled=false*/
+//        launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         #if DEBUG
         print("viewDidLoad******")
         #endif
+        UserDefaults().removeObject(forKey: "YESorNO")
+        
 //        onSaveButton(0)
 //        alertDidLoad()
  //       alert2()
@@ -1798,6 +1809,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     override func viewDidAppear(_ animated: Bool) {
+        print("didappear*********:")
         dispWakus()
         setButtons_first()
         showWakuImages()
@@ -1806,7 +1818,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //            UserDefaults.standard.set(true,forKey: "YESorNO")
         }else{
             if UserDefaults.standard.bool(forKey: "YESorNO")==false{
-                allisEnabled()
+//                allisEnabled()
+                launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+
             }
         }
     }
@@ -2970,6 +2984,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let bh=bw
         let by0=wh-bottom-2*sp-bh
         let by1=by0-bh-sp//2段目
+        launchButton.frame=CGRect(x:0,y:0,width: 0,height: 0)
         vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         
         waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
