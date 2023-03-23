@@ -14,6 +14,24 @@ import MessageUI
 //import CoreLocation
 //import CoreTelephony
 //let noFaceMark=true//facemarkが完成したら削除の予定
+extension UIAlertController {
+    
+    func setMessageAlignment(_ alignment : NSTextAlignment) {
+        let paragraphStyle = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
+        paragraphStyle.alignment = alignment
+        
+        let messageText = NSMutableAttributedString(
+            string: self.message ?? "",
+            attributes: [
+                NSAttributedString.Key.paragraphStyle: paragraphStyle,
+                NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
+                NSAttributedString.Key.foregroundColor: UIColor.black
+            ]
+        )
+        self.setValue(messageText, forKey: "attributedMessage")
+    }
+}
+
 extension UIImage {
     func pixelData() -> [UInt8]? {
         let size = self.size
@@ -219,7 +237,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var nonsavedFlag:Bool = false //calcしてなければfalse, calcしたらtrue, saveしたらfalse
     //vHITeyeがちゃんと読めない瞬間が生じるようだ
     
-    @IBOutlet weak var launchButton: UIButton!
+//    @IBOutlet weak var launchButton: UIButton!
     @IBOutlet weak var videoFps: UILabel!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var helpButton: UIButton!
@@ -1688,28 +1706,29 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 //    var YESorNO:Bool=false
     func alertYESorNO() {
-        var title="Are you a physician or physical therapist?"
-        var mess="This application is used by physicians and physical therapists. vHIT inspections can be performed with an iPhone and a pair of goggles that can be made by the user. It is approved for research use in Japan."
+        var title="vHIT application"
+        var mess="This application is used by physicians and physical therapists.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include the (a) nature, purpose, and duration of the research; (b) procedures, risks, and benefits to the participant; (c) information about confidentiality and handling of data (including any sharing with third parties); (d) a point of contact for participant questions; and (e) the withdrawal process."
         if Locale.preferredLanguages.first!.contains("ja"){
-            title="あなたは医師もしくは理学療法士ですか？"
-            mess="このアプリは医師、理学療法士が利用します。自作可能なゴーグルとiPhoneでvHIT検査が行えます。日本国内で研究用として承認されています。"
+            title="vHITアプリ"
+            mess="医師、理学療法士が利用するvHITアプリです。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。"
         }
         let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
-        
-        let yes = UIAlertAction(title: "YES", style: .default, handler: { (action) -> Void in
+//        let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
+        alert.setMessageAlignment(.left)
+        let yes = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
             print("Delete button tapped")
-            UserDefaults.standard.set(true,forKey: "YESorNO")
-            self.launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
+            UserDefaults.standard.set(true,forKey: "consentOK")
+ //           self.launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
         })
-        let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
-            print("Cancel button tapped")
-//            self.allisEnabled()
-            self.launchButton.frame=CGRect(x:0,y:0,width: self.view.bounds.width,height: self.view.bounds.height)
-
-            UserDefaults.standard.set(false,forKey: "YESorNO")
-        })
+//        let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
+//            print("Cancel button tapped")
+////            self.allisEnabled()
+//            self.launchButton.frame=CGRect(x:0,y:0,width: self.view.bounds.width,height: self.view.bounds.height)
+//
+//            UserDefaults.standard.set(false,forKey: "YESorNO")
+//        })
         alert.addAction(yes)
-        alert.addAction(no)
+ //       alert.addAction(no)
         self.present(alert, animated: true, completion: nil)
     }
 //    func allisEnabled(){
@@ -1811,14 +1830,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         setButtons_first()
         showWakuImages()
-        if UserDefaults.standard.object(forKey: "YESorNO") == nil{
+        if UserDefaults.standard.object(forKey: "consentOK") == nil{
             alertYESorNO()
         }else{
-            if UserDefaults.standard.bool(forKey: "YESorNO")==false{
-                launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-            }else{
-                launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
-            }
+//            if UserDefaults.standard.bool(forKey: "YESorNO")==false{
+//                launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
+//            }else{
+ //               launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
+//            }
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -2981,7 +3000,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let bh=bw
         let by0=wh-bottom-2*sp-bh
         let by1=by0-bh-sp//2段目
-        launchButton.frame=CGRect(x:-200,y:0,width: 0,height: 0)
+  //      launchButton.frame=CGRect(x:-200,y:0,width: 0,height: 0)
         vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         
         waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
@@ -3156,20 +3175,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("none?")
         }
     }
-    func noItemAlert (){
-        print("アラート表示")
-        // アラートを作成
-        let alert = UIAlertController(
-            title: "TA･SU･KE",
-            message: "バッグにアイテムがありません。\nこの画面を閉じます",
-            preferredStyle: .alert)
-        
-        // アラートにボタンをつける
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        
-        // アラート表示
-        self.present(alert, animated: true, completion: nil)
-    }
+//    func noItemAlert (){
+//        print("アラート表示")
+//        // アラートを作成
+//        let alert = UIAlertController(
+//            title: "TA･SU･KE",
+//            message: "バッグにアイテムがありません。\nこの画面を閉じます",
+//            preferredStyle: .alert)
+//
+//        // アラートにボタンをつける
+//        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//
+//        // アラート表示
+//        self.present(alert, animated: true, completion: nil)
+//    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

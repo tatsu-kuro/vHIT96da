@@ -354,14 +354,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
-                            <button opaque="NO" alpha="0.94999999999999996" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNV-Tm-I6w">
-                                <rect key="frame" x="196" y="508" width="22" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="vHIT96da" titleAlignment="center"/>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="uIe-Wh-aZk"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -399,7 +391,6 @@
                         <outlet property="faceWaku_image" destination="8Nc-UQ-RY5" id="c7S-Ij-XHD"/>
                         <outlet property="forwardButton" destination="hru-fB-bbG" id="4o4-De-TdZ"/>
                         <outlet property="helpButton" destination="7OA-cL-B3S" id="YzF-8f-1r2"/>
-                        <outlet property="launchButton" destination="iNV-Tm-I6w" id="ZDG-nM-oG6"/>
                         <outlet property="listButton" destination="Afb-7h-V8u" id="hfI-Hx-H2E"/>
                         <outlet property="nextButton" destination="fee-9L-VIg" id="Dl0-G1-Z6x"/>
                         <outlet property="paraButton" destination="nHY-L8-P6Q" id="Sqr-vl-7wU"/>
