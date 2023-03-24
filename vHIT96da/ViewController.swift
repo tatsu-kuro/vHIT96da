@@ -3163,18 +3163,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             ParametersViewController.waveWidth = waveWidth
             ParametersViewController.calcMode = calcMode
             ParametersViewController.eyeBorder = eyeBorder
-            //            ParametersViewController.gyroDelta = gyroDelta
+            
             ParametersViewController.faceMark = faceMark
             ParametersViewController.wakuLength = wakuLength
-//            if calcMode != 2{
-                ParametersViewController.eyeRatio = eyeRatio
-                ParametersViewController.gyroRatio = gyroRatio
-                ParametersViewController.videoGyroZure=videoGyroZure
-                ParametersViewController.vHITDisplayMode=vHITDisplayMode
-//            }else{
-                ParametersViewController.posRatio = posRatio
-                ParametersViewController.veloRatio = veloRatio
-//            }
+ //           print("eyeRatio:",eyeRatio)
+            ParametersViewController.eyeRatio = eyeRatio
+            ParametersViewController.gyroRatio = gyroRatio
+            ParametersViewController.videoGyroZure=videoGyroZure
+            ParametersViewController.vHITDisplayMode=vHITDisplayMode
+            
+            ParametersViewController.posRatio = posRatio
+            ParametersViewController.veloRatio = veloRatio
+
             #if DEBUG
             print("prepare para")
             #endif
