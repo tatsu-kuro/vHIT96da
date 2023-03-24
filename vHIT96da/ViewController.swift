@@ -1707,15 +1707,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    var YESorNO:Bool=false
     func alertYESorNO() {
         var title="vHIT application"
+        var okText="accept"
         var mess="This application is used by physicians and physical therapists.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include the (a) nature, purpose, and duration of the research; (b) procedures, risks, and benefits to the participant; (c) information about confidentiality and handling of data (including any sharing with third parties); (d) a point of contact for participant questions; and (e) the withdrawal process."
         if Locale.preferredLanguages.first!.contains("ja"){
             title="vHITアプリ"
+            okText="承諾"
             mess="医師、理学療法士が利用するvHITアプリです。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。"
         }
         let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
 //        let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
         alert.setMessageAlignment(.left)
-        let yes = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+        let yes = UIAlertAction(title: okText, style: .default, handler: { (action) -> Void in
             print("Delete button tapped")
             UserDefaults.standard.set(true,forKey: "consentOK")
  //           self.launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)

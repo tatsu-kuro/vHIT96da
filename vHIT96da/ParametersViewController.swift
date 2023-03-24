@@ -66,12 +66,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     }
     @IBAction func unwindPara(_ segue: UIStoryboardSegue) {
         calcMode=3
-        if let vc = segue.source as? ARKitViewController {
-            let ARKitViewController:ARKitViewController = vc
-            ARKitViewController.onClearButton(0)
-            ARKitViewController.timer.invalidate()
-            print("unwindFromARKit")
-        }
+//        if let vc = segue.source as? ARKitViewController {
+//            let ARKitViewController:ARKitViewController = vc
+//            ARKitViewController.onClearButton(0)
+//            ARKitViewController.timer.invalidate()
+//            print("unwindFromARKit")
+//        }
        
     }
     @IBAction func onExitButton(_ sender: Any) {
