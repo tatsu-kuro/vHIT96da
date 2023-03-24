@@ -499,20 +499,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     //calcMode 0:hori.  1:vert. 2:vog
-//    func showModeText(){
-//        if calcMode==0{
-////            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
-////            changeModeButton.setTitle(" vHIT hoirizontal", for: .normal)
-//        }
-//        else if calcMode==1{
-////            changeModeButton.setImage(  UIImage(systemName:"arrow.left.arrow.right.circle"), for: .normal)
-////            changeModeButton.setTitle(" vHIT vertical", for: .normal)
-//        }
-//        else{
-////            changeModeButton.setImage(  UIImage(systemName:""), for: .normal)//ないものを指定
-////            changeModeButton1.setTitle(" VOG hor. & vert.", for: .normal)
-//        }
-//    }
+
     @IBAction func onChangeModeButton1(_ sender: Any) {
         if calcFlag == true || calcMode == 2 || videoDate.count == 0{
             return
@@ -1733,28 +1720,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  //       alert.addAction(no)
         self.present(alert, animated: true, completion: nil)
     }
-//    func allisEnabled(){
-//        /*
-//        self.cameraButton.isEnabled=false
-//        self.calcButton.isEnabled=false
-//        self.helpButton.isEnabled=false
-//        self.waveButton.isEnabled=false
-//        self.listButton.isEnabled=false
-//        self.changeModeButton.isEnabled=false
-//        self.changeModeButton1.isEnabled=false
-//        self.changeModeButton2.isEnabled=false
-//        self.saveButton.isEnabled=false
-//        self.paraButton.isEnabled=false
-//        self.playButton.isEnabled=false
-//        self.backButton.isEnabled=false
-//        self.nextButton.isEnabled=false
-//        self.eraseButton.isEnabled=false
-//        self.forwardButton.isEnabled=false
-//        self.backwardButton.isEnabled=false
-//        self.videoSlider.isEnabled=false
-//        self.waveSlider.isEnabled=false*/
-//        launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-//    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         #if DEBUG
@@ -3054,23 +3020,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             forwardButton.isEnabled=false
             backwardButton.isEnabled=false
         }
-//        declarationLabel.frame=CGRect(x:sp*2,y:vHITBoxView.frame.minY,width:ww-sp*4,height: videoSlider.frame.minY-vHITBoxView.frame.minY-2*sp)
-//        declarationLabel.frame=CGRect(x:sp*2,y:sp*2,width:ww-sp*4,height:wh)
     }
+    
     func setButtos4mode(_ mode:Int){
-        if mode==3{
-            changeModeButton1.setTitle("ARKit vHIT", for: .normal)
-            changeModeButton2.isHidden=true
-            changeModeButton.isHidden=true
-
-            backwardButton.isHidden=true
-            playButton.isHidden=true
-            forwardButton.isHidden=true
-            waveButton.setImage(  UIImage(systemName:"clear"), for: .normal)
-            waveButton.backgroundColor=UIColor.red
-            cameraButton.isEnabled=false
-            cameraButton.alpha=0.6
-        }else if mode==0 || mode==1{
+        if mode==0 || mode==1{
             changeModeButton1.setTitle("vHIT hori.", for: .normal)
             changeModeButton2.setTitle("vHIT vert.", for: .normal)
             changeModeButton2.isHidden=false
@@ -3082,7 +3035,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.backgroundColor=UIColor.systemBlue
             cameraButton.isEnabled=true
             cameraButton.alpha=1
-        }else{
+        }else if mode==2{
             changeModeButton1.setTitle("VOG hor. & vert.", for: .normal)
             changeModeButton2.isHidden=true
             changeModeButton.isHidden=true
@@ -3094,6 +3047,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.backgroundColor=UIColor.systemBlue
             cameraButton.isEnabled=true
             cameraButton.alpha=1
+        }else{
+            
         }
         
     }

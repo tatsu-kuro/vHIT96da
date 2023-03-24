@@ -22,10 +22,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
              bottomPadding = self.view.safeAreaInsets.bottom
 //            UserDefaults.standard.set(bottomPadding,forKey: "bottomPadding")
         }
-        
         setTexts()
-//        vHITARKitLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-
     }
     @IBOutlet weak var markText: UILabel!
     @IBOutlet weak var faceMarkSwitch: UISwitch!
@@ -47,14 +44,9 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         UserDefaults.standard.set(index, forKey: "lowPassFilterCnt")
         print("selectedSegmentIndex",index)
     }
-  
-    @IBOutlet weak var arkitVHITButtonLabel: UIButton!
-    @IBOutlet weak var arkitButton: UIButton!
-    
-//    @IBOutlet weak var vHITARKitLabel: UILabel!
+ 
     @IBOutlet weak var greenItemLabel: UILabel!
     @IBOutlet weak var vHITLabel: UILabel!
-    @IBOutlet weak var arkitLabel: UILabel!
     @IBOutlet weak var toVOGButton: UIButton!
     @IBAction func onTovHITButton(_ sender: Any) {
         if calcMode == 0{
@@ -64,37 +56,17 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
       dispParam()
       setTexts()
     }
-    @IBAction func unwindPara(_ segue: UIStoryboardSegue) {
-        calcMode=3
-//        if let vc = segue.source as? ARKitViewController {
-//            let ARKitViewController:ARKitViewController = vc
-//            ARKitViewController.onClearButton(0)
-//            ARKitViewController.timer.invalidate()
-//            print("unwindFromARKit")
-//        }
-       
-    }
+//    @IBAction func unwindPara(_ segue: UIStoryboardSegue) {
+//        calcMode=3
+//    }
     @IBAction func onExitButton(_ sender: Any) {
-        if calcMode != 3{
         performSegue(withIdentifier: "fromParamsToMain", sender: nil)
-        }else{
-        onSegueToArkitButton(0)
-        }
+
     }
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    @IBOutlet weak var segueToArkitButton: UIButton!
-    @IBAction func onSegueToArkitButton(_ sender: Any) {
-    }
-    @IBAction func toARKitButton(_ sender: Any) {
-        if calcMode == 3{
-            return
-        }
-        calcMode=3
-        dispParam()
-        setTexts()
-    }
+
     @IBAction func onToVOGButton(_ sender: Any) {
         if calcMode == 2{
             return
@@ -367,9 +339,6 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
         eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
         eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
-        arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
-        arkitVHITButtonLabel.isHidden=true
-        segueToArkitButton.isHidden=true
         lowPassText.isHidden=true
         lowPassFilterSwitch.isHidden=true
         if calcMode==2{//VOG
@@ -412,9 +381,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
                         
             vHITLabel.isHidden=true
             VOGLabel.isHidden=false
-            arkitLabel.isHidden=true
             greenItemLabel.isHidden=true
-        }else if calcMode==0{//vhit
+        }else if calcMode==0 || calcMode==1{//vhit
             eyeVelocityLabel.isHidden=false
             headVelocityLabel.isHidden=false
             lowPassText.isHidden=false
@@ -491,35 +459,21 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             displayMode()
             vHITLabel.isHidden=false
             VOGLabel.isHidden=true
-            arkitLabel.isHidden=true
             vHITLabel.layer.masksToBounds=true
             greenItemLabel.layer.borderColor = UIColor.green.cgColor
             greenItemLabel.layer.borderWidth = 1.0
-        }else{//calcmode==3 arkit
-            vHITLabel.isHidden=true
-            VOGLabel.isHidden=false
-            arkitLabel.isHidden=true
-            vHITLabel.isHidden=true
-            VOGLabel.isHidden=true
-            arkitLabel.isHidden=true//false
-            arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-            arkitVHITButtonLabel.isHidden=false//buttonLabelなどを隠す
-            segueToArkitButton.isHidden=false//Exitの上に載せて、ArkitViewContへsegueする
         }
-
+        
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
         tovHITButton.frame=CGRect(x:butw1+3*sp,y:buty1,width:butw1*1.5+sp/2,height: buth1)
         iroiro.setLabelTopRectangle(vHITLabel, rect: tovHITButton.frame, UIColor.systemRed)
-        arkitButton.frame=CGRect( x:butw1*2+4*sp,y:buty1,width:butw1,height: buth1)
-        arkitButton.isHidden=true
-        iroiro.setLabelTopRectangle(arkitLabel, rect: arkitButton.frame, UIColor.systemRed)
         toVOGButton.frame=CGRect( x:butw1*2.5+4.5*sp,y:buty1,width:butw1*1.5+sp/2,height: buth1)
         iroiro.setLabelTopRectangle(VOGLabel, rect: toVOGButton.frame, UIColor.systemRed)
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
-        segueToArkitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
-     }
+    }
+    
     let iroiro = myFunctions(albumName: "vHIT_VOG")
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if faceMarkHidden==true{
@@ -544,22 +498,11 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
-        segueToArkitButton.layer.cornerRadius=5
         keyDown.layer.cornerRadius = 5
         toVOGButton.layer.cornerRadius=5
         tovHITButton.layer.cornerRadius=5
-        arkitButton.layer.cornerRadius=5
         keyDown.isHidden = true
         setMaxMin()//念の為パラメータを正常範囲にしておく。
-//        vhitDisplayLabel.frame=CGRect(x:0,y:0,width: 0,height: 0)
-//        vhitDisplayLabel.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-        arkitVHITButtonLabel.frame=CGRect(x:0,y:0,width: 0,height:0)//view.bounds.width,height: view.bounds.height)
-        arkitVHITButtonLabel.isHidden=true
-        arkitVHITButtonLabel.titleLabel!.lineBreakMode = NSLineBreakMode.byWordWrapping
-        arkitVHITButtonLabel.titleLabel!.numberOfLines = 3
-        arkitVHITButtonLabel.titleLabel!.textAlignment = NSTextAlignment.center
-        arkitVHITButtonLabel.setTitle("ARKit vHIT\non iPhoneX or later models\n(under construction)", for: .normal)
-   
     }
 
     override func didReceiveMemoryWarning() {

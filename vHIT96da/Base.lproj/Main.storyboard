@@ -245,16 +245,6 @@
                                     <action selector="onChangeModeButton2:" destination="BYZ-38-t0r" eventType="touchUpInside" id="N30-U7-qgZ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhS-eE-NWD">
-                                <rect key="frame" x="91" y="134.5" width="30" height="27"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemRedColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="to record the video of the eye" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6oH-Ur-nDk">
                                 <rect key="frame" x="0.0" y="73" width="414" height="20"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -354,6 +344,13 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyA-8E-tec">
+                                <rect key="frame" x="43" y="673" width="93" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" systemColor="systemRedColor"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="hori_vert"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="uIe-Wh-aZk"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -382,7 +379,7 @@
                         <outlet property="backwardButton" destination="NjV-Ob-HQy" id="Rph-oU-hig"/>
                         <outlet property="calcButton" destination="sZn-CJ-Yxe" id="hF7-9w-d0q"/>
                         <outlet property="cameraButton" destination="w2G-cJ-1fV" id="bJm-SI-8sf"/>
-                        <outlet property="changeModeButton" destination="XhS-eE-NWD" id="sXQ-mD-lpc"/>
+                        <outlet property="changeModeButton" destination="qyA-8E-tec" id="Aym-lI-Oi5"/>
                         <outlet property="changeModeButton1" destination="ljP-WQ-bdT" id="oyi-64-Gnq"/>
                         <outlet property="changeModeButton2" destination="qBS-1Q-PWv" id="WwZ-ji-yin"/>
                         <outlet property="currentVideoDate" destination="0q7-O3-Ich" id="Lv3-7t-LiK"/>
@@ -832,14 +829,6 @@ Tap the waveforms to change the (2*).</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Db-Xx-7hu">
-                                <rect key="frame" x="283" y="696" width="151" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="ARKit vHIT"/>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DZA-EA-S6I">
                                 <rect key="frame" x="94" y="822" width="62" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -884,19 +873,6 @@ Tap the waveforms to change the (2*).</string>
                                     <action selector="onToVOGButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="hyB-dd-mpf"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d81-YQ-ILY">
-                                <rect key="frame" x="173" y="816" width="67" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="ARKit">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="toARKitButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="RAS-5K-C7T"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ut3-ve-Fe7">
                                 <rect key="frame" x="324" y="812" width="80" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -909,15 +885,6 @@ Tap the waveforms to change the (2*).</string>
                                     <action selector="onExitButton:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="4iL-za-3Q1"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ktc-fi-Lu2">
-                                <rect key="frame" x="179" y="792" width="67" height="19"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemRedColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nyP-Lg-EwR">
                                 <rect key="frame" x="317" y="544" width="109" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -925,19 +892,6 @@ Tap the waveforms to change the (2*).</string>
                                 <buttonConfiguration key="configuration" style="plain" title="segueToMain"/>
                                 <connections>
                                     <segue destination="LGJ-5M-CKr" kind="unwind" identifier="fromParamsToMain" unwindAction="unwind:" id="wD8-g0-7kd"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RsZ-ce-yvy">
-                                <rect key="frame" x="349" y="411" width="48" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Exit">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <segue destination="1VO-Zl-WBN" kind="show" id="ybs-uw-EQG"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="cjT-c1-5ay">
@@ -984,9 +938,6 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="B2CInput" destination="O7P-AP-fl8" id="9dw-E5-Jqf"/>
                         <outlet property="B2CLabel" destination="9oE-gN-h2Z" id="cr5-4C-3Jp"/>
                         <outlet property="VOGLabel" destination="ifV-06-obi" id="zkC-t8-lZh"/>
-                        <outlet property="arkitButton" destination="d81-YQ-ILY" id="q6D-Zd-MvM"/>
-                        <outlet property="arkitLabel" destination="ktc-fi-Lu2" id="ygd-dR-bbH"/>
-                        <outlet property="arkitVHITButtonLabel" destination="2Db-Xx-7hu" id="Xj9-Al-nN4"/>
                         <outlet property="defaultButton" destination="5sT-gS-ZO9" id="oOY-AU-z6c"/>
                         <outlet property="exitButton" destination="ut3-ve-Fe7" id="IR0-BQ-SVI"/>
                         <outlet property="eyeBorderInput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
@@ -1008,7 +959,6 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="oppositeLabel" destination="i3U-lw-sar" id="hTw-07-F5J"/>
                         <outlet property="parallelButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
                         <outlet property="parallelLabel" destination="vXE-sa-v6F" id="Nnc-ZI-dhn"/>
-                        <outlet property="segueToArkitButton" destination="RsZ-ce-yvy" id="Iel-aG-MHL"/>
                         <outlet property="timeLagInput" destination="FYu-Qu-Gex" id="MPg-6E-bbA"/>
                         <outlet property="timeLagLabel" destination="69E-lo-wOt" id="25e-FT-cVH"/>
                         <outlet property="toVOGButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
@@ -1029,214 +979,6 @@ Tap the waveforms to change the (2*).</string>
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-413.04347826086962" y="-40.178571428571423"/>
-        </scene>
-        <!--Kit View Controller-->
-        <scene sceneID="gdb-xG-ISs">
-            <objects>
-                <viewController modalPresentationStyle="fullScreen" id="1VO-Zl-WBN" customClass="ARKitViewController" customModule="vHIT96da" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="zF3-Xt-82F">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aN8-fa-BQ5">
-                                <rect key="frame" x="93" y="836" width="23" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="folder" catalog="system"/>
-                                <connections>
-                                    <action selector="onSaveButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="g5y-Aw-Dis"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iXL-fJ-Kgq">
-                                <rect key="frame" x="120" y="836" width="39" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemRedColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="clear" catalog="system"/>
-                                <connections>
-                                    <action selector="onClearButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="sBF-PN-PfX"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZG-X3-cHS">
-                                <rect key="frame" x="43" y="836" width="21" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="paperplane" catalog="system"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fdf-wp-qbG">
-                                <rect key="frame" x="292" y="836" width="20" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="questionmark.app" catalog="system"/>
-                                <connections>
-                                    <segue destination="l3a-Ut-FhC" kind="show" id="0wg-2c-lQT"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Pf-J0-eQ3">
-                                <rect key="frame" x="347" y="830" width="30" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemRedColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="0"/>
-                                <connections>
-                                    <action selector="onDataTypeButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="EXk-3r-7Gg"/>
-                                </connections>
-                            </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="env-4t-0qd">
-                                <rect key="frame" x="120" y="87" width="150" height="4"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </progressView>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="A8E-zb-bS9">
-                                <rect key="frame" x="120" y="118" width="150" height="4"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" systemColor="systemRedColor"/>
-                            </progressView>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="c97-iK-9np">
-                                <rect key="frame" x="144" y="752" width="118" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </slider>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YQu-16-yh9">
-                                <rect key="frame" x="95" y="318" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bCO-cD-P2h">
-                                <rect key="frame" x="95" y="478" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </imageView>
-                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Xt-XH-etN">
-                                <rect key="frame" x="27" y="797" width="100" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="ARKit vHIT"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ca-VO-mwS">
-                                <rect key="frame" x="191" y="836" width="20" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="stop.circle" catalog="system"/>
-                                <connections>
-                                    <action selector="onARKitButton:" destination="1VO-Zl-WBN" eventType="touchUpInside" id="7UL-r7-Tsz"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c4S-vS-12c">
-                                <rect key="frame" x="225" y="664" width="65" height="117"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="gear" catalog="system"/>
-                                <connections>
-                                    <segue destination="r8T-yT-R0T" kind="unwind" unwindAction="unwindPara:" id="OyZ-SI-KWb"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="RCl-fo-Vm6"/>
-                        <color key="backgroundColor" systemColor="systemGray5Color"/>
-                        <gestureRecognizers/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="B78-bG-ZZF" appends="YES" id="NFK-jm-G3t"/>
-                            <outletCollection property="gestureRecognizers" destination="M4d-OV-rnO" appends="YES" id="icT-YS-WQQ"/>
-                        </connections>
-                    </view>
-                    <navigationItem key="navigationItem" id="vzd-h3-pgU"/>
-                    <connections>
-                        <outlet property="ARKitButton" destination="5ca-VO-mwS" id="t1v-AK-sjn"/>
-                        <outlet property="clearButton" destination="iXL-fJ-Kgq" id="nbq-WZ-8sv"/>
-                        <outlet property="dataTypeButton" destination="1Pf-J0-eQ3" id="t3u-15-uyg"/>
-                        <outlet property="helpButton" destination="fdf-wp-qbG" id="N5B-ju-lvW"/>
-                        <outlet property="labelButton" destination="2Xt-XH-etN" id="Vj4-5e-qOm"/>
-                        <outlet property="mailButton" destination="gZG-X3-cHS" id="xXt-re-vMH"/>
-                        <outlet property="progressEyeView" destination="A8E-zb-bS9" id="ZC0-eP-b35"/>
-                        <outlet property="progressFaceView" destination="env-4t-0qd" id="VDC-VS-oMN"/>
-                        <outlet property="saveButton" destination="aN8-fa-BQ5" id="r28-F2-TND"/>
-                        <outlet property="settingButton" destination="c4S-vS-12c" id="hrE-AU-fxU"/>
-                        <outlet property="vHITBoxView" destination="YQu-16-yh9" id="fbZ-vC-kvC"/>
-                        <outlet property="waveBoxView" destination="bCO-cD-P2h" id="ywq-jm-1Uq"/>
-                        <outlet property="waveSlider" destination="c97-iK-9np" id="kls-rl-r3S"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cmx-AD-yAt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="r8T-yT-R0T" userLabel="Exit" sceneMemberID="exit"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="B78-bG-ZZF">
-                    <connections>
-                        <action selector="panGesture:" destination="1VO-Zl-WBN" id="kiX-qe-fHp"/>
-                    </connections>
-                </panGestureRecognizer>
-                <tapGestureRecognizer id="M4d-OV-rnO">
-                    <connections>
-                        <action selector="tapGesture:" destination="1VO-Zl-WBN" id="6iN-cc-cpN"/>
-                    </connections>
-                </tapGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="-1804.3478260869567" y="592.63392857142856"/>
-        </scene>
-        <!--Kit Help View-->
-        <scene sceneID="bLV-hN-1Q4">
-            <objects>
-                <viewController modalPresentationStyle="fullScreen" id="l3a-Ut-FhC" customClass="ARKitHelpView" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="lwZ-mW-I86">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="47f-Fi-KoO">
-                                <rect key="frame" x="324" y="812" width="80" height="40"/>
-                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="0pB-uU-xsB"/>
-                                    <constraint firstAttribute="width" constant="80" id="diN-rb-CUF"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Exit"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <segue destination="qlp-zf-PaW" kind="unwind" unwindAction="unwindArkit:" id="X3v-a1-wQ8"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ARKit vHIT  iPhone X 以降の機種で動きます。 フロントカメラを使います。 頭部回転は上手く検出できています。 眼球運動検出はまだダメです。" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YzR-0o-yei">
-                                <rect key="frame" x="0.0" y="48" width="414" height="764"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="Ldy-jw-9MG"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="YzR-0o-yei" firstAttribute="top" secondItem="Ldy-jw-9MG" secondAttribute="top" id="J5a-Ih-hka"/>
-                            <constraint firstItem="Ldy-jw-9MG" firstAttribute="bottom" secondItem="47f-Fi-KoO" secondAttribute="bottom" constant="10" id="J5a-uw-s5N"/>
-                            <constraint firstItem="Ldy-jw-9MG" firstAttribute="trailing" secondItem="47f-Fi-KoO" secondAttribute="trailing" constant="10" id="N9A-Dp-uGY"/>
-                            <constraint firstItem="YzR-0o-yei" firstAttribute="trailing" secondItem="Ldy-jw-9MG" secondAttribute="trailing" id="eeR-bj-2UT"/>
-                            <constraint firstItem="YzR-0o-yei" firstAttribute="leading" secondItem="Ldy-jw-9MG" secondAttribute="leading" id="pPm-hF-9pq"/>
-                            <constraint firstItem="47f-Fi-KoO" firstAttribute="top" secondItem="YzR-0o-yei" secondAttribute="bottom" id="ykZ-lE-fnv"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="ldX-lZ-UEg"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HVv-H1-LkQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="qlp-zf-PaW" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="-2436" y="727"/>
         </scene>
         <!--Helpj View Controller-->
         <scene sceneID="hFD-w5-waW">
@@ -1287,7 +1029,6 @@ Tap the waveforms to change the (2*).</string>
         <image name="camera" catalog="system" width="128" height="93"/>
         <image name="chevron.left.circle" catalog="system" width="128" height="123"/>
         <image name="chevron.right.circle" catalog="system" width="128" height="123"/>
-        <image name="clear" catalog="system" width="128" height="114"/>
         <image name="eye" width="212" height="212"/>
         <image name="face" width="212" height="212"/>
         <image name="folder" catalog="system" width="128" height="96"/>
@@ -1298,7 +1039,6 @@ Tap the waveforms to change the (2*).</string>
         <image name="paperplane" catalog="system" width="128" height="119"/>
         <image name="play.circle" catalog="system" width="128" height="123"/>
         <image name="playpause.fill" catalog="system" width="128" height="69"/>
-        <image name="questionmark.app" catalog="system" width="128" height="114"/>
         <image name="questionmark.circle" catalog="system" width="128" height="123"/>
         <image name="speaker.wave.2.circle" catalog="system" width="128" height="123"/>
         <image name="stop.circle" catalog="system" width="128" height="123"/>
@@ -1313,9 +1053,6 @@ Tap the waveforms to change the (2*).</string>
         </systemColor>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemGray5Color">
-            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
