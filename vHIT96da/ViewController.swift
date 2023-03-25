@@ -1699,7 +1699,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if Locale.preferredLanguages.first!.contains("ja"){
             title="vHITアプリ"
             okText="承諾"
-            mess="医師、理学療法士が利用するvHITアプリです。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。"
+            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。"
         }
         let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
 //        let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
