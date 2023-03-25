@@ -1695,7 +1695,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func alertYESorNO() {
         var title="vHIT application"
         var okText="accept"
-        var mess="This application is used by physicians and physical therapists.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include the (a) nature, purpose, and duration of the research; (b) procedures, risks, and benefits to the participant; (c) information about confidentiality and handling of data (including any sharing with third parties); (d) a point of contact for participant questions; and (e) the withdrawal process."
+        var mess="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include the (a) nature, purpose, and duration of the research; (b) procedures, risks, and benefits to the participant; (c) information about confidentiality and handling of data (including any sharing with third parties); (d) a point of contact for participant questions; and (e) the withdrawal process."
         if Locale.preferredLanguages.first!.contains("ja"){
             title="vHITアプリ"
             okText="承諾"
