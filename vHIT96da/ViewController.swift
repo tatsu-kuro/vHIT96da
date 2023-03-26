@@ -4,6 +4,7 @@
 //
 //  Created by kuroda tatsuaki on 2018/02/10.
 //  Copyright © 2018年 tatsuaki.kuroda. All rights reserved.
+//  main202303をmainにする。2023/3/25
 //
 //faceMarkHiddenをtrueにするとマーク補正機能を削除
 import UIKit
