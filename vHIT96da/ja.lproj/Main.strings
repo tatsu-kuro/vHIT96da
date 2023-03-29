@@ -78,22 +78,13 @@
 
 /* Class = "UIButton"; normalTitle = "KeyOff"; ObjectID = "pMb-F1-KQb"; */
 "pMb-F1-KQb.normalTitle" = "KeyOff";
-
-/* Class = "UILabel"; text = "(1)頭部回転時のGyro波形幅 msec"; ObjectID = "srl-OW-f1c"; */
-
-
-/* Class = "UIButton"; normalTitle = "Parallel"; ObjectID = "tNT-h2-pQW"; */
 "tNT-h2-pQW.normalTitle" = "平行";
-
-
-/* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "ut3-ve-Fe7"; */
 "ut3-ve-Fe7.normalTitle" = "Exit";
-
-/* Class = "UIButton"; normalTitle = "VOG"; ObjectID = "ySb-fb-deN"; */
 "ySb-fb-deN.normalTitle" = "VOG";
-
-/* Class = "UILabel"; text = "far"; ObjectID = "z8v-v3-JoQ"; */
 "z8v-v3-JoQ.text" = "遠";
-/* Class = "UILabel"; text = "far"; ObjectID = "VUD-4d-LTF"; */
+/*"Tgf-Kj-P0L.normalTitle" = "登録";*/
 "VUD-4d-LTF.text" = "移動平均 N";
-"Tgf-Kj-P0L.text" = "登録";
+"gON-Be-fSL.normalTitle" = "全機能有効化のためのキー設定";
+"BTd-HK-Sth.normalTitle" = "キー発行依頼のメール";
+"aIU-up-E7z.text" = "アプリを利用するには、キーの設定が必要です。下記ボタンから、所属、氏名、メールアドレスを明記の上、作者にメールして下さい。キーをメールしますので、それを上のキー設定テキストボックスにセットして下さい。";
+
