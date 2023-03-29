@@ -16,18 +16,7 @@ import MessageUI
 //import CoreTelephony
 //let noFaceMark=true//facemarkが完成したら削除の予定
 
-import Foundation
-import CryptoKit
 
-// CryptoKit.Digest utils
-extension Digest {
-    var bytes: [UInt8] { Array(makeIterator()) }
-    var data: Data { Data(bytes) }
-
-    var hexStr: String {
-        bytes.map { String(format: "%02X", $0) }.joined()
-    }
-}
 
 extension UIAlertController {
     
@@ -225,13 +214,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBAction func onBackwardButton(_ sender: Any) {
         forwardBackwardButton(mode: 1)
     }
-    
-    func example() {
-        guard let data = "hello cworld".data(using: .utf8) else { return }
-        let digest = SHA256.hash(data: data)
-        print(digest.data) // 32 bytes
-        print(digest.hexStr) // B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9
-    }
+ 
     
     @IBOutlet weak var wakuImg1: UIImageView!
     @IBOutlet weak var wakuImg2: UIImageView!
@@ -1716,12 +1699,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    var YESorNO:Bool=false
     func alertYESorNO() {
         var title="vHIT application"
-        var okText="accept"
-        var mess="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include the (a) nature, purpose, and duration of the research; (b) procedures, risks, and benefits to the participant; (c) information about confidentiality and handling of data (including any sharing with third parties); (d) a point of contact for participant questions; and (e) the withdrawal process."
+        var okText="OK"
+        var mess="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nTo use this app, you must go to the registration page from the Settings page and set up a key. Please apply for a key with your name, email address, and affiliation. Once the key is set, all functions will be available."
         if Locale.preferredLanguages.first!.contains("ja"){
             title="vHITアプリ"
-            okText="承諾"
-            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\nこのアプリを使用するためには、設定⚙ボタンから登録ページに行き、キーを設定する必要があります。氏名、メールアドレスなどを記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
+            okText="OK"
+            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\nこのアプリを使用するためには、設定⚙ボタンから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
         }
         let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
 //        let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
@@ -2761,7 +2744,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func onSaveButton(_ sender: Any) {//vhit
- example()
+ 
         if calcFlag == true{
             return
         }

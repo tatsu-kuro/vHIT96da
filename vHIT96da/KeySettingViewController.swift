@@ -7,12 +7,44 @@
 //
 
 import UIKit
+import MessageUI
+import Foundation
+import CryptoKit
 
-class KeySettingViewController: UIViewController {
+// CryptoKit.Digest utils
+extension Digest {
+    var bytes: [UInt8] { Array(makeIterator()) }
+    var data: Data { Data(bytes) }
+
+    var hexStr: String {
+        bytes.map { String(format: "%02X", $0) }.joined()
+    }
+}
+class KeySettingViewController: UIViewController,MFMailComposeViewControllerDelegate {
     @IBOutlet weak var keyStatusText: UILabel!
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var mailAddressText: UITextField!
     @IBOutlet weak var keyText: UITextField!
+    
+    func example() {
+        guard let data = "hello cworld".data(using: .utf8) else { return }
+        let digest = SHA256.hash(data: data)
+        print(digest.data) // 32 bytes
+        print(digest.hexStr) // B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9
+    }
+    @IBAction func eMailMe(_ sender: Any) {
+        print("mailoneButton")
+        let mailViewController = MFMailComposeViewController()
+        mailViewController.mailComposeDelegate = self
+        mailViewController.setSubject("vHIT96da Key")
+        mailViewController.setToRecipients(["tatsuakikuroda@me.com"])
+        if !Locale.preferredLanguages.first!.contains("ja"){
+            mailViewController.setMessageBody("name:\neMail:\naffiliation:", isHTML: false)
+        }else{
+            mailViewController.setMessageBody("所属:\n氏名:\nEメール:", isHTML: false)
+        }
+        present(mailViewController, animated: true, completion: nil)
+    }
     
     func keyTextSet(){
         if !Locale.preferredLanguages.first!.contains("ja"){
@@ -25,7 +57,7 @@ class KeySettingViewController: UIViewController {
             if UserDefaults.standard.bool(forKey: "keyGet")==false{
                 keyStatusText.text = "キーはセットされていません!"
             }else{
-                keyStatusText.text = "キーはセットされています!"
+                keyStatusText.text = "キーはセットされました!"
             }
         }
     }
@@ -35,7 +67,7 @@ class KeySettingViewController: UIViewController {
         keyTextSet()
     }
     
-    @IBAction func onSetKyeButton(_ sender: Any) {
+    @IBAction func onSetKeyButton(_ sender: Any) {
         keyText.endEditing(true)
         mailAddressText.endEditing(true)
         if true{//keyが正しければ
@@ -43,15 +75,22 @@ class KeySettingViewController: UIViewController {
         }
         keyTextSet()
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller
+  
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {//errorの時に通る
+        
+        switch result {
+        case .cancelled:
+            print("cancel1")
+        case .saved:
+            print("save")
+        case .sent:
+            print("send")
+        case .failed:
+            print("fail")
+        @unknown default:
+            print("unknown error")
+        }
+        self.dismiss(animated: true, completion: nil)
     }
-    */
-
 }
+
