@@ -28,6 +28,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var faceMarkSwitch: UISwitch!
     @IBOutlet weak var exitButton: UIButton!
     
+    @IBOutlet weak var registerButton: UIButton!
     @IBOutlet weak var lowPassText: UILabel!
     @IBOutlet weak var lowPassFilterSwitch: UISegmentedControl!
     func getUserDefault(str:String,ret:Int) -> Int{//getUserDefault_one
@@ -465,11 +466,12 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
         
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
-        tovHITButton.frame=CGRect(x:butw1+3*sp,y:buty1,width:butw1*1.5+sp/2,height: buth1)
+        tovHITButton.frame=CGRect(x:butw1+3*sp,y:buty1,width:butw1,height: buth1)
         iroiro.setLabelTopRectangle(vHITLabel, rect: tovHITButton.frame, UIColor.systemRed)
-        toVOGButton.frame=CGRect( x:butw1*2.5+4.5*sp,y:buty1,width:butw1*1.5+sp/2,height: buth1)
+        toVOGButton.frame=CGRect( x:butw1*2+4*sp,y:buty1,width:butw1,height: buth1)
         iroiro.setLabelTopRectangle(VOGLabel, rect: toVOGButton.frame, UIColor.systemRed)
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
+        registerButton.frame=CGRect(x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
     }
     
     let iroiro = myFunctions(albumName: "vHIT_VOG")
@@ -501,6 +503,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         keyDown.layer.cornerRadius = 5
         toVOGButton.layer.cornerRadius=5
         tovHITButton.layer.cornerRadius=5
+        registerButton.layer.cornerRadius=5
         keyDown.isHidden = true
         setMaxMin()//念の為パラメータを正常範囲にしておく。
     }

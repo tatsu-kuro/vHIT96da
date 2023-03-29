@@ -1721,14 +1721,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if Locale.preferredLanguages.first!.contains("ja"){
             title="vHITアプリ"
             okText="承諾"
-            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。"
+            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\nこのアプリを使用するためには、設定⚙ボタンから登録ページに行き、キーを設定する必要があります。氏名、メールアドレスなどを記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
         }
         let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
 //        let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
         alert.setMessageAlignment(.left)
         let yes = UIAlertAction(title: okText, style: .default, handler: { (action) -> Void in
             print("Delete button tapped")
-            UserDefaults.standard.set(true,forKey: "consentOK")
+            UserDefaults.standard.set(true,forKey: "keyGet")
  //           self.launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
         })
 //        let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
@@ -1820,7 +1820,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         dispWakus()
         setButtons_first()
         showWakuImages()
-        if UserDefaults.standard.object(forKey: "consentOK") == nil{
+        if UserDefaults.standard.object(forKey: "keyGet") == nil{
             alertYESorNO()
         }else{
 //            if UserDefaults.standard.bool(forKey: "YESorNO")==false{
