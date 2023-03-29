@@ -2726,7 +2726,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func onSaveButton(_ sender: Any) {//vhit
- 
+        if UserDefaults.standard.bool(forKey: "keyGet")==false{
+            alertKetSet()
+            return
+        }
         if calcFlag == true{
             return
         }
@@ -2776,21 +2779,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
     }
     
-    func alertDidLoad() {
-        
-        let alert = UIAlertController(title: "vHIT96da", message: "Input ID", preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
-          
+    func alertKetSet() {
+        var mess="key is not set yet!!"
+        if Locale.preferredLanguages.first!.contains("ja"){
+            mess="keyが設定されていません！!"
         }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+        let alert = UIAlertController(title: "vHIT96da", message: mess, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
         }
         // UIAlertControllerにtextFieldを追加
-
-        alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
-        alert.addAction(saveAction)
+        alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
-        
     }
     
     func trimmingImage(_ image: UIImage, trimmingArea: CGRect) -> UIImage {
