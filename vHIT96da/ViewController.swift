@@ -1728,7 +1728,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         alert.setMessageAlignment(.left)
         let yes = UIAlertAction(title: okText, style: .default, handler: { (action) -> Void in
             print("Delete button tapped")
-            UserDefaults.standard.set(true,forKey: "keyGet")
+            UserDefaults.standard.set(false,forKey: "keyGet")
  //           self.launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
         })
 //        let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
@@ -1748,7 +1748,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         #if DEBUG
         print("viewDidLoad******")
         #endif
-        UserDefaults().removeObject(forKey: "YESorNO")
+//        UserDefaults().removeObject(forKey: "YESorNO")
         
 //        onSaveButton(0)
 //        alertDidLoad()

@@ -994,10 +994,10 @@ Tap the waveforms to change the (2*).</string>
             </objects>
             <point key="canvasLocation" x="-413.04347826086962" y="-40.178571428571423"/>
         </scene>
-        <!--View Controller-->
+        <!--Key Setting View Controller-->
         <scene sceneID="5cW-KP-3CX">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="hQl-qG-mNl" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="hQl-qG-mNl" customClass="KeySettingViewController" customModule="vHIT96da" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bo1-EJ-Gei">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1014,7 +1014,7 @@ Tap the waveforms to change the (2*).</string>
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="gFk-sU-TlZ" kind="unwind" unwindAction="unwind:" id="woe-HP-DCw"/>
+                                    <segue destination="gFk-sU-TlZ" kind="unwind" unwindAction="unwindPara:" id="4Br-qE-R99"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SLN-wJ-4Qx">
@@ -1074,6 +1074,9 @@ Tap the waveforms to change the (2*).</string>
                                 <state key="normal" title="set the Key to enable all functions">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="onSetKyeButton:" destination="hQl-qG-mNl" eventType="touchUpInside" id="aAo-UO-Cf9"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key is set already!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEY-un-bTQ">
                                 <rect key="frame" x="20" y="762" width="374" height="30"/>
@@ -1126,6 +1129,12 @@ Tap the waveforms to change the (2*).</string>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="UQU-Ok-v2c"/>
+                    <connections>
+                        <outlet property="exitButton" destination="oJW-Cd-KMq" id="Aez-ov-jea"/>
+                        <outlet property="keyStatusText" destination="CEY-un-bTQ" id="hlU-qX-NuO"/>
+                        <outlet property="keyText" destination="Nhc-WQ-Z4g" id="TbS-ZG-Jzp"/>
+                        <outlet property="mailAddressText" destination="SLN-wJ-4Qx" id="W6L-WJ-hm1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Is9-Z9-IMJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="gFk-sU-TlZ" userLabel="Exit" sceneMemberID="exit"/>

@@ -19,8 +19,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if #available(iOS 11.0, *) {
-             bottomPadding = self.view.safeAreaInsets.bottom
-//            UserDefaults.standard.set(bottomPadding,forKey: "bottomPadding")
+            bottomPadding = self.view.safeAreaInsets.bottom
+            //            UserDefaults.standard.set(bottomPadding,forKey: "bottomPadding")
         }
         setTexts()
     }
@@ -45,21 +45,25 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         UserDefaults.standard.set(index, forKey: "lowPassFilterCnt")
         print("selectedSegmentIndex",index)
     }
- 
+    
     @IBOutlet weak var greenItemLabel: UILabel!
     @IBOutlet weak var vHITLabel: UILabel!
     @IBOutlet weak var toVOGButton: UIButton!
     @IBAction func onTovHITButton(_ sender: Any) {
         if calcMode == 0{
-          return
-      }
-      calcMode=0
-      dispParam()
-      setTexts()
+            return
+        }
+        calcMode=0
+        dispParam()
+        setTexts()
     }
-//    @IBAction func unwindPara(_ segue: UIStoryboardSegue) {
-//        calcMode=3
-//    }
+    @IBAction func unwindPara(_ segue: UIStoryboardSegue){
+    }
+    //    @IBAction func unwindPara(_ segue: UIStoryboardSegue) {
+    //        calcMode=3
+    //    }
+        
+   
     @IBAction func onExitButton(_ sender: Any) {
         performSegue(withIdentifier: "fromParamsToMain", sender: nil)
 

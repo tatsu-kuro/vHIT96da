@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		690F57C1277DAAF300135F5D /* myFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690F57C0277DAAF300135F5D /* myFunctions.swift */; };
 		6932D4C4240A7D97008A03D9 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6932D4C3240A7D97008A03D9 /* RecordViewController.swift */; };
+		69401B0829D4211000AADC94 /* KeySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69401B0729D4211000AADC94 /* KeySettingViewController.swift */; };
 		695959AD29C58CB10044BF40 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 695959AF29C58CB10044BF40 /* InfoPlist.strings */; };
 		69ACED3429B6019C004C55CB /* topImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 69ACED3329B6019C004C55CB /* topImg.png */; };
 		8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */; };
@@ -27,6 +28,7 @@
 		690F57C0277DAAF300135F5D /* myFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myFunctions.swift; sourceTree = "<group>"; };
 		6932D4C3240A7D97008A03D9 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		69401B0629D401EC00AADC94 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
+		69401B0729D4211000AADC94 /* KeySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeySettingViewController.swift; sourceTree = "<group>"; };
 		695959AE29C58CB10044BF40 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		69ACED3329B6019C004C55CB /* topImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topImg.png; sourceTree = "<group>"; };
 		8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				8EE2C01E202F32440064ED6F /* ViewController.swift */,
 				690F57C0277DAAF300135F5D /* myFunctions.swift */,
 				8E495CC5202FE7880030748C /* ParametersViewController.swift */,
+				69401B0729D4211000AADC94 /* KeySettingViewController.swift */,
 				6932D4C3240A7D97008A03D9 /* RecordViewController.swift */,
 				8EB6E0F8208E1CAF000A85EB /* Assets.xcassets */,
 				8EE2C025202F32440064ED6F /* LaunchScreen.storyboard */,
@@ -177,6 +180,7 @@
 				8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */,
 				6932D4C4240A7D97008A03D9 /* RecordViewController.swift in Sources */,
 				690F57C1277DAAF300135F5D /* myFunctions.swift in Sources */,
+				69401B0829D4211000AADC94 /* KeySettingViewController.swift in Sources */,
 				8E495CC6202FE7880030748C /* ParametersViewController.swift in Sources */,
 				8EBC22802182D6A100EF040C /* HelpjViewController.swift in Sources */,
 				8ECE3964203802750054AC0C /* opencvWrapper.mm in Sources */,
