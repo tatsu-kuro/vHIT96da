@@ -1022,7 +1022,7 @@ Tap the waveforms to change the (2*).</string>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="2ho-wi-QNm"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mail address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bnJ-sl-JaJ">
@@ -1096,7 +1096,7 @@ Tap the waveforms to change the (2*).</string>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="0F7-YM-Bue"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                         </subviews>

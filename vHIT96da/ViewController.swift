@@ -1696,7 +1696,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func printR(str:String,cnt:Int,max:Double,rct1:CGRect,rct2:CGRect){
         print("\(str)",String(format: "%d %.2f-%.0f,%.0f %.0f,%.0f",cnt,max,rct1.origin.x,rct1.origin.y,rct2.origin.x,rct2.origin.y))
     }
-//    var YESorNO:Bool=false
     func alertYESorNO() {
         var title="vHIT application"
         var okText="OK"
@@ -1707,22 +1706,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\nこのアプリを使用するためには、設定⚙ボタンから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
         }
         let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
-//        let alert = UIAlertController(title: "", message: message, preferredStyle: UIAlertController.Style.alert)
         alert.setMessageAlignment(.left)
         let yes = UIAlertAction(title: okText, style: .default, handler: { (action) -> Void in
             print("Delete button tapped")
             UserDefaults.standard.set(false,forKey: "keyGet")
- //           self.launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
         })
-//        let no = UIAlertAction(title: "NO", style: .cancel, handler: { (action) -> Void in
-//            print("Cancel button tapped")
-////            self.allisEnabled()
-//            self.launchButton.frame=CGRect(x:0,y:0,width: self.view.bounds.width,height: self.view.bounds.height)
-//
-//            UserDefaults.standard.set(false,forKey: "YESorNO")
-//        })
+
         alert.addAction(yes)
- //       alert.addAction(no)
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -1731,14 +1721,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         #if DEBUG
         print("viewDidLoad******")
         #endif
-//        UserDefaults().removeObject(forKey: "YESorNO")
-        
-//        onSaveButton(0)
-//        alertDidLoad()
- //       alert2()
-//        while alert2tapped==false{
-//            sleep(UInt32(0.1))
-//        }
+
         dispFilesindoc()//for debug
            //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
@@ -1747,7 +1730,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         getUserDefaults()
         setButtons(mode: true)
         stopButton.isHidden = true
-//        showModeText()
         showBoxies(f: false)//isVHITに応じてviewを表示
         if PHPhotoLibrary.authorizationStatus() != .authorized {
             PHPhotoLibrary.requestAuthorization { status in

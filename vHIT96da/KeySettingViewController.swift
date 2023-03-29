@@ -26,11 +26,13 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
     @IBOutlet weak var mailAddressText: UITextField!
     @IBOutlet weak var keyText: UITextField!
     
-    func example() {
-        guard let data = "hello cworld".data(using: .utf8) else { return }
+    func hashSora(str:String)->String{
+        let soraStr=str+"sora"
+        guard let data = soraStr.data(using: .utf8) else { return "0"}
         let digest = SHA256.hash(data: data)
-        print(digest.data) // 32 bytes
-        print(digest.hexStr) // B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9
+ //       print("digest.data:",digest.data) // 32 bytes
+   //     print("digest.hexStr:",digest.hexStr) // B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9
+        return digest.hexStr
     }
     @IBAction func eMailMe(_ sender: Any) {
         print("mailoneButton")
@@ -70,9 +72,11 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
     @IBAction func onSetKeyButton(_ sender: Any) {
         keyText.endEditing(true)
         mailAddressText.endEditing(true)
-        if true{//keyが正しければ
+        let str=hashSora(str: mailAddressText.text!)
+        if str.contains(keyText.text!) && keyText.text!.utf8.count>25{
             UserDefaults.standard.set(true,forKey: "keyGet")
         }
+        print("**key**:",str)
         keyTextSet()
     }
   
