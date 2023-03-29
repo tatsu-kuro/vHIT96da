@@ -15,6 +15,20 @@ import MessageUI
 //import CoreLocation
 //import CoreTelephony
 //let noFaceMark=true//facemarkが完成したら削除の予定
+
+import Foundation
+import CryptoKit
+
+// CryptoKit.Digest utils
+extension Digest {
+    var bytes: [UInt8] { Array(makeIterator()) }
+    var data: Data { Data(bytes) }
+
+    var hexStr: String {
+        bytes.map { String(format: "%02X", $0) }.joined()
+    }
+}
+
 extension UIAlertController {
     
     func setMessageAlignment(_ alignment : NSTextAlignment) {
@@ -210,6 +224,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     @IBAction func onBackwardButton(_ sender: Any) {
         forwardBackwardButton(mode: 1)
+    }
+    
+    func example() {
+        guard let data = "hello cworld".data(using: .utf8) else { return }
+        let digest = SHA256.hash(data: data)
+        print(digest.data) // 32 bytes
+        print(digest.hexStr) // B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9
     }
     
     @IBOutlet weak var wakuImg1: UIImageView!
@@ -2740,7 +2761,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func onSaveButton(_ sender: Any) {//vhit
- 
+ example()
         if calcFlag == true{
             return
         }
