@@ -1703,7 +1703,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if Locale.preferredLanguages.first!.contains("ja"){
             title="vHITアプリ"
             okText="OK"
-            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\nこのアプリを使用するためには、設定⚙ボタンから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
+            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\nこのアプリを使用するためには、設定ページから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
         }
         let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
         alert.setMessageAlignment(.left)
