@@ -38,13 +38,13 @@ class HelpjViewController: UIViewController {
             if calcMode != 2{
                 img = UIImage(named:"vHITja")!
             }else{
-                img = UIImage(named: "VOGja")!// currentImageName="VOGen"
+                img = UIImage(named: "VOGja")!
             }
         }else{
             if calcMode != 2{
-                img = UIImage(named:"vHITja")!//currentImageName="vHITja"
+                img = UIImage(named:"vHITen")!
             }else{
-                img = UIImage(named:"VOGja")!//currentImageName="VOGja"
+                img = UIImage(named:"VOGen")!
             }
         }
         
