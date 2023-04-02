@@ -86,11 +86,11 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         }else{
             statementLabel.text="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include \n(a) nature, purpose\nduration of the research\n(b) procedures, risks, and benefits to the participant\n(c) information about confidentiality and handling of data (including any sharing with third parties)\na point of contact for participant questions\n(e) the withdrawal process."
         }
-        nextButton.frame=CGRect(x:ww/2-bw/2,y:wh-bottom-sp-bh,width: bw,height: bh)
+        nextButton.frame=CGRect(x:ww/2-bw/2,y:wh-bottom-2*sp-bh,width: bw,height: bh)
         nextButton.layer.cornerRadius=5
-        exitButton.frame=CGRect(x:ww/2-bw,y:wh-bottom-sp-bh*2,width: bw*2,height: bh*2)
+        exitButton.frame=CGRect(x:ww/2-bw,y:wh-bottom-2*sp-bh*2,width: bw*2,height: bh*2)
         exitButton.layer.cornerRadius=5
-        keyStatusText.frame=CGRect(x:40,y:wh-bottom-sp-bh*2-60,width:ww-80,height: 34)
+        keyStatusText.frame=CGRect(x:30,y:wh-bottom-2*sp-bh*2-34-10,width:ww-60,height: 34)
         exitButton.isHidden=true
 //        statementLabel.isHidden=true
         mailAddressText.keyboardType = .emailAddress
@@ -100,7 +100,9 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
     @IBAction func onNextButton(_ sender: Any) {
         statementLabel.isHidden=true
         nextButton.isHidden=true
-//        exitButton.isHidden=false
+        exitButton.isHidden=false
+        exitButton.isEnabled=false
+        exitButton.alpha=0.1
     }
     /*
      var mess="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include the (a) nature, purpose, and duration of the research; (b) procedures, risks, and benefits to the participant; (c) information about confidentiality and handling of data (including any sharing with third parties); (d) a point of contact for participant questions; and (e) the withdrawal process.\nTo use this app, you must go to the registration page from the Settings page and set up a key. Please apply for a key with your name, email address, and affiliation. Once the key is set, all functions will be available."
@@ -117,7 +119,9 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         print("hash20:",str)
         if str == keyText.text{
             UserDefaults.standard.set(true,forKey: "keyGet")
-            exitButton.isHidden=false
+//            exitButton.isHidden=false
+            exitButton.isEnabled=true
+            exitButton.alpha=1.0
         }
         keyTextSet()
     }
@@ -126,9 +130,10 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
    
         if sender.state == .ended{
             let move = sender.translation(in: self.view)
-            if ( move.y > 20)
+            if ( move.y > 5 || move.y < -5)
             {
                 mailAddressText.endEditing(true)
+                keyText.endEditing(true)
             }
         }
     }
