@@ -26,6 +26,8 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
     @IBOutlet weak var mailAddressText: UITextField!
     @IBOutlet weak var keyText: UITextField!
     
+    @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var statementLabel: UILabel!
     func hashSora(str:String)->String{//get 20char
         let soraStr=str+"sora"
         guard let data = soraStr.data(using: .utf8) else { return "0"}
@@ -49,23 +51,40 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
     }
     
     func keyTextSet(){
-        if !Locale.preferredLanguages.first!.contains("ja"){
-            if UserDefaults.standard.bool(forKey: "keyGet")==false{
+        if UserDefaults.standard.bool(forKey: "keyGet")==false{
+            if Locale.preferredLanguages.first!.contains("ja"){
+                keyStatusText.text = "キーはセットされていません!"
+            }else{
                 keyStatusText.text = "Key is not set yet!"
+            }
+            print("keyGet:false")
+        }else{
+            if Locale.preferredLanguages.first!.contains("ja"){
+                keyStatusText.text = "キーはセットされました!"
             }else{
                 keyStatusText.text = "Key is set already!"
             }
-        }else{
-            if UserDefaults.standard.bool(forKey: "keyGet")==false{
-                keyStatusText.text = "キーはセットされていません!"
-            }else{
-                keyStatusText.text = "キーはセットされました!"
-            }
+            print("kegyGet:true")
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        let wh=view.bounds.height
+        let ww=view.bounds.width
+        let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
+        let top=CGFloat(UserDefaults.standard.float(forKey: "top"))
+//        let bottom:CGFloat=10
+//        let top:CGFloat=10
+        let sp:CGFloat=5
+        let bw:CGFloat=55
+        let bh:CGFloat=25
+   
+        statementLabel.frame=CGRect(x:0,y:top,width: ww,height: wh-top-bottom-sp-bh)
+        statementLabel.text="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。このアプリを使用するためには、設定ページから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
+        nextButton.frame=CGRect(x:ww/2-bw/2,y:wh-bottom-sp-bh,width: bw,height: bh)
         exitButton.layer.cornerRadius=5
+        statementLabel.isHidden=true
+        mailAddressText.keyboardType = .emailAddress
         keyTextSet()
     }
     

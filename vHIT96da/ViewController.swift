@@ -1696,58 +1696,43 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func printR(str:String,cnt:Int,max:Double,rct1:CGRect,rct2:CGRect){
         print("\(str)",String(format: "%d %.2f-%.0f,%.0f %.0f,%.0f",cnt,max,rct1.origin.x,rct1.origin.y,rct2.origin.x,rct2.origin.y))
     }
-    func alertYESorNO() {
-        var title="vHIT application"
-        var okText="OK"
-        var mess="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nTo use this app, you must go to the registration page from the Settings page and set up a key. Please apply for a key with your name, email address, and affiliation. Once the key is set, all functions will be available."
-        if Locale.preferredLanguages.first!.contains("ja"){
-            title="vHITアプリ"
-            okText="OK"
-            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\nこのアプリを使用するためには、設定ページから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
-        }
-        let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
-        alert.setMessageAlignment(.left)
-        let yes = UIAlertAction(title: okText, style: .default, handler: { (action) -> Void in
-            print("Delete button tapped")
-            UserDefaults.standard.set(false,forKey: "keyGet")
-        })
-
-        alert.addAction(yes)
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        #if DEBUG
-        print("viewDidLoad******")
-        #endif
-
-        dispFilesindoc()//for debug
-           //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
-        mailWidth=2400//240*10
-        mailHeight=1600//240*10*2/3
-         //vHIT結果サイズは500*200
-        getUserDefaults()
-        setButtons(mode: true)
-        stopButton.isHidden = true
-        showBoxies(f: false)//isVHITに応じてviewを表示
+//    func alertYESorNO() {
+//        var title="vHIT application"
+//        var okText="OK"
+//        var mess="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include the (a) nature, purpose, and duration of the research; (b) procedures, risks, and benefits to the participant; (c) information about confidentiality and handling of data (including any sharing with third parties); (d) a point of contact for participant questions; and (e) the withdrawal process.\nTo use this app, you must go to the registration page from the Settings page and set up a key. Please apply for a key with your name, email address, and affiliation. Once the key is set, all functions will be available."
+//        if Locale.preferredLanguages.first!.contains("ja"){
+//            title="vHITアプリ"
+//            okText="OK"
+//            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。このアプリを使用するためには、設定ページから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
+//        }
+//        let alert = UIAlertController(title: title, message:mess, preferredStyle: .alert)
+//        alert.setMessageAlignment(.left)
+//        let yes = UIAlertAction(title: okText, style: .default, handler: { (action) -> Void in
+//            print("Delete button tapped")
+//            UserDefaults.standard.set(false,forKey: "keyGet")
+//        })
+//
+//        alert.addAction(yes)
+//        self.present(alert, animated: true, completion: nil)
+//    }
+    func getAlbumFirst(){
         if PHPhotoLibrary.authorizationStatus() != .authorized {
             PHPhotoLibrary.requestAuthorization { status in
                 if status == .authorized {
-//                    self.checkLibraryAuthrizedFlag=1
+                    //                    self.checkLibraryAuthrizedFlag=1
                     print("authorized")
                 } else if status == .denied {
-//                    self.checkLibraryAuthrizedFlag = -1
+                    //                    self.checkLibraryAuthrizedFlag = -1
                     print("denied")
                 }else{
-//                    self.checkLibraryAuthrizedFlag = -1
+                    //                    self.checkLibraryAuthrizedFlag = -1
                 }
             }
         }else{
             getAlbumAssets()//完了したら戻ってくるようにしたつもり
             //videcurrentは前回終了時のものを利用する
             videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
-//            startFrame = getUserDefault(str: "startFrame", ret: 0)
+            //            startFrame = getUserDefault(str: "startFrame", ret: 0)
             if videoCurrent>videoDate.count-1{
                 videoCurrent=videoDate.count-1
             }
@@ -1764,14 +1749,35 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             waveSlider.isHidden=true
         }
-//        if Locale.preferredLanguages.first!.contains("ja"){
-//            declarationLabel.text="このアプリとゴーグルを\n使ったvHIT検査は\n日本国内で研究用として\n承認を受けています。\n\n医療機器として認可されて\nおらず、研究用としてのみ\n利用できます。\n\nOK"
-//        }else{
-//            declarationLabel.text="The vHIT test using\nthis app and goggles\nhas been approved for\nresearch use in Japan.\n\nIt is not approved as\na medical device and is\nfor research use only.\n\nOK"
-//
-//        }
-//        noItemAlert()
-//print("didload****************************")
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    //      #if DEBUG
+        print("viewDidLoad******")
+        //    #endif
+//        dispFilesindoc()//for debug
+        //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
+        mailWidth=2400//240*10
+        mailHeight=1600//240*10*2/3
+        //vHIT結果サイズは500*200
+        getUserDefaults()
+        //        setButtons(mode: true)
+        stopButton.isHidden = true
+        showBoxies(f: false)//isVHITに応じてviewを表示
+        //        getAlbumFirst()
+        
+        if UserDefaults.standard.object(forKey: "keyGet") == nil || UserDefaults.standard.bool(forKey: "keyGet")==false{
+            //DidAppearでkeyGetがfalseならKeySettingViewControllerに飛び
+            //keyGetがtrueで戻ってくる。
+            //unwindで表示、アルバムデータゲットする（時間が掛かる）
+            UserDefaults.standard.set(false,forKey: "keyGet")
+        }else{//keyGetはtrueしかないはず、ここでアルバムデータをゲットする
+            setButtons_first()
+            getAlbumFirst()
+            dispWakus()
+            showWakuImages()
+        }
+        print("didload****************************")
     }
     func getUserDefaultBool(str:String,ret:Bool) -> Bool{
         if (UserDefaults.standard.object(forKey: str) != nil){
@@ -1782,19 +1788,29 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     override func viewDidAppear(_ animated: Bool) {
-        dispWakus()
-        setButtons_first()
-        showWakuImages()
-        if UserDefaults.standard.object(forKey: "keyGet") == nil{
-            alertYESorNO()
+  
+        if UserDefaults.standard.bool(forKey: "keyGet")==false{
+            goKeySettingViewController()
+            print("didappear keyGet:false")
+            return
         }else{
+            print("didappear keyGet:true")
+        }
+//        setButtons_first()
+//        getAlbumFirst()
+//        dispWakus()
+//        showWakuImages()
+        //        if UserDefaults.standard.object(forKey: "keyGet") == nil{
+//            alertYESorNO()
+//        }else{
 //            if UserDefaults.standard.bool(forKey: "YESorNO")==false{
 //                launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
 //            }else{
  //               launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
 //            }
-        }
-    }
+//        }
+        print("viewDidAppear*****")
+      }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
        // dispWakuImages()ここでは効かない
@@ -2394,7 +2410,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //    }
     func getUserDefaults(){
         let lowPassFilterCnt=getUserDefault(str: "lowPassFilterCnt", ret: 4)//とりあえず作っておく
-        print("lowPassFilterCnt",lowPassFilterCnt)
+//        print("lowPassFilterCnt",lowPassFilterCnt)
         widthRange = getUserDefault(str: "widthRange", ret: 30)
         waveWidth = getUserDefault(str: "waveWidth", ret: 80)
         eyeBorder = getUserDefault(str: "eyeBorder", ret: 10)
@@ -2722,11 +2738,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let temp=vHIT(isRight: isRight,frameN: frameN, dispOn: dispOn, currDispOn: currDispOn,eye:eye,face:face)
         vHITs.append(temp)
     }
- 
+    func goKeySettingViewController(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
+        nextVC.modalPresentationStyle = .fullScreen
+        present(nextVC, animated: true, completion: nil)
+    }
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func onSaveButton(_ sender: Any) {//vhit
-        if UserDefaults.standard.bool(forKey: "keyGet")==false{
+          if UserDefaults.standard.bool(forKey: "keyGet")==false{
             alertKetSet()
             return
         }
@@ -2943,6 +2964,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let bottomPadding = self.view.safeAreaInsets.bottom
         UserDefaults.standard.set(topPadding, forKey: "top")
         UserDefaults.standard.set(bottomPadding, forKey: "bottom")
+        print("subView******")
         //        setButtons_first()
     }
     func setButtons_first(){
@@ -3303,6 +3325,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #if DEBUG
             print("TATSUAKI-unwind from para")
             #endif
+        }else if let vc = segue.source as? KeySettingViewController{
+            let Controller:KeySettingViewController = vc
+            stopButton.isHidden = true
+            showBoxies(f: false)//isVHITに応じてviewを表示
+            setButtons_first()
+            getAlbumFirst()
+            dispWakus()
+            showWakuImages()
         }else if let vc = segue.source as? RecordViewController{
             let Controller:RecordViewController = vc
             if Controller.captureSession.isRunning{//何もせず帰ってきた時
