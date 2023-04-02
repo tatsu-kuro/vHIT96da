@@ -1000,15 +1000,13 @@ Tap the waveforms to change the (2*).</string>
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJW-Cd-KMq">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJW-Cd-KMq">
                                 <rect key="frame" x="185" y="848" width="60" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="Gqe-FI-Ogs"/>
-                                    <constraint firstAttribute="height" constant="30" id="kFP-Gf-REN"/>
-                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Exit">
+                                <state key="normal" title="RUN">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -1073,19 +1071,17 @@ There is no charge for the key.</string>
                                     <constraint firstAttribute="height" constant="30" id="fLq-yz-AIW"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="set the Key to enable all functions">
+                                <state key="normal" title="set the Key to run the app.">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="onSetKeyButton:" destination="hQl-qG-mNl" eventType="touchUpInside" id="Y6L-9Y-hdl"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key is set already!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEY-un-bTQ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Key is set already!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEY-un-bTQ">
                                 <rect key="frame" x="20" y="798" width="390" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemYellowColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="sru-ha-TpH"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1098,7 +1094,7 @@ There is no charge for the key.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cFt-Lo-UGW">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="15" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cFt-Lo-UGW">
                                 <rect key="frame" x="248" y="11" width="42" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1111,26 +1107,28 @@ There is no charge for the key.</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="next">
+                                <state key="normal" title="OK">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="onNextButton:" destination="hQl-qG-mNl" eventType="touchUpInside" id="uoz-N4-3fZ"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="IPX-Wz-fg3"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="aIU-up-E7z" firstAttribute="top" secondItem="gON-Be-fSL" secondAttribute="bottom" constant="10" id="0XP-Og-38c"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="BTd-HK-Sth" secondAttribute="trailing" constant="30" id="2mL-kg-Te4"/>
                             <constraint firstItem="SLN-wJ-4Qx" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="5SV-jP-VhI"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="1Og-Go-1ZF" secondAttribute="trailing" constant="20" id="5Y9-6x-61o"/>
-                            <constraint firstItem="oJW-Cd-KMq" firstAttribute="top" secondItem="CEY-un-bTQ" secondAttribute="bottom" constant="20" id="5k7-xs-Dbo"/>
                             <constraint firstItem="gON-Be-fSL" firstAttribute="top" secondItem="Nhc-WQ-Z4g" secondAttribute="bottom" constant="15" id="ATl-Rb-7dv"/>
                             <constraint firstItem="bnJ-sl-JaJ" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="Afu-KZ-FYU"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="bnJ-sl-JaJ" secondAttribute="trailing" constant="20" id="FpM-VJ-TSr"/>
                             <constraint firstItem="BTd-HK-Sth" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="30" id="KXf-zU-bLR"/>
                             <constraint firstItem="bnJ-sl-JaJ" firstAttribute="top" secondItem="IPX-Wz-fg3" secondAttribute="top" constant="40" id="Ka0-iJ-GbQ"/>
                             <constraint firstItem="SLN-wJ-4Qx" firstAttribute="top" secondItem="bnJ-sl-JaJ" secondAttribute="bottom" constant="1" id="MAD-K6-aEX"/>
-                            <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="CEY-un-bTQ" secondAttribute="trailing" constant="20" id="MKt-7T-1kZ"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="Nhc-WQ-Z4g" secondAttribute="trailing" constant="20" id="N5I-V4-BoG"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="aIU-up-E7z" secondAttribute="trailing" constant="20" id="Qh1-kg-cHC"/>
                             <constraint firstItem="BTd-HK-Sth" firstAttribute="top" secondItem="aIU-up-E7z" secondAttribute="bottom" constant="10" id="RQf-HJ-LAv"/>
@@ -1139,13 +1137,13 @@ There is no charge for the key.</string>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="gON-Be-fSL" secondAttribute="trailing" constant="30" id="WWg-Wd-vrN"/>
                             <constraint firstItem="Nhc-WQ-Z4g" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="dOi-dH-914"/>
                             <constraint firstItem="aIU-up-E7z" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="eY1-Qt-HSz"/>
-                            <constraint firstItem="IPX-Wz-fg3" firstAttribute="bottom" secondItem="oJW-Cd-KMq" secondAttribute="bottom" constant="20" id="nBa-HJ-liy"/>
                             <constraint firstItem="gON-Be-fSL" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="30" id="qno-vz-64m"/>
                             <constraint firstItem="1Og-Go-1ZF" firstAttribute="top" secondItem="SLN-wJ-4Qx" secondAttribute="bottom" constant="10" id="sOz-FM-Sgv"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="SLN-wJ-4Qx" secondAttribute="trailing" constant="20" id="wGe-mU-eFJ"/>
-                            <constraint firstItem="CEY-un-bTQ" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="yA1-jZ-a5z"/>
-                            <constraint firstItem="oJW-Cd-KMq" firstAttribute="centerX" secondItem="bo1-EJ-Gei" secondAttribute="centerX" id="yvr-SM-5Qf"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="gnA-iZ-lwf" appends="YES" id="kM1-iJ-Hrx"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="UQU-Ok-v2c"/>
                     <connections>
@@ -1159,6 +1157,11 @@ There is no charge for the key.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Is9-Z9-IMJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="gFk-sU-TlZ" userLabel="Exit" sceneMemberID="exit"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="gnA-iZ-lwf">
+                    <connections>
+                        <action selector="panGestureRec:" destination="hQl-qG-mNl" id="6Pc-qp-i1S"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="285.50724637681162" y="89.732142857142847"/>
         </scene>
