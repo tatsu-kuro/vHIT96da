@@ -1010,7 +1010,7 @@ Tap the waveforms to change the (2*).</string>
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="gFk-sU-TlZ" kind="unwind" unwindAction="unwind:" id="PUp-gf-MmX"/>
+                                    <segue destination="gFk-sU-TlZ" kind="unwind" identifier="KeySet2Main" unwindAction="unwind:" id="PUp-gf-MmX"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SLN-wJ-4Qx">
@@ -1020,8 +1020,11 @@ Tap the waveforms to change the (2*).</string>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="mailTouchDown:" destination="hQl-qG-mNl" eventType="touchDown" id="IdT-tR-WYo"/>
+                                </connections>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mail address" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bnJ-sl-JaJ">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID( mail address)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bnJ-sl-JaJ">
                                 <rect key="frame" x="20" y="99" width="390" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="X5e-wH-fEa"/>
@@ -1030,7 +1033,7 @@ Tap the waveforms to change the (2*).</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Og-Go-1ZF">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PassWord" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Og-Go-1ZF">
                                 <rect key="frame" x="20" y="160" width="390" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="6EZ-b2-ROa"/>
@@ -1046,11 +1049,11 @@ Tap the waveforms to change the (2*).</string>
                                     <constraint firstAttribute="height" constant="30" id="lEH-j1-nZQ"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Email me to receive the key">
+                                <state key="normal" title="Email me for PassWord">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="eMailMe:" destination="hQl-qG-mNl" eventType="touchUpInside" id="TMq-sY-pNW"/>
+                                    <action selector="onMailMeButton:" destination="hQl-qG-mNl" eventType="touchUpInside" id="5nd-Y0-GHu"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aIU-up-E7z">
@@ -1058,8 +1061,8 @@ Tap the waveforms to change the (2*).</string>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="170" id="NEO-cH-VmA"/>
                                 </constraints>
-                                <string key="text">To use this app, you will need to set up a key. Please click the button below and email the author with your name, affiliation, and email address. We will send you a key, which you will then set in the key setting text box above.
-There is no charge for the key.</string>
+                                <string key="text">To use this app, you need a PassWord. Please click the button below and email the author with your name, affiliation, and email address. We will send you a PassWord.
+There is no charge for the PassWord.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1071,18 +1074,20 @@ There is no charge for the key.</string>
                                     <constraint firstAttribute="height" constant="30" id="fLq-yz-AIW"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="set the Key to run the app.">
+                                <state key="normal" title="set ID &amp; PassWord">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="onSetKeyButton:" destination="hQl-qG-mNl" eventType="touchUpInside" id="Y6L-9Y-hdl"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Key is set already!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEY-un-bTQ">
-                                <rect key="frame" x="20" y="798" width="390" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key is set already!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEY-un-bTQ">
+                                <rect key="frame" x="30" y="261" width="370" height="30"/>
                                 <color key="backgroundColor" systemColor="systemYellowColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="9sy-4r-PVB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -1093,6 +1098,9 @@ There is no charge for the key.</string>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="passTouchDown:" destination="hQl-qG-mNl" eventType="touchDown" id="Yie-Y8-4Ce"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="15" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cFt-Lo-UGW">
                                 <rect key="frame" x="248" y="11" width="42" height="21"/>
@@ -1103,7 +1111,7 @@ There is no charge for the key.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6uu-IL-C0T">
-                                <rect key="frame" x="241" y="518" width="57" height="35"/>
+                                <rect key="frame" x="187" y="697" width="57" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -1126,14 +1134,17 @@ There is no charge for the key.</string>
                             <constraint firstItem="gON-Be-fSL" firstAttribute="top" secondItem="Nhc-WQ-Z4g" secondAttribute="bottom" constant="15" id="ATl-Rb-7dv"/>
                             <constraint firstItem="bnJ-sl-JaJ" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="Afu-KZ-FYU"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="bnJ-sl-JaJ" secondAttribute="trailing" constant="20" id="FpM-VJ-TSr"/>
+                            <constraint firstItem="CEY-un-bTQ" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="30" id="IXf-Sd-2JR"/>
                             <constraint firstItem="BTd-HK-Sth" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="30" id="KXf-zU-bLR"/>
                             <constraint firstItem="bnJ-sl-JaJ" firstAttribute="top" secondItem="IPX-Wz-fg3" secondAttribute="top" constant="40" id="Ka0-iJ-GbQ"/>
                             <constraint firstItem="SLN-wJ-4Qx" firstAttribute="top" secondItem="bnJ-sl-JaJ" secondAttribute="bottom" constant="1" id="MAD-K6-aEX"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="Nhc-WQ-Z4g" secondAttribute="trailing" constant="20" id="N5I-V4-BoG"/>
+                            <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="CEY-un-bTQ" secondAttribute="trailing" constant="30" id="Nh2-AN-XzY"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="aIU-up-E7z" secondAttribute="trailing" constant="20" id="Qh1-kg-cHC"/>
                             <constraint firstItem="BTd-HK-Sth" firstAttribute="top" secondItem="aIU-up-E7z" secondAttribute="bottom" constant="10" id="RQf-HJ-LAv"/>
                             <constraint firstItem="1Og-Go-1ZF" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="U9M-9A-J1E"/>
                             <constraint firstItem="Nhc-WQ-Z4g" firstAttribute="top" secondItem="1Og-Go-1ZF" secondAttribute="bottom" constant="1" id="W8s-yb-1rT"/>
+                            <constraint firstItem="CEY-un-bTQ" firstAttribute="top" secondItem="gON-Be-fSL" secondAttribute="bottom" constant="5" id="WNA-gm-zZU"/>
                             <constraint firstItem="IPX-Wz-fg3" firstAttribute="trailing" secondItem="gON-Be-fSL" secondAttribute="trailing" constant="30" id="WWg-Wd-vrN"/>
                             <constraint firstItem="Nhc-WQ-Z4g" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="dOi-dH-914"/>
                             <constraint firstItem="aIU-up-E7z" firstAttribute="leading" secondItem="IPX-Wz-fg3" secondAttribute="leading" constant="20" id="eY1-Qt-HSz"/>
@@ -1148,11 +1159,14 @@ There is no charge for the key.</string>
                     <navigationItem key="navigationItem" id="UQU-Ok-v2c"/>
                     <connections>
                         <outlet property="exitButton" destination="oJW-Cd-KMq" id="Aez-ov-jea"/>
+                        <outlet property="how2MailText" destination="aIU-up-E7z" id="3OF-Mr-Ddz"/>
                         <outlet property="keyStatusText" destination="CEY-un-bTQ" id="hlU-qX-NuO"/>
-                        <outlet property="keyText" destination="Nhc-WQ-Z4g" id="TbS-ZG-Jzp"/>
-                        <outlet property="mailAddressText" destination="SLN-wJ-4Qx" id="W6L-WJ-hm1"/>
+                        <outlet property="mailAddressInput" destination="SLN-wJ-4Qx" id="W6L-WJ-hm1"/>
+                        <outlet property="mailMeButton" destination="BTd-HK-Sth" id="CNU-Xo-946"/>
                         <outlet property="nextButton" destination="6uu-IL-C0T" id="ipT-v3-ojS"/>
-                        <outlet property="statementLabel" destination="cFt-Lo-UGW" id="S1y-tH-r44"/>
+                        <outlet property="passWordInput" destination="Nhc-WQ-Z4g" id="TbS-ZG-Jzp"/>
+                        <outlet property="setKeyButton" destination="gON-Be-fSL" id="sbb-Ar-VHW"/>
+                        <outlet property="statementText" destination="cFt-Lo-UGW" id="S1y-tH-r44"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Is9-Z9-IMJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -140,6 +140,8 @@ extension UIImage {
 
 @available(iOS 13.0, *)
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
+    var userID:String="????"//起動時にuserDefaultに保存してあればそれとPWDをセット、
+    //なければ新規にメールで申請して貰ったものとPWDをセットする
     let openCV = opencvWrapper()
     let iroiro = myFunctions(albumName: "vHIT_VOG")
     var writingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
@@ -1764,18 +1766,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        setButtons(mode: true)
         stopButton.isHidden = true
         showBoxies(f: false)//isVHITに応じてviewを表示
-        //        getAlbumFirst()
-        
-        if UserDefaults.standard.object(forKey: "keyGet") == nil || UserDefaults.standard.bool(forKey: "keyGet")==false{
-            //DidAppearでkeyGetがfalseならKeySettingViewControllerに飛び
-            //keyGetがtrueで戻ってくる。
-            //unwindで表示、アルバムデータゲットする（時間が掛かる）
-            UserDefaults.standard.set(false,forKey: "keyGet")
-        }else{//keyGetはtrueしかないはず、ここでアルバムデータをゲットする
-            setButtons_first()
-            getAlbumFirst()
-            dispWakus()
-            showWakuImages()
+//        print("mailAdd:",UserDefaults.standard.string(forKey: "passWord"))
+        if UserDefaults.standard.object(forKey: "passWord")==nil{//passWord設定されてなければ、PWD要求ボタン表示
+            UserDefaults.standard.set("nil",forKey: "passWord")
+        }else{
+            if UserDefaults.standard.string(forKey: "passWord") != "nil"{//passWordが設定されているなら
+                UserDefaults.standard.set("???",forKey: "passWord")//passWordを???に変更し、再設定させる
+            }//"nil"ならPWD要求ボタン表示
         }
         print("didload****************************")
     }
@@ -1787,30 +1784,38 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
+    /*
+     func getUserDefaultString(str:String,ret:String) -> String{
+         if (UserDefaults.standard.object(forKey: str) != nil){
+             return UserDefaults.standard.string(forKey:str)!
+         }else{//keyが設定してなければretをセット
+             UserDefaults.standard.set(ret, forKey: str)
+             return ret
+         }
+     }
+     */
+//    func goKeySettingViewController(){
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
+//        nextVC.modalPresentationStyle = .fullScreen
+//        present(nextVC, animated: true, completion: nil)
+//    }
+    func goSetKeySettingViewController(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
+        nextVC.modalPresentationStyle = .fullScreen
+        present(nextVC, animated: true, completion: nil)
+    }
     override func viewDidAppear(_ animated: Bool) {
-  
-        if UserDefaults.standard.bool(forKey: "keyGet")==false{
-            goKeySettingViewController()
-            print("didappear keyGet:false")
-            return
-        }else{
-            print("didappear keyGet:true")
+        let str=UserDefaults.standard.string(forKey: "passWord")
+        if str=="nil" || str=="???"{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
+            nextVC.modalPresentationStyle = .fullScreen
+            present(nextVC, animated: true, completion: nil)
         }
-//        setButtons_first()
-//        getAlbumFirst()
-//        dispWakus()
-//        showWakuImages()
-        //        if UserDefaults.standard.object(forKey: "keyGet") == nil{
-//            alertYESorNO()
-//        }else{
-//            if UserDefaults.standard.bool(forKey: "YESorNO")==false{
-//                launchButton.frame=CGRect(x:0,y:0,width: view.bounds.width,height: view.bounds.height)
-//            }else{
- //               launchButton.frame=CGRect(x:-200,y:0,width:0,height:0)
-//            }
-//        }
         print("viewDidAppear*****")
-      }
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
        // dispWakuImages()ここでは効かない
@@ -2738,19 +2743,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let temp=vHIT(isRight: isRight,frameN: frameN, dispOn: dispOn, currDispOn: currDispOn,eye:eye,face:face)
         vHITs.append(temp)
     }
-    func goKeySettingViewController(){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
-        nextVC.modalPresentationStyle = .fullScreen
-        present(nextVC, animated: true, completion: nil)
-    }
+  
     //アラート画面にテキスト入力欄を表示する。上記のswift入門よりコピー
     var tempnum:Int = 0
     @IBAction func onSaveButton(_ sender: Any) {//vhit
-          if UserDefaults.standard.bool(forKey: "keyGet")==false{
-            alertKetSet()
-            return
-        }
+        
         if calcFlag == true{
             return
         }
@@ -3325,8 +3322,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #if DEBUG
             print("TATSUAKI-unwind from para")
             #endif
-        }else if let vc = segue.source as? KeySettingViewController{
-            let Controller:KeySettingViewController = vc
+        }else if segue.source is KeySettingViewController{
             stopButton.isHidden = true
             showBoxies(f: false)//isVHITに応じてviewを表示
             setButtons_first()

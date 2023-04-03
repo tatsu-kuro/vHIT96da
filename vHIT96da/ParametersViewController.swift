@@ -470,12 +470,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
         
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
-        tovHITButton.frame=CGRect(x:butw1+3*sp,y:buty1,width:butw1,height: buth1)
+        tovHITButton.frame=CGRect(x:ww/2-butw1-sp/2,y:buty1,width:butw1,height: buth1)
         iroiro.setLabelTopRectangle(vHITLabel, rect: tovHITButton.frame, UIColor.systemRed)
-        toVOGButton.frame=CGRect( x:butw1*2+4*sp,y:buty1,width:butw1,height: buth1)
+        toVOGButton.frame=CGRect( x:ww/2+sp/2,y:buty1,width:butw1,height: buth1)
         iroiro.setLabelTopRectangle(VOGLabel, rect: toVOGButton.frame, UIColor.systemRed)
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
         registerButton.frame=CGRect(x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
+        registerButton.isHidden=true
     }
     
     let iroiro = myFunctions(albumName: "vHIT_VOG")
