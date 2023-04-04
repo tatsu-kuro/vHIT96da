@@ -5,7 +5,7 @@
 //  Created by kuroda tatsuaki on 2018/02/10.
 //  Copyright © 2018年 tatsuaki.kuroda. All rights reserved.
 //  main202303をmainにした。2023/3/25
-//
+//  mainをまたmainに戻した。2023/4/4
 //faceMarkHiddenをtrueにするとマーク補正機能を削除
 import UIKit
 import AVFoundation
