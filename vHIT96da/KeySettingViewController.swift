@@ -109,7 +109,7 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         }else{
             statementText.text="This application is used by physicians and physical therapists. With this app, vHIT can be perfomed with goggles that can be made by the user and an iPhone. This vHIT has been approved for reserch use in Japnan.\nBefore using this application obtain consent from participants or, in the case of minors, their parent or guardian. Such consent must include \n(a) nature, purpose\nduration of the research\n(b) procedures, risks, and benefits to the participant\n(c) information about confidentiality and handling of data (including any sharing with third parties)\na point of contact for participant questions\n(e) the withdrawal process."
         }
-        nextButton.frame=CGRect(x:ww/2-bw/2,y:wh-bottom-2*sp-bh,width: bw,height: bh)
+        nextButton.frame=CGRect(x:ww/2-bw,y:wh-bottom-2*sp-bh*2,width: bw*2,height: bh*2)
         nextButton.layer.cornerRadius=5
         exitButton.frame=CGRect(x:ww/2-bw,y:wh-bottom-2*sp-bh*2,width: bw*2,height: bh*2)
         exitButton.layer.cornerRadius=5

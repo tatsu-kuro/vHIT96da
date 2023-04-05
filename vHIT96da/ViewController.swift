@@ -1770,9 +1770,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if UserDefaults.standard.object(forKey: "passWord")==nil{//passWord設定されてなければ、PWD要求ボタン表示
             UserDefaults.standard.set("nil",forKey: "passWord")
         }else{
-            if UserDefaults.standard.string(forKey: "passWord") != "nil"{//passWordが設定されているなら
+//            if UserDefaults.standard.string(forKey: "passWord") != "nil"{//passWordが設定されているなら
                 UserDefaults.standard.set("???",forKey: "passWord")//passWordを???に変更し、再設定させる
-            }//"nil"ならPWD要求ボタン表示
+//            }//"nil"ならPWD要求ボタン表示
         }
         print("didload****************************")
     }
@@ -1808,11 +1808,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     override func viewDidAppear(_ animated: Bool) {
         let str=UserDefaults.standard.string(forKey: "passWord")
-        if str=="nil" || str=="???"{
+        if str=="nil"{//} || str=="???"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
             nextVC.modalPresentationStyle = .fullScreen
             present(nextVC, animated: true, completion: nil)
+        }else if str=="???"{
+            stopButton.isHidden = true
+            showBoxies(f: false)//isVHITに応じてviewを表示
+            setButtons_first()
+            getAlbumFirst()
+            dispWakus()
+            showWakuImages()
         }
         print("viewDidAppear*****")
     }
