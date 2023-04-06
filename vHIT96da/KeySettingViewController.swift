@@ -65,14 +65,17 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         keyStatusText.isHidden=true
     }
     func keyTextSet(){
-        let str=UserDefaults.standard.string(forKey: "passWord")
-        if str=="nil" || str=="???"{
+//        let str=UserDefaults.standard.string(forKey: "passWord")
+        let str1=mailAddressInput.text
+        let str2=passWordInput.text
+        if str1 != str2{//}"nil" || str=="???"{
             if Locale.preferredLanguages.first!.contains("ja"){
                 keyStatusText.text = "ID-PassWord ??"
             }else{
                 keyStatusText.text = "ID-PassWord ??"
             }
             print("keyGet:false")
+            
         }else{
             if Locale.preferredLanguages.first!.contains("ja"){
                 keyStatusText.text = "ID-PassWord OK!"
@@ -80,12 +83,12 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
                 keyStatusText.text = "ID-PassWord OK!"
             }
             print("kegyGet:true")
-        }
+         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let passWord=UserDefaults.standard.string(forKey:"passWord")!
-        print("passWord:",passWord)
+//        let passWord=UserDefaults.standard.string(forKey:"passWord")!
+//        print("passWord:",passWord)
 //        let df = DateFormatter()
 //        df.locale = Locale(identifier: "ja_JP")
 //        df.dateFormat = "HHmmss"
@@ -103,7 +106,7 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         let bw:CGFloat=60
         let bh:CGFloat=30
    
-        statementText.frame=CGRect(x:10,y:top+20,width: ww-20,height: wh-top-bottom-20-sp-bh*2)
+        statementText.frame=CGRect(x:10,y:top+20,width: ww-20,height:wh-bottom-2*sp-bh*2-top-20)
         if Locale.preferredLanguages.first!.contains("ja"){
             statementText.text="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、\n（a）研究の性質、目的および期間\n（b）手順、参加者に対するリスクおよび利益\n（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報\n（d）参加者からの質問に対する連絡先\n（e）撤回手続\nが含まれなければなりません。"
         }else{
@@ -117,17 +120,17 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         mailAddressInput.keyboardType = .emailAddress
         passWordInput.keyboardType = .asciiCapable
         exitButton.isHidden=true
-        if passWord=="nil"{
+//        if passWord=="nil"{
 //            exitButton.isHidden=true
             keyStatusText.isHidden=true
-        }else{//mailAdd=="???"
-            statementText.isHidden=true
-//            exitButton.isHidden=true
-            nextButton.isHidden=true
-            mailMeButton.isHidden=true
-            how2MailText.isHidden=true
-            keyStatusText.isHidden=true
-        }
+//        }else{//mailAdd=="???"
+//            statementText.isHidden=true
+////            exitButton.isHidden=true
+//            nextButton.isHidden=true
+//            mailMeButton.isHidden=true
+//            how2MailText.isHidden=true
+//            keyStatusText.isHidden=true
+//        }
         keyTextSet()
     }
     
@@ -152,6 +155,7 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         keyStatusText.isHidden=true
         let str=hashSora(str: mailAddressInput.text!)
         print("hash5:",str)
+        print("pwd:",passWordInput.text)
         if str == passWordInput.text{
             UserDefaults.standard.set(str,forKey: "passWord")
             exitButton.isEnabled=true

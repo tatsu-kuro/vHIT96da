@@ -1755,7 +1755,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
     //      #if DEBUG
-        print("viewDidLoad******")
+//        print("viewDidLoad******")
         //    #endif
 //        dispFilesindoc()//for debug
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
@@ -1766,14 +1766,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        setButtons(mode: true)
         stopButton.isHidden = true
         showBoxies(f: false)//isVHITに応じてviewを表示
-//        print("mailAdd:",UserDefaults.standard.string(forKey: "passWord"))
-        if UserDefaults.standard.object(forKey: "passWord")==nil{//passWord設定されてなければ、PWD要求ボタン表示
-            UserDefaults.standard.set("nil",forKey: "passWord")
-        }else{
-//            if UserDefaults.standard.string(forKey: "passWord") != "nil"{//passWordが設定されているなら
-                UserDefaults.standard.set("???",forKey: "passWord")//passWordを???に変更し、再設定させる
-//            }//"nil"ならPWD要求ボタン表示
-        }
+        if UserDefaults.standard.object(forKey: "passWord") != nil{//passWord設定されてなければ、PWD要求ボタン表示
+            stopButton.isHidden = true
+            showBoxies(f: false)//isVHITに応じてviewを表示
+            setButtons_first()
+            getAlbumFirst()
+            dispWakus()
+            showWakuImages()
+            print("passWord nil!!!")
+         }
         print("didload****************************")
     }
     func getUserDefaultBool(str:String,ret:Bool) -> Bool{
@@ -1807,19 +1808,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         present(nextVC, animated: true, completion: nil)
     }
     override func viewDidAppear(_ animated: Bool) {
-        let str=UserDefaults.standard.string(forKey: "passWord")
-        if str=="nil"{//} || str=="???"{
+        if UserDefaults.standard.object(forKey: "passWord") == nil{//passWord設定されてなければ、PWD要求ボタン表示
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
             nextVC.modalPresentationStyle = .fullScreen
             present(nextVC, animated: true, completion: nil)
-        }else if str=="???"{
-            stopButton.isHidden = true
-            showBoxies(f: false)//isVHITに応じてviewを表示
-            setButtons_first()
-            getAlbumFirst()
-            dispWakus()
-            showWakuImages()
         }
         print("viewDidAppear*****")
     }
