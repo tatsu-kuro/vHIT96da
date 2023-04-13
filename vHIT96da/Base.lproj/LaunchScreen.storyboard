@@ -21,7 +21,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="JQu-Co-ovR"/>
                                 </constraints>
-                                <string key="text">Version 5.9
+                                <string key="text">Version 6.0
 2023-4-13
 Kuroda ENT</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
