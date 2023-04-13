@@ -17,23 +17,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HK7-WL-kmC">
-                                <rect key="frame" x="5" y="385" width="310" height="75"/>
+                                <rect key="frame" x="5" y="386" width="310" height="90"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="75" id="VaV-Nk-e64"/>
+                                    <constraint firstAttribute="height" constant="90" id="JQu-Co-ovR"/>
                                 </constraints>
                                 <string key="text">Version 5.9
-2023-4-3
+2023-4-13
 Kuroda ENT</string>
-                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="22"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="vHIT96da" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEA-rJ-xd7">
-                                <rect key="frame" x="10" y="295" width="300" height="80"/>
+                                <rect key="frame" x="10" y="295" width="300" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="csw-6s-ZO1"/>
+                                    <constraint firstAttribute="height" constant="40" id="xA2-og-PmA"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="37"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="33"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -53,21 +53,33 @@ Kuroda ENT</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="for research use only" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k60-wj-LXg">
+                                <rect key="frame" x="10" y="345" width="300" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="orZ-ia-9zL"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Jrj-j3-EUi" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="0LC-Do-rAM"/>
-                            <constraint firstItem="HEA-rJ-xd7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="4Lm-t0-EuR"/>
-                            <constraint firstItem="HEA-rJ-xd7" firstAttribute="top" secondItem="s0t-fP-tqn" secondAttribute="bottom" constant="10" id="9c6-kS-DsL"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HEA-rJ-xd7" secondAttribute="trailing" constant="10" id="ABL-rQ-doA"/>
+                            <constraint firstItem="k60-wj-LXg" firstAttribute="top" secondItem="HEA-rJ-xd7" secondAttribute="bottom" constant="10" id="49o-i4-esk"/>
+                            <constraint firstItem="HEA-rJ-xd7" firstAttribute="top" secondItem="s0t-fP-tqn" secondAttribute="bottom" constant="10" id="4sN-Oq-EUG"/>
+                            <constraint firstItem="HK7-WL-kmC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="Dux-Le-GSi"/>
                             <constraint firstItem="s0t-fP-tqn" firstAttribute="top" secondItem="Jrj-j3-EUi" secondAttribute="bottom" id="Gru-pO-MXK"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="s0t-fP-tqn" secondAttribute="trailing" id="Iiu-wH-a3p"/>
-                            <constraint firstItem="HK7-WL-kmC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="OB6-5M-trc"/>
+                            <constraint firstItem="k60-wj-LXg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="N47-H9-M9b"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HEA-rJ-xd7" secondAttribute="trailing" constant="10" id="QYF-jg-wmF"/>
                             <constraint firstItem="s0t-fP-tqn" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="VY7-cA-nhV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="k60-wj-LXg" secondAttribute="trailing" constant="10" id="YTP-Hs-vUe"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HK7-WL-kmC" secondAttribute="trailing" constant="5" id="YkG-Nj-Ljw"/>
                             <constraint firstItem="s0t-fP-tqn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="gnW-Jm-bwy"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HK7-WL-kmC" secondAttribute="trailing" constant="5" id="l8g-7Y-iAB"/>
-                            <constraint firstItem="HK7-WL-kmC" firstAttribute="top" secondItem="HEA-rJ-xd7" secondAttribute="bottom" constant="10" id="tRz-Iq-fIB"/>
+                            <constraint firstItem="HK7-WL-kmC" firstAttribute="top" secondItem="k60-wj-LXg" secondAttribute="bottom" constant="11" id="h2V-j5-dMs"/>
+                            <constraint firstItem="HEA-rJ-xd7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="yMz-iq-70G"/>
                         </constraints>
                     </view>
                 </viewController>
