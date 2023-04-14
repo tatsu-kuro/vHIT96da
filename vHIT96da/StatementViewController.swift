@@ -12,32 +12,32 @@ import Foundation
 import CryptoKit
 
 // CryptoKit.Digest utils
-extension Digest {
-    var bytes: [UInt8] { Array(makeIterator()) }
-    var data: Data { Data(bytes) }
-    var hexStr: String {
-        bytes.map { String(format: "%02X", $0) }.joined()
-    }
-}
-class KeySettingViewController: UIViewController,MFMailComposeViewControllerDelegate {
-    @IBOutlet weak var keyStatusText: UILabel!
+//extension Digest {
+//    var bytes: [UInt8] { Array(makeIterator()) }
+//    var data: Data { Data(bytes) }
+//    var hexStr: String {
+//        bytes.map { String(format: "%02X", $0) }.joined()
+//    }
+//}
+class StatementViewController: UIViewController{//},MFMailComposeViewControllerDelegate {
+//    @IBOutlet weak var keyStatusText: UILabel!
     @IBOutlet weak var exitButton: UIButton!
     
-    @IBOutlet weak var how2MailText: UILabel!
-    @IBOutlet weak var mailMeButton: UIButton!
-    @IBOutlet weak var setKeyButton: UIButton!
-    @IBOutlet weak var mailAddressInput: UITextField!
-    @IBOutlet weak var passWordInput: UITextField!
+//    @IBOutlet weak var how2MailText: UILabel!
+//    @IBOutlet weak var mailMeButton: UIButton!
+//    @IBOutlet weak var setKeyButton: UIButton!
+//    @IBOutlet weak var mailAddressInput: UITextField!
+//    @IBOutlet weak var passWordInput: UITextField!
 //    var userID:String = "x"
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var statementText: UILabel!
-    func hashSora(str:String)->String{//get 5char
+ /*   func hashSora(str:String)->String{//get 5char
         let soraStr=str+"sora"
         guard let data = soraStr.data(using: .utf8) else { return "0"}
         let digest = SHA256.hash(data: data)//str2.lowercased()
         return String(digest.hexStr.prefix(5).lowercased())
-    }
-    @IBAction func onMailMeButton(_ sender: Any) {
+    }*/
+/*    @IBAction func onMailMeButton(_ sender: Any) {
         print("mailoneButton")
         
 //        let df = DateFormatter()
@@ -56,8 +56,8 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
             mailViewController.setMessageBody("所属:\n氏名:\nEメール:", isHTML: false)
         }
         present(mailViewController, animated: true, completion: nil)
-    }
-    
+    }*/
+/*
     @IBAction func passTouchDown(_ sender: Any) {
         keyStatusText.isHidden=true
     }
@@ -84,7 +84,7 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
             }
             print("kegyGet:true")
          }
-    }
+    }*/
     override func viewDidLoad() {
         super.viewDidLoad()
 //        let passWord=UserDefaults.standard.string(forKey:"passWord")!
@@ -117,12 +117,12 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
         exitButton.frame=CGRect(x:ww/2-bw,y:wh-bottom-2*sp-bh*2,width: bw*2,height: bh*2)
         exitButton.layer.cornerRadius=5
 //        keyStatusText.frame=CGRect(x:30,y:wh-bottom-2*sp-bh*2-34-10,width:ww-60,height: 34)
-        mailAddressInput.keyboardType = .emailAddress
-        passWordInput.keyboardType = .asciiCapable
+//        mailAddressInput.keyboardType = .emailAddress
+//        passWordInput.keyboardType = .asciiCapable
         exitButton.isHidden=true
 //        if passWord=="nil"{
 //            exitButton.isHidden=true
-            keyStatusText.isHidden=true
+//            keyStatusText.isHidden=true
 //        }else{//mailAdd=="???"
 //            statementText.isHidden=true
 ////            exitButton.isHidden=true
@@ -131,11 +131,11 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
 //            how2MailText.isHidden=true
 //            keyStatusText.isHidden=true
 //        }
-        keyTextSet()
+//        keyTextSet()
     }
     
     @IBAction func onNextButton(_ sender: Any) {
-        UserDefaults.standard.set("ok",forKey: "passWord")
+        UserDefaults.standard.set("yes",forKey: "installed")
 
         performSegue(withIdentifier: "KeySet2Main", sender: self)
 
@@ -150,7 +150,7 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
 //            mess="医師、理学療法士が利用するvHITアプリです。自作可能なiPhone固定ゴーグルとiPhoneでvHITが行えます。日本国内で研究用として承認されています。\n使用に際しては、参加者または未成年の場合はその親または保護者から同意を得る必要があります。その同意には、（a）研究の性質、目的および期間、（b）手順、参加者に対するリスクおよび利益、（c）データの機密保持および取り扱い（第三者との共有を含む）に関する情報、（d）参加者からの質問に対する連絡先、および（e）撤回手続が含まれなければなりません。このアプリを使用するためには、設定ページから登録ページに行き、キーを設定する必要があります。氏名、メールアドレス、所属を記載してキーを申請して下さい。キーを設定すると全ての機能が利用可能となります。"
 
      */
-    @IBAction func onSetKeyButton(_ sender: Any) {
+ /*   @IBAction func onSetKeyButton(_ sender: Any) {
         passWordInput.endEditing(true)
         mailAddressInput.endEditing(true)
         keyStatusText.isHidden=true
@@ -168,9 +168,9 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
             keyStatusText.isHidden=false
             keyTextSet()
         }
-    }
+    }*/
   
-    @IBAction func panGestureRec(_ sender: UIPanGestureRecognizer) {
+/*    @IBAction func panGestureRec(_ sender: UIPanGestureRecognizer) {
    
         if sender.state == .ended{
             let move = sender.translation(in: self.view)
@@ -180,22 +180,22 @@ class KeySettingViewController: UIViewController,MFMailComposeViewControllerDele
                 passWordInput.endEditing(true)
             }
         }
-    }
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {//errorの時に通る
-        
-        switch result {
-        case .cancelled:
-            print("cancel1")
-        case .saved:
-            print("save")
-        case .sent:
-            print("send")
-        case .failed:
-            print("fail")
-        @unknown default:
-            print("unknown error")
-        }
-        self.dismiss(animated: true, completion: nil)
-    }
+    }*/
+//    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {//errorの時に通る
+//
+//        switch result {
+//        case .cancelled:
+//            print("cancel1")
+//        case .saved:
+//            print("save")
+//        case .sent:
+//            print("send")
+//        case .failed:
+//            print("fail")
+//        @unknown default:
+//            print("unknown error")
+//        }
+//        self.dismiss(animated: true, completion: nil)
+//    }
 }
 

@@ -1766,14 +1766,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        setButtons(mode: true)
         stopButton.isHidden = true
         showBoxies(f: false)//isVHITに応じてviewを表示
-        if UserDefaults.standard.object(forKey: "passWord") != nil{//passWord設定されてなければ、PWD要求ボタン表示
+        if UserDefaults.standard.object(forKey: "installed") != nil{//passWord設定されてなければ、PWD要求ボタン表示
             stopButton.isHidden = true
             showBoxies(f: false)//isVHITに応じてviewを表示
             setButtons_first()
             getAlbumFirst()
             dispWakus()
             showWakuImages()
-            print("passWord nil!!!")
+            print("installed nil!!!")
          }
         print("didload****************************")
     }
@@ -1801,14 +1801,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        nextVC.modalPresentationStyle = .fullScreen
 //        present(nextVC, animated: true, completion: nil)
 //    }
-    func goSetKeySettingViewController(){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
-        nextVC.modalPresentationStyle = .fullScreen
-        present(nextVC, animated: true, completion: nil)
-    }
+//    func goSetKeySettingViewController(){
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
+//        nextVC.modalPresentationStyle = .fullScreen
+//        present(nextVC, animated: true, completion: nil)
+//    }
     override func viewDidAppear(_ animated: Bool) {
-        if UserDefaults.standard.object(forKey: "passWord") == nil{//passWord設定されてなければ、PWD要求ボタン表示
+        if UserDefaults.standard.object(forKey: "installed") == nil{//passWord設定されてなければ、PWD要求ボタン表示
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
             nextVC.modalPresentationStyle = .fullScreen
@@ -3322,7 +3322,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             #if DEBUG
             print("TATSUAKI-unwind from para")
             #endif
-        }else if segue.source is KeySettingViewController{
+        }else if segue.source is StatementViewController{
             stopButton.isHidden = true
             showBoxies(f: false)//isVHITに応じてviewを表示
             setButtons_first()
