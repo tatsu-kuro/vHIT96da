@@ -683,7 +683,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <action selector="videoGyroZurechange:" destination="jFt-gZ-HXu" eventType="editingDidEnd" id="3Yl-17-EBz"/>
+                                    <action selector="vorGainCorrectionChange:" destination="jFt-gZ-HXu" eventType="editingDidEnd" id="3Yl-17-EBz"/>
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(1*)eye velocity wave Height (%) " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tWF-A9-5II">
@@ -721,7 +721,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(1*)time lag: eye &amp; head waveforms" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="69E-lo-wOt">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Correction of lt-rt diff. in VORGain" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="69E-lo-wOt">
                                 <rect key="frame" x="87" y="284" width="270" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -949,6 +949,7 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="B2CInput" destination="O7P-AP-fl8" id="9dw-E5-Jqf"/>
                         <outlet property="B2CLabel" destination="9oE-gN-h2Z" id="cr5-4C-3Jp"/>
                         <outlet property="VOGLabel" destination="ifV-06-obi" id="zkC-t8-lZh"/>
+                        <outlet property="VorGainCorrectionLabel" destination="69E-lo-wOt" id="25e-FT-cVH"/>
                         <outlet property="defaultButton" destination="5sT-gS-ZO9" id="oOY-AU-z6c"/>
                         <outlet property="exitButton" destination="ut3-ve-Fe7" id="IR0-BQ-SVI"/>
                         <outlet property="eyeBorderInput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
@@ -971,13 +972,12 @@ Tap the waveforms to change the (2*).</string>
                         <outlet property="parallelButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>
                         <outlet property="parallelLabel" destination="vXE-sa-v6F" id="Nnc-ZI-dhn"/>
                         <outlet property="registerButton" destination="Tgf-Kj-P0L" id="Rmb-yS-lT8"/>
-                        <outlet property="timeLagInput" destination="FYu-Qu-Gex" id="MPg-6E-bbA"/>
-                        <outlet property="timeLagLabel" destination="69E-lo-wOt" id="25e-FT-cVH"/>
                         <outlet property="toVOGButton" destination="ySb-fb-deN" id="60a-CD-iO7"/>
                         <outlet property="tovHITButton" destination="DZA-EA-S6I" id="eba-4P-chM"/>
                         <outlet property="vHITLabel" destination="QNY-eg-azz" id="6mA-db-m2a"/>
                         <outlet property="vhitDisplayLabel" destination="bwj-An-8NO" id="L4A-8c-FfO"/>
                         <outlet property="vhitpng" destination="EJg-35-yLr" id="juY-rW-Ebq"/>
+                        <outlet property="vorGainCorrectionInput" destination="FYu-Qu-Gex" id="MPg-6E-bbA"/>
                         <outlet property="wakuLengthInput" destination="yGy-kJ-89F" id="jVb-91-XuR"/>
                         <outlet property="wakuLengthLabel" destination="HbG-UI-ZsL" id="fZW-2n-cud"/>
                     </connections>

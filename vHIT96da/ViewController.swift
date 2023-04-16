@@ -281,6 +281,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var calcMode:Int?//0:HIThorizontal 1:HITvertical 2:VOG
     var faceMark:Bool=false
     var videoGyroZure:Int = 20
+    var vorGainCorrection:Int = 100
     //解析結果保存用配列
     
     var waveTuple = Array<(Int,Int,Int,Int)>()//rl,framenum,disp onoff,current disp onoff)
@@ -2391,6 +2392,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             faceMark=false
         }
 //        getVideoGyryoZureDefault()
+        vorGainCorrection = getUserDefault(str: "vorGainCorrection", ret:101)
         videoGyroZure = getUserDefault(str: "videoGyroZure", ret: 20)
         calcMode = getUserDefault(str: "calcMode", ret: 0)
         vHITDisplayMode = getUserDefault(str: "vHITDisplayMode", ret:1)
@@ -2425,7 +2427,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UserDefaults.standard.set(faceMark,forKey: "faceMark")
  
         UserDefaults.standard.set(videoGyroZure,forKey:"videoGyroZure")
-        
+        UserDefaults.standard.set(vorGainCorrection,forKey:"vorGainCorrection")
+
         UserDefaults.standard.set(Int(wakuE.origin.x), forKey: "wakuE_x")
         UserDefaults.standard.set(Int(wakuE.origin.y), forKey: "wakuE_y")
         UserDefaults.standard.set(Int(wakuF.origin.x), forKey: "wakuF_x")
@@ -2598,12 +2601,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 blueVORGainArray.append(tempGain)
             }
         }
-        let redGainAv=getAve(array: redVORGainArray)
+        //controll dataでGainは右:左=0.7:1.0
+        let redGainAv=getAve(array: redVORGainArray)*0.014*Double(vorGainCorrection)
         let redGainSd=getSD(array:redVORGainArray,svvAv: redGainAv)
         let blueGainAv=getAve(array: blueVORGainArray)
         let blueGainSd=getSD(array:blueVORGainArray,svvAv: blueGainAv)
-        redGainStr = String(format: "(%d) Gain     %.2f sd:%.2f",redVORGainArray.count,redGainAv,redGainSd)
-        blueGainStr = String(format:"(%d) Gain     %.2f sd:%.2f",blueVORGainArray.count,blueGainAv,blueGainSd)
+        redGainStr = String(format: "(%d) VOR-Gain     %.2f sd:%.2f",redVORGainArray.count,redGainAv,redGainSd)
+        blueGainStr = String(format:"(%d) VOR-Gain     %.2f sd:%.2f",blueVORGainArray.count,blueGainAv,blueGainSd)
         
         for i in 0..<waveTuple.count{//blue vHIT
             pointList1.removeAll()
@@ -3132,6 +3136,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             ParametersViewController.eyeRatio = eyeRatio
             ParametersViewController.gyroRatio = gyroRatio
             ParametersViewController.videoGyroZure=videoGyroZure
+            ParametersViewController.vorGainCorrection=vorGainCorrection
             ParametersViewController.vHITDisplayMode=vHITDisplayMode
             
             ParametersViewController.posRatio = posRatio
@@ -3246,7 +3251,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             eyeRatio=ParametersViewController.eyeRatio
             gyroRatio=ParametersViewController.gyroRatio
             faceMark=ParametersViewController.faceMark
-
+            vorGainCorrection=ParametersViewController.vorGainCorrection
             videoGyroZure=ParametersViewController.videoGyroZure
             vHITDisplayMode=ParametersViewController.vHITDisplayMode
             if posRatio != ParametersViewController.posRatio ||

@@ -12,7 +12,7 @@
 "5sT-gS-ZO9.normalTitle" = "Default";
 
 /* Class = "UILabel"; text = "ビデオとセンサーの波形のずれ"; ObjectID = "69E-lo-wOt"; */
-"69E-lo-wOt.text" = "(1*)ビデオとジャイロの波形のずれ";
+"69E-lo-wOt.text" = "VOR-Gain左右差の補正%";
 
 /* Class = "UILabel"; text = "00:00"; ObjectID = "6Oa-WH-xL2"; */
 "6Oa-WH-xL2.text" = "00:00";

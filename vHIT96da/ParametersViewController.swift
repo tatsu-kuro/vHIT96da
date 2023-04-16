@@ -120,6 +120,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var waveWidth:Int = 0
     var eyeBorder:Int = 0
     var videoGyroZure:Int = 0
+    var vorGainCorrection:Int = 100
     var eyeRatio:Int = 0
     var gyroRatio:Int = 0
     var posRatio:Int = 0
@@ -142,8 +143,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var eyeBorderLabel: UILabel!
     @IBOutlet weak var wakuLengthInput: UITextField!
     
-    @IBOutlet weak var timeLagInput: UITextField!
-    @IBOutlet weak var timeLagLabel: UILabel!
+    @IBOutlet weak var vorGainCorrectionInput: UITextField!
+    @IBOutlet weak var VorGainCorrectionLabel: UILabel!
     @IBOutlet weak var vhitpng: UIImageView!
     @IBOutlet weak var keyDown: UIButton!
     @IBOutlet weak var B2CInput: UITextField!
@@ -173,10 +174,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         numpadOff(0)
     }
     func setMaxMin(){
-        if videoGyroZure<1{
-            videoGyroZure=1
-        }else if videoGyroZure>100{
-            videoGyroZure=100
+        if vorGainCorrection<50{
+            vorGainCorrection=50
+        }else if vorGainCorrection>150{
+            vorGainCorrection=150
         }
         if waveWidth<40{
             waveWidth=40
@@ -220,7 +221,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         B2CInput.endEditing(true)
         A2DInput.endEditing(true)
         eyeBorderInput.endEditing(true)
-        timeLagInput.endEditing(true)
+        vorGainCorrectionInput.endEditing(true)
         eyeVelocityInput.endEditing(true)
         headVelocityInput.endEditing(true)
         keyDown.isHidden = true
@@ -239,6 +240,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             faceMarkSwitch.isOn=false
             faceMark=false
             videoGyroZure = 2
+            vorGainCorrection = 100
             eyeRatio = 300
             gyroRatio = 170
             wakuLength = 3
@@ -276,8 +278,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         eyeBorder = Field2value(field: eyeBorderInput)
     }
     
-    @IBAction func videoGyroZurechange(_ sender: Any) {
-        videoGyroZure=Field2value(field: timeLagInput)
+    @IBAction func vorGainCorrectionChange(_ sender: Any) {
+        vorGainCorrection=Field2value(field: vorGainCorrectionInput)
     }
  
     @IBAction func ratio1Button(_ sender: Any) {
@@ -300,7 +302,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.B2CInput.text = "\(widthRange)"
         self.A2DInput.text = "\(waveWidth)"
         self.eyeBorderInput.text = "\(eyeBorder)"
-        self.timeLagInput.text = "\(videoGyroZure)"
+        self.vorGainCorrectionInput.text = "\(vorGainCorrection)"
         if calcMode == 0 || calcMode==3{//vHIT
             self.eyeVelocityInput.text = "\(eyeRatio)"
             self.headVelocityInput.text = "\(gyroRatio)"
@@ -362,10 +364,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             A2DInput.isHidden = true
             B2CInput.isHidden = true
             eyeBorderInput.isHidden = false
-            timeLagInput.isHidden = true
+            vorGainCorrectionInput.isHidden = true
             eyeVelocityInput.isHidden = false
             headVelocityInput.isHidden = false
-            timeLagLabel.isHidden = true
+            VorGainCorrectionLabel.isHidden = true
             wakuLengthLabel.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
@@ -408,10 +410,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             A2DInput.isHidden = false
             B2CInput.isHidden = false
             eyeBorderInput.isHidden = false
-            timeLagInput.isHidden = false
+            vorGainCorrectionInput.isHidden = false
             eyeVelocityInput.isHidden = false
             headVelocityInput.isHidden = false
-            timeLagLabel.isHidden = false
+            VorGainCorrectionLabel.isHidden = false
                 
             parallelButton.isHidden=false
             parallelLabel.isHidden=false
@@ -423,8 +425,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeVelocityLabel.textColor=UIColor.systemGreen
             headVelocityLabel.backgroundColor=UIColor.white
             headVelocityLabel.textColor=UIColor.systemGreen
-            timeLagLabel.backgroundColor=UIColor.white
-            timeLagLabel.textColor=UIColor.systemGreen
+//            timeLagLabel.backgroundColor=UIColor.white
+//            timeLagLabel.textColor=UIColor.systemGreen
             vhitDisplayLabel.textColor=UIColor.systemGreen
             vhitDisplayLabel.backgroundColor=UIColor.white
             
@@ -434,7 +436,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             headVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*1 ,width: tw, height: bh)
             wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
-            timeLagLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
+            VorGainCorrectionLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
             var vhitpngH=(ww-10)*440/940
             gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
@@ -443,7 +445,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             headVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             eyeBorderInput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
-            timeLagInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
+            vorGainCorrectionInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             vhitpng.frame = CGRect(x:5,y:topY+bh1*7-5,width:ww-10,height:vhitpngH)
             vhitpngH -= 5
             vhitDisplayLabel.frame = CGRect(x:butw*2+4*sp,y: topY+bh1*7+vhitpngH+5 ,width: tw, height: bh)
@@ -490,7 +492,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         B2CInput.delegate = self
         A2DInput.delegate = self
         eyeBorderInput.delegate = self
-        timeLagInput.delegate = self
+        vorGainCorrectionInput.delegate = self
         eyeVelocityInput.delegate = self
         headVelocityInput.delegate = self
         wakuLengthInput.delegate = self
@@ -501,7 +503,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         self.wakuLengthInput.keyboardType = UIKeyboardType.numberPad
         self.eyeVelocityInput.keyboardType = UIKeyboardType.numberPad
         self.headVelocityInput.keyboardType = UIKeyboardType.numberPad
-        self.timeLagInput.keyboardType = UIKeyboardType.numberPad
+        self.vorGainCorrectionInput.keyboardType = UIKeyboardType.numberPad
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
