@@ -2938,6 +2938,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         print("subView******")
         //        setButtons_first()
     }
+    
     func setButtons_first(){
         let ww=view.bounds.width
         let wh=view.bounds.height
@@ -3278,7 +3279,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 showBoxies(f: true)
             }
-//            showModeText()
+            setButtons_first()
             #if DEBUG
             print("TATSUAKI-unwind from para")
             #endif
