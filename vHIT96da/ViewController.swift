@@ -1798,6 +1798,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             present(nextVC, animated: true, completion: nil)
         }
         print("viewDidAppear*****")
+        showWakuImages()
+//        dispWakus()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -2602,7 +2604,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
         //controll dataでGainは右:左=0.7:1.0
-        let redGainAv=getAve(array: redVORGainArray)*0.014*Double(vorGainCorrection)
+        let redGainAv=getAve(array: redVORGainArray)*Double(vorGainCorrection)/100
         let redGainSd=getSD(array:redVORGainArray,svvAv: redGainAv)
         let blueGainAv=getAve(array: blueVORGainArray)
         let blueGainSd=getSD(array:blueVORGainArray,svvAv: blueGainAv)
@@ -2660,9 +2662,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawPathEye.lineWidth = 2
                 drawPathFace.lineWidth = 2
             }else if waveTuple[i].3==1 && waveTuple[i].2==0 {
-                drawPathEye.lineWidth = 0.6
-                drawPathFace.lineWidth = 0.6
-            }else if waveTuple[i].3==0 && waveTuple[i].2==1 {
+                drawPathEye.lineWidth = 1.2//0.6
+                drawPathFace.lineWidth = 1.2//0.6
+            }else if waveTuple[i].3==0 && waveTuple[i].2==1 {//表示
                 drawPathEye.lineWidth = 0.3
                 drawPathFace.lineWidth = 0.3
             }else if waveTuple[i].3==0 && waveTuple[i].2==0 {
