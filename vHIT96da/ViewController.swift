@@ -3721,9 +3721,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let gc=g5(st:i+naf+raf+1)-g5(st:i+naf+raf)
         let gd=g5(st:i+naf+raf+2)-g5(st:i+naf+raf+1)
 
-        for j in 0...100{//
-            if !errArray[i+j] {
-                return -1
+        for j in 0...140{//
+            if i+j-20<errArray.count {
+                if !errArray[i+j-20] {
+                    return -1
+                }
             }
         }
         //下のように変更すると小さな波も拾える
