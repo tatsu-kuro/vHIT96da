@@ -3154,8 +3154,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             Controller.calcMode = calcMode
         }else if let vc = segue.destination as? RecordViewController{
             let Controller:RecordViewController = vc
-            iroiro.makeAlbum(vHIT_VOG)//なければ作る
-            iroiro.makeAlbum(Wave96da)//これもなければ作る
+            if PHPhotoLibrary.authorizationStatus(for: .readWrite) == .authorized{
+                iroiro.makeAlbum(vHIT_VOG)//なければ作る
+                iroiro.makeAlbum(Wave96da)//これもなければ作る
+            }
             Controller.videoCount=videoDate.count
         }else{
             #if DEBUG
@@ -3719,6 +3721,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let gc=g5(st:i+naf+raf+1)-g5(st:i+naf+raf)
         let gd=g5(st:i+naf+raf+2)-g5(st:i+naf+raf+1)
 
+        for j in 0...100{//
+            if !errArray[i+j] {
+                return -1
+            }
+        }
         //下のように変更すると小さな波も拾える
         if /*g1>1 &&*/ g2>g1 && g3>g2 && ga>sl && gb>sl && gc < -sl && gd < -sl  {
             return 0
@@ -3732,11 +3739,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let flatwidth:Int = 12//12frame-50ms
         let t = upDownp(i: number + flatwidth)
         if t != -1 {
+            
             let ws = number// - flatwidth + 12;//波表示開始位置 wavestartpoint
+            
             waveTuple.append((t,ws,1,0))//L/R,frameNumber,disp,current)
  
             let n=waveTuple.count-1
-            for i in 0..<120{//number..<number + 120{
+            for i in 0..<120{//number..<number + 120{//calcMode:Int?//0:HIThorizontal 1:HITvertical 2:VOG
                 if calcMode==0{
                     eyeWs[n][i]=eyeVeloXFiltered4update[ws+i]*CGFloat(eyeRatio)/300.0
                     gyroWs[n][i]=gyroMoved[ws+i]*CGFloat(gyroRatio)/100.0
