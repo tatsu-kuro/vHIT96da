@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_72" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -186,6 +186,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LZQ-Ez-rYI">
                                 <rect key="frame" x="5" y="436" width="60" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="7hk-xh-SZs"/>
                                     <constraint firstAttribute="width" constant="60" id="eVt-lU-rmy"/>
@@ -194,11 +195,13 @@
                                 <state key="normal" image="chevron.left.circle" catalog="system"/>
                                 <connections>
                                     <action selector="onBackVideoButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2VK-JJ-de9"/>
+                                    <outletCollection property="gestureRecognizers" destination="KKk-PE-9cZ" appends="YES" id="clr-bR-bcE"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fee-9L-VIg">
                                 <rect key="frame" x="377" y="418" width="60" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="3sV-SB-R5D"/>
                                     <constraint firstAttribute="width" constant="60" id="5sO-a4-hBQ"/>
@@ -207,6 +210,7 @@
                                 <state key="normal" image="chevron.right.circle" catalog="system"/>
                                 <connections>
                                     <action selector="onNextVideoButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wKd-qU-2SQ"/>
+                                    <outletCollection property="gestureRecognizers" destination="RlZ-ci-DzW" appends="YES" id="Nji-UR-Eyw"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w2G-cJ-1fV">
@@ -418,6 +422,16 @@
                         <action selector="tapGesture:" destination="BYZ-38-t0r" id="RkR-3H-IcK"/>
                     </connections>
                 </tapGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="RlZ-ci-DzW">
+                    <connections>
+                        <action selector="onNextButtonLongPress:" destination="BYZ-38-t0r" id="M6h-5l-LcR"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="KKk-PE-9cZ">
+                    <connections>
+                        <action selector="onBackButtonLongPress:" destination="BYZ-38-t0r" id="ki0-iR-uU0"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1120.4651162790697" y="-40.557939914163093"/>
         </scene>

@@ -3787,4 +3787,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         drawVHITwaves()
     }
+    
+    @IBAction func onNextButtonLongPress(_ sender: UILongPressGestureRecognizer) {
+        if (sender.state == UIGestureRecognizer.State.ended) {
+            startFrame=0
+            videoPlayMode=0
+            showVideoIroiro(num: 5)
+            print("next長押し終了")
+        }
+    }
+    
+    @IBAction func onBackButtonLongPress(_ sender: UILongPressGestureRecognizer) {
+        if (sender.state == UIGestureRecognizer.State.ended) {
+            if vHITBoxView?.isHidden == false{
+                return
+            }
+            startFrame=0
+            videoPlayMode=0
+            showVideoIroiro(num: -5)
+            print("back長押し終了")
+        }
+    }
 }
