@@ -284,12 +284,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @objc func onLEDValueChange(){
         setFlashlevel(level: LEDBar.value)
         UserDefaults.standard.set(LEDBar.value, forKey: "LEDValue")
-        print("led:",LEDBar.value)
+   //     print("led:",LEDBar.value)
     }
     @objc func onFocusValueChange(){
         setFocus(focus:focusBar.value)
         UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
-        print("focus:",focusBar.value)
+ //       print("focus:",focusBar.value)
     }
 
     override func viewDidAppear(_ animated: Bool) {

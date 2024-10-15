@@ -195,7 +195,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func onForwardButton(_ sender: Any) {
-        forwardBackwardButton(mode: 2)
+  //      forwardBackwardButton(mode: 2)
     }
     func forwardBackwardButton(mode:Int){
         if checkDispMode() != 0{
@@ -214,9 +214,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoPlayMode=mode
     }
     @IBAction func onBackwardButton(_ sender: Any) {
-        forwardBackwardButton(mode: 1)
+      //  forwardBackwardButton(mode: 1)
+        videoPlayer.pause()
+        videoPlayMode=0
+        videoSlider.value=0
+        let newTime = CMTime(seconds: Double(videoSlider.value), preferredTimescale: 600)
+        videoPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        startFrame=0
+        dispWakus()
+        showWakuImages()
     }
- 
+ //cameraforword
     
     @IBOutlet weak var wakuImg1: UIImageView!
     @IBOutlet weak var wakuImg2: UIImageView!
@@ -585,7 +593,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoSlider.isEnabled = mode
         waveSlider.isHidden = mode
         backwardButton.isEnabled=mode
-        forwardButton.isEnabled=mode
+ //       forwardButton.isEnabled=mode
         playButton.isEnabled=mode
         eraseButton.isHidden = !mode
     }
@@ -2974,11 +2982,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
         iroiro.setButtonProperty(paraButton,x:sp*6+bw*4,y:by0,w:bw,h:bh,UIColor.systemBlue)
         iroiro.setButtonProperty(helpButton,x:sp*7+bw*5,y:by0,w:bw,h:bh,UIColor.systemBlue)
-        iroiro.setButtonProperty(cameraButton,x:sp*8+bw*6,y:by0,w:bw,h:bh,UIColor.systemRed)
+        iroiro.setButtonProperty(cameraButton,x:sp*8+bw*6,y:by0-sp/2-bh/2,w:bw,h:bh,UIColor.systemRed)
         
         iroiro.setButtonProperty(backwardButton,x:sp*6+bw*4,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(playButton,x:sp*7+bw*5,y:by1,w:bw,h:bh,UIColor.systemOrange)
         iroiro.setButtonProperty(forwardButton,x:sp*8+bw*6,y:by1,w:bw,h:bh,UIColor.systemOrange)
+        forwardButton.isHidden=true
         //calcMode 0:hori.  1:vert. 2:vog 3:arkit
         if calcMode == 0{
             iroiro.setButtonProperty(changeModeButton1,x:sp*2,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
@@ -2999,7 +3008,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         if videoDate.count == 0{
             playButton.isEnabled=false
-            forwardButton.isEnabled=false
+       //     forwardButton.isEnabled=false
             backwardButton.isEnabled=false
         }
     }
@@ -3012,7 +3021,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             changeModeButton.isHidden=false
             backwardButton.isHidden=false
             playButton.isHidden=false
-            forwardButton.isHidden=false
+       //     forwardButton.isHidden=false
             waveButton.setImage(  UIImage(systemName:"waveform.path.ecg.rectangle"), for: .normal)
             waveButton.backgroundColor=UIColor.systemBlue
             cameraButton.isEnabled=true
@@ -3024,7 +3033,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
             backwardButton.isHidden=false
             playButton.isHidden=false
-            forwardButton.isHidden=false
+         //   forwardButton.isHidden=false
             waveButton.setImage(  UIImage(systemName:"waveform.path.ecg.rectangle"), for: .normal)
             waveButton.backgroundColor=UIColor.systemBlue
             cameraButton.isEnabled=true
@@ -3765,7 +3774,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         return t
     }
 
-   //wavetuple変更の有無、高さ(%)表示変更の時はwavetupleは変更しない。
+    //wavetuple変更の有無、高さ(%)表示変更の時はwavetupleは変更しない。
     func calcDrawVHIT(tuple:Bool){//true:
         tempTuple.removeAll()
         for i in 0..<waveTuple.count{

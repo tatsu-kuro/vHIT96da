@@ -301,7 +301,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="backward.frame.fill" catalog="system">
+                                <state key="normal" image="backward.end.fill" catalog="system">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -1110,7 +1110,7 @@ Tap the waveforms to change the (2*).</string>
     </scenes>
     <resources>
         <image name="arrow.triangle.2.circlepath.camera" catalog="system" width="128" height="93"/>
-        <image name="backward.frame.fill" catalog="system" width="128" height="91"/>
+        <image name="backward.end.fill" catalog="system" width="128" height="101"/>
         <image name="camera" catalog="system" width="128" height="93"/>
         <image name="chevron.left.circle" catalog="system" width="128" height="123"/>
         <image name="chevron.right.circle" catalog="system" width="128" height="123"/>
