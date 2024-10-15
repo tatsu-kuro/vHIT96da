@@ -231,7 +231,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.addTarget(self, action: #selector(onLEDValueChange), for: UIControl.Event.valueChanged)
         LEDBar.value=getUserDefault(str: "LEDValue", ret:0.03)//初期値はmini12に合わせる
         setFlashlevel(level:LEDBar.value)
-        setFocus(focus: 0)
+        focusBar.minimumValue = 0
+        focusBar.maximumValue = 1.0
+        focusBar.addTarget(self, action: #selector(onFocusValueChange), for: UIControl.Event.valueChanged)
+        focusBar.value=getUserDefault(str: "focusValue", ret:0.6)//初期値はmini12に合わせる
+        setFocus(focus: focusBar.value)
         setZoom()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
     }
@@ -283,6 +287,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         UserDefaults.standard.set(LEDBar.value, forKey: "LEDValue")
         print("led:",LEDBar.value)
     }
+    @objc func onFocusValueChange(){
+        //        setFocus(focus:focusBar.value)
+        setFocus(focus:focusBar.value)
+        UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
+        print("led:",focusBar.value)
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         setButtons()//type: true)
@@ -295,6 +305,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.isHidden=false
         LEDHigh.isHidden=false
         LEDLow.isHidden=false
+        focusBar.isHidden=false
+        focusNear.isHidden=false
+        focusFar.isHidden=false
         speakerImage.isHidden=false
         speakerSwitch.isHidden=false
     }
@@ -337,6 +350,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDBar.isHidden=true
         LEDLow.isHidden=true
         LEDHigh.isHidden=true
+        focusBar.isHidden=true
+        focusNear.isHidden=true
+        focusFar.isHidden=true
         exitBut.isHidden=type
         if ultrawideCamera==false && telephotoCamera==false{
             cameraChangeButton.isHidden=true
@@ -353,7 +369,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let bh:CGFloat=60
         let y0=wh-bh-10
         let y1=y0-bh-10
-        let y2=y1-bh
+        let y2=y1-bh+bh/4
         let y3=y2-10-bh/2
         let x1=ww-5-bw
         
@@ -387,6 +403,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         iroiro.setLabelProperty(LEDHigh,x:x1,y:y3, w: bw, h:bh/2,UIColor.systemOrange)
         iroiro.setButtonProperty(exitBut,x:x1,y:y0, w: bw, h:bh,UIColor.darkGray)
         LEDBar.frame=CGRect(x:20+bw,y:y3,width:ww-bw*2-40,height:bh/2)
+        iroiro.setLabelProperty(focusNear,x:5,y:y3-bh/2-2,w:bw,h:bh/2,UIColor.darkGray)
+        iroiro.setLabelProperty(focusFar,x:x1,y:y3-bh/2-2, w: bw, h:bh/2,UIColor.darkGray)
+        focusBar.frame=CGRect(x:20+bw,y:y3-bh/2-2,width:ww-bw*2-40,height:bh/2)
 
         startButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
         stopButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
@@ -395,11 +414,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         stopButton.tintColor=UIColor.orange
         cameraChangeButton.isHidden=true
         focusBar.isHidden=true
-        LEDBar.isHidden=true
         focusFar.isHidden=true
         focusNear.isHidden=true
         LEDLow.isHidden=true
         LEDHigh.isHidden=true
+        LEDBar.isHidden=true
         speakerSwitch.isHidden=true
         speakerImage.isHidden=true
     }
@@ -539,10 +558,11 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                         })
                     })
                     device.unlockForConfiguration()
+                    print("focus-changed")
                 }
                 catch {
                     // just ignore
-                    print("focuserror")
+                    print("focus-error")
                 }
             }
         }

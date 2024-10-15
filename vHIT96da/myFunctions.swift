@@ -507,6 +507,7 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         label.layer.borderWidth = 1.0
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 5
+        label.textColor = UIColor.white
         label.backgroundColor = color
     }
    
