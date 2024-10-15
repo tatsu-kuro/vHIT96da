@@ -3721,7 +3721,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let gc=g5(st:i+naf+raf+1)-g5(st:i+naf+raf)
         let gd=g5(st:i+naf+raf+2)-g5(st:i+naf+raf+1)
 
-        for j in 0...140{//
+        for j in 0...140{//点取得がエラーの時
             if i+j-20<errArray.count {
                 if !errArray[i+j-20] {
                     return -1
@@ -3739,10 +3739,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     func SetWave2wP(number:Int) -> Int {//-1:波なし 0:上向き波？ 1:その反対向きの波
         let flatwidth:Int = 12//12frame-50ms
+   
+        let dep1=gyroMoved[number] - gyroMoved[number+flatwidth/2]
+        let dep2=gyroMoved[number+flatwidth] - gyroMoved[number+flatwidth/2]
+        if dep1*dep1+dep2*dep2>10.0 {//hitの立ち上がりの部分がエラーだった時にhit終わりの波を間違えて取らないように
+            return -1
+        }
         let t = upDownp(i: number + flatwidth)
         if t != -1 {
-            
-            let ws = number// - flatwidth + 12;//波表示開始位置 wavestartpoint
+                  let ws = number// - flatwidth + 12;//波表示開始位置 wavestartpoint
             
             waveTuple.append((t,ws,1,0))//L/R,frameNumber,disp,current)
  
@@ -3776,7 +3781,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             if skipCnt > 0{
                 skipCnt -= 1
             }else if SetWave2wP(number:vcnt) > -1{
-                skipCnt = 30
+                skipCnt = 100
             }
         }
         if tuple==false{
