@@ -282,16 +282,14 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     
     @objc func onLEDValueChange(){
-        //        setFocus(focus:focusBar.value)
         setFlashlevel(level: LEDBar.value)
         UserDefaults.standard.set(LEDBar.value, forKey: "LEDValue")
         print("led:",LEDBar.value)
     }
     @objc func onFocusValueChange(){
-        //        setFocus(focus:focusBar.value)
         setFocus(focus:focusBar.value)
         UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
-        print("led:",focusBar.value)
+        print("focus:",focusBar.value)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -548,6 +546,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func setFocus(focus:Float) {//focus 0:最接近　0-1.0
         if let device = videoDevice{
+    //        print("focus-videodevice")
             if device.isFocusModeSupported(.autoFocus) && device.isFocusPointOfInterestSupported {
                 do {
                     try device.lockForConfiguration()
@@ -558,13 +557,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                         })
                     })
                     device.unlockForConfiguration()
-                    print("focus-changed")
+ //                   print("focus-changed")
                 }
                 catch {
                     // just ignore
-                    print("focus-error")
+ //                   print("focus-error")
                 }
             }
+        }else{
+            print("focus-device-error")
         }
     }
   
