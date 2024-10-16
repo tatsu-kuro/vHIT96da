@@ -401,9 +401,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         iroiro.setLabelProperty(LEDHigh,x:x1,y:y3, w: bw, h:bh/2,UIColor.systemOrange)
         iroiro.setButtonProperty(exitBut,x:x1,y:y0, w: bw, h:bh,UIColor.darkGray)
         LEDBar.frame=CGRect(x:20+bw,y:y3,width:ww-bw*2-40,height:bh/2)
-        iroiro.setLabelProperty(focusNear,x:5,y:y3-bh/2-2,w:bw,h:bh/2,UIColor.darkGray)
-        iroiro.setLabelProperty(focusFar,x:x1,y:y3-bh/2-2, w: bw, h:bh/2,UIColor.darkGray)
-        focusBar.frame=CGRect(x:20+bw,y:y3-bh/2-2,width:ww-bw*2-40,height:bh/2)
+        iroiro.setLabelProperty(focusNear,x:5,y:y3-bh/2-4,w:bw,h:bh/2,UIColor.darkGray)
+        iroiro.setLabelProperty(focusFar,x:x1,y:y3-bh/2-4, w: bw, h:bh/2,UIColor.darkGray)
+        focusBar.frame=CGRect(x:20+bw,y:y3-bh/2-4,width:ww-bw*2-40,height:bh/2)
 
         startButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
         stopButton.frame=CGRect(x:(ww-bh*3.2)/2,y:wh-10-bh*3.2,width:bh*3.2,height:bh*3.2)
