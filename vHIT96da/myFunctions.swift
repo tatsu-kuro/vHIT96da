@@ -519,15 +519,15 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         button.backgroundColor = color
     }
     func setButtonTopRectangle(_ ui:UIButton, rect:CGRect,_ color:UIColor ){
-        ui.frame   = CGRect(x:rect.minX, y:rect.minY-5, width: rect.width, height: 4)
+        ui.frame   = CGRect(x:rect.minX+2, y:rect.minY+1, width: rect.width-4, height: 4)
         ui.layer.masksToBounds = true
-        ui.layer.cornerRadius = 5
+        ui.layer.cornerRadius = 1
         ui.backgroundColor = color
     }
     func setLabelTopRectangle(_ ui:UILabel, rect:CGRect,_ color:UIColor ){
-        ui.frame   = CGRect(x:rect.minX, y:rect.minY-5, width: rect.width, height: 4)
+        ui.frame   = CGRect(x:rect.minX, y:rect.minY, width: rect.width, height: 4)
         ui.layer.masksToBounds = true
-        ui.layer.cornerRadius = 5
+        ui.layer.cornerRadius = 3
         ui.backgroundColor = color
     }
 

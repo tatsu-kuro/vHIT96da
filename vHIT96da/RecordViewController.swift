@@ -420,6 +420,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         speakerSwitch.isHidden=true
         speakerImage.isHidden=true
     }
+    
     func initSession(fps:Int) {
         // セッション生成
         captureSession = AVCaptureSession()
