@@ -26,10 +26,10 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var fpsMax:Int?
     var fps_non_120_240:Int=2
     var maxFps:Double=240
-    @IBOutlet weak var speakerSwitch: UISwitch!
-    @IBOutlet weak var speakerLabel: UILabel!
+ //   @IBOutlet weak var speakerSwitch: UISwitch!
+ //   @IBOutlet weak var speakerLabel: UILabel!
     
-    @IBOutlet weak var speakerImage: UIImageView!
+  //  @IBOutlet weak var speakerImage: UIImageView!
     var saved2album:Bool=false//albumに保存終了（エラーの時も）
     var fileOutput = AVCaptureMovieFileOutput()
     var gyro = Array<Double>()
@@ -56,15 +56,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @IBOutlet weak var cameraChangeButton: UIButton!
     
     
-    @IBAction func onSpeakerSwitch(_ sender: UISwitch) {
-        if speakerSwitch.isOn==true{
-            UserDefaults.standard.set(1, forKey: "recordSound")
-            speakerImage.tintColor=UIColor.green
-        }else{
-            UserDefaults.standard.set(0, forKey: "recordSound")
-            speakerImage.tintColor=UIColor.gray
-        }
-    }
+//    @IBAction func onSpeakerSwitch(_ sender: UISwitch) {
+//        if speakerSwitch.isOn==true{
+//            UserDefaults.standard.set(1, forKey: "recordSound")
+//            speakerImage.tintColor=UIColor.green
+//        }else{
+//            UserDefaults.standard.set(0, forKey: "recordSound")
+//            speakerImage.tintColor=UIColor.gray
+//        }
+//    }
     
     @IBAction func onCameraChange(_ sender: Any) {//camera>1
         if captureSession.isRunning{
@@ -83,13 +83,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             if timer?.isValid == true {
                 timer!.invalidate()
             }
-            if speakerSwitch.isOn==true{
+         //   if speakerSwitch.isOn==true{
                 if let soundUrl = URL(string:
                                         "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
                     AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
                     AudioServicesPlaySystemSound(soundIdx)
                 }
-            }
+        //    }
             print("ストップボタンを押した。")
             fileOutput.stopRecording()
         }
@@ -201,13 +201,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             cameraType=0
         }
         let sound=getUserDefault(str: "recordSound", ret: 1)
-        if sound==0{
-            speakerSwitch.isOn=false
-            speakerImage.tintColor=UIColor.gray
-        }else{
-            speakerSwitch.isOn=true
-            speakerImage.tintColor=UIColor.green
-        }
+//        if sound==0{
+//            speakerSwitch.isOn=false
+//            speakerImage.tintColor=UIColor.gray
+//        }else{
+//            speakerSwitch.isOn=true
+//            speakerImage.tintColor=UIColor.green
+//        }
         print("cameraType",cameraType)
         self.view.backgroundColor = .black
         
@@ -306,8 +306,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusBar.isHidden=false
         focusNear.isHidden=false
         focusFar.isHidden=false
-        speakerImage.isHidden=false
-        speakerSwitch.isHidden=false
+   //     speakerImage.isHidden=false
+  //      speakerSwitch.isHidden=false
     }
     @IBAction func onClick120fps(_ sender: Any) {
         if fps_non_120_240==1{
@@ -338,8 +338,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     func hideButtons(type:Bool){
-        speakerImage.isHidden=true
-        speakerSwitch.isHidden=true
+     //   speakerImage.isHidden=true
+    //    speakerSwitch.isHidden=true
         startButton.isHidden=type
         stopButton.isHidden=type
         currentTime.isHidden=type
@@ -395,8 +395,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         //startButton
 
-        speakerSwitch.frame=CGRect(x:8,y:y2,width: 47,height: 31)
-        speakerImage.frame=CGRect(x:60,y:y2,width: 31,height: 31)
+    //    speakerSwitch.frame=CGRect(x:8,y:y2,width: 47,height: 31)
+    //    speakerImage.frame=CGRect(x:60,y:y2,width: 31,height: 31)
         iroiro.setLabelProperty(LEDLow,x:5,y:y3,w:bw,h:bh/2,UIColor.gray)
         iroiro.setLabelProperty(LEDHigh,x:x1,y:y3, w: bw, h:bh/2,UIColor.systemOrange)
         iroiro.setButtonProperty(exitBut,x:x1,y:y0, w: bw, h:bh,UIColor.darkGray)
@@ -417,8 +417,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         LEDLow.isHidden=true
         LEDHigh.isHidden=true
         LEDBar.isHidden=true
-        speakerSwitch.isHidden=true
-        speakerImage.isHidden=true
+  //      speakerSwitch.isHidden=true
+  //      speakerImage.isHidden=true
     }
     
     func initSession(fps:Int) {
@@ -572,13 +572,13 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
   
     var soundIdx:SystemSoundID = 0
     func sound(){
-        if speakerSwitch.isOn==true{
+      //  if speakerSwitch.isOn==true{
                  if let soundUrl = URL(string:
                                          "/System/Library/Audio/UISounds/end_record.caf"/*photoShutter.caf*/){
                      AudioServicesCreateSystemSoundID(soundUrl as CFURL, &soundIdx)
                      AudioServicesPlaySystemSound(soundIdx)
                  }
-             }
+    //         }
     }
     
     @IBAction func onClickStartButton(_ sender: Any) {
