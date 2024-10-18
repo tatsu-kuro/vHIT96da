@@ -3663,60 +3663,61 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }else{//波形が表示されていないとき
-            if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
-//                if calcFlag==false && boxiesFlag==false{//within waku
-//                    matchingTestMode=true
-//                    vHITcalcTest()
-//                    nextButton.isHidden=true
-//                    backButton.isHidden=true
-//                    eraseButton.isHidden=true
-//                    videoSlider.isEnabled=false
-//                  
-//                    return
-//                }
-            }else{
-//                let ww=view.bounds.width
-//                let wh=view.bounds.height
+            //            if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
+            //                if calcFlag==false && boxiesFlag==false{//within waku
+            //                    matchingTestMode=true
+            //                    vHITcalcTest()
+            //                    nextButton.isHidden=true
+            //                    backButton.isHidden=true
+            //                    eraseButton.isHidden=true
+            //                    videoSlider.isEnabled=false
+            //
+            //                    return
+            //                }
+            //            }else{
+            //                let ww=view.bounds.width
+            //                let wh=view.bounds.height
+            if loc.y < videoSlider.frame.minY-20{//video slide bar と被らないように
                 
                 //let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
                 wakuE.origin.x=loc.x
                 wakuE.origin.y=loc.y
-//                wakuE = moveWakus(rect:wakuE,stRect: startRect,movePo: move,hani:et)
+                //                wakuE = moveWakus(rect:wakuE,stRect: startRect,movePo: move,hani:et)
                 dispWakus()
                 showWakuImages()
                 setUserDefaults()
-                
-//                print("tap")
             }
-//            if calcFlag==true {//計算中
-//                if matchingTestMode==true{//testMode計算中なら
-//                    calcFlag=false
-//                    nextButton.isHidden=false
-//                    backButton.isHidden=false
-//                    eraseButton.isHidden=false
-//                    videoSlider.isEnabled=true
-//                }
-//                return
-//            }
-//            if wakuImg2.isHidden==false||wakuImg3.isHidden==false{//testModeの表示があるとき
-//                wakuImg2.isHidden=true
-//                wakuImg3.isHidden=true
-//                return
-//            }
-            if loc.y > videoSlider.frame.minY-20{//video slide bar と被らないように
-                return
-            }
-//            if faceMark==true{//選択枠を変更
-//                if wakuEyeFace==0{
-//                    wakuEyeFace=1
-//                }else{
-//                    wakuEyeFace=0
-//                }
-////                print("faceMark:",faceMark,wakuEyeFace)
-//                dispWakus()
-//                showWakuImages()
-//            }
+            //                print("tap")
         }
+        //            if calcFlag==true {//計算中
+        //                if matchingTestMode==true{//testMode計算中なら
+        //                    calcFlag=false
+        //                    nextButton.isHidden=false
+        //                    backButton.isHidden=false
+        //                    eraseButton.isHidden=false
+        //                    videoSlider.isEnabled=true
+        //                }
+        //                return
+        //            }
+        //            if wakuImg2.isHidden==false||wakuImg3.isHidden==false{//testModeの表示があるとき
+        //                wakuImg2.isHidden=true
+        //                wakuImg3.isHidden=true
+        //                return
+        //            }
+        //        if loc.y > videoSlider.frame.minY-20{//video slide bar と被らないように
+        //            return
+        //        }
+        //            if faceMark==true{//選択枠を変更
+        //                if wakuEyeFace==0{
+        //                    wakuEyeFace=1
+        //                }else{
+        //                    wakuEyeFace=0
+        //                }
+        ////                print("faceMark:",faceMark,wakuEyeFace)
+        //                dispWakus()
+        //                showWakuImages()
+        //            }
+        //        }
     }
     func setCurrVHIT(pos:Int){
         let cnt=waveTuple.count
