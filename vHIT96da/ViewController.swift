@@ -2176,7 +2176,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         waveSlider.addTarget(self, action: #selector(onWaveSliderValueChange), for: UIControl.Event.valueChanged)
     }
     var calcStartTime=CFAbsoluteTimeGetCurrent()
-    var tapDownUpTime=CFAbsoluteTimeGetCurrent()//down-up所要時間
+  //  var tapDownUpTime=CFAbsoluteTimeGetCurrent()//down-up所要時間
     @objc func update_vHIT(tm: Timer) {
         
         if matchingTestMode==true{
@@ -3505,7 +3505,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         if sender.state == .began {
             
-            tapDownUpTime=CFAbsoluteTimeGetCurrent()
+        //    tapDownUpTime=CFAbsoluteTimeGetCurrent()
             
             moveThumX=0
             moveThumY=0
@@ -3609,11 +3609,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
-        if sender.state == .ended{
-            let delay=CFAbsoluteTimeGetCurrent() - tapDownUpTime
-            print("tapdowntime:",delay)
-            tapDownUpTime = CFAbsoluteTimeGetCurrent()
-        }
+//        if sender.state == .ended{
+//            let delay=CFAbsoluteTimeGetCurrent() - tapDownUpTime
+//            print("tapdowntime:",delay)
+//            tapDownUpTime = CFAbsoluteTimeGetCurrent()
+//        }
 
         if videoDate.count==0{
             return
@@ -3664,19 +3664,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else{//波形が表示されていないとき
             if (loc.x>eyeFrame.minX && loc.x<eyeFrame.maxX && loc.y>eyeFrame.minY && loc.y<eyeFrame.maxY && wakuEyeFace==0)||(loc.x>faceFrame.minX && loc.x<faceFrame.maxX && loc.y>faceFrame.minY && loc.y<faceFrame.maxY && wakuEyeFace==1){
-                if calcFlag==false && boxiesFlag==false{//within waku
-                    matchingTestMode=true
-                    vHITcalcTest()
-                    nextButton.isHidden=true
-                    backButton.isHidden=true
-                    eraseButton.isHidden=true
-                    videoSlider.isEnabled=false
-                  
-                    return
-                }
+//                if calcFlag==false && boxiesFlag==false{//within waku
+//                    matchingTestMode=true
+//                    vHITcalcTest()
+//                    nextButton.isHidden=true
+//                    backButton.isHidden=true
+//                    eraseButton.isHidden=true
+//                    videoSlider.isEnabled=false
+//                  
+//                    return
+//                }
             }else{
-                let ww=view.bounds.width
-                let wh=view.bounds.height
+//                let ww=view.bounds.width
+//                let wh=view.bounds.height
                 
                 //let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
                 wakuE.origin.x=loc.x
@@ -3686,36 +3686,36 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 showWakuImages()
                 setUserDefaults()
                 
-                print("tap")
+//                print("tap")
             }
-            if calcFlag==true {//計算中
-                if matchingTestMode==true{//testMode計算中なら
-                    calcFlag=false
-                    nextButton.isHidden=false
-                    backButton.isHidden=false
-                    eraseButton.isHidden=false
-                    videoSlider.isEnabled=true
-                }
-                return
-            }
-            if wakuImg2.isHidden==false||wakuImg3.isHidden==false{//testModeの表示があるとき
-                wakuImg2.isHidden=true
-                wakuImg3.isHidden=true
-                return
-            }
+//            if calcFlag==true {//計算中
+//                if matchingTestMode==true{//testMode計算中なら
+//                    calcFlag=false
+//                    nextButton.isHidden=false
+//                    backButton.isHidden=false
+//                    eraseButton.isHidden=false
+//                    videoSlider.isEnabled=true
+//                }
+//                return
+//            }
+//            if wakuImg2.isHidden==false||wakuImg3.isHidden==false{//testModeの表示があるとき
+//                wakuImg2.isHidden=true
+//                wakuImg3.isHidden=true
+//                return
+//            }
             if loc.y > videoSlider.frame.minY-20{//video slide bar と被らないように
                 return
             }
-            if faceMark==true{//選択枠を変更
-                if wakuEyeFace==0{
-                    wakuEyeFace=1
-                }else{
-                    wakuEyeFace=0
-                }
-//                print("faceMark:",faceMark,wakuEyeFace)
-                dispWakus()
-                showWakuImages()
-            }
+//            if faceMark==true{//選択枠を変更
+//                if wakuEyeFace==0{
+//                    wakuEyeFace=1
+//                }else{
+//                    wakuEyeFace=0
+//                }
+////                print("faceMark:",faceMark,wakuEyeFace)
+//                dispWakus()
+//                showWakuImages()
+//            }
         }
     }
     func setCurrVHIT(pos:Int){
