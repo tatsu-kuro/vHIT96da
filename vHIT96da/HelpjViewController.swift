@@ -10,7 +10,7 @@ import UIKit
 
 class HelpjViewController: UIViewController {
 //    let someFunctions = myFunctions()
-    let iroiro = myFunctions(albumName: "vHIT_VOG")
+    let iroiro = myFunctions(albumName: "vHIT96da")
   
     var calcMode:Int?
 

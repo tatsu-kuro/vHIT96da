@@ -143,13 +143,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var userID:String="????"//起動時にuserDefaultに保存してあればそれとPWDをセット、
     //なければ新規にメールで申請して貰ったものとPWDをセットする
     let openCV = opencvWrapper()
-    let iroiro = myFunctions(albumName: "vHIT_VOG")
+    let iroiro = myFunctions(albumName: "vHIT96da")
     var writingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
     var readingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
     var vogCurpoint:Int = 0
     var videoPlayer: AVPlayer!
-    let vHIT_VOG:String="vHIT_VOG"
+    let vHIT96da:String="vHIT96da"
     let Wave96da:String="Wave96da"
     var matchingTestMode:Bool=false
     var fpsIs120:Bool=false
@@ -394,7 +394,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT_VOG)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT96da)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
 //        print("asset:",assetCollections.count)
@@ -479,7 +479,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT_VOG)
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT96da)
         
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         //アルバムが存在しない事もある？
@@ -2286,7 +2286,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         requestOptions.deliveryMode = .highQualityFormat
         // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         if (assetCollections.count > 0) {//アルバムが存在しない時
             //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
@@ -2346,7 +2346,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         requestOptions.deliveryMode = .highQualityFormat
         // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT_VOG")
+        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
         if (assetCollections.count > 0) {//アルバムが存在しない時
             //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
@@ -2757,7 +2757,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             idString = textField.text!
             let drawImage = drawvhitWaves(width:500*4,height:200*4)
             
-            //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
+            //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
             saveJpegImage2path(image: drawImage, path: "temp.jpeg")
             while existFile(aFile: "temp.jpeg") == false{
                 sleep(UInt32(0.1))
@@ -2827,7 +2827,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             drawVog(vogCurpoint)//画面にID表示。
   // イメージビューに設定する
             let trimImgWithText=getVogImgWithText(vogImage!, curPoint: vogCurpoint,mailFlag: true)
-            //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
+            //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
             saveJpegImage2path(image: trimImgWithText, path: "temp.jpeg")
             while existFile(aFile: "temp.jpeg") == false{
                 sleep(UInt32(0.1))
@@ -3164,7 +3164,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }else if let vc = segue.destination as? RecordViewController{
             let Controller:RecordViewController = vc
             if PHPhotoLibrary.authorizationStatus(for: .readWrite) == .authorized{
-                iroiro.makeAlbum(vHIT_VOG)//なければ作る
+                iroiro.makeAlbum(vHIT96da)//なければ作る
                 iroiro.makeAlbum(Wave96da)//これもなければ作る
             }
             Controller.videoCount=videoDate.count
@@ -3342,7 +3342,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 print("rewind***2")
 
                 removeFile(delFile: "temp.png")
-//                getVideosAlbumList(name: vHIT_VOG)
+//                getVideosAlbumList(name: vHIT_)
                 if videoDate.count<3{
                     getAlbumAssets()
                 }else{
@@ -3386,20 +3386,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
                 let eyeImage = iroiro.getThumb(avasset: avasset!)
                 let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
-                //まずtemp.pngに保存して、それをvHIT_VOGアルバムにコピーする
+                //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
                 savePngImage2path(image: gyroImage!, path: "temp.png")
                 while existFile(aFile: "temp.png")==false{
                     sleep(UInt32(0.1))
                 }
                 print("rewind***5")
 
-                savePath2album(name:vHIT_VOG,path: "temp.png")
+                savePath2album(name:vHIT96da,path: "temp.png")
                 startFrame=0
                 //                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
-//                    getVideosAlbumList(name: vHIT_VOG)
+
                     getAlbumAssets()
 #if DEBUG
                     print("アルバムを消されていたので、録画を保存しなかった。")
@@ -3622,8 +3622,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let eyeFrame=eyeWaku_image.frame
         let faceFrame=faceWaku_image.frame
         //checkDispMode() 1-vHIT 2-VOG 0-non
-        let vHIT_VOG=checkDispMode()
-        if vHIT_VOG==1 {//vhit
+        let vHIT_dispmode=checkDispMode()
+        if vHIT_dispmode==1 {//vhit
             if loc.y<vHITBoxView!.frame.minY || (loc.y>vHITBoxView!.frame.maxY && loc.y<waveBoxView!.frame.minY) ||
                 (loc.y>waveBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
                 if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
@@ -3655,7 +3655,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 drawVHITwaves()
             }
-        }else if vHIT_VOG==2{//vog
+        }else if vHIT_dispmode==2{//vog
             if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
                 if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
                     onWaveButton(0)

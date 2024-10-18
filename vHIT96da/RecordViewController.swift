@@ -12,9 +12,9 @@ import GLKit
 import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
-    let iroiro = myFunctions(albumName:"vHIT_VOG")
+    let iroiro = myFunctions(albumName:"vHIT96da")
     let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
-    let vHIT_VOG:String="vHIT_VOG"
+    let vHIT96da:String="vHIT96da"
     var recordedFlag:Bool = false
     let motionManager = CMMotionManager()
     var captureSession: AVCaptureSession!
@@ -628,12 +628,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         
-        if albumExists(albumName: vHIT_VOG)==true{
+        if albumExists(albumName: vHIT96da)==true{
             recordedFlag=true
             PHPhotoLibrary.shared().performChanges({ [self] in
                 //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
                 let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
-                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: vHIT_VOG))
+                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: vHIT96da))
                 let placeHolder = assetRequest.placeholderForCreatedAsset
                 albumChangeRequest?.addAssets([placeHolder!] as NSArray)
                 //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
