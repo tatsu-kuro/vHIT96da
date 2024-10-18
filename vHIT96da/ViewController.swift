@@ -2176,7 +2176,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         waveSlider.addTarget(self, action: #selector(onWaveSliderValueChange), for: UIControl.Event.valueChanged)
     }
     var calcStartTime=CFAbsoluteTimeGetCurrent()
-
+    var tapDownUpTime=CFAbsoluteTimeGetCurrent()//down-up所要時間
     @objc func update_vHIT(tm: Timer) {
         
         if matchingTestMode==true{
@@ -3470,8 +3470,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let dx:CGFloat = movePo.x
         let dy:CGFloat = movePo.y
      
-        r.origin.x = stRect.origin.x + dx/5//3->5
-        r.origin.y = stRect.origin.y + dy/5
+        r.origin.x = stRect.origin.x + dx/20//3->5->20
+        r.origin.y = stRect.origin.y + dy/20
         //r.size.width = stRect.size
         if r.origin.x < hani.origin.x{
             r.origin.x = hani.origin.x
@@ -3504,6 +3504,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         if sender.state == .began {
+            
+            tapDownUpTime=CFAbsoluteTimeGetCurrent()
+            
             moveThumX=0
             moveThumY=0
             if checkDispMode()==0{
@@ -3595,7 +3598,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else if sender.state == .ended{
             setUserDefaults()
-            
+   //             print("tap:",CFAbsoluteTimeGetCurrent() - self.tapDownUpTime)
         }
     }
     func setWakuImgs(mode:Bool){
@@ -3604,11 +3607,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         wakuImg3.isHidden = !mode
         wakuImg4.isHidden = !mode
     }
-    
 
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
-//        declarationLabel.alpha=0
-//        alert2()
+        if sender.state == .ended{
+            let delay=CFAbsoluteTimeGetCurrent() - tapDownUpTime
+            print("tapdowntime:",delay)
+            tapDownUpTime = CFAbsoluteTimeGetCurrent()
+        }
+
         if videoDate.count==0{
             return
         }
@@ -3665,8 +3671,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     backButton.isHidden=true
                     eraseButton.isHidden=true
                     videoSlider.isEnabled=false
+                  
                     return
                 }
+            }else{
+                let ww=view.bounds.width
+                let wh=view.bounds.height
+                
+                //let et=CGRect(x:ww/10,y:wh/20,width: ww*4/5,height:wh*3/4)
+                wakuE.origin.x=loc.x
+                wakuE.origin.y=loc.y
+//                wakuE = moveWakus(rect:wakuE,stRect: startRect,movePo: move,hani:et)
+                dispWakus()
+                showWakuImages()
+                setUserDefaults()
+                
+                print("tap")
             }
             if calcFlag==true {//計算中
                 if matchingTestMode==true{//testMode計算中なら
@@ -3802,6 +3822,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         drawVHITwaves()
     }
     
+ 
     @IBAction func onNextButtonLongPress(_ sender: UILongPressGestureRecognizer) {
         if (sender.state == UIGestureRecognizer.State.ended) {
             startFrame=0

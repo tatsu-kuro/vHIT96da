@@ -479,6 +479,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
         registerButton.frame=CGRect(x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
         registerButton.isHidden=true
+        toVOGButton.isHidden=true
+        tovHITButton.isHidden=true
+        VOGLabel.isHidden=true
+        vHITLabel.isHidden=true
+        faceMarkSwitch.isHidden=true
+        markText.isHidden=true
+        lowPassText.isHidden=true
+        lowPassFilterSwitch.isHidden=true
     }
     
     let iroiro = myFunctions(albumName: "vHIT_VOG")
