@@ -75,22 +75,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k50-f5-jh1">
-                                <rect key="frame" x="130" y="155" width="59" height="58"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhl-W2-Rd7">
-                                <rect key="frame" x="131" y="39" width="59" height="58"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tQh-go-BDj">
-                                <rect key="frame" x="131" y="212" width="59" height="58"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i5c-dW-a9a">
-                                <rect key="frame" x="130" y="98" width="59" height="58"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ac1-F6-YXh">
                                 <rect key="frame" x="10" y="69" width="45" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -385,10 +369,6 @@
                         <outlet property="vHITBoxView" destination="LF5-TY-uR4" id="wIh-rl-KVn"/>
                         <outlet property="videoFps" destination="6oH-Ur-nDk" id="EUJ-xJ-mml"/>
                         <outlet property="videoSlider" destination="rzY-7a-f2q" id="ge5-Op-ylX"/>
-                        <outlet property="wakuImg1" destination="jhl-W2-Rd7" id="La3-kk-kYg"/>
-                        <outlet property="wakuImg2" destination="k50-f5-jh1" id="BGH-eT-L8b"/>
-                        <outlet property="wakuImg3" destination="tQh-go-BDj" id="pz4-mk-m61"/>
-                        <outlet property="wakuImg4" destination="i5c-dW-a9a" id="1wZ-Uk-56k"/>
                         <outlet property="wakuShowEye_image" destination="ac1-F6-YXh" id="xbD-VV-AMd"/>
                         <outlet property="waveBoxView" destination="jmg-cq-3ff" id="hec-lR-9Ac"/>
                         <outlet property="waveButton" destination="Q2m-D3-Mdm" id="hsZ-Du-slr"/>
