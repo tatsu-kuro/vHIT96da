@@ -29,8 +29,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var exitButton: UIButton!
     
     @IBOutlet weak var registerButton: UIButton!
-    @IBOutlet weak var lowPassText: UILabel!
-    @IBOutlet weak var lowPassFilterSwitch: UISegmentedControl!
+//    @IBOutlet weak var lowPassText: UILabel!
+//    @IBOutlet weak var lowPassFilterSwitch: UISegmentedControl!
     func getUserDefault(str:String,ret:Int) -> Int{//getUserDefault_one
         if (UserDefaults.standard.object(forKey: str) != nil){//keyが設定してなければretをセット
             return UserDefaults.standard.integer(forKey:str)
@@ -40,23 +40,23 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @IBAction func onLowPassFilterSwitch(_ sender: Any) {
-        let index=lowPassFilterSwitch.selectedSegmentIndex
-        UserDefaults.standard.set(index, forKey: "lowPassFilterCnt")
-        print("selectedSegmentIndex",index)
-    }
+//    @IBAction func onLowPassFilterSwitch(_ sender: Any) {
+//        let index=lowPassFilterSwitch.selectedSegmentIndex
+//        UserDefaults.standard.set(index, forKey: "lowPassFilterCnt")
+//        print("selectedSegmentIndex",index)
+//    }
     
-    @IBOutlet weak var greenItemLabel: UILabel!
-    @IBOutlet weak var vHITLabel: UILabel!
-    @IBOutlet weak var toVOGButton: UIButton!
-    @IBAction func onTovHITButton(_ sender: Any) {
-        if calcMode == 0{
-            return
-        }
-        calcMode=0
-        dispParam()
-        setTexts()
-    }
+ //   @IBOutlet weak var greenItemLabel: UILabel!
+//    @IBOutlet weak var vHITLabel: UILabel!
+//    @IBOutlet weak var toVOGButton: UIButton!
+//    @IBAction func onTovHITButton(_ sender: Any) {
+//        if calcMode == 0{
+//            return
+//        }
+//        calcMode=0
+//        dispParam()
+//        setTexts()
+//    }
     @IBAction func unwindPara(_ segue: UIStoryboardSegue){
     }
     //    @IBAction func unwindPara(_ segue: UIStoryboardSegue) {
@@ -72,14 +72,14 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         return true
     }
 
-    @IBAction func onToVOGButton(_ sender: Any) {
-        if calcMode == 2{
-            return
-        }
-        calcMode=2
-        dispParam()
-        setTexts()
-    }
+//    @IBAction func onToVOGButton(_ sender: Any) {
+//        if calcMode == 2{
+//            return
+//        }
+//        calcMode=2
+//        dispParam()
+//        setTexts()
+//    }
     @IBOutlet weak var defaultButton: UIButton!
  
 //    var okpMode:Int = 0
@@ -132,13 +132,13 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var A2DLabel: UILabel!
     @IBOutlet weak var B2CLabel: UILabel!
     
-    @IBOutlet weak var eyeVelocityLabel: UILabel!
-    @IBOutlet weak var headVelocityLabel: UILabel!
-    @IBOutlet weak var eyePositionLabelVOG: UILabel!
-    @IBOutlet weak var eyeVelocityLabelVOG: UILabel!
+ //   @IBOutlet weak var eyeVelocityLabel: UILabel!
+ //   @IBOutlet weak var headVelocityLabel: UILabel!
+  //  @IBOutlet weak var eyePositionLabelVOG: UILabel!
+  //  @IBOutlet weak var eyeVelocityLabelVOG: UILabel!
     
-    @IBOutlet weak var tovHITButton: UIButton!
-    @IBOutlet weak var VOGLabel: UILabel!
+ //   @IBOutlet weak var tovHITButton: UIButton!
+ //   @IBOutlet weak var VOGLabel: UILabel!
     @IBOutlet weak var wakuLengthLabel: UILabel!
     @IBOutlet weak var eyeBorderLabel: UILabel!
     @IBOutlet weak var wakuLengthInput: UITextField!
@@ -151,8 +151,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var A2DInput: UITextField!
     @IBOutlet weak var eyeBorderInput: UITextField!
 
-    @IBOutlet weak var eyeVelocityInput: UITextField!
-    @IBOutlet weak var headVelocityInput: UITextField!
+//    @IBOutlet weak var eyeVelocityInput: UITextField!
+//    @IBOutlet weak var headVelocityInput: UITextField!
 
     @IBAction func wakuLengthAction(_ sender: Any) {
         wakuLength = Field2value(field: wakuLengthInput)
@@ -222,8 +222,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         A2DInput.endEditing(true)
         eyeBorderInput.endEditing(true)
         vorGainCorrectionInput.endEditing(true)
-        eyeVelocityInput.endEditing(true)
-        headVelocityInput.endEditing(true)
+ //       eyeVelocityInput.endEditing(true)
+//        headVelocityInput.endEditing(true)
         keyDown.isHidden = true
         setMaxMin()
         dispParam()
@@ -244,16 +244,16 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeRatio = 300
             gyroRatio = 170
             wakuLength = 3
-            lowPassFilterSwitch.selectedSegmentIndex=4//getUserDefault(str: "lowPassFilterCnt", ret: 4)
-            onLowPassFilterSwitch(0)
+//            lowPassFilterSwitch.selectedSegmentIndex=4//getUserDefault(str: "lowPassFilterCnt", ret: 4)
+//            onLowPassFilterSwitch(0)
         }else{
             eyeBorder=10
             faceMarkSwitch.isOn=false
             posRatio = 100
             veloRatio = 100
             wakuLength = 3
-            lowPassFilterSwitch.selectedSegmentIndex=4//getUserDefault(str: "lowPassFilterCnt", ret: 4)
-            onLowPassFilterSwitch(0)
+//            lowPassFilterSwitch.selectedSegmentIndex=4//getUserDefault(str: "lowPassFilterCnt", ret: 4)
+//            onLowPassFilterSwitch(0)
         }
         
         dispParam()
@@ -282,34 +282,34 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         vorGainCorrection=Field2value(field: vorGainCorrectionInput)
     }
  
-    @IBAction func ratio1Button(_ sender: Any) {
-        if calcMode == 0 || calcMode==3{
-            eyeRatio = Field2value(field: eyeVelocityInput)
-        }else{
-            posRatio = Field2value(field: eyeVelocityInput)
-        }
-    }
+//    @IBAction func ratio1Button(_ sender: Any) {
+//        if calcMode == 0 || calcMode==3{
+//            eyeRatio = Field2value(field: eyeVelocityInput)
+//        }else{
+//            posRatio = Field2value(field: eyeVelocityInput)
+//        }
+ //   }
     
-    @IBAction func ratio2Button(_ sender: Any) {
-        if calcMode == 0 || calcMode==3{
-            gyroRatio = Field2value(field: headVelocityInput)
-        }else{
-            veloRatio = Field2value(field: headVelocityInput)
-        }
-    }
+//    @IBAction func ratio2Button(_ sender: Any) {
+//        if calcMode == 0 || calcMode==3{
+//            gyroRatio = Field2value(field: headVelocityInput)
+//        }else{
+//            veloRatio = Field2value(field: headVelocityInput)
+//        }
+ //   }
     
     func dispParam(){
         self.B2CInput.text = "\(widthRange)"
         self.A2DInput.text = "\(waveWidth)"
         self.eyeBorderInput.text = "\(eyeBorder)"
         self.vorGainCorrectionInput.text = "\(vorGainCorrection)"
-        if calcMode == 0 || calcMode==3{//vHIT
-            self.eyeVelocityInput.text = "\(eyeRatio)"
-            self.headVelocityInput.text = "\(gyroRatio)"
-        }else{//vog
-            self.eyeVelocityInput.text = "\(posRatio)"
-            self.headVelocityInput.text = "\(veloRatio)"
-        }
+//        if calcMode == 0 || calcMode==3{//vHIT
+//            self.eyeVelocityInput.text = "\(eyeRatio)"
+//            self.headVelocityInput.text = "\(gyroRatio)"
+//        }else{//vog
+//            self.eyeVelocityInput.text = "\(posRatio)"
+//            self.headVelocityInput.text = "\(veloRatio)"
+//        }
         self.wakuLengthInput.text = "\(wakuLength)"
         if faceMark==false{
             self.faceMarkSwitch.isOn=false
@@ -342,21 +342,21 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let buty1=view.bounds.height-sp-buth1-bottom
 
         keyDown.frame=CGRect(x:ww-butw-sp*2,y:topY,width: butw,height: buth)
-        eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
-        headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
-        eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
-        eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
-        lowPassText.isHidden=true
-        lowPassFilterSwitch.isHidden=true
+ //       eyeVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
+ //       headVelocityLabel.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
+ //       eyePositionLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*1,width: tw, height: bh)
+ //       eyeVelocityLabelVOG.frame   = CGRect(x:x2,   y: topY+bh1*2 ,width: tw, height: bh)
+ //       lowPassText.isHidden=true
+//        lowPassFilterSwitch.isHidden=true
         if calcMode==2{//VOG
-            eyeVelocityLabel.isHidden=true
-            headVelocityLabel.isHidden=true
-            eyePositionLabelVOG.isHidden=false
-            eyeVelocityLabelVOG.isHidden=false
-            eyeVelocityLabel.backgroundColor=UIColor.white
-            eyeVelocityLabel.textColor=UIColor.black
-            headVelocityLabel.backgroundColor=UIColor.white
-            headVelocityLabel.textColor=UIColor.black
+ //           eyeVelocityLabel.isHidden=true
+ //           headVelocityLabel.isHidden=true
+ //           eyePositionLabelVOG.isHidden=false
+ //           eyeVelocityLabelVOG.isHidden=false
+ //           eyeVelocityLabel.backgroundColor=UIColor.white
+ //           eyeVelocityLabel.textColor=UIColor.black
+ //           headVelocityLabel.backgroundColor=UIColor.white
+ //           headVelocityLabel.textColor=UIColor.black
             vhitpng.isHidden=true
             A2DLabel.isHidden=true
             B2CLabel.isHidden=true
@@ -365,15 +365,15 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             B2CInput.isHidden = true
             eyeBorderInput.isHidden = false
             vorGainCorrectionInput.isHidden = true
-            eyeVelocityInput.isHidden = false
-            headVelocityInput.isHidden = false
+//            eyeVelocityInput.isHidden = false
+//            headVelocityInput.isHidden = false
             VorGainCorrectionLabel.isHidden = true
             wakuLengthLabel.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
             gyroText.isHidden=true
-            eyeVelocityInput.frame = CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
-            headVelocityInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
+//            eyeVelocityInput.frame = CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
+//            headVelocityInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             eyeBorderInput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             
@@ -386,18 +386,18 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             oppositeButton.isHidden=true
             vhitDisplayLabel.isHidden=true
                         
-            vHITLabel.isHidden=true
-            VOGLabel.isHidden=false
-            greenItemLabel.isHidden=true
+        //    vHITLabel.isHidden=true
+       //     VOGLabel.isHidden=false
+   //         greenItemLabel.isHidden=true
         }else if calcMode==0 || calcMode==1{//vhit
-            eyeVelocityLabel.isHidden=false
-            headVelocityLabel.isHidden=false
-            lowPassText.isHidden=false
-            lowPassFilterSwitch.isHidden=false
-            eyePositionLabelVOG.isHidden=true
-            eyeVelocityLabelVOG.isHidden=true
+  //          eyeVelocityLabel.isHidden=false
+  //          headVelocityLabel.isHidden=false
+   //         lowPassText.isHidden=false
+//            lowPassFilterSwitch.isHidden=false
+   //         eyePositionLabelVOG.isHidden=true
+  //          eyeVelocityLabelVOG.isHidden=true
             gyroText.isHidden=true
-            greenItemLabel.isHidden=false
+ //           greenItemLabel.isHidden=false
             vhitpng.isHidden=false
             if Locale.preferredLanguages.first!.contains("ja"){
                 vhitpng.image=UIImage(named:"vhit_ja")!
@@ -411,8 +411,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             B2CInput.isHidden = false
             eyeBorderInput.isHidden = false
             vorGainCorrectionInput.isHidden = false
-            eyeVelocityInput.isHidden = false
-            headVelocityInput.isHidden = false
+//            eyeVelocityInput.isHidden = false
+//            headVelocityInput.isHidden = false
             VorGainCorrectionLabel.isHidden = false
                 
             parallelButton.isHidden=false
@@ -421,19 +421,19 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             oppositeButton.isHidden=false
             vhitDisplayLabel.isHidden=false
             
-            eyeVelocityLabel.backgroundColor=UIColor.white
-            eyeVelocityLabel.textColor=UIColor.systemGreen
-            headVelocityLabel.backgroundColor=UIColor.white
-            headVelocityLabel.textColor=UIColor.systemGreen
+   //         eyeVelocityLabel.backgroundColor=UIColor.white
+   //         eyeVelocityLabel.textColor=UIColor.systemGreen
+   //         headVelocityLabel.backgroundColor=UIColor.white
+   //         headVelocityLabel.textColor=UIColor.systemGreen
 //            timeLagLabel.backgroundColor=UIColor.white
 //            timeLagLabel.textColor=UIColor.systemGreen
-            vhitDisplayLabel.textColor=UIColor.systemGreen
-            vhitDisplayLabel.backgroundColor=UIColor.white
+ //           vhitDisplayLabel.textColor=UIColor.systemGreen
+   //         vhitDisplayLabel.backgroundColor=UIColor.white
             
             A2DLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
             B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
-            eyeVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*0 ,width: tw, height: bh)
-            headVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*1 ,width: tw, height: bh)
+      //      eyeVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*0 ,width: tw, height: bh)
+      //      headVelocityLabel.frame = CGRect(x:x2,   y: topY+bh1*1 ,width: tw, height: bh)
             wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             VorGainCorrectionLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
@@ -441,8 +441,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             B2CInput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
-            eyeVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*0 ,width: bw, height: bh)
-            headVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
+//            eyeVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*0 ,width: bw, height: bh)
+//            headVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
             wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
             eyeBorderInput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
             vorGainCorrectionInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
@@ -455,38 +455,38 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH,width:butw,height:3)
             oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:bh)
             oppositeButton.layer.cornerRadius=3
-            greenItemLabel.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+5 ,width: view.bounds.width-x1*2, height: bh*2)
-            greenItemLabel.layer.masksToBounds = true
-            greenItemLabel.layer.cornerRadius = 3
+ //           greenItemLabel.frame = CGRect(x:x1,y: topY+bh1*8+vhitpngH+5 ,width: view.bounds.width-x1*2, height: bh*2)
+ //           greenItemLabel.layer.masksToBounds = true
+  //          greenItemLabel.layer.cornerRadius = 3
             faceMarkSwitch.frame =     CGRect(x:x1,y: topY+bh1*10+vhitpngH-5 ,width: bw, height: bh)
-            lowPassFilterSwitch.frame =     CGRect(x:x1,y: faceMarkSwitch.frame.maxY+sp ,width: bw*3, height: bh)
-            lowPassText.frame=CGRect(x:lowPassFilterSwitch.frame.maxX+sp,y: faceMarkSwitch.frame.maxY+sp,width: bw*3, height: lowPassFilterSwitch.frame.height)
+//            lowPassFilterSwitch.frame =     CGRect(x:x1,y: faceMarkSwitch.frame.maxY+sp ,width: bw*3, height: bh)
+  //          lowPassText.frame=CGRect(x:lowPassFilterSwitch.frame.maxX+sp,y: faceMarkSwitch.frame.maxY+sp,width: bw*3, height: lowPassFilterSwitch.frame.height)
             markText.frame  = CGRect(x:x2,  y: topY+bh1*10+vhitpngH-5,width:tw,height: faceMarkSwitch.frame.height)
 
             displayMode()
-            vHITLabel.isHidden=false
-            VOGLabel.isHidden=true
-            vHITLabel.layer.masksToBounds=true
-            greenItemLabel.layer.borderColor = UIColor.green.cgColor
-            greenItemLabel.layer.borderWidth = 1.0
+        //    vHITLabel.isHidden=false
+         //   VOGLabel.isHidden=true
+         //   vHITLabel.layer.masksToBounds=true
+     //       greenItemLabel.layer.borderColor = UIColor.green.cgColor
+    //        greenItemLabel.layer.borderWidth = 1.0
         }
         
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
-        tovHITButton.frame=CGRect(x:ww/2-butw1-sp/2,y:buty1,width:butw1,height: buth1)
-        iroiro.setLabelTopRectangle(vHITLabel, rect: tovHITButton.frame, UIColor.systemRed)
-        toVOGButton.frame=CGRect( x:ww/2+sp/2,y:buty1,width:butw1,height: buth1)
-        iroiro.setLabelTopRectangle(VOGLabel, rect: toVOGButton.frame, UIColor.systemRed)
+    //    tovHITButton.frame=CGRect(x:ww/2-butw1-sp/2,y:buty1,width:butw1,height: buth1)
+    //    iroiro.setLabelTopRectangle(vHITLabel, rect: tovHITButton.frame, UIColor.systemRed)
+   //     toVOGButton.frame=CGRect( x:ww/2+sp/2,y:buty1,width:butw1,height: buth1)
+   //     iroiro.setLabelTopRectangle(VOGLabel, rect: toVOGButton.frame, UIColor.systemRed)
         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
-        registerButton.frame=CGRect(x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
-        registerButton.isHidden=true
-        toVOGButton.isHidden=true
-        tovHITButton.isHidden=true
-        VOGLabel.isHidden=true
-        vHITLabel.isHidden=true
+    //    registerButton.frame=CGRect(x:butw1*3+5*sp,y:buty1,width:butw1,height: buth1)
+    //    registerButton.isHidden=true
+     //   toVOGButton.isHidden=true
+     //   tovHITButton.isHidden=true
+    //    VOGLabel.isHidden=true
+     //   vHITLabel.isHidden=true
         faceMarkSwitch.isHidden=true
         markText.isHidden=true
-        lowPassText.isHidden=true
-        lowPassFilterSwitch.isHidden=true
+  //      lowPassText.isHidden=true
+//        lowPassFilterSwitch.isHidden=true
     }
     
     let iroiro = myFunctions(albumName: "vHIT_VOG")
@@ -501,24 +501,24 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         A2DInput.delegate = self
         eyeBorderInput.delegate = self
         vorGainCorrectionInput.delegate = self
-        eyeVelocityInput.delegate = self
-        headVelocityInput.delegate = self
+   //     eyeVelocityInput.delegate = self
+//        headVelocityInput.delegate = self
         wakuLengthInput.delegate = self
-        lowPassFilterSwitch.selectedSegmentIndex=getUserDefault(str: "lowPassFilterCnt", ret: 4)
+//        lowPassFilterSwitch.selectedSegmentIndex=getUserDefault(str: "lowPassFilterCnt", ret: 4)
         self.B2CInput.keyboardType = UIKeyboardType.numberPad
         self.A2DInput.keyboardType = UIKeyboardType.numberPad
         self.eyeBorderInput.keyboardType = UIKeyboardType.numberPad
         self.wakuLengthInput.keyboardType = UIKeyboardType.numberPad
-        self.eyeVelocityInput.keyboardType = UIKeyboardType.numberPad
-        self.headVelocityInput.keyboardType = UIKeyboardType.numberPad
+   //     self.eyeVelocityInput.keyboardType = UIKeyboardType.numberPad
+//        self.headVelocityInput.keyboardType = UIKeyboardType.numberPad
         self.vorGainCorrectionInput.keyboardType = UIKeyboardType.numberPad
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
         keyDown.layer.cornerRadius = 5
-        toVOGButton.layer.cornerRadius=5
-        tovHITButton.layer.cornerRadius=5
-        registerButton.layer.cornerRadius=5
+   //     toVOGButton.layer.cornerRadius=5
+    //    tovHITButton.layer.cornerRadius=5
+    //    registerButton.layer.cornerRadius=5
         keyDown.isHidden = true
         setMaxMin()//念の為パラメータを正常範囲にしておく。
     }
