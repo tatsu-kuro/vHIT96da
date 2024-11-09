@@ -322,11 +322,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nhv-wX-Ii2">
-                                <rect key="frame" x="73" y="402" width="145" height="71"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qyA-8E-tec">
                                 <rect key="frame" x="71" y="863" width="12" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -390,7 +385,6 @@
                         <outlet property="vHITBoxView" destination="LF5-TY-uR4" id="wIh-rl-KVn"/>
                         <outlet property="videoFps" destination="6oH-Ur-nDk" id="EUJ-xJ-mml"/>
                         <outlet property="videoSlider" destination="rzY-7a-f2q" id="ge5-Op-ylX"/>
-                        <outlet property="vogBoxView" destination="Nhv-wX-Ii2" id="Ffc-g1-qPQ"/>
                         <outlet property="wakuImg1" destination="jhl-W2-Rd7" id="La3-kk-kYg"/>
                         <outlet property="wakuImg2" destination="k50-f5-jh1" id="BGH-eT-L8b"/>
                         <outlet property="wakuImg3" destination="tQh-go-BDj" id="pz4-mk-m61"/>

@@ -233,7 +233,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var mailHeight:CGFloat=0//VOG
     
     @IBOutlet weak var waveBoxView: UIImageView!
-    @IBOutlet weak var vogBoxView: UIImageView!
+  //  @IBOutlet weak var vogBoxView: UIImageView!
     
     @IBOutlet weak var vHITBoxView: UIImageView!
 
@@ -730,7 +730,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func showBoxies(f:Bool){
         if f==true && calcMode == 2{//vog wave
             boxiesFlag=true
-            vogBoxView?.isHidden = false
+   //         vogBoxView?.isHidden = false
             vHITBoxView?.isHidden = true
 
             waveBoxView?.isHidden = true
@@ -739,7 +739,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             playButton.isEnabled=false
         }else if f==true && calcMode != 2{//vhit wave
             boxiesFlag=true
-            vogBoxView?.isHidden = true
+  //          vogBoxView?.isHidden = true
             vHITBoxView?.isHidden = false
             waveBoxView?.isHidden = false
             setBacknext(f: false)
@@ -747,7 +747,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             playButton.isEnabled=false
         }else{//no wave
             boxiesFlag=false
-            vogBoxView?.isHidden = true
+  //          vogBoxView?.isHidden = true
             vHITBoxView?.isHidden = true
             waveBoxView?.isHidden = true
             setBacknext(f: true)
@@ -765,8 +765,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func checkDispMode()->Int{
         if vHITBoxView?.isHidden==false {//vHIT on
             return 1
-        }else if vogBoxView?.isHidden==false{//VOG on
-            return 2
+//        }else if vogBoxView?.isHidden==false{//VOG on
+//            return 2
         }else{//off
             return 0
         }
@@ -1337,11 +1337,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func drawVog(_ curPoint:Int){
-        let ww=view.bounds.width
-        // 画面に表示する
-        let img = getVogImgWithText(vogImage!,curPoint:curPoint,mailFlag: false)
-        let drawImage = img .resize(size: CGSize(width:ww, height:ww*2/3))
-        drawVogBoxView(drawImage!)
+//        let ww=view.bounds.width
+//        // 画面に表示する
+//        let img = getVogImgWithText(vogImage!,curPoint:curPoint,mailFlag: false)
+//        let drawImage = img .resize(size: CGSize(width:ww, height:ww*2/3))
+//        drawVogBoxView(drawImage!)
     }
 
     func getVOGText(orgImg:UIImage,width w:CGFloat,height h:CGFloat,mail:Bool) -> UIImage {
@@ -1479,12 +1479,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var initDrawVogBoxFlag:Bool=true
     
     func drawVogBoxView(_ img:UIImage){
-         if initDrawVogBoxFlag==true{
-             initDrawVogBoxFlag=false
-         }else{
-             vogBoxView.layer.sublayers?.removeLast()
-         }
-         vogBoxView.addSubview(UIImageView(image: img))
+//         if initDrawVogBoxFlag==true{
+//             initDrawVogBoxFlag=false
+//         }else{
+//             vogBoxView.layer.sublayers?.removeLast()
+//         }
+//         vogBoxView.addSubview(UIImageView(image: img))
     }
 //    func drawVogtext(){
 //        let ww=view.bounds.width
@@ -2451,7 +2451,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vHITBoxView?.frame=CGRect(x:0,y:wh*160/568-ww/5,width :ww,height:ww*2/5)
         
         waveBoxView?.frame=CGRect(x:0,y:wh*340/568-ww*90/320,width:ww,height: ww*180/320)
-        vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
+//        vogBoxView?.frame=CGRect(x:0,y:wh/2-ww/3,width:ww,height: ww*2/3)
 
         backButton.layer.cornerRadius = 5
         nextButton.layer.cornerRadius = 5
@@ -3059,8 +3059,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     calcDrawVHIT(tuple: false)
                     drawOneWave(startcount: vhitCurpoint)
                 }
-            }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
-                
+//            }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
+//                
             }else{//枠 changed
                 if pos.y>view.bounds.height*3/4{
                     return
@@ -3080,10 +3080,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
          }
     }
     func setWakuImgs(mode:Bool){
-        wakuImg1.isHidden = !mode
-        wakuImg2.isHidden = !mode
-        wakuImg3.isHidden = !mode
-        wakuImg4.isHidden = !mode
+//        wakuImg1.isHidden = !mode
+//        wakuImg2.isHidden = !mode
+//        wakuImg3.isHidden = !mode
+//        wakuImg4.isHidden = !mode
     }
 
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
@@ -3128,12 +3128,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 drawVHITwaves()
             }
         }else if vHIT_dispmode==2{//vog
-            if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
-                if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
-                    onWaveButton(0)
-                    return
-                }
-            }
+//            if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
+//                if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
+//                    onWaveButton(0)
+//                    return
+//                }
+//            }
         }else{//波形が表示されていないとき
             if loc.y < videoSlider.frame.minY-20{//video slide bar と被らないように
                 wakuE.origin.x=loc.x
