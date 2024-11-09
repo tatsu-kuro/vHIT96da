@@ -56,7 +56,7 @@
 "b3H-GH-mSd.text" = "眼球位置波形の高さ %";
 
 /* Class = "UILabel"; text = "(2*)vhit waveforms"; ObjectID = "bwj-An-8NO"; */
-"bwj-An-8NO.text" = "(2*)vhit表示タイプ";
+"bwj-An-8NO.text" = "vhit表示タイプ";
 
 /* Class = "UILabel"; text = "near"; ObjectID = "ds1-rt-blQ"; */
 "ds1-rt-blQ.text" = "近";

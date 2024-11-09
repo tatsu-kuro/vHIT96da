@@ -128,7 +128,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var wakuLength:Int = 0
     var calcMode:Int?
     var vHITDisplayMode:Int = 0
-    @IBOutlet weak var gyroText: UILabel!
+ //   @IBOutlet weak var gyroText: UILabel!
     @IBOutlet weak var A2DLabel: UILabel!
     @IBOutlet weak var B2CLabel: UILabel!
     
@@ -370,8 +370,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             VorGainCorrectionLabel.isHidden = true
             wakuLengthLabel.frame   = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
             eyeBorderLabel.frame   = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
-            gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
-            gyroText.isHidden=true
+ //           gyroText.frame = CGRect(x:5,y:topY+bh1*5,width:ww-10,height: bh*3 )
+ //           gyroText.isHidden=true
 //            eyeVelocityInput.frame = CGRect(x:x1,y: topY+bh1*1 ,width: bw, height: bh)
 //            headVelocityInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
             eyeBorderInput.frame = CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
@@ -396,7 +396,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 //            lowPassFilterSwitch.isHidden=false
    //         eyePositionLabelVOG.isHidden=true
   //          eyeVelocityLabelVOG.isHidden=true
-            gyroText.isHidden=true
+  //          gyroText.isHidden=true
  //           greenItemLabel.isHidden=false
             vhitpng.isHidden=false
             if Locale.preferredLanguages.first!.contains("ja"){
@@ -438,7 +438,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
             VorGainCorrectionLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
             var vhitpngH=(ww-10)*440/940
-            gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
+  //          gyroText.frame  = CGRect(x:5,y: topY+bh1*7+25+ww/4,width:0,height:0)
             A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
             B2CInput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
 //            eyeVelocityInput.frame =     CGRect(x:x1,y: topY+bh1*0 ,width: bw, height: bh)

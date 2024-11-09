@@ -836,7 +836,6 @@
                         <outlet property="eyeBorderInput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
                         <outlet property="eyeBorderLabel" destination="NMH-1D-eWf" id="3bC-Vb-aGc"/>
                         <outlet property="faceMarkSwitch" destination="eyC-be-Bgy" id="1BZ-yx-0Xd"/>
-                        <outlet property="gyroText" destination="Atu-MZ-zqA" id="65H-wy-p1s"/>
                         <outlet property="keyDown" destination="pMb-F1-KQb" id="9ax-j5-bsU"/>
                         <outlet property="markText" destination="aD3-jN-jML" id="cLB-AB-x5I"/>
                         <outlet property="oppositeButton" destination="p30-4I-jic" id="atM-HJ-i7U"/>
