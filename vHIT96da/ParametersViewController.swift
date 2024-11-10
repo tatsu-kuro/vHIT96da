@@ -276,8 +276,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             A2DInput.isHidden = false
             B2CInput.isHidden = false
             eyeBorderInput.isHidden = false
-            vorGainCorrectionInput.isHidden = false
-            VorGainCorrectionLabel.isHidden = false
+            vorGainCorrectionInput.isHidden = true //false 将来のため？
+            VorGainCorrectionLabel.isHidden = true //false 将来のため？
                 
             parallelButton.isHidden=false
             parallelLabel.isHidden=false
