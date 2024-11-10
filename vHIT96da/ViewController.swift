@@ -2304,7 +2304,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //           ParametersViewController.faceMarkHidden = faceMarkHidden
             ParametersViewController.widthRange = widthRange
             ParametersViewController.waveWidth = waveWidth
-            ParametersViewController.calcMode = calcMode
+        //    ParametersViewController.calcMode = calcMode
             ParametersViewController.eyeBorder = eyeBorder
             
             //          ParametersViewController.faceMark = faceMark
@@ -2323,7 +2323,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             
         }else if let vc = segue.destination as? HelpjViewController{
             let Controller:HelpjViewController = vc
-            Controller.calcMode = calcMode
+           // Controller.calcMode = calcMode
         }else if let vc = segue.destination as? RecordViewController{
             let Controller:RecordViewController = vc
             if PHPhotoLibrary.authorizationStatus(for: .readWrite) == .authorized{

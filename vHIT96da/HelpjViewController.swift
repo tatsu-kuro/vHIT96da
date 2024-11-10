@@ -12,7 +12,7 @@ class HelpjViewController: UIViewController {
 //    let someFunctions = myFunctions()
     let iroiro = myFunctions(albumName: "vHIT96da")
   
-    var calcMode:Int?
+ //   var calcMode:Int?
 
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var exitButton: UIButton!
@@ -35,17 +35,9 @@ class HelpjViewController: UIViewController {
         var img = UIImage(named:"vHITen")!
     
         if Locale.preferredLanguages.first!.contains("ja"){
-            if calcMode != 2{
+
                 img = UIImage(named:"vHITja")!
-            }else{
-                img = UIImage(named: "VOGja")!
-            }
-        }else{
-            if calcMode != 2{
-                img = UIImage(named:"vHITen")!
-            }else{
-                img = UIImage(named:"VOGen")!
-            }
+   
         }
         
         // 画像のサイズ
