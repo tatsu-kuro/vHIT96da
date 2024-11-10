@@ -142,7 +142,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var writingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
     var readingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
-    var vogCurpoint:Int = 0
+
     var videoPlayer: AVPlayer!
     let vHIT96da:String="vHIT96da"
     let Wave96da:String="Wave96da"
@@ -510,7 +510,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcMode != 2{
             if eyePosXFiltered.count>0 && videoCurrent != -1{
                 vhitCurpoint=0
-                drawOneWave(startcount: 0)
+                drawOneWave(startcount: 0,clearFlag: false)
                 calcDrawVHIT(tuple: false)
             }
         }
@@ -536,7 +536,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcMode != 2{
             if eyePosXFiltered.count>0 && videoCurrent != -1{
                 vhitCurpoint=0
-                drawOneWave(startcount: 0)
+                drawOneWave(startcount: 0,clearFlag: false)
                 calcDrawVHIT(tuple: false)
             }
         }
@@ -923,11 +923,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setArraysData(type: 1)//append(0)
         
         showBoxies(f: true)
-        
+        drawVHITwaves(clearFlag: true)
+        drawOneWave(startcount: 0,clearFlag: true)
+
+  //      waveBoxView.image = UIImage(named:"VOGen")//eye")
         waveSlider.isHidden=false
         videoSlider.isHidden=true
-        vogImage = makeVOGimgWakulines(width:mailWidth*18,height:mailHeight)//枠だけ
-        
+         
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
         moveGyroData()//gyroDeltastartframe分をズラして
@@ -1288,62 +1290,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     
-//    func drawNewVog(_ curPoint:Int){//すべてのvogを画面に表示 unwindから呼ばれる
-//        vogImage = makeVOGimgWakulines(width: mailWidth*18,height: mailHeight)
-//        vogImage = makeVOGImage(startImg:vogImage!,width:0, height:0, start:0, end:eyePosXFiltered4update.count)
-//        drawVog(curPoint)
-//    }
-    
-    func drawVog(_ curPoint:Int){
-        //        let ww=view.bounds.width
-        //        // 画面に表示する
-        //        let img = getVogImgWithText(vogImage!,curPoint:curPoint,mailFlag: false)
-        //        let drawImage = img .resize(size: CGSize(width:ww, height:ww*2/3))
-        //        drawVogBoxView(drawImage!)
-    }
-    
-    func getVOGText(orgImg:UIImage,width w:CGFloat,height h:CGFloat,mail:Bool) -> UIImage {
-        // イメージ処理の開始]
-        //mailの時は直に貼り付ける
-        UIGraphicsBeginImageContext(orgImg.size)
-        orgImg.draw(at:CGPoint.zero)
-        let drawPath = UIBezierPath()
-        if !mail{//mailの時は時間経過は表示しない
-            let time=Int(CFAbsoluteTimeGetCurrent()-calcStartTime)+1
-            let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",arrayDataCount,CGFloat(arrayDataCount)/240.0,videoDura[videoCurrent],time)
-            //print(timetxt)
-            
-            timetxt.draw(at: CGPoint(x: 20, y: 5), withAttributes: [
-                NSAttributedString.Key.foregroundColor : UIColor.black,
-                NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        }
-        
-        let str0 = calcDate.components(separatedBy: ":")
-        let str1 = str0[0] + ":" + str0[1]
-        let str2 = "ID:" + idString
-        let str3 = "2sec/scale"
-        str1.draw(at: CGPoint(x: w/2, y: h-100), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        str2.draw(at: CGPoint(x: 20, y: h-100), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: w-360, y: h-100), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 70, weight: UIFont.Weight.regular)])
-        drawPath.stroke()
-        // イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
-    
+ 
 
     var initDrawVhitF:Bool=true
-    func drawVHITwaves(){//解析結果のvHITwavesを表示する
+    func drawVHITwaves(clearFlag:Bool){//解析結果のvHITwavesを表示する
         let ww=view.bounds.width
-        let drawImage = drawvhitWaves(width:500,height:200)
+        var drawImage = drawvhitWaves(width:500,height:200)
+        if clearFlag{
+            drawImage=drawvhitWavesClear(width:500,height: 200)
+        }
         let dImage = drawImage.resize(size: CGSize(width:ww, height:ww*2/5))//view.bounds.width*2/5))
         // 画面に表示する
         if initDrawVhitF==true{
@@ -1356,7 +1311,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     var initDrawOneFlag:Bool=true
-    func drawOneWave(startcount:Int){//vHIT_eye_head
+    func drawOneWave(startcount:Int,clearFlag:Bool){//vHIT_eye_head
         var startcnt = startcount
         let ww=view.bounds.width
         
@@ -1369,9 +1324,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             startcnt = arrayDataCount - Int(ww)
         }
         //波形を時間軸で表示
-        let drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
-        // イメージビューに設定する
-        
+        var drawImage:UIImage//  = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
+        if clearFlag{
+            drawImage = drawLineClear(num:startcnt,width:ww,height:ww*9/16)// 180)
+        }else{// イメージビューに設定する
+            drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
+        }
         if initDrawOneFlag==true{
             initDrawOneFlag=false
         }else{
@@ -1445,58 +1403,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     var timercnt:Int = 0
     var lastArraycount:Int = 0
- /*   @objc func update_vog(tm: Timer) {
-        timercnt += 1
-        if matchingTestMode==true{
-            if calcFlag == false{
-                timerCalc.invalidate()
-                setButtons(mode: true)
-                setVideoButtons(mode: true)
-                videoSlider.isEnabled=true
-                nextButton.isHidden=false
-                backButton.isHidden=false
-                matchingTestMode=false
-            }
-            return
-        }
-        arrayDataCount = getArrayData()
-        if arrayDataCount < 5 {
-            return
-        }
-        if calcFlag == false {//終わったらここ
-            arrayDataCount = getArrayData()//念の為
-            timerCalc.invalidate()
-            setButtons(mode: true)
-            autoreleasepool{
-                UIApplication.shared.isIdleTimerDisabled = false//do sleep
-                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-100, end: arrayDataCount)
-                //                vogCurpoint=0
-                var x=CGFloat(arrayDataCount-2400)*view.bounds.width/mailWidth
-                if x<0{
-                    x=0
-                }
-                vogCurpoint=0
-                drawVog(vogCurpoint)
-                setWaveSlider()
-            }
-            //終わり直前で認識されたvhitdataが認識されないこともあるかもしれない
-        }else{
-#if DEBUG
-            print("debug-update",timercnt)
-#endif
-            
-            autoreleasepool{
-                vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount-10, end: arrayDataCount)
-                lastArraycount=arrayDataCount
-                var x=CGFloat(arrayDataCount-2400)*view.bounds.width/mailWidth
-                if x<0{
-                    x=0
-                }
-                drawVog(Int(x))
-            }
-        }
-    }
-    */
+
     var lastVhitpoint:Int = -2//これはなんだろう→あとでチェック！！！
     @objc func onWaveSliderValueChange(){
         let mode=checkDispMode()
@@ -1505,21 +1412,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if mode==1{//vhit
             vhitCurpoint=Int(waveSlider.value*(waveSlider.maximumValue-Float(view.bounds.width))/waveSlider.maximumValue)
             //            print(vhitCurpoint)p
-            drawOneWave(startcount: vhitCurpoint)
+            drawOneWave(startcount: vhitCurpoint,clearFlag: false)
             lastVhitpoint = vhitCurpoint
             if waveTuple.count>0{
                 //setするだけか？
                 setCurrVHIT(pos: lastVhitpoint + Int(ww/2))//, mode:1)
-                drawVHITwaves()
+                drawVHITwaves(clearFlag: false)
             }
         }else if mode==2{//vogalc
-            if eyePosXFiltered4update.count<240*10{//240*10以下なら動けない。
-                return
-            }
-            let r = view.bounds.width/CGFloat(mailWidth)
-            vogCurpoint = Int(Float(r)*waveSlider.value*Float(eyePosXFiltered4update.count-2400))/eyePosXFiltered4update.count
-            drawVog(    vogCurpoint)
-            print("vogCurpoint:",vogCurpoint,eyePosXFiltered4update.count,waveSlider.value)
         }
     }
     func setWaveSlider(){
@@ -1569,14 +1469,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
      //   vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
         lastArraycount=arrayDataCount
         //        drawRealwave()
-        drawOneWave(startcount: arrayDataCount)
+        drawOneWave(startcount: arrayDataCount,clearFlag: false)
         timercnt += 1
 #if DEBUG
         print("debug-update",timercnt)
 #endif
         calcDrawVHIT(tuple: true)//waveTupleは更新する。
         if calcFlag==false{
-            drawOneWave(startcount: 0)
+            drawOneWave(startcount: 0,clearFlag: false)
         }
     }
     
@@ -1807,6 +1707,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
     }
     //vHIT_eye_head
+    func drawLineClear(num:Int,width w:CGFloat,height h:CGFloat) -> UIImage{
+        let size = CGSize(width:w, height:h)
+        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        // イメージ処理の終了
+        UIGraphicsEndImageContext()
+        return image!
+    }
     func drawLine(num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
@@ -2039,14 +1947,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var eye = [CGFloat](repeating:0,count:121)
         var face = [CGFloat](repeating:0,count:121)
     }
-    //    struct wave{
-    //        var ltEye:CGFloat
-    //        var rtEye:CGFloat
-    //        var face:CGFloat
-    //        var date:String
-    //    }
-    //    var waves=[wave]()
-    //
+ 
     var vHITs = [vHIT]()
     var vHITsTemp = [vHIT]()
     var vHITEye = [CGFloat](repeating: 0, count: 121)
@@ -2131,55 +2032,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let trimImage = UIImage(cgImage: imgRef!, scale: image.scale, orientation: image.imageOrientation)
         return trimImage
     }
-    
-    func getVogImgWithText(_ image:UIImage,curPoint:Int,mailFlag:Bool)->UIImage{
-        let pos = CGFloat(curPoint)*mailWidth/view.bounds.width
-        let imgRef = image.cgImage?.cropping(to: CGRect(x:pos,y:0,width: mailWidth,height: mailHeight))
-        let trimImage = UIImage(cgImage: imgRef!, scale: image.scale, orientation: image.imageOrientation)
-        let imgWithText=getVOGText(orgImg: trimImage, width: mailWidth , height: mailHeight,mail:mailFlag)
-        return imgWithText
+    func drawvhitWavesClear(width w:CGFloat,height h:CGFloat) ->UIImage{
+        let size = CGSize(width:w, height:h)
+        // イメージ処理の開始
+        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+        // パス
+        let drawPath = UIBezierPath()
+        // イメージコンテキストからUIImageを作る
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        // イメージ処理の終了
+        UIGraphicsEndImageContext()
+        return image!
     }
-    
-/*    func saveResult_vog(_ sender: Any) {//vog
-        if calcFlag == true{
-            return
-        }
-        if eyePosXFiltered4update.count == 0{
-            return
-        }
-        let alert = UIAlertController(title: "VOG96da", message: "Input ID", preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: "OK", style: .default) { [self] (action:UIAlertAction!) -> Void in
-            
-            // 入力したテキストをコンソールに表示
-            let textField = alert.textFields![0] as UITextField
-#if DEBUG
-            print("\(String(describing: textField.text))")
-#endif
-            idString = textField.text!
-            drawVog(vogCurpoint)//画面にID表示。
-            // イメージビューに設定する
-            let trimImgWithText=getVogImgWithText(vogImage!, curPoint: vogCurpoint,mailFlag: true)
-            //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
-            saveJpegImage2path(image: trimImgWithText, path: "temp.jpeg")
-            while existFile(aFile: "temp.jpeg") == false{
-                sleep(UInt32(0.1))
-            }
-            savePath2album(name:Wave96da,path: "temp.jpeg")
-            nonsavedFlag = false //解析結果がsaveされたのでfalse
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
-        }
-        // UIAlertControllerにtextFieldを追加
-        alert.addTextField { (textField:UITextField!) -> Void in
-            textField.keyboardType = UIKeyboardType.default
-            //            textField.keyboardType = UIKeyboardType.numberPad
-        }
-        alert.addAction(cancelAction)//この行と下の行の並びを変えるとCancelとOKの左右が入れ替わる。
-        alert.addAction(saveAction)
-        present(alert, animated: true, completion: nil)
-    }*/
-    
+ 
     func drawvhitWaves(width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         var r:CGFloat=1//r:倍率magnification
@@ -2379,34 +2244,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-    func makeVOGimgWakulines(width w:CGFloat,height h:CGFloat) ->UIImage{
-        let size = CGSize(width:w, height:h)
-        // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        // パスの初期化
-        let drawPath = UIBezierPath()
-        
-        //let wI:Int = Int(w)//2400*18
-        let wid:CGFloat=w/90.0
-        for i in 0..<90 {
-            let xp = CGFloat(i)*wid
-            drawPath.move(to: CGPoint(x:xp,y:0))
-            drawPath.addLine(to: CGPoint(x:xp,y:h-120))
-        }
-        drawPath.move(to:CGPoint(x:0,y:0))
-        drawPath.addLine(to: CGPoint(x:w,y:0))
-        drawPath.move(to:CGPoint(x:0,y:h-120))
-        drawPath.addLine(to: CGPoint(x:w,y:h-120))
-        //UIColor.blue.setStroke()
-        drawPath.lineWidth = 2.0//1.0
-        drawPath.stroke()
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
+
     
     func removeFile(delFile:String){
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
@@ -2599,7 +2437,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 if calcMode != 2{//データがありそうな時は表示
                     moveGyroData()
                     calcDrawVHIT(tuple: false)
-                    drawOneWave(startcount: vhitCurpoint)//gyroFileがないとエラー
+                    drawOneWave(startcount: vhitCurpoint,clearFlag: false)//gyroFileがないとエラー
                 }else{
 
                 }
@@ -2886,7 +2724,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                     moveGyroData()
                     calcDrawVHIT(tuple: false)
-                    drawOneWave(startcount: vhitCurpoint)
+                    drawOneWave(startcount: vhitCurpoint,clearFlag: false)
                 }
                 //            }else if calcMode == 2 && vogBoxView?.isHidden == false{//vog
                 //
@@ -2936,7 +2774,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 UserDefaults.standard.set(vHITDisplayMode,forKey: "vHITDisplayMode")
                 moveGyroData()
                 calcDrawVHIT(tuple: false)
-                drawOneWave(startcount: vhitCurpoint)
+                drawOneWave(startcount: vhitCurpoint,clearFlag: false)
                 return
             }else if loc.y<waveBoxView!.frame.maxY && waveTuple.count>0{
                 let cnt=waveTuple.count
@@ -2949,7 +2787,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                         }
                     }
                 }
-                drawVHITwaves()
+                drawVHITwaves(clearFlag: false)
             }
         }else if vHIT_dispmode==2{//vog
             //            if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
@@ -3071,7 +2909,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 waveTuple.append(tempTuple[i])
             }
         }
-        drawVHITwaves()
+        drawVHITwaves(clearFlag: false)
     }
     
     
