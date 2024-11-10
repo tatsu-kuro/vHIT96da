@@ -87,8 +87,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     var vorGainCorrection:Int = 100
     var eyeRatio:Int = 0
     var gyroRatio:Int = 0
-    var posRatio:Int = 0
-    var veloRatio:Int = 0
+ 
     var wakuLength:Int = 0
     var calcMode:Int?
     var vHITDisplayMode:Int = 0
@@ -165,11 +164,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }else if gyroRatio>4000{
             gyroRatio=4000
         }
-        if veloRatio<10{
-            veloRatio=10
-        }else if veloRatio>4000{
-            veloRatio=4000
-        }
+
     }
     @IBAction func numpadOff(_ sender: Any) {
         wakuLengthInput.endEditing(true)
@@ -200,8 +195,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
 
         }else{
             eyeBorder=10
-             posRatio = 100
-            veloRatio = 100
+ //            posRatio = 100
+ //           veloRatio = 100
             wakuLength = 3
 
         }
