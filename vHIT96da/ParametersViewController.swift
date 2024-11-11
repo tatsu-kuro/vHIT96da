@@ -333,7 +333,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
         keyDown.layer.cornerRadius = 5
-   
+        
         keyDown.isHidden = true
         setMaxMin()//念の為パラメータを正常範囲にしておく。
     }

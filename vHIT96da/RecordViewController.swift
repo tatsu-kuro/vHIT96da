@@ -234,7 +234,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         focusBar.minimumValue = 0
         focusBar.maximumValue = 1.0
         focusBar.addTarget(self, action: #selector(onFocusValueChange), for: UIControl.Event.valueChanged)
-        focusBar.value=getUserDefault(str: "focusValue", ret:0.6)//初期値はmini12に合わせる
+        focusBar.value=getUserDefault(str: "focusValue", ret:0.0)//初期値はmini12に合わせる
         setFocus(focus: focusBar.value)
         setZoom()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
@@ -289,7 +289,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     @objc func onFocusValueChange(){
         setFocus(focus:focusBar.value)
         UserDefaults.standard.set(focusBar.value, forKey: "focusValue")
- //       print("focus:",focusBar.value)
+   //     print("focus:",focusBar.value)
     }
 
     override func viewDidAppear(_ animated: Bool) {
