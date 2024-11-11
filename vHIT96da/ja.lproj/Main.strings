@@ -1,8 +1,4 @@
 
-/* Class = "UILabel"; text = "2018-01-01 00:00:00 (0)"; ObjectID = "0q7-O3-Ich"; */
-
-
-/* Class = "UILabel"; text = "LED"; ObjectID = "3Cx-vb-1Rg"; */
 "3Cx-vb-1Rg.text" = "LED";
 
 /* Class = "UILabel"; text = "LED"; ObjectID = "3Ut-hV-2qn"; */
@@ -11,17 +7,10 @@
 /* Class = "UIButton"; normalTitle = "Default"; ObjectID = "5sT-gS-ZO9"; */
 "5sT-gS-ZO9.normalTitle" = "Default";
 
-/* Class = "UILabel"; text = "ビデオとセンサーの波形のずれ"; ObjectID = "69E-lo-wOt"; */
-"69E-lo-wOt.text" = "VOR-Gain左右差の補正%";
-
-/* Class = "UILabel"; text = "00:00"; ObjectID = "6Oa-WH-xL2"; */
-"6Oa-WH-xL2.text" = "00:00";
 "0q7-O3-Ich.text" = "右下ボタンをタップして";
 "6oH-Ur-nDk.text" = "ビデオを撮影して下さい";
 "srl-OW-f1c.text" = "(1) A(立上がり) - D(頂点) msec";
 "9oE-gN-h2Z.text" = "(2) B(上昇) - C(下降) msec";
-
-/* Class = "UIButton"; normalTitle = "vHIT"; ObjectID = "DZA-EA-S6I"; */
 "DZA-EA-S6I.normalTitle" = "vHIT";
 
 /* Class = "UILabel"; text = "Width of the LED image"; ObjectID = "HbG-UI-ZsL"; */
@@ -36,26 +25,8 @@
 /* Class = "UILabel"; text = "Range for detecting the LED image"; ObjectID = "NMH-1D-eWf"; */
 "NMH-1D-eWf.text" = "LED画像を探す範囲の幅";
 
-/* Class = "UIButton"; normalTitle = "English"; ObjectID = "Qiw-FJ-LWg"; */
-//"Qiw-FJ-LWg.normalTitle" = "English";
-
 /* Class = "UIButton"; normalTitle = "Exit"; ObjectID = "Ty3-wO-nMU"; */
 "Ty3-wO-nMU.normalTitle" = "Exit";
-/* Class = "UILabel"; text = "eye velocity wave Height (%) "; ObjectID = "tWF-A9-5II"; */
-"tWF-A9-5II.text" = "(1*)眼球速度波形の高さ %";
-"Wre-qf-59d.text" = "(1*)頭部速度波形の高さ %";
-"b3H-GH-mSd.text" = "眼球位置波形の高さ %";
-"utK-j7-SyA.text" = "眼球速度波形の高さ %";
-/* Class = "UIButton"; normalTitle = " MODE"; ObjectID = "XhS-eE-NWD"; */
-/*"XhS-eE-NWD.normalTitle" = " MODE";*/
-
-/* Class = "UILabel"; text = "皮膚上マークの動きによる補正"; ObjectID = "aD3-jN-jML"; */
-"aD3-jN-jML.text" = "皮膚上マークの動きによる補正";
-
-/* Class = "UILabel"; text = "eye position wave Height (%)"; ObjectID = "b3H-GH-mSd"; */
-"b3H-GH-mSd.text" = "眼球位置波形の高さ %";
-
-/* Class = "UILabel"; text = "(2*)vhit waveforms"; ObjectID = "bwj-An-8NO"; */
 "bwj-An-8NO.text" = "vhit表示タイプ";
 
 /* Class = "UILabel"; text = "near"; ObjectID = "ds1-rt-blQ"; */
@@ -67,25 +38,9 @@
 /* Class = "UIButton"; normalTitle = "240fps"; ObjectID = "iC2-bZ-his"; */
 "iC2-bZ-his.normalTitle" = "240fps";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "ktc-fi-Lu2"; */
-"ktc-fi-Lu2.text" = "Label";
-
-/* Class = "UILabel"; text = "Pan the waveforms to change the (1*).\nTap the waveforms to change the (2*)."; ObjectID = "m3m-N0-giW"; */
-"m3m-N0-giW.text" = "波形のパンで(1*)パラメータを変更.\n波形のタップで(2*)vHIT表示変更.";
-
-/* Class = "UIButton"; normalTitle = "Opposite"; ObjectID = "p30-4I-jic"; */
 "p30-4I-jic.normalTitle" = "上下";
-
-/* Class = "UIButton"; normalTitle = "KeyOff"; ObjectID = "pMb-F1-KQb"; */
 "pMb-F1-KQb.normalTitle" = "KeyOff";
 "tNT-h2-pQW.normalTitle" = "平行";
 "ut3-ve-Fe7.normalTitle" = "Exit";
 "ySb-fb-deN.normalTitle" = "VOG";
 "z8v-v3-JoQ.text" = "遠";
-/*"Tgf-Kj-P0L.normalTitle" = "登録";*/
-"VUD-4d-LTF.text" = "移動平均 N";
-"gON-Be-fSL.normalTitle" = "IDとPassWordをセット";
-"BTd-HK-Sth.normalTitle" = "パスワード希望のメール";
-"aIU-up-E7z.text" = "アプリを利用するには、パスワードが必要です。下記ボタンから、氏名、所属、メールアドレスを明記の上、作者にメールして下さい。パスワードをメールします。\nパスワードは無料です。";
-"gON-Be-fSL.normalTitle" = "ログイン";
-
