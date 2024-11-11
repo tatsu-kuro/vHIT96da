@@ -142,7 +142,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var writingDataNow:Bool = false//videoを解析した値をアレイに書き込み中
     var readingDataNow:Bool = false//VOGimageを作るためにアレイデータを読み込み中
     var vhitCurpoint:Int = 0//現在表示波形の視点（アレイインデックス）
-
+    
     var videoPlayer: AVPlayer!
     let vHIT96da:String="vHIT96da"
     let Wave96da:String="Wave96da"
@@ -260,7 +260,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeBorder:Int = 20
     var eyeRatio:Int = 100//vhit
     var gyroRatio:Int = 100//vhit
- 
+    
     var calcMode:Int?//0:HIThorizontal 1:HITvertical 2:VOG
     
     var videoGyroZure:Int = 20
@@ -705,7 +705,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcMode != 2{
             timerCalc = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.update_vHIT), userInfo: nil, repeats: true)
         }else{
-//            timerCalc = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
+            //            timerCalc = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.update_vog), userInfo: nil, repeats: true)
         }
     }
     func showBoxies(f:Bool){
@@ -925,11 +925,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showBoxies(f: true)
         drawVHITwaves(clearFlag: true)
         drawOneWave(startcount: 0,clearFlag: true)
-
-  //      waveBoxView.image = UIImage(named:"VOGen")//eye")
+        
+        //      waveBoxView.image = UIImage(named:"VOGen")//eye")
         waveSlider.isHidden=false
         videoSlider.isHidden=true
-         
+        
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
         readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
         moveGyroData()//gyroDeltastartframe分をズラして
@@ -1267,7 +1267,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         if UserDefaults.standard.object(forKey: "installed") == nil{//passWord設定されてなければ、PWD要求ボタン表示
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -1290,8 +1290,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     
- 
-
+    
+    
     var initDrawVhitF:Bool=true
     func drawVHITwaves(clearFlag:Bool){//解析結果のvHITwavesを表示する
         let ww=view.bounds.width
@@ -1403,7 +1403,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     var timercnt:Int = 0
     var lastArraycount:Int = 0
-
+    
     var lastVhitpoint:Int = -2//これはなんだろう→あとでチェック！！！
     @objc func onWaveSliderValueChange(){
         let mode=checkDispMode()
@@ -1434,18 +1434,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     //  var tapDownUpTime=CFAbsoluteTimeGetCurrent()//down-up所要時間
     @objc func update_vHIT(tm: Timer) {
         
-     /*   if matchingTestMode==true{
-            if calcFlag == false{
-                timerCalc.invalidate()
-                setButtons(mode: true)
-                setVideoButtons(mode: true)
-                videoSlider.isEnabled=true
-                nextButton.isHidden=false
-                backButton.isHidden=false
-                matchingTestMode=false
-            }
-            return
-        }*/
+        /*   if matchingTestMode==true{
+         if calcFlag == false{
+         timerCalc.invalidate()
+         setButtons(mode: true)
+         setVideoButtons(mode: true)
+         videoSlider.isEnabled=true
+         nextButton.isHidden=false
+         backButton.isHidden=false
+         matchingTestMode=false
+         }
+         return
+         }*/
         arrayDataCount = getArrayData()
         if arrayDataCount < 5 {
             return
@@ -1466,7 +1466,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             setWaveSlider()
         }
         //        let tmpCount=getPosXFilteredCount()
-     //   vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
+        //   vogImage=makeVOGImage(startImg: vogImage!, width: 0, height: 0,start:lastArraycount, end: arrayDataCount)
         lastArraycount=arrayDataCount
         //        drawRealwave()
         drawOneWave(startcount: arrayDataCount,clearFlag: false)
@@ -1650,7 +1650,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         eyeBorder = getUserDefault(str: "eyeBorder", ret: 10)
         eyeRatio = getUserDefault(str: "eyeRatio", ret: 100)
         gyroRatio = getUserDefault(str: "gyroRatio", ret: 100)
-         
+        
         vorGainCorrection = getUserDefault(str: "vorGainCorrection", ret:101)
         videoGyroZure = getUserDefault(str: "videoGyroZure", ret: 20)
         calcMode = getUserDefault(str: "calcMode", ret: 0)
@@ -1681,7 +1681,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UserDefaults.standard.set(eyeBorder, forKey: "eyeBorder")
         UserDefaults.standard.set(eyeRatio, forKey: "eyeRatio")
         UserDefaults.standard.set(gyroRatio, forKey: "gyroRatio")
-         
+        
         UserDefaults.standard.set(videoGyroZure,forKey:"videoGyroZure")
         UserDefaults.standard.set(vorGainCorrection,forKey:"vorGainCorrection")
         
@@ -1947,7 +1947,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         var eye = [CGFloat](repeating:0,count:121)
         var face = [CGFloat](repeating:0,count:121)
     }
- 
+    
     var vHITs = [vHIT]()
     var vHITsTemp = [vHIT]()
     var vHITEye = [CGFloat](repeating: 0, count: 121)
@@ -1968,10 +1968,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if calcFlag == true{
             return
         }
-      //  if calcMode==2{
-      //      saveResult_vog(0)
-      //      return
-       // }
+        //  if calcMode==2{
+        //      saveResult_vog(0)
+        //      return
+        // }
         if waveTuple.count < 1 {
             return
         }
@@ -2044,7 +2044,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         UIGraphicsEndImageContext()
         return image!
     }
- 
+    
     func drawvhitWaves(width w:CGFloat,height h:CGFloat) -> UIImage {
         let size = CGSize(width:w, height:h)
         var r:CGFloat=1//r:倍率magnification
@@ -2195,8 +2195,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton2.frame,UIColor.systemRed)
             setButtos4mode(calcMode!)
         }else if calcMode==2{
-//            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
-//            setButtos4mode(calcMode!)
+            //            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
+            //            setButtos4mode(calcMode!)
         }else{
             iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
             setButtos4mode(calcMode!)
@@ -2244,7 +2244,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     override var prefersStatusBarHidden: Bool {
         return true
     }
-
+    
     
     func removeFile(delFile:String){
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
@@ -2304,7 +2304,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //           ParametersViewController.faceMarkHidden = faceMarkHidden
             ParametersViewController.widthRange = widthRange
             ParametersViewController.waveWidth = waveWidth
-        //    ParametersViewController.calcMode = calcMode
+            //    ParametersViewController.calcMode = calcMode
             ParametersViewController.eyeBorder = eyeBorder
             
             //          ParametersViewController.faceMark = faceMark
@@ -2313,17 +2313,17 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             ParametersViewController.eyeRatio = eyeRatio
             ParametersViewController.gyroRatio = gyroRatio
             ParametersViewController.videoGyroZure=videoGyroZure
-            ParametersViewController.vorGainCorrection=vorGainCorrection
+            //            ParametersViewController.vorGainCorrection=vorGainCorrection
             ParametersViewController.vHITDisplayMode=vHITDisplayMode
             
-       
+            
 #if DEBUG
             print("prepare para")
 #endif
             
         }else if let vc = segue.destination as? HelpjViewController{
             let Controller:HelpjViewController = vc
-           // Controller.calcMode = calcMode
+            // Controller.calcMode = calcMode
         }else if let vc = segue.destination as? RecordViewController{
             let Controller:RecordViewController = vc
             if PHPhotoLibrary.authorizationStatus(for: .readWrite) == .authorized{
@@ -2422,16 +2422,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             wakuLength = ParametersViewController.wakuLength
             wakuE.size.width = CGFloat(wakuLength)
             wakuE.size.height = CGFloat(wakuLength)
-            calcMode=ParametersViewController.calcMode
+            //       calcMode=ParametersViewController.calcMode
             
-            var chanF=false
+            //      var chanF=false
             eyeRatio=ParametersViewController.eyeRatio
             gyroRatio=ParametersViewController.gyroRatio
             //           faceMark=ParametersViewController.faceMark
-            vorGainCorrection=ParametersViewController.vorGainCorrection
+            //            vorGainCorrection=ParametersViewController.vorGainCorrection
             videoGyroZure=ParametersViewController.videoGyroZure
             vHITDisplayMode=ParametersViewController.vHITDisplayMode
-     
+            
             setUserDefaults()
             if eyeVeloXFiltered.count > 400 && videoDate.count>0{
                 if calcMode != 2{//データがありそうな時は表示
@@ -2439,7 +2439,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     calcDrawVHIT(tuple: false)
                     drawOneWave(startcount: vhitCurpoint,clearFlag: false)//gyroFileがないとエラー
                 }else{
-
+                    
                 }
             }
             dispWakus()

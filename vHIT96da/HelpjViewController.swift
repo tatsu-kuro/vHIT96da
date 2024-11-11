@@ -9,11 +9,9 @@
 import UIKit
 
 class HelpjViewController: UIViewController {
-//    let someFunctions = myFunctions()
+    //    let someFunctions = myFunctions()
     let iroiro = myFunctions(albumName: "vHIT96da")
-  
- //   var calcMode:Int?
-
+    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var exitButton: UIButton!
     
@@ -27,17 +25,15 @@ class HelpjViewController: UIViewController {
         let bw=(ww-sp*10)/7//ボタン幅
         let bh=bw
         let by=view.bounds.height-bottom-2*sp-bh
-
+        
         // 画面サイズ取得
         scrollView.frame = CGRect(x:0,y:top,width: ww,height: wh)
         iroiro.setButtonProperty(exitButton,x:bw*6+sp*8,y:by,w:bw,h:bh,UIColor.darkGray)
-
+        
         var img = UIImage(named:"vHITen")!
-    
+        
         if Locale.preferredLanguages.first!.contains("ja"){
-
-                img = UIImage(named:"vHITja")!
-   
+            img = UIImage(named:"vHITja")!
         }
         
         // 画像のサイズ

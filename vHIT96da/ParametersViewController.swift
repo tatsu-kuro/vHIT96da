@@ -33,21 +33,21 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             return ret
         }
     }
- 
+    
     @IBAction func unwindPara(_ segue: UIStoryboardSegue){
     }
-  
-   
+    
+    
     @IBAction func onExitButton(_ sender: Any) {
         performSegue(withIdentifier: "fromParamsToMain", sender: nil)
-
+        
     }
     override var prefersStatusBarHidden: Bool {
         return true
     }
-
+    
     @IBOutlet weak var defaultButton: UIButton!
-
+    
     @IBOutlet weak var vhitDisplayLabel: UILabel!
     @IBOutlet weak var parallelButton: UIButton!
     
@@ -76,63 +76,47 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         parallelLabel.isHidden=false
         oppositeLabel.isHidden=true
     }
- //   var faceMarkHidden:Bool=true
- //   var faceMark:Bool=true
-    //これでmarkswitch,marktextの表示をオンオフする。
-//    var useFaceMark:Int?
+    
     var widthRange:Int = 0
     var waveWidth:Int = 0
     var eyeBorder:Int = 0
     var videoGyroZure:Int = 0
-    var vorGainCorrection:Int = 100
+    
     var eyeRatio:Int = 0
     var gyroRatio:Int = 0
- 
+    
     var wakuLength:Int = 0
     var calcMode:Int?
     var vHITDisplayMode:Int = 0
- 
+    
     @IBOutlet weak var A2DLabel: UILabel!
     @IBOutlet weak var B2CLabel: UILabel!
- 
+    
     @IBOutlet weak var wakuLengthLabel: UILabel!
     @IBOutlet weak var eyeBorderLabel: UILabel!
     @IBOutlet weak var wakuLengthInput: UITextField!
     
-    @IBOutlet weak var vorGainCorrectionInput: UITextField!
-    @IBOutlet weak var VorGainCorrectionLabel: UILabel!
     @IBOutlet weak var vhitpng: UIImageView!
     @IBOutlet weak var keyDown: UIButton!
     @IBOutlet weak var B2CInput: UITextField!
     @IBOutlet weak var A2DInput: UITextField!
     @IBOutlet weak var eyeBorderInput: UITextField!
-
-
+    
+    
     @IBAction func wakuLengthAction(_ sender: Any) {
         wakuLength = Field2value(field: wakuLengthInput)
     }
     
- //   @IBAction func faceFchan(_ sender: UISwitch) {
-//        if sender.isOn{
-//            faceMark=true
-//        }else{
-//            faceMark=false
-//        }
-//    }
     // became first responder
     func textFieldDidBeginEditing(_ textField: UITextField) {
         keyDown.isHidden = false
     }
-
+    
     @IBAction func tapBack(_ sender: Any) {
         numpadOff(0)
     }
     func setMaxMin(){
-        if vorGainCorrection<50{
-            vorGainCorrection=50
-        }else if vorGainCorrection>150{
-            vorGainCorrection=150
-        }
+        
         if waveWidth<40{
             waveWidth=40
         }else if waveWidth>200{
@@ -164,20 +148,19 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         }else if gyroRatio>4000{
             gyroRatio=4000
         }
-
+        
     }
     @IBAction func numpadOff(_ sender: Any) {
         wakuLengthInput.endEditing(true)
         B2CInput.endEditing(true)
         A2DInput.endEditing(true)
         eyeBorderInput.endEditing(true)
-        vorGainCorrectionInput.endEditing(true)
-
+        
         keyDown.isHidden = true
         setMaxMin()
         dispParam()
     }
-
+    
     @IBAction func setDefault(_ sender: Any) {
         if calcMode==3{
             return
@@ -186,19 +169,15 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             widthRange = 30
             waveWidth = 80
             eyeBorder=10
-   //         faceMark=false
             videoGyroZure = 2
-            vorGainCorrection = 100
             eyeRatio = 300
             gyroRatio = 170
             wakuLength = 3
-
+            
         }else{
             eyeBorder=10
- //            posRatio = 100
- //           veloRatio = 100
             wakuLength = 3
-
+            
         }
         
         dispParam()
@@ -210,8 +189,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
             return 0
         }
     }
-
-
+    
+    
     @IBAction func widthRangeButton(_ sender: Any) {
         widthRange = Field2value(field:B2CInput)
     }
@@ -223,24 +202,19 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         eyeBorder = Field2value(field: eyeBorderInput)
     }
     
-    @IBAction func vorGainCorrectionChange(_ sender: Any) {
-        vorGainCorrection=Field2value(field: vorGainCorrectionInput)
-    }
-    
     func dispParam(){
         self.B2CInput.text = "\(widthRange)"
         self.A2DInput.text = "\(waveWidth)"
         self.eyeBorderInput.text = "\(eyeBorder)"
-        self.vorGainCorrectionInput.text = "\(vorGainCorrection)"
-
+        
         self.wakuLengthInput.text = "\(wakuLength)"
-
+        
     }
-  
+    
     func setTexts(){
         let ww=view.bounds.width
         let bottom=CGFloat( UserDefaults.standard.float(forKey: "bottom"))
-
+        
         let sp:CGFloat=5
         let topY = CGFloat( UserDefaults.standard.float(forKey: "top"))+sp*2//keyDown.frame.minY// vhitpng.frame.minY
         let bw:CGFloat=55
@@ -256,79 +230,68 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         let butw1=(view.bounds.width-sp*8)/5
         let buth1=butw1/2
         let buty1=view.bounds.height-sp-buth1-bottom
-
+        
         keyDown.frame=CGRect(x:ww-butw-sp*2,y:topY,width: butw,height: buth)
- 
-        if calcMode==2{//VOG
-
-   
-        }else if calcMode==0 || calcMode==1{//vhit
- 
-            vhitpng.isHidden=false
-            if Locale.preferredLanguages.first!.contains("ja"){
-                vhitpng.image=UIImage(named:"vhit_ja")!
-            }else{
-                vhitpng.image=UIImage(named:"vhit")!
-            }
-            A2DLabel.isHidden=false
-            B2CLabel.isHidden=false
-            eyeBorderLabel.isHidden=false
-            A2DInput.isHidden = false
-            B2CInput.isHidden = false
-            eyeBorderInput.isHidden = false
-            vorGainCorrectionInput.isHidden = true //false 将来のため？
-            VorGainCorrectionLabel.isHidden = true //false 将来のため？
-                
-            parallelButton.isHidden=false
-            parallelLabel.isHidden=false
-            oppositeLabel.isHidden=false
-            oppositeButton.isHidden=false
-            vhitDisplayLabel.isHidden=false
-       
-            A2DLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
-            B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
-             wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
-            eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
-            VorGainCorrectionLabel.frame = CGRect(x:x2,   y: topY+bh1*2,width: tw,height:bh)
-            var vhitpngH=(ww-10)*440/940
-             A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
-            B2CInput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
-            wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
-            eyeBorderInput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
-            vorGainCorrectionInput.frame = CGRect(x:x1,y: topY+bh1*2 ,width: bw, height: bh)
-            vhitpng.frame = CGRect(x:5,y:topY+bh1*7-5,width:ww-10,height:vhitpngH)
-            vhitpngH -= 5
-            vhitDisplayLabel.frame = CGRect(x:butw*2+4*sp,y: topY+bh1*7+vhitpngH+5 ,width: tw, height: bh)
-            parallelLabel.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH,width: butw, height: 3)
-            parallelButton.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+5 ,width: butw, height: bh)
-            parallelButton.layer.cornerRadius=3
-            oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH,width:butw,height:3)
-            oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:bh)
-            oppositeButton.layer.cornerRadius=3
-
-            displayMode()
-         }
+        
+        
+        vhitpng.isHidden=false
+        if Locale.preferredLanguages.first!.contains("ja"){
+            vhitpng.image=UIImage(named:"vhit_ja")!
+        }else{
+            vhitpng.image=UIImage(named:"vhit")!
+        }
+        A2DLabel.isHidden=false
+        B2CLabel.isHidden=false
+        eyeBorderLabel.isHidden=false
+        A2DInput.isHidden = false
+        B2CInput.isHidden = false
+        eyeBorderInput.isHidden = false
+        
+        parallelButton.isHidden=false
+        parallelLabel.isHidden=false
+        oppositeLabel.isHidden=false
+        oppositeButton.isHidden=false
+        vhitDisplayLabel.isHidden=false
+        
+        A2DLabel.frame = CGRect(x:x2,   y: topY+bh1*5 ,width: tw, height: bh)
+        B2CLabel.frame = CGRect(x:x2,   y: topY+bh1*6 ,width: tw, height: bh)
+        wakuLengthLabel.frame = CGRect(x:x2,   y: topY+bh1*3 ,width: tw, height: bh)
+        eyeBorderLabel.frame = CGRect(x:x2,   y: topY+bh1*4 ,width: tw, height: bh)
+        var vhitpngH=(ww-10)*440/940
+        A2DInput.frame =  CGRect(x:x1,y: topY+bh1*5 ,width: bw, height: bh)
+        B2CInput.frame = CGRect(x:x1,y: topY+bh1*6 ,width: bw, height: bh)
+        wakuLengthInput.frame = CGRect(x:x1,y: topY+bh1*3 ,width: bw, height: bh)
+        eyeBorderInput.frame =       CGRect(x:x1,y: topY+bh1*4 ,width: bw, height: bh)
+        vhitpng.frame = CGRect(x:5,y:topY+bh1*7-5,width:ww-10,height:vhitpngH)
+        vhitpngH -= 5
+        vhitDisplayLabel.frame = CGRect(x:butw*2+4*sp,y: topY+bh1*7+vhitpngH+5 ,width: tw, height: bh)
+        parallelLabel.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH,width: butw, height: 3)
+        parallelButton.frame = CGRect(x:2*sp,y: topY+bh1*7+vhitpngH+5 ,width: butw, height: bh)
+        parallelButton.layer.cornerRadius=3
+        oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH,width:butw,height:3)
+        oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:bh)
+        oppositeButton.layer.cornerRadius=3
+        
+        displayMode()
         
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
-         exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
+        exitButton.frame=CGRect(  x:butw1*4+6*sp,y:buty1,width:butw1,height: buth1)
         registerButton.isHidden=true
-     }
+    }
     
     let iroiro = myFunctions(albumName: "vHIT_VOG")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         B2CInput.delegate = self
         A2DInput.delegate = self
         eyeBorderInput.delegate = self
-        vorGainCorrectionInput.delegate = self
-         wakuLengthInput.delegate = self
+        wakuLengthInput.delegate = self
         self.B2CInput.keyboardType = UIKeyboardType.numberPad
         self.A2DInput.keyboardType = UIKeyboardType.numberPad
         self.eyeBorderInput.keyboardType = UIKeyboardType.numberPad
         self.wakuLengthInput.keyboardType = UIKeyboardType.numberPad
-        self.vorGainCorrectionInput.keyboardType = UIKeyboardType.numberPad
         dispParam()
         defaultButton.layer.cornerRadius = 5
         exitButton.layer.cornerRadius = 5
@@ -337,7 +300,7 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         keyDown.isHidden = true
         setMaxMin()//念の為パラメータを正常範囲にしておく。
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
