@@ -1234,8 +1234,74 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveSlider.isHidden=true
         }
     }
+    
+
+
+    func getLocalHighFrameRateVideoURLsInAlbum(albumName: String, completion: @escaping ([URL]) -> Void) {
+        PHPhotoLibrary.requestAuthorization { status in
+            guard status == .authorized else {
+                completion([])
+                return
+            }
+
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+            let albumResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+
+            guard let album = albumResult.firstObject else {
+                completion([])
+                return
+            }
+
+            let assetsFetchOptions = PHFetchOptions()
+            let assets = PHAsset.fetchAssets(in: album, options: assetsFetchOptions)
+
+            var highFrameRateVideoURLs: [URL] = []
+            let dispatchGroup = DispatchGroup()
+
+            assets.enumerateObjects { asset, _, _ in
+                if asset.mediaSubtypes.contains(.videoHighFrameRate) && asset.sourceType == .typeUserLibrary {
+                    dispatchGroup.enter()
+                    let options = PHVideoRequestOptions()
+                    options.version = .original
+                    options.isNetworkAccessAllowed = false  // cloud上のファイルは排除する
+
+                    PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { avAsset, _, _ in
+                        if let urlAsset = avAsset as? AVURLAsset {
+                            let frameRate = self.getVideoFrameRate(url: urlAsset.url)
+                            if frameRate == 120 || frameRate == 240 {
+    highFrameRateVideoURLs.append(urlAsset.url)
+                            }
+                        }
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                completion(highFrameRateVideoURLs)
+            }
+        }
+    }
+
+    private func getVideoFrameRate(url: URL) -> Float {
+        let asset = AVAsset(url: url)
+        guard let track = asset.tracks(withMediaType: .video).first else {
+            return 0
+        }
+        return track.nominalFrameRate
+    }
+/*
+    // 使用例
+    getLocalHighFrameRateVideoURLsInAlbum(albumName: "vHIT96da") { urls in
+        urls.forEach { url in
+            print("スローモーション動画のURL: \(url)")
+        }
+    }
+ */
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         //      #if DEBUG
         //        print("viewDidLoad******")
         //    #endif
@@ -1248,7 +1314,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        setButtons(mode: true)
         stopButton.isHidden = true
         showBoxies(f: false)//isVHITに応じてviewを表示
-        if UserDefaults.standard.object(forKey: "installed") != nil{//passWord設定されてなければ、PWD要求ボタン表示
+        if UserDefaults.standard.object(forKey: "installed") != nil{//StatementViewControllerが表示されている時まだnil
             stopButton.isHidden = true
             showBoxies(f: false)//isVHITに応じてviewを表示
             setButtons_first()
@@ -1256,6 +1322,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             dispWakus()
             showWakuImages()
             print("installed nil!!!")
+        }else{
+            //nilの時はviewDidAppearでStamentViewControllerでStatementを表示
+            //StatementViewControllerからのunwindで以下３行を行う
+            //getAlbumFirst()
+            //dispWakus()
+            //showWakuImages()
         }
         print("didload****************************")
     }
@@ -1269,11 +1341,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if UserDefaults.standard.object(forKey: "installed") == nil{//passWord設定されてなければ、PWD要求ボタン表示
+        getLocalHighFrameRateVideoURLsInAlbum(albumName: "vHIT96da") { urls in
+            urls.forEach { url in
+                print("スローモーション動画のURL: \(url)")
+            }
+        }
+        //StatementViewController(KeySet)の中でinstalledを作りyesを設定
+        if UserDefaults.standard.object(forKey: "installed") == nil{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let nextVC = storyboard.instantiateViewController(withIdentifier: "KeySet")
             nextVC.modalPresentationStyle = .fullScreen
-            present(nextVC, animated: true, completion: nil)
+            present(nextVC, animated: true, completion: nil)//ここでinstalledにyesを設定
+            
         }
         print("viewDidAppear*****")
         showWakuImages()
@@ -1573,6 +1652,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gettingAlbumF = false
         }
     }
+
     func getAlbumAssets(){
         gettingAlbumF = true
         getAlbumAssets_sub()
@@ -1594,7 +1674,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let requestOptions = PHImageRequestOptions()
         videoPHAsset.removeAll()
         videoDura.removeAll()
-        //        videoURL.removeAll()
         videoDate.removeAll()
         requestOptions.isSynchronous = false
         requestOptions.isNetworkAccessAllowed = false//これでもicloud上のvideoを取ってしまう
@@ -1603,7 +1682,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let assetFetchOptions = PHFetchOptions()
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
-        if (assetCollections.count > 0) {//アルバムが存在しない時
+        if (assetCollections.count > 0) {//アルバムが存在する時
+            print("assetCollections.count>0")
             //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
             let assetCollection = assetCollections.object(at:0)
             // creationDate降順でアルバム内のアセットをフェッチ
@@ -1630,6 +1710,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
             gettingAlbumF = false
         }else{
+            print("!! assetCollections.count>0")
+
             gettingAlbumF = false
         }
     }
@@ -2459,6 +2541,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             getAlbumFirst()
             dispWakus()
             showWakuImages()
+            
+            print("StatementViewController unwind")
         }else if let vc = segue.source as? RecordViewController{
             let Controller:RecordViewController = vc
             if Controller.captureSession.isRunning{//何もせず帰ってきた時
