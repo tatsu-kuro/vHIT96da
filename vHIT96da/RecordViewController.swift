@@ -710,9 +710,12 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                  self.saved2album=false
                  print("アルバム保存に失敗しました: \(String(describing: error))")
              }
-             self.performSegue(withIdentifier: "fromRecordToMain", sender: self)
+             DispatchQueue.main.async {
+                 self.performSegue(withIdentifier: "fromRecordToMain", sender: self)
+             }
          }
      }
+  
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
         setMotion()//ここにしても安定したような

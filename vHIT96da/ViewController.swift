@@ -1214,7 +1214,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else{
 //            getAlbumAssetsEndFlag=false
-            getAlbumAssets()
+            getAlbumAssets(false)
 //            while(!getAlbumAssetsEndFlag){
 //                sleep(UInt32(0.1))
 //            }
@@ -1310,7 +1310,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //      #if DEBUG
         //        print("viewDidLoad******")
         //    #endif
-        //        dispFilesindoc()//for debug
+  //              dispFilesindoc()//for debug
         //機種にょって異なるVOG結果サイズだったのを2400*1600に統一した
         mailWidth=2400//240*10
         mailHeight=1600//240*10*2/3
@@ -1638,7 +1638,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        }
 //    }
 //    var getAlbumAssetsEndFlag=false
-    func getAlbumAssets(){
+//    func getAlbumAssets_unwind(){
+//        getAlbumAssets(true)
+//        saveGyroValue()
+//    }
+    func getAlbumAssets(_ writeGyro:Bool){
 //        getAlbumAssetsEndFlag=false
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
@@ -1664,9 +1668,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //}
                 //    }
             }
-            // 非同期でスローモーションビデオを表示
+             // 非同期でスローモーションビデオを表示
             DispatchQueue.main.async {
-                self.getAlbumVideos(slowMotionVideos)
+                self.getAlbumVideos(slowMotionVideos,writeGyro)
             }
         } else {
             print("指定したアルバムが見つかりませんでした。")
@@ -1675,13 +1679,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
   //  var count:Int=0
     
-    func getAlbumVideos(_ videos: [PHAsset]) {
+    func getAlbumVideos(_ videos: [PHAsset],_ writeGyro:Bool) {
+        
         videoPHAsset.removeAll()
         videoDura.removeAll()
         videoDate.removeAll()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-
+        
         if videos.isEmpty {
             print("スローモーションビデオはありません。")
         } else {
@@ -1693,37 +1698,38 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     let duration = String(format:"%.1fs",video.duration)
                     videoDate.append(date)// + "(" + duration + ")")
                     videoDura.append(duration)
-          //          print(videoPHAsset.last)
-                    print(videoDate.last)
-                    print(videoDura.last)
+                    //          print(videoPHAsset.last)
+                    print(videoDate.count,videoDate.last)
+               //     print(videoDura.last)
                 }
             }
-            
-            videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
-            //            startFrame = getUserDefault(str: "startFrame", ret: 0)
+            if writeGyro {
+                videoCurrent=videoDate.count-1
+            }else{
+                videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
+            }//            startFrame = getUserDefault(str: "startFrame", ret: 0)
             if videoCurrent>videoDate.count-1{
                 videoCurrent=videoDate.count-1
             }
-           
+            
             //
-                        self.setNeedsStatusBarAppearanceUpdate()
+            self.setNeedsStatusBarAppearanceUpdate()
             //            dispWakus()
             //#if DEBUG
             //            print("didloadcount:",videoDate.count)
             //#endif
-                        showVideoIroiro(num:0)
-                        if videoDate.count==0{
-                            setVideoButtons(mode: false)
-                        }else{
-                            startTimerVideo()
-                        }
-                        waveSlider.isHidden=true
-
-            
-            
-          
+            showVideoIroiro(num:0)
+            if videoDate.count==0{
+                setVideoButtons(mode: false)
+            }else{
+                startTimerVideo()
+            }
+            waveSlider.isHidden=true
+            if(writeGyro){
+                saveGyroValue()
+            }
         }
-//        getAlbumAssetsEndFlag=true
+        //        getAlbumAssetsEndFlag=true
     }
 /*    func getAlbumAssets_(){
         gettingAlbumF = true
@@ -2523,6 +2529,77 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+    func saveImageToExistingAlbum(image: UIImage, albumName: String) {
+        // PNG形式でデータを生成
+        guard let pngData = image.pngData() else {
+            print("UIImageをPNGデータに変換できませんでした")
+            return
+        }
+        
+        // アルバムを取得
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+        let collection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+        
+        guard let album = collection.firstObject else {
+            print("指定されたアルバムが見つかりません: \(albumName)")
+            return
+        }
+        
+        // 画像を保存
+        PHPhotoLibrary.shared().performChanges({
+            let creationRequest = PHAssetCreationRequest.forAsset()
+            let options = PHAssetResourceCreationOptions()
+            creationRequest.addResource(with: .photo, data: pngData, options: options)
+            
+            // アルバムに追加
+            if let albumChangeRequest = PHAssetCollectionChangeRequest(for: album),
+               let placeholder = creationRequest.placeholderForCreatedAsset {
+                let assets = NSArray(array: [placeholder])
+                albumChangeRequest.addAssets(assets)
+            }
+        }) { success, error in
+            if success {
+                print("画像をアルバム '\(albumName)' に保存しました")
+            } else {
+                print("画像の保存に失敗しました: \(error?.localizedDescription ?? "不明なエラー")")
+            }
+        }
+    }
+    // フォトライブラリにアルバムがあるか確認し、無ければ作成して画像を追加する関数
+    func addImageToAlbum(image: UIImage) {
+        // "kuroda96"というアルバムを取得
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "title = %@", "vHIT96da")
+        let albums = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+        
+        // アルバムが存在する// 場合はそのアルバムに画像を追加
+        if let album = albums.firstObject {
+            PHPhotoLibrary.shared().performChanges({
+                let assetCollectionChangeRequest = PHAssetCollectionChangeRequest(for: album)
+                assetCollectionChangeRequest?.addAssets([image] as NSArray)
+            }, completionHandler: { success, error in
+                if success {
+                    print("画像がアルバムに追加されました")
+                } else {
+                    print("画像のアルバムへの追加に失敗しました: \(String(describing: error))")
+                }
+            })
+//        } else {
+//            // "kuroda96"というアルバムが存在しない場合は、新たに作成してその中に画像を追加
+//            PHPhotoLibrary.shared().performChanges({
+//                PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: "kuroda96")
+//            }, completionHandler: { success, error in
+//                if success {
+//                    print("新しいアルバム 'kuroda96' が作成されました")
+//                    // アルバムが作成されたら再度アルバムに画像を追加
+//                    self.addImageToAlbum(image: image)
+//                } else {
+//                    print("アルバムの作成に失敗しました: \(String(describing: error))")
+//                }
+//            })
+        }
+    }
     //gyroDataは劣化のないPngで保存
     func savePngImage2path(image:UIImage,path:String) {//imageを保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
@@ -2647,52 +2724,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroH.append(-dH)
                     gyroV.append(-dV)
                 }
-                getAlbumAssets()
-                showVideoIroiro(num:0)
-                var fps=getFPS(videoCurrent)
-                if fps < 200.0{
-                    fps *= 2.0
-                }
-                let framecount=Int(Float(gyroH.count)*(fps)/100.0)
-                var lastJ:Int=0
-                //                let t1=CFAbsoluteTimeGetCurrent()
-                for i in 0...framecount+500{//100を尻に付けないとgyrodataが変な値になる
-                    let gn=Double(i)/Double(fps)//iフレーム目の秒数
-                    var getj:Int=0
-                    for j in lastJ...gyroH.count-1{
-                        if gyroTime[j] >= gn{//secondの値が入っている。
-                            getj=j//越えるところを見つける
-                            lastJ=j
-                            break
-                        }
-                    }
-                    gyroHFiltered.append(Kalman(value:CGFloat(gyroH[getj]),num:2))
-                    gyroVFiltered.append(Kalman(value:CGFloat(gyroV[getj]),num: 3))
-                }
-                
-                print("rewind***4")
-                
-                let gyroCSV=getGyroCSV()//csv文字列
-                //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
-                //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
-                let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
-                let eyeImage = iroiro.getThumb(avasset: avasset!)
-                let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
-                //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
-                savePngImage2path(image: gyroImage!, path: "temp.png")
-                while existFile(aFile: "temp.png")==false{
-                    sleep(UInt32(0.1))
-                }
-                print("rewind***5")
-                
-                savePath2album(name:vHIT96da,path: "temp.png")
-                startFrame=0
-                //                getPngsAlbumList()
-                //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
+                getAlbumAssets(true)//writeGyro==true
+
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
                     
-                    getAlbumAssets()
+                    getAlbumAssets(false)
 #if DEBUG
                     print("アルバムを消されていたので、録画を保存しなかった。")
 #endif
@@ -2717,12 +2754,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         showBoxies(f: false)
         setVideoButtons(mode: false)
         removeFile(delFile: "temp.png")
+        print("rewind***1")
 
         showVideoIroiro(num:0)
         var fps=getFPS(videoCurrent)
         if fps < 200.0{
             fps *= 2.0
         }
+        print("rewind***2")
         let framecount=Int(Float(gyroH.count)*(fps)/100.0)
         var lastJ:Int=0
         //                let t1=CFAbsoluteTimeGetCurrent()
@@ -2739,22 +2778,27 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroHFiltered.append(Kalman(value:CGFloat(gyroH[getj]),num:2))
             gyroVFiltered.append(Kalman(value:CGFloat(gyroV[getj]),num: 3))
         }
-  
+        print("rewind***3")
+
         let gyroCSV=getGyroCSV()//csv文字列
         //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
         //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
         let eyeImage = iroiro.getThumb(avasset: avasset!)
         let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
-        //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
+
+        print("rewind***4")
+        saveImageToExistingAlbum(image: gyroImage!, albumName:"vHIT96da")
+   /*     //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
         savePngImage2path(image: gyroImage!, path: "temp.png")
         while existFile(aFile: "temp.png")==false{
             sleep(UInt32(0.1))
         }
         print("rewind***5")
         
-        savePath2album(name:vHIT96da,path: "temp.png")
+        savePath2album(name:"vHIT96da",path: "temp.png")*/
         startFrame=0
+        print("rewind***6")
         //
     }
     
