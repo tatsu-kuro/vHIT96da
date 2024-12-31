@@ -1125,7 +1125,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDura.count<1 {
             return
         }
-        
+  //      videoCurrent=videoDura.count-1//kurodatatsu
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
         
         calcDate = currentVideoDate.text!
@@ -1213,84 +1213,89 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }else{
-            getAlbumAssets()//完了したら戻ってくるようにしたつもり
-            //videcurrentは前回終了時のものを利用する
-            videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
-            //            startFrame = getUserDefault(str: "startFrame", ret: 0)
-            if videoCurrent>videoDate.count-1{
-                videoCurrent=videoDate.count-1
-            }
-            self.setNeedsStatusBarAppearanceUpdate()
-            dispWakus()
-#if DEBUG
-            print("didloadcount:",videoDate.count)
-#endif
-            showVideoIroiro(num:0)
-            if videoDate.count==0{
-                setVideoButtons(mode: false)
-            }else{
-                startTimerVideo()
-            }
-            waveSlider.isHidden=true
+//            getAlbumAssetsEndFlag=false
+            getAlbumAssets()
+//            while(!getAlbumAssetsEndFlag){
+//                sleep(UInt32(0.1))
+//            }
+//            //videcurrentは前回終了時のものを利用する
+////            videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
+////            //            startFrame = getUserDefault(str: "startFrame", ret: 0)
+////            if videoCurrent>videoDate.count-1{
+////                videoCurrent=videoDate.count-1
+////            }
+//            
+//            self.setNeedsStatusBarAppearanceUpdate()
+//            dispWakus()
+//#if DEBUG
+//            print("didloadcount:",videoDate.count)
+//#endif
+//            showVideoIroiro(num:0)
+//            if videoDate.count==0{
+//                setVideoButtons(mode: false)
+//            }else{
+//                startTimerVideo()
+//            }
+//            waveSlider.isHidden=true
         }
     }
     
 
 
-    func getLocalHighFrameRateVideoURLsInAlbum(albumName: String, completion: @escaping ([URL]) -> Void) {
-        PHPhotoLibrary.requestAuthorization { status in
-            guard status == .authorized else {
-                completion([])
-                return
-            }
+//    func getLocalHighFrameRateVideoURLsInAlbum(albumName: String, completion: @escaping ([URL]) -> Void) {
+//        PHPhotoLibrary.requestAuthorization { status in
+//            guard status == .authorized else {
+//                completion([])
+//                return
+//            }
+//
+//            let fetchOptions = PHFetchOptions()
+//            fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+//            let albumResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+//
+//            guard let album = albumResult.firstObject else {
+//                completion([])
+//                return
+//            }
+//
+//            let assetsFetchOptions = PHFetchOptions()
+//            let assets = PHAsset.fetchAssets(in: album, options: assetsFetchOptions)
+//
+//            var highFrameRateVideoURLs: [URL] = []
+//            let dispatchGroup = DispatchGroup()
+//
+//            assets.enumerateObjects { asset, _, _ in
+//                if asset.mediaSubtypes.contains(.videoHighFrameRate) && asset.sourceType == .typeUserLibrary {
+//                    dispatchGroup.enter()
+//                    let options = PHVideoRequestOptions()
+//                    options.version = .original
+//                    options.isNetworkAccessAllowed = false  // cloud上のファイルは排除する
+//
+//                    PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { avAsset, _, _ in
+//                        if let urlAsset = avAsset as? AVURLAsset {
+//                            let frameRate = self.getVideoFrameRate(url: urlAsset.url)
+//                            if frameRate == 120 || frameRate == 240 {
+//    highFrameRateVideoURLs.append(urlAsset.url)
+//                            }
+//                        }
+//                        dispatchGroup.leave()
+//                    }
+//                }
+//            }
+//
+//            dispatchGroup.notify(queue: .main) {
+//                completion(highFrameRateVideoURLs)
+//            }
+//        }
+//    }
 
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
-            let albumResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
-
-            guard let album = albumResult.firstObject else {
-                completion([])
-                return
-            }
-
-            let assetsFetchOptions = PHFetchOptions()
-            let assets = PHAsset.fetchAssets(in: album, options: assetsFetchOptions)
-
-            var highFrameRateVideoURLs: [URL] = []
-            let dispatchGroup = DispatchGroup()
-
-            assets.enumerateObjects { asset, _, _ in
-                if asset.mediaSubtypes.contains(.videoHighFrameRate) && asset.sourceType == .typeUserLibrary {
-                    dispatchGroup.enter()
-                    let options = PHVideoRequestOptions()
-                    options.version = .original
-                    options.isNetworkAccessAllowed = false  // cloud上のファイルは排除する
-
-                    PHImageManager.default().requestAVAsset(forVideo: asset, options: options) { avAsset, _, _ in
-                        if let urlAsset = avAsset as? AVURLAsset {
-                            let frameRate = self.getVideoFrameRate(url: urlAsset.url)
-                            if frameRate == 120 || frameRate == 240 {
-    highFrameRateVideoURLs.append(urlAsset.url)
-                            }
-                        }
-                        dispatchGroup.leave()
-                    }
-                }
-            }
-
-            dispatchGroup.notify(queue: .main) {
-                completion(highFrameRateVideoURLs)
-            }
-        }
-    }
-
-    private func getVideoFrameRate(url: URL) -> Float {
-        let asset = AVAsset(url: url)
-        guard let track = asset.tracks(withMediaType: .video).first else {
-            return 0
-        }
-        return track.nominalFrameRate
-    }
+//    private func getVideoFrameRate(url: URL) -> Float {
+//        let asset = AVAsset(url: url)
+//        guard let track = asset.tracks(withMediaType: .video).first else {
+//            return 0
+//        }
+//        return track.nominalFrameRate
+//    }
 /*
     // 使用例
     getLocalHighFrameRateVideoURLsInAlbum(albumName: "vHIT96da") { urls in
@@ -1321,8 +1326,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             getAlbumFirst()
             dispWakus()
             showWakuImages()
-            print("installed nil!!!")
+            print("installed != nil")
         }else{
+            print("installed == nil, unwind で getAlbumFirstその他")
             //nilの時はviewDidAppearでStamentViewControllerでStatementを表示
             //StatementViewControllerからのunwindで以下３行を行う
             //getAlbumFirst()
@@ -1341,11 +1347,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        getLocalHighFrameRateVideoURLsInAlbum(albumName: "vHIT96da") { urls in
-            urls.forEach { url in
-                print("スローモーション動画のURL: \(url)")
-            }
-        }
+        
+//        getLocalHighFrameRateVideoURLsInAlbum(albumName: "vHIT96da") { urls in
+//            urls.forEach { url in
+//                print("スローモーション動画のURL: \(url)")
+//            }
+//        }
         //StatementViewController(KeySet)の中でinstalledを作りyesを設定
         if UserDefaults.standard.object(forKey: "installed") == nil{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -1581,79 +1588,144 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return ret
         }
     }
-    var iCloudStatus:Bool=true
-    func checkIsiCloud(assetVideo:PHAsset,cachingImageManager:PHCachingImageManager) -> PHImageRequestID{
-        
-        let opt=PHVideoRequestOptions()
-        opt.deliveryMode = .mediumQualityFormat
-        opt.isNetworkAccessAllowed=true //iCloud video can play
-        return cachingImageManager.requestAVAsset(forVideo:assetVideo, options: opt) { (asset, audioMix, info) in
-            
+ 
+//    func getAlbumAssets_last(){
+//        gettingAlbumF = true
+//        getAlbumAssets_last_sub()
+//        while gettingAlbumF == true{
+//            sleep(UInt32(0.1))
+//        }
+//    }
+//    
+//    var gettingAlbumF:Bool = false
+//    func getAlbumAssets_last_sub(){
+//        let requestOptions = PHImageRequestOptions()
+//        requestOptions.isSynchronous = false
+//        requestOptions.isNetworkAccessAllowed = false//これでもicloud上のvideoを取ってしまう
+//        requestOptions.deliveryMode = .highQualityFormat
+//        // アルバムをフェッチ
+//        let assetFetchOptions = PHFetchOptions()
+//        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
+//        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+//        if (assetCollections.count > 0) {//アルバムが存在しない時
+//            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+//            let assetCollection = assetCollections.object(at:0)
+//            // creationDate降順でアルバム内のアセットをフェッチ
+//            let fetchOptions = PHFetchOptions()
+//            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+//            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+//            let formatter = DateFormatter()
+//            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//            for i in (assets.count-2)..<assets.count{
+//                let asset=assets[i]
+//                if asset.duration>0{//静止画を省く
+//                    videoPHAsset.append(asset)
+//#if DEBUG
+//                    print("asset:",asset)
+//#endif
+//                    //                    videoURL.append(nil)
+//                    let date_sub = asset.creationDate
+//                    let date = formatter.string(from: date_sub!)
+//                    let duration = String(format:"%.1fs",asset.duration)
+//                    videoDate.append(date)// + "(" + duration + ")")
+//                    //                    asset.video
+//                    videoDura.append(duration)
+//                }
+//            }
+//            gettingAlbumF = false
+//        }else{
+//            gettingAlbumF = false
+//        }
+//    }
+//    var getAlbumAssetsEndFlag=false
+    func getAlbumAssets(){
+//        getAlbumAssetsEndFlag=false
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
+        let collectionResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+        if let album = collectionResult.firstObject {
+            let assetFetchOptions = PHFetchOptions()
+            assetFetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+
+            //   assetFetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+            let assets = PHAsset.fetchAssets(in: album, options: assetFetchOptions)
+            var slowMotionVideos: [PHAsset] = [] // スローモーションビデオのリストを作成
+            assets.enumerateObjects { (asset, _, _) in
+                // スローモーション動画かどうかの確認
+                //    if asset.mediaSubtypes.contains(PHAssetMediaSubtype.videoHighFrameRate) {
+                // iCloudからダウンロードされていないかどうかを確認
+                //    self.checkIfVideoIsLocallyAvailable(asset: asset) { isAvailable in
+                //      if isAvailable {
+                slowMotionVideos.append(asset)
+                /*
+                 self.mediaAssets.append(asset)
+                 */
+                //  }
+                //}
+                //    }
+            }
+            // 非同期でスローモーションビデオを表示
             DispatchQueue.main.async {
-                if (info!["PHImageFileSandboxExtensionTokenKey"] != nil) {
-                    self.iCloudStatus=false
-                    //                        self.playVideo(videoAsset:asset!)
-                }else if((info![PHImageResultIsInCloudKey]) != nil) {
-                    self.iCloudStatus=true
-                    
-                }else{
-                    self.iCloudStatus=false
-                    //                       self.playVideo(videoAsset:asset!)
-                }
+                self.getAlbumVideos(slowMotionVideos)
             }
-        }
-        
-    }
-    func getAlbumAssets_last(){
-        gettingAlbumF = true
-        getAlbumAssets_last_sub()
-        while gettingAlbumF == true{
-            sleep(UInt32(0.1))
-        }
-    }
-    
-    var gettingAlbumF:Bool = false
-    func getAlbumAssets_last_sub(){
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = false
-        requestOptions.isNetworkAccessAllowed = false//これでもicloud上のvideoを取ってしまう
-        requestOptions.deliveryMode = .highQualityFormat
-        // アルバムをフェッチ
-        let assetFetchOptions = PHFetchOptions()
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
-        if (assetCollections.count > 0) {//アルバムが存在しない時
-            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
-            let assetCollection = assetCollections.object(at:0)
-            // creationDate降順でアルバム内のアセットをフェッチ
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            for i in (assets.count-2)..<assets.count{
-                let asset=assets[i]
-                if asset.duration>0{//静止画を省く
-                    videoPHAsset.append(asset)
-#if DEBUG
-                    print("asset:",asset)
-#endif
-                    //                    videoURL.append(nil)
-                    let date_sub = asset.creationDate
-                    let date = formatter.string(from: date_sub!)
-                    let duration = String(format:"%.1fs",asset.duration)
-                    videoDate.append(date)// + "(" + duration + ")")
-                    //                    asset.video
-                    videoDura.append(duration)
-                }
-            }
-            gettingAlbumF = false
-        }else{
-            gettingAlbumF = false
+        } else {
+            print("指定したアルバムが見つかりませんでした。")
         }
     }
 
-    func getAlbumAssets(){
+  //  var count:Int=0
+    
+    func getAlbumVideos(_ videos: [PHAsset]) {
+        videoPHAsset.removeAll()
+        videoDura.removeAll()
+        videoDate.removeAll()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        if videos.isEmpty {
+            print("スローモーションビデオはありません。")
+        } else {
+            for video in videos {
+                if video.duration>0{//静止画を省く
+                    videoPHAsset.append(video)
+                    let date_sub = video.creationDate
+                    let date = formatter.string(from: date_sub!)
+                    let duration = String(format:"%.1fs",video.duration)
+                    videoDate.append(date)// + "(" + duration + ")")
+                    videoDura.append(duration)
+          //          print(videoPHAsset.last)
+                    print(videoDate.last)
+                    print(videoDura.last)
+                }
+            }
+            
+            videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
+            //            startFrame = getUserDefault(str: "startFrame", ret: 0)
+            if videoCurrent>videoDate.count-1{
+                videoCurrent=videoDate.count-1
+            }
+           
+            //
+                        self.setNeedsStatusBarAppearanceUpdate()
+            //            dispWakus()
+            //#if DEBUG
+            //            print("didloadcount:",videoDate.count)
+            //#endif
+                        showVideoIroiro(num:0)
+                        if videoDate.count==0{
+                            setVideoButtons(mode: false)
+                        }else{
+                            startTimerVideo()
+                        }
+                        waveSlider.isHidden=true
+
+            
+            
+          
+        }
+//        getAlbumAssetsEndFlag=true
+    }
+/*    func getAlbumAssets_(){
         gettingAlbumF = true
         getAlbumAssets_sub()
         while gettingAlbumF == true{
@@ -1715,7 +1787,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gettingAlbumF = false
         }
     }
-    
+    */
     //    func getUserDefaultBool(str:String,ret:Bool) -> Bool{
     //        if (UserDefaults.standard.object(forKey: str) != nil){
     //            return UserDefaults.standard.bool(forKey: str)
@@ -2491,7 +2563,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return false
     }
-    
+    var gyroH = Array<Double>()//Holizontal
+    var gyroV = Array<Double>()//vertical
+    var gyroTime = Array<Double>()
+
     @IBAction func unwind(_ segue: UIStoryboardSegue) {
         //     if tempCalcflag == false{
         if let vc = segue.source as? ParametersViewController {
@@ -2557,12 +2632,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 print("recorded well")
                 var dH:Double=0//lateral
                 var dV:Double=0//vertical
-                var gyroH = Array<Double>()//Holizontal
-                var gyroV = Array<Double>()//vertical
-                var gyroTime = Array<Double>()
                 KalmanInit()
-                gyroHFiltered.removeAll()
-                gyroVFiltered.removeAll()
+                gyroH.removeAll()
+                gyroV.removeAll()
+                gyroTime.removeAll()
                 showBoxies(f: false)
                 setVideoButtons(mode: false)
                 
@@ -2574,28 +2647,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroH.append(-dH)
                     gyroV.append(-dV)
                 }
-                //gyroは10msごとに拾ってある.合わせる
-                //これをvideoのフレーム数に合わせる
-                while Controller.saved2album == false{//fileができるまで待つ
-                    sleep(UInt32(0.1))
-                }
-                print("rewind***2")
-                
-                removeFile(delFile: "temp.png")
-                //                getVideosAlbumList(name: vHIT_)
-                if videoDate.count<3{
-                    getAlbumAssets()
-                }else{
-                    getAlbumAssets_last()
-                }
-                print("rewind***3")
-                let videoCount=Controller.videoCount
-                //ビデオが出来るまで待つ
-                while videoDura.count==videoCount{
-                    sleep(UInt32(0.5))
-                }
-                
-                videoCurrent=videoDura.count-1
+                getAlbumAssets()
                 showVideoIroiro(num:0)
                 var fps=getFPS(videoCurrent)
                 if fps < 200.0{
@@ -2656,6 +2708,54 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("tatsuaki-unwind from list")
 #endif
         }
+    }
+    
+    func saveGyroValue(){
+        KalmanInit()
+        gyroHFiltered.removeAll()
+        gyroVFiltered.removeAll()
+        showBoxies(f: false)
+        setVideoButtons(mode: false)
+        removeFile(delFile: "temp.png")
+
+        showVideoIroiro(num:0)
+        var fps=getFPS(videoCurrent)
+        if fps < 200.0{
+            fps *= 2.0
+        }
+        let framecount=Int(Float(gyroH.count)*(fps)/100.0)
+        var lastJ:Int=0
+        //                let t1=CFAbsoluteTimeGetCurrent()
+        for i in 0...framecount+500{//100を尻に付けないとgyrodataが変な値になる
+            let gn=Double(i)/Double(fps)//iフレーム目の秒数
+            var getj:Int=0
+            for j in lastJ...gyroH.count-1{
+                if gyroTime[j] >= gn{//secondの値が入っている。
+                    getj=j//越えるところを見つける
+                    lastJ=j
+                    break
+                }
+            }
+            gyroHFiltered.append(Kalman(value:CGFloat(gyroH[getj]),num:2))
+            gyroVFiltered.append(Kalman(value:CGFloat(gyroV[getj]),num: 3))
+        }
+  
+        let gyroCSV=getGyroCSV()//csv文字列
+        //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
+        //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
+        let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
+        let eyeImage = iroiro.getThumb(avasset: avasset!)
+        let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
+        //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
+        savePngImage2path(image: gyroImage!, path: "temp.png")
+        while existFile(aFile: "temp.png")==false{
+            sleep(UInt32(0.1))
+        }
+        print("rewind***5")
+        
+        savePath2album(name:vHIT96da,path: "temp.png")
+        startFrame=0
+        //
     }
     
     func isVerticalData(num:Int)->Bool{

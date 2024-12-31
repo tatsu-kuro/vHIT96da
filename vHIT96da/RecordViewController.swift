@@ -627,36 +627,92 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         return assetCollections.object(at:0)
     }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        
-        if albumExists(albumName: vHIT96da)==true{
-            recordedFlag=true
-            PHPhotoLibrary.shared().performChanges({ [self] in
-                //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
-                let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
-                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: vHIT96da))
-                let placeHolder = assetRequest.placeholderForCreatedAsset
-                albumChangeRequest?.addAssets([placeHolder!] as NSArray)
-                //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
-                print("file add to album")
-            }) { [self] (isSuccess, error) in
-                if isSuccess {
-                    // 保存した画像にアクセスする為のimageIDを返却
-                    print("success")
-                    self.saved2album=true
-                } else {
-                    print("fail")
-                    self.saved2album=true
-                }
-            }
-        }else{
+        if let error = error {
+            print("録画エラー: \(error.localizedDescription)")
             startButton.isHidden=true
             stopButton.isHidden=true
-            //上二つをunwindでチェック
-            //アプリ起動中にアルバムを消したら、保存せずに戻る。
-            //削除してもどこかにあるようで、参照URLは生きていて、再生できる。
+            performSegue(withIdentifier: "fromRecordToMain", sender: self)
+
+  //          return
         }
-        performSegue(withIdentifier: "fromRecordToMain", sender: self)
+        
+        // 録画が正常に終了した場合、ビデオをアルバムに保存
+        recordedFlag=true
+        saveToCustomAlbum(url: outputFileURL)
+        
+        //            if albumExists(albumName: "vHIT96da")==true{
+        //            recordedFlag=true
+        //            PHPhotoLibrary.shared().performChanges({ [self] in
+        //                //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
+        //                print("fileOutput entrance3")
+        //                let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
+        //                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: "vHIT96da"))
+          //                let placeHolder = assetRequest.placeholderForCreatedAsset
+        //                albumChangeRequest?.addAssets([placeHolder!] as NSArray)
+        //                //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
+        //                print("file add to album")
+        //            }) { [self] (isSuccess, error) in
+        //                if isSuccess {
+        //                    // 保存した画像にアクセスする為のimageIDを返却
+        //                    print("success")
+        //                    self.saved2album=true
+        //                } else {
+        //                    print("fail")
+        //                    self.saved2album=true
+        //                }
+        //            }
+        //        }else{
+        //            startButton.isHidden=true
+        //            stopButton.isHidden=true
+        //            //上二つをunwindでチェック
+        //            //アプリ起動中にアルバムを消したら、保存せずに戻る。
+        //            //削除してもどこかにあるようで、参照URLは生きていて、再生できる。
+        //        }
+//        performSegue(withIdentifier: "fromRecordToMain", sender: self)
     }
+    
+  
+     
+     
+     // カスタムアルバムに保存
+     func saveToCustomAlbum(url: URL) {
+         // アルバム名
+         let albumName = "vHIT96da"
+         
+         // 写真ライブラリに保存
+         PHPhotoLibrary.shared().performChanges({
+             // アルバムがすでにあるか確認
+             let fetchOptions = PHFetchOptions()
+             fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+             let fetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+             
+             var assetCollection: PHAssetCollection?
+             if fetchResult.count == 0 {
+                 // 新しいアルバムを作成
+                 PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
+                 assetCollection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions).firstObject
+             } else {
+                 assetCollection = fetchResult.firstObject
+             }
+             
+             // 写真ライブラリに動画を保存
+             let creationRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+             
+             guard let album = assetCollection else { return }
+             let assetCollectionChangeRequest = PHAssetCollectionChangeRequest(for: album)
+             assetCollectionChangeRequest?.addAssets([creationRequest!.placeholderForCreatedAsset!] as NSArray)
+             
+         }) { success, error in
+             if success {
+                 self.saved2album=true
+                 print("動画をアルバムに保存しました。")
+             } else {
+                 self.saved2album=false
+                 print("アルバム保存に失敗しました: \(String(describing: error))")
+             }
+             self.performSegue(withIdentifier: "fromRecordToMain", sender: self)
+         }
+     }
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
         setMotion()//ここにしても安定したような
