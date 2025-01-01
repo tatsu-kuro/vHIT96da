@@ -374,67 +374,146 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    @IBAction func onEraseButton(_ sender: Any) {
-        
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.isNetworkAccessAllowed = false
-        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
-        //アルバムをフェッチ
-        let assetFetchOptions = PHFetchOptions()
-        
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
-        
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
-        //        print("asset:",assetCollections.count)
-        //アルバムが存在しない事もある？
-        var dialogStatus:Int=0
-        if (assetCollections.count > 0) {
-            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
-            let assetCollection = assetCollections.object(at:0)
-            // creationDate降順でアルバム内のアセットをフェッチ
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            var id:Int=0
-            for i in 0..<assets.count{
-                let date_sub=assets[i].creationDate
-                let date = formatter.string(from:date_sub!)
-                //                eraseAssetPngNumber=i+1
-                if videoDate[videoCurrent].contains(date){//
-                    id=i
-                    break
-                }
+    //PHAsset-Arrayを削除
+    func deleteAssets(assets: [PHAsset], completion: @escaping (Bool, Error?) -> Void) {
+        // PHPhotoLibraryの変更操作を実行
+        PHPhotoLibrary.shared().performChanges({
+            // 削除リクエストを作成
+            PHAssetChangeRequest.deleteAssets(assets as NSArray)
+        }) { success, error in
+            if success {
+                print("PHAssetsを削除しました")
+                completion(true, nil)
+            } else {
+                print("PHAssetsの削除に失敗しました: \(error?.localizedDescription ?? "不明なエラー")")
+                completion(false, error)
             }
-            if !assets[id].canPerform(.delete) {
-                return
-            }
-            var delAssets=Array<PHAsset>()
-            delAssets.append(assets[id])
-            print("erase0:",id,assets.count)
-            if id != assets.count-1{//最後でなければ
-                //                print("erase1:",id,assets.count)
-                if assets[id+1].duration==0{//pngが無くて、videoが選択されてない事を確認
-                    delAssets.append(assets[id+1])//pngはその次に入っているはず
-                    print("erase2:",id,assets.count)
-                }
-            }
-            //            delAssets.append(assets[id])
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
-            }, completionHandler: { success,error in//[self] _, _ in
-                if success==true{
-                    dialogStatus = 1//YES
-                }else{
-                    dialogStatus = -1//NO
-                }
-                // 削除後の処理
-            })
-            
         }
-        
+    }
+    //1個のPHAssetを削除
+    func deleteAsset(asset: PHAsset, completion: @escaping (Bool, Error?) -> Void) {
+        // PHPhotoLibraryの変更操作を実行
+        PHPhotoLibrary.shared().performChanges({
+            // 削除リクエストを作成
+            PHAssetChangeRequest.deleteAssets([asset] as NSArray)
+        }) { success, error in
+            if success {
+                print("PHAssetを削除しました: \(asset.localIdentifier)")
+                completion(true, nil)
+            } else {
+                print("PHAssetの削除に失敗しました: \(error?.localizedDescription ?? "不明なエラー")")
+                completion(false, error)
+            }
+        }
+    }
+    
+    @IBAction func onEraseButton(_ sender: Any) {
+        let fetchOptions = PHFetchOptions()
+        // 全てのアセット（画像と動画）をフェッチ
+        let fetchResult = PHAsset.fetchAssets(with: fetchOptions)
+        // 削除対象を収集
+        var assetsToDelete: [PHAsset] = []
+        assetsToDelete.append(videoPHAsset[videoCurrent])
+        assetsToDelete.append(pngPHAsset[videoCurrent])
+        //        fetchResult.enumerateObjects { asset, _, _ in
+        //            assetsToDelete.append(asset)
+        //        }
+        var dialogStatus:Int=0
+        // 削除実行
+        if !assetsToDelete.isEmpty {
+            deleteAssets(assets: assetsToDelete) { [self] success, error in
+                if success {
+                    print("画像と動画を削除しました")
+                    
+                    dialogStatus=1
+                    
+                    //                    videoDate.remove(at: videoCurrent)
+                    //                    videoDura.remove(at: videoCurrent)
+                    //                    videoPHAsset.remove(at: videoCurrent)
+                    //                    pngPHAsset.remove(at: videoCurrent)
+                    //
+                    //                    videoCurrent -= 1
+                    //                    showVideoIroiro(num: 0)
+                    //                    if videoDate.count==0{
+                    //                        setVideoButtons(mode: false)
+                    //                        if Locale.preferredLanguages.first!.contains("ja"){
+                    //                            //                    print("japanese")
+                    //                            currentVideoDate.text="右下ボタンをタップして"
+                    //                            videoFps.text="ビデオを撮影して下さい"
+                    //                        }else{
+                    //                            //                    print("english")
+                    //                            currentVideoDate.text="tap button in lower right corner"
+                    //                            videoFps.text="to record the video of the eye"
+                    //                        }
+                    //
+                } else {
+                    dialogStatus = -1
+                    print("削除に失敗しました: \(error?.localizedDescription ?? "不明なエラー")")
+                }
+            }
+        } else {
+            print("削除する画像や動画が見つかりませんでした")
+        }
+        /*
+         let requestOptions = PHImageRequestOptions()
+         requestOptions.isSynchronous = true
+         requestOptions.isNetworkAccessAllowed = false
+         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
+         //アルバムをフェッチ
+         let assetFetchOptions = PHFetchOptions()
+         
+         assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+         
+         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+         //        print("asset:",assetCollections.count)
+         //アルバムが存在しない事もある？
+         var dialogStatus:Int=0
+         if (assetCollections.count > 0) {
+         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
+         let assetCollection = assetCollections.object(at:0)
+         // creationDate降順でアルバム内のアセットをフェッチ
+         let fetchOptions = PHFetchOptions()
+         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+         let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
+         let formatter = DateFormatter()
+         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+         var id:Int=0
+         for i in 0..<assets.count{
+         let date_sub=assets[i].creationDate
+         let date = formatter.string(from:date_sub!)
+         //                eraseAssetPngNumber=i+1
+         if videoDate[videoCurrent].contains(date){//
+         id=i
+         break
+         }
+         }
+         if !assets[id].canPerform(.delete) {
+         return
+         }
+         var delAssets=Array<PHAsset>()
+         delAssets.append(assets[id])
+         print("erase0:",id,assets.count)
+         if id != assets.count-1{//最後でなければ
+         //                print("erase1:",id,assets.count)
+         if assets[id+1].duration==0{//pngが無くて、videoが選択されてない事を確認
+         delAssets.append(assets[id+1])//pngはその次に入っているはず
+         print("erase2:",id,assets.count)
+         }
+         }
+         //            delAssets.append(assets[id])
+         PHPhotoLibrary.shared().performChanges({
+         PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
+         }, completionHandler: { success,error in//[self] _, _ in
+         if success==true{
+         dialogStatus = 1//YES
+         }else{
+         dialogStatus = -1//NO
+         }
+         // 削除後の処理
+         })
+         
+         }
+         */
         while dialogStatus == 0{//dialogから抜けるまでは0
             sleep(UInt32(0.2))
         }
