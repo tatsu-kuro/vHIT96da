@@ -105,7 +105,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZn-CJ-Yxe">
-                                <rect key="frame" x="193" y="865" width="30" height="30"/>
+                                <rect key="frame" x="170" y="750" width="53" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
@@ -384,7 +384,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1120.4651162790697" y="-40.557939914163093"/>
+            <point key="canvasLocation" x="-1121.3740458015266" y="-40.845070422535215"/>
         </scene>
         <!--Record View Controller-->
         <scene sceneID="Sj0-eK-p84">

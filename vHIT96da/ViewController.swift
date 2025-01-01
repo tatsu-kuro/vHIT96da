@@ -391,7 +391,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     //1個のPHAssetを削除
-    func deleteAsset(asset: PHAsset, completion: @escaping (Bool, Error?) -> Void) {
+/*    func deleteAsset(asset: PHAsset, completion: @escaping (Bool, Error?) -> Void) {
         // PHPhotoLibraryの変更操作を実行
         PHPhotoLibrary.shared().performChanges({
             // 削除リクエストを作成
@@ -405,7 +405,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 completion(false, error)
             }
         }
-    }
+    }*/
     
     @IBAction func onEraseButton(_ sender: Any) {
         let fetchOptions = PHFetchOptions()
@@ -538,6 +538,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
+    func readGyroFromPngAsset(n:Int){
+        if pngPHAsset[n].duration==0{
+            let requestOptions = PHImageRequestOptions()
+            let width=pngPHAsset[n].pixelWidth
+            let height=pngPHAsset[n].pixelHeight
+            let imgManager = PHImageManager.default()
+            imgManager.requestImage(for: pngPHAsset[n], targetSize: CGSize(width: width, height: height), contentMode:
+                    .aspectFill, options: requestOptions, resultHandler: { [self] img, _ in
+                        if let img = img {
+                            readGyroFromPng(img: img)
+                        }
+                    })
+        }else{
+            readGyroFromNul()//5min 0
+        }
+    }
+
     func readGyroFromPngOfVideo(videoDate:String){
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
@@ -1024,7 +1041,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoSlider.isHidden=true
         
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
-        readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+ //       readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+        readGyroFromPngAsset(n: videoCurrent)
         moveGyroData()//gyroDeltastartframe分をズラして
         
         timercnt = 0
@@ -1401,6 +1419,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     var initDrawOneFlag:Bool=true
     func drawOneWave(startcount:Int,clearFlag:Bool){//vHIT_eye_head
+        
         var startcnt = startcount
         let ww=view.bounds.width
         
@@ -1415,6 +1434,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //波形を時間軸で表示
         var drawImage:UIImage//  = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
         if clearFlag{
+//            drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
+ 
             drawImage = drawLineClear(num:startcnt,width:ww,height:ww*9/16)// 180)
         }else{// イメージビューに設定する
             drawImage = drawLine(num:startcnt,width:ww,height:ww*9/16)// 180)
@@ -1751,6 +1772,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     //vHIT_eye_head
     func drawLineClear(num:Int,width w:CGFloat,height h:CGFloat) -> UIImage{
+        
         let size = CGSize(width:w, height:h)
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         let image = UIGraphicsGetImageFromCurrentImageContext()
