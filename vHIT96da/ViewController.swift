@@ -410,16 +410,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }*/
     
     @IBAction func onEraseButton(_ sender: Any) {
-        let fetchOptions = PHFetchOptions()
-        // 全てのアセット（画像と動画）をフェッチ
-        let fetchResult = PHAsset.fetchAssets(with: fetchOptions)
-        // 削除対象を収集
         var assetsToDelete: [PHAsset] = []
         assetsToDelete.append(videoPHAsset[videoCurrent])
         assetsToDelete.append(pngPHAsset[videoCurrent])
-        //        fetchResult.enumerateObjects { asset, _, _ in
-        //            assetsToDelete.append(asset)
-        //        }
+  
         var dialogStatus:Int=0
         // 削除実行
         if !assetsToDelete.isEmpty {
@@ -429,25 +423,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     
                     dialogStatus=1
                     
-                    //                    videoDate.remove(at: videoCurrent)
-                    //                    videoDura.remove(at: videoCurrent)
-                    //                    videoPHAsset.remove(at: videoCurrent)
-                    //                    pngPHAsset.remove(at: videoCurrent)
-                    //
-                    //                    videoCurrent -= 1
-                    //                    showVideoIroiro(num: 0)
-                    //                    if videoDate.count==0{
-                    //                        setVideoButtons(mode: false)
-                    //                        if Locale.preferredLanguages.first!.contains("ja"){
-                    //                            //                    print("japanese")
-                    //                            currentVideoDate.text="右下ボタンをタップして"
-                    //                            videoFps.text="ビデオを撮影して下さい"
-                    //                        }else{
-                    //                            //                    print("english")
-                    //                            currentVideoDate.text="tap button in lower right corner"
-                    //                            videoFps.text="to record the video of the eye"
-                    //                        }
-                    //
+             
                 } else {
                     dialogStatus = -1
                     print("削除に失敗しました: \(error?.localizedDescription ?? "不明なエラー")")
@@ -456,66 +432,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         } else {
             print("削除する画像や動画が見つかりませんでした")
         }
-        /*
-         let requestOptions = PHImageRequestOptions()
-         requestOptions.isSynchronous = true
-         requestOptions.isNetworkAccessAllowed = false
-         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
-         //アルバムをフェッチ
-         let assetFetchOptions = PHFetchOptions()
-         
-         assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
-         
-         let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
-         //        print("asset:",assetCollections.count)
-         //アルバムが存在しない事もある？
-         var dialogStatus:Int=0
-         if (assetCollections.count > 0) {
-         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
-         let assetCollection = assetCollections.object(at:0)
-         // creationDate降順でアルバム内のアセットをフェッチ
-         let fetchOptions = PHFetchOptions()
-         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-         let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-         let formatter = DateFormatter()
-         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-         var id:Int=0
-         for i in 0..<assets.count{
-         let date_sub=assets[i].creationDate
-         let date = formatter.string(from:date_sub!)
-         //                eraseAssetPngNumber=i+1
-         if videoDate[videoCurrent].contains(date){//
-         id=i
-         break
-         }
-         }
-         if !assets[id].canPerform(.delete) {
-         return
-         }
-         var delAssets=Array<PHAsset>()
-         delAssets.append(assets[id])
-         print("erase0:",id,assets.count)
-         if id != assets.count-1{//最後でなければ
-         //                print("erase1:",id,assets.count)
-         if assets[id+1].duration==0{//pngが無くて、videoが選択されてない事を確認
-         delAssets.append(assets[id+1])//pngはその次に入っているはず
-         print("erase2:",id,assets.count)
-         }
-         }
-         //            delAssets.append(assets[id])
-         PHPhotoLibrary.shared().performChanges({
-         PHAssetChangeRequest.deleteAssets(NSArray(array: delAssets))
-         }, completionHandler: { success,error in//[self] _, _ in
-         if success==true{
-         dialogStatus = 1//YES
-         }else{
-         dialogStatus = -1//NO
-         }
-         // 削除後の処理
-         })
-         
-         }
-         */
+    
         while dialogStatus == 0{//dialogから抜けるまでは0
             sleep(UInt32(0.2))
         }
@@ -557,49 +474,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-/*    func readGyroFromPngOfVideo(videoDate:String){
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.isNetworkAccessAllowed = false
-        requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
-        //アルバムをフェッチ
-        let assetFetchOptions = PHFetchOptions()
-        
-        assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
-        
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
-        //アルバムが存在しない事もある？
-        if (assetCollections.count > 0) {
-            //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
-            let assetCollection = assetCollections.object(at:0)
-            // creationDate降順でアルバム内のアセットをフェッチ
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            let assets = PHAsset.fetchAssets(in: assetCollection, options: fetchOptions)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            for i in 0..<assets.count-1{//最後はvideoでは無いはずなので
-                let date = formatter.string(from:assets[i].creationDate!)
-                if videoDate.contains(date){//find currentVideo
-                    if assets[i+1].duration==0{//pngが無くて、videoが選択されてない事を確認
-                        //currentVideoの次がpngならそれを選択
-                        let width=assets[i+1].pixelWidth
-                        let height=assets[i+1].pixelHeight
-                        let imgManager = PHImageManager.default()
-                        imgManager.requestImage(for: assets[i+1], targetSize: CGSize(width: width, height: height), contentMode:
-                                .aspectFill, options: requestOptions, resultHandler: { [self] img, _ in
-                                    if let img = img {
-                                        readGyroFromPng(img: img)
-                                    }
-                                })
-                        
-                    }else{//次がpngでないとき。録画失敗して、gyroデータを保存できなかったとき
-                        readGyroFromNul()//5min 0
-                    }
-                }
-            }
-        }
-    }*/
     //calcMode 0:hori.  1:vert. 2:vog
     
     func onChangeMode(mode:Int){
@@ -1695,7 +1569,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
 
     func getUserDefaults(){
-        let lowPassFilterCnt=getUserDefault(str: "lowPassFilterCnt", ret: 4)//とりあえず作っておく
+//        let lowPassFilterCnt=getUserDefault(str: "lowPassFilterCnt", ret: 4)//とりあえず作っておく
         //        print("lowPassFilterCnt",lowPassFilterCnt)
         widthRange = getUserDefault(str: "widthRange", ret: 30)
         waveWidth = getUserDefault(str: "waveWidth", ret: 80)
@@ -1746,7 +1620,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
     
     func dispWakus(){
-        let nullRect:CGRect = CGRect(x:0,y:0,width:0,height:0)
+//        let nullRect:CGRect = CGRect(x:0,y:0,width:0,height:0)
         
         //        printR(str:"wakuE:",rct: wakuE)
         eyeWaku_image.frame=CGRect(x:(wakuE.origin.x)-15,y:wakuE.origin.y-15,width:(wakuE.size.width)+30,height: wakuE.size.height+30)
@@ -1776,7 +1650,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let renderer = UIGraphicsImageRenderer(size: size)
 
         let image = renderer.image { context in
-            let ctx = context.cgContext
+//            let ctx = context.cgContext
 
             #if DEBUG
             print("drawLine:", num, w, h)
@@ -2091,7 +1965,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let image = renderer.image { context in
             // パス
-            let drawPath = UIBezierPath()
+//            let drawPath = UIBezierPath()
             // 必要な描画をここで行う (今回は何も描画しない場合)
         }
         
@@ -2109,7 +1983,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         let image = renderer.image { context in
             // コンテキスト
-            let cgContext = context.cgContext
+//            let cgContext = context.cgContext
             
             // パスの初期化
             let drawPath = UIBezierPath()
@@ -2137,7 +2011,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             
             // 線の描画
             UIColor.black.setStroke()
-            var pList = [
+            let pList = [
                 CGPoint(x: 0, y: 0),
                 CGPoint(x: 0, y: 180 * r),
                 CGPoint(x: 240 * r, y: 180 * r),
@@ -2196,19 +2070,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             //            videoFps.text = "\(freeCounter)"
         }
     }
-    
-    //UIDevice
-    var alertController: UIAlertController!
-    func alert(title:String, message:String) {
-        alertController = UIAlertController(title: title,
-                                            message: message,
-                                            preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK",
-                                                style: .default,
-                                                handler: nil))
-        present(alertController, animated: true)
-    }
-    
+ 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let topPadding = self.view.safeAreaInsets.top
@@ -2267,12 +2129,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton2.frame,UIColor.systemRed)
             setButtos4mode(calcMode!)
-//        }else if calcMode==2{
-//            //            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
-//            //            setButtos4mode(calcMode!)
-//        }else{
-//            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
-//            setButtos4mode(calcMode!)
         }
         if videoDate.count == 0{
             playButton.isEnabled=false
@@ -2292,19 +2148,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.backgroundColor=UIColor.systemBlue
             cameraButton.isEnabled=true
             cameraButton.alpha=1
-//        }else if mode==2{
-//            changeModeButton1.setTitle("VOG hor. & vert.", for: .normal)
-//            changeModeButton2.isHidden=true
-//            changeModeButton.isHidden=true
-//            
-//            backwardButton.isHidden=false
-//            playButton.isHidden=false
-//            waveButton.setImage(  UIImage(systemName:"waveform.path.ecg.rectangle"), for: .normal)
-//            waveButton.backgroundColor=UIColor.systemBlue
-//            cameraButton.isEnabled=true
-//            cameraButton.alpha=1
-//        }else{
-            
         }
         
     }
@@ -2395,7 +2238,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 #endif
             
         }else if let vc = segue.destination as? HelpjViewController{
-            let Controller:HelpjViewController = vc
+//            let Controller:HelpjViewController = vc
             // Controller.calcMode = calcMode
         }else if let vc = segue.destination as? RecordViewController{
             let Controller:RecordViewController = vc
@@ -2537,54 +2380,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
              }
          }
      }
-     
-    // フォトライブラリにアルバムがあるか確認し、無ければ作成して画像を追加する関数
-/*    func addImageToAlbum(image: UIImage) {
-        // "kuroda96"というアルバムを取得
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
-        let albums = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
-        
-        // アルバムが存在する// 場合はそのアルバムに画像を追加
-        if let album = albums.firstObject {
-            PHPhotoLibrary.shared().performChanges({
-                let assetCollectionChangeRequest = PHAssetCollectionChangeRequest(for: album)
-                assetCollectionChangeRequest?.addAssets([image] as NSArray)
-            }, completionHandler: { success, error in
-                if success {
-                    print("画像がアルバムに追加されました")
-                } else {
-                    print("画像のアルバムへの追加に失敗しました: \(String(describing: error))")
-                }
-            })
-//        } else {
-//            // "kuroda96"というアルバムが存在しない場合は、新たに作成してその中に画像を追加
-//            PHPhotoLibrary.shared().performChanges({
-//                PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: "kuroda96")
-//            }, completionHandler: { success, error in
-//                if success {
-//                    print("新しいアルバム 'kuroda96' が作成されました")
-//                    // アルバムが作成されたら再度アルバムに画像を追加
-//                    self.addImageToAlbum(image: image)
-//                } else {
-//                    print("アルバムの作成に失敗しました: \(String(describing: error))")
-//                }
-//            })
-        }
-    }*/
-    //gyroDataは劣化のないPngで保存
-//    func savePngImage2path(image:UIImage,path:String) {//imageを保存
-//        if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
-//            let path_url = dir.appendingPathComponent( path )
-//            let pngImageData = image.pngData()
-//            do {
-//                try pngImageData!.write(to: path_url, options: .atomic)
-//                //                saving2pathFlag=false
-//            } catch {
-//                print("gyroData.txt write err")//エラー処理
-//            }
-//        }
-//    }
+
     //結果画像はJpegで保存。Pngだと背景色黒で保存されてしまう。
     func saveJpegImage2path(image:UIImage,path:String) {//imageを保存
         if let dir = FileManager.default.urls( for: .documentDirectory, in: .userDomainMask ).first {
@@ -2778,17 +2574,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //
     }
     
-    //    func isVerticalData(num:Int)->Bool{
-    //        let str1=videoDate[num].components(separatedBy: " ")
-    //        let str=str1[0].components(separatedBy: "-")
-    //        let date=Int(str[0])!*10000+Int(str[1])!*100+Int(str[2])!
-    //        //        print("date",date)
-    //        if date>20210609{//
-    //            return true
-    //        }
-    //        return false
-    //    }
-    
     func readGyroFromPng(img:UIImage){
         //        let newVersion=isVerticalData(num: videoCurrent)//20210609より新しい場合は垂直データもある
         gyroHFiltered.removeAll()
@@ -2958,7 +2743,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             return
         }
         let loc=sender.location(in: view)
-        let eyeFrame=eyeWaku_image.frame
+  //      let eyeFrame=eyeWaku_image.frame
         //checkDispMode() 1-vHIT 2-VOG 0-non
         let vHIT_dispmode=checkDispMode()
         //if vHITBoxView?.isHidden==false
@@ -2995,13 +2780,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 drawVHITwaves(clearFlag: false)
             }
-//        }else if vHIT_dispmode==2{//vog
-            //            if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
-            //                if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
-            //                    onWaveButton(0)
-            //                    return
-            //                }
-            //            }
+
         }else{//波形が表示されていないとき
             if loc.y < videoSlider.frame.minY-20{//video slide bar と被らないように
                 wakuE.origin.x=loc.x
