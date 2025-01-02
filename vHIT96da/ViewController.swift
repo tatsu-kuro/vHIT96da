@@ -155,6 +155,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var albumExist:Bool=false
     var videoDate = Array<String>()
     var videoDura = Array<String>()
+    var pngPHAsset = Array<PHAsset>()
     var videoPHAsset = Array<PHAsset>()
     var videoCurrent:Int=0
     
@@ -555,7 +556,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
 
-    func readGyroFromPngOfVideo(videoDate:String){
+/*    func readGyroFromPngOfVideo(videoDate:String){
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
@@ -597,60 +598,43 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
         }
-    }
+    }*/
     //calcMode 0:hori.  1:vert. 2:vog
     
-    @IBAction func onChangeModeButton1(_ sender: Any) {
+    func onChangeMode(mode:Int){
         if calcFlag == true || calcMode == 2 || videoDate.count == 0{
             return
         }
-        
+        setButtons_first()
+        setButtons(mode: true)
+        dispWakus()
+        showWakuImages()
+        calcStartTime=CFAbsoluteTimeGetCurrent()//所要時間の起点 update_vog
+        if calcMode != 2{
+            if eyePosXFiltered.count>0 && videoCurrent != -1{
+                vhitCurpoint=0
+                drawOneWave(startcount: 0,clearFlag: false)
+                calcDrawVHIT(tuple: false)
+            }
+        }
+        showBoxies(f:boxiesFlag)
+    }
+    
+    @IBAction func onChangeModeButton1(_ sender: Any) {
         if calcMode==0{
             return
         }else{
             calcMode=0
         }
-        
-        //        showModeText()
-        setButtons_first()
-        setButtons(mode: true)
-        dispWakus()
-        showWakuImages()
-        calcStartTime=CFAbsoluteTimeGetCurrent()//所要時間の起点 update_vog
-        if calcMode != 2{
-            if eyePosXFiltered.count>0 && videoCurrent != -1{
-                vhitCurpoint=0
-                drawOneWave(startcount: 0,clearFlag: false)
-                calcDrawVHIT(tuple: false)
-            }
-        }
-        showBoxies(f:boxiesFlag)
+        onChangeMode(mode:calcMode!)
     }
     @IBAction func onChangeModeButton2(_ sender: Any) {
-        if calcFlag == true || calcMode == 2 || videoDate.count == 0{
-            return
-        }
-        
         if calcMode==1{
             return
         }else{
             calcMode=1
         }
-        
-        //        showModeText()
-        setButtons_first()
-        setButtons(mode: true)
-        dispWakus()
-        showWakuImages()
-        calcStartTime=CFAbsoluteTimeGetCurrent()//所要時間の起点 update_vog
-        if calcMode != 2{
-            if eyePosXFiltered.count>0 && videoCurrent != -1{
-                vhitCurpoint=0
-                drawOneWave(startcount: 0,clearFlag: false)
-                calcDrawVHIT(tuple: false)
-            }
-        }
-        showBoxies(f:boxiesFlag)
+        onChangeMode(mode: calcMode!)
     }
     
     @IBAction func onBackVideoButton(_ sender: Any) {
@@ -863,7 +847,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     @IBAction func onWaveButton(_ sender: Any) {//saveresult record-unwind の２箇所
-        if videoDate.count == 0{
+        if videoDate.count == 0 || eyePosXFiltered.isEmpty{
             return
         }
         if checkDispMode()==0{
@@ -1043,6 +1027,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
  //       readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
         readGyroFromPngAsset(n: videoCurrent)
+        print ("gyroHFiltered.count:",gyroHFiltered.count)
+        
         moveGyroData()//gyroDeltastartframe分をズラして
         
         timercnt = 0
@@ -1186,13 +1172,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                             eyePosXFiltered.append( -1.0*Kalman(value:eyePosX,num:2))
                             eyePosYFiltered.append( -1.0*Kalman(value:eyePosY,num:3))
                             let cnt=eyePosXFiltered.count
-                            if calcMode != 2{//vHIT
+                        //    if calcMode != 2{//vHIT
                                 eyeVeloXFiltered.append(12*(eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2]))
                                 eyeVeloYFiltered.append(12*(eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2]))
-                            }else{//vogでは、２重にフィフターをかけると体裁が良いが、それで良いのだろうか？
-                                eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
-                                eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
-                            }
+//                            }else{//vogでは、２重にフィフターをかけると体裁が良いが、それで良いのだろうか？
+//                                eyeVeloXFiltered.append(12*Kalman(value:eyePosXFiltered[cnt-1]-eyePosXFiltered[cnt-2],num:4))
+//                                eyeVeloYFiltered.append(12*Kalman(value:eyePosYFiltered[cnt-1]-eyePosYFiltered[cnt-2],num:5))
+//                            }
                             
                         }else{
                             errArray.append(false)
@@ -1614,7 +1600,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
  
 
-    func getAlbumAssets(_ writeGyro:Bool){
+    func getAlbumAssets(_ writeGyro:Bool){//
 //        getAlbumAssetsEndFlag=false
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
@@ -1625,14 +1611,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 
             //   assetFetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
             let assets = PHAsset.fetchAssets(in: album, options: assetFetchOptions)
-            var slowMotionVideos: [PHAsset] = [] // スローモーションビデオのリストを作成
+            var gazoPHAsset: [PHAsset] = [] // 画像(video&png)のリストを作成
             assets.enumerateObjects { (asset, _, _) in
                 // スローモーション動画かどうかの確認
                 //    if asset.mediaSubtypes.contains(PHAssetMediaSubtype.videoHighFrameRate) {
                 // iCloudからダウンロードされていないかどうかを確認
                 //    self.checkIfVideoIsLocallyAvailable(asset: asset) { isAvailable in
                 //      if isAvailable {
-                slowMotionVideos.append(asset)
+                gazoPHAsset.append(asset)
                 /*
                  self.mediaAssets.append(asset)
                  */
@@ -1642,16 +1628,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
              // 非同期でスローモーションビデオを表示
             DispatchQueue.main.async {
-                self.getAlbumVideos(slowMotionVideos,writeGyro)
+                self.getAlbumVideos(gazoPHAsset,writeGyro)
             }
         } else {
             print("指定したアルバムが見つかりませんでした。")
         }
     }
 
-  //  var count:Int=0
-    var pngPHAsset = Array<PHAsset>()
-    func getAlbumVideos(_ videos: [PHAsset],_ writeGyro:Bool) {
+    func getAlbumVideos(_ gazo: [PHAsset],_ writeGyro:Bool) {
         pngPHAsset.removeAll()
         videoPHAsset.removeAll()
         videoDura.removeAll()
@@ -1659,34 +1643,33 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
-        if videos.isEmpty {
+        if gazo.isEmpty {
             print("スローモーションビデオはありません。")
         } else {
-            for video in videos {
-                if video.duration>0{//静止画を省く
-                    videoPHAsset.append(video)
-                    let date_sub = video.creationDate
+            for videoPng in gazo {
+                if videoPng.duration>0{//動画
+                    videoPHAsset.append(videoPng)
+                    let date_sub = videoPng.creationDate
                     let date = formatter.string(from: date_sub!)
-                    let duration = String(format:"%.1fs",video.duration)
+                    let duration = String(format:"%.1fs",videoPng.duration)
                     videoDate.append(date)// + "(" + duration + ")")
                     videoDura.append(duration)
                     //          print(videoPHAsset.last)
-                    print(videoDate.count,videoDate.last)
+                //    print(videoDate.count,videoDate.last)
                //     print(videoDura.last)
                 }else{//静止画
-                    pngPHAsset.append(video)
+                    pngPHAsset.append(videoPng)
                 }
             }
-            if writeGyro {
+            if writeGyro {//recordからunwindで戻ってきた時は、録画した最後のvideoとする
                 videoCurrent=videoDate.count-1
             }else{
                 videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
             }
-            if videoCurrent>videoDate.count-1{
+            if videoCurrent>videoDate.count-1{//念のため
                 videoCurrent=videoDate.count-1
             }
             
-            //
             self.setNeedsStatusBarAppearanceUpdate()
             //#if DEBUG
             //            print("didloadcount:",videoDate.count)
@@ -2259,12 +2242,12 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             iroiro.setButtonProperty(changeModeButton2,x:sp*2+bh*3/2+sp/2+sp,y:by1,w:bh*3/2+sp/2,h:bh,UIColor.systemBlue)
             iroiro.setButtonTopRectangle(changeModeButton,rect: changeModeButton2.frame,UIColor.systemRed)
             setButtos4mode(calcMode!)
-        }else if calcMode==2{
-            //            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
-            //            setButtos4mode(calcMode!)
-        }else{
-            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
-            setButtos4mode(calcMode!)
+//        }else if calcMode==2{
+//            //            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
+//            //            setButtos4mode(calcMode!)
+//        }else{
+//            iroiro.setButtonProperty(changeModeButton1, x: sp*2, y:by1, w: bh*3+sp*2, h: bh, UIColor.darkGray)
+//            setButtos4mode(calcMode!)
         }
         if videoDate.count == 0{
             playButton.isEnabled=false
@@ -2284,18 +2267,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             waveButton.backgroundColor=UIColor.systemBlue
             cameraButton.isEnabled=true
             cameraButton.alpha=1
-        }else if mode==2{
-            changeModeButton1.setTitle("VOG hor. & vert.", for: .normal)
-            changeModeButton2.isHidden=true
-            changeModeButton.isHidden=true
-            
-            backwardButton.isHidden=false
-            playButton.isHidden=false
-            waveButton.setImage(  UIImage(systemName:"waveform.path.ecg.rectangle"), for: .normal)
-            waveButton.backgroundColor=UIColor.systemBlue
-            cameraButton.isEnabled=true
-            cameraButton.alpha=1
-        }else{
+//        }else if mode==2{
+//            changeModeButton1.setTitle("VOG hor. & vert.", for: .normal)
+//            changeModeButton2.isHidden=true
+//            changeModeButton.isHidden=true
+//            
+//            backwardButton.isHidden=false
+//            playButton.isHidden=false
+//            waveButton.setImage(  UIImage(systemName:"waveform.path.ecg.rectangle"), for: .normal)
+//            waveButton.backgroundColor=UIColor.systemBlue
+//            cameraButton.isEnabled=true
+//            cameraButton.alpha=1
+//        }else{
             
         }
         
@@ -2688,7 +2671,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroH.append(-dH)
                     gyroV.append(-dV)
                 }
-                getAlbumAssets(true)//writeGyro==true
+                getAlbumAssets(true)//writeGyro==true gyroTime, gyroH, gyroVをpngに書き込む
 
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
@@ -2717,9 +2700,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         gyroVFiltered.removeAll()
         showBoxies(f: false)
         setVideoButtons(mode: false)
-        removeFile(delFile: "temp.png")
-        print("rewind***1")
-
+        //        removeFile(delFile: "temp.png")
+        //        print("rewind***1")
+        
         showVideoIroiro(num:0)
         var fps=getFPS(videoCurrent)
         if fps < 200.0{
@@ -2743,47 +2726,46 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroVFiltered.append(Kalman(value:CGFloat(gyroV[getj]),num: 3))
         }
         print("rewind***3")
-
+        
         let gyroCSV=getGyroCSV()//csv文字列
-        //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
+        //int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
         //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
         let eyeImage = iroiro.getThumb(avasset: avasset!)
         let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
-
-        print("rewind***4")
-     //   saveImageToExistingAlbum1(image: gyroImage!, albumName:albumName)
         
+        print("rewind***4")
+        //   saveImageToExistingAlbum1(image: gyroImage!, albumName:albumName)
         
         saveImageToExistingAlbum1(image: gyroImage!, albumName: albumName) { savedAsset in
             if let asset = savedAsset {
                 self.pngPHAsset.append(asset)
-            //    print("保存された PHAsset を取得しました: \(asset)")
-            //    print("Asset Local Identifier: \(asset.localIdentifier)")
+                //    print("保存された PHAsset を取得しました: \(asset)")
+                //    print("Asset Local Identifier: \(asset.localIdentifier)")
             } else {
                 print("保存された PHAsset を取得できませんでした")
             }
             print("video,png:",self.videoPHAsset.count,self.pngPHAsset.count)
         }
-   
+        
         startFrame=0
         print("rewind***6")
         //
     }
     
-    func isVerticalData(num:Int)->Bool{
-        let str1=videoDate[num].components(separatedBy: " ")
-        let str=str1[0].components(separatedBy: "-")
-        let date=Int(str[0])!*10000+Int(str[1])!*100+Int(str[2])!
-        //        print("date",date)
-        if date>20210609{//
-            return true
-        }
-        return false
-    }
+    //    func isVerticalData(num:Int)->Bool{
+    //        let str1=videoDate[num].components(separatedBy: " ")
+    //        let str=str1[0].components(separatedBy: "-")
+    //        let date=Int(str[0])!*10000+Int(str[1])!*100+Int(str[2])!
+    //        //        print("date",date)
+    //        if date>20210609{//
+    //            return true
+    //        }
+    //        return false
+    //    }
     
     func readGyroFromPng(img:UIImage){
-        let newVersion=isVerticalData(num: videoCurrent)//20210609より新しい場合は垂直データもある
+        //        let newVersion=isVerticalData(num: videoCurrent)//20210609より新しい場合は垂直データもある
         gyroHFiltered.removeAll()
         gyroVFiltered.removeAll()
         let rgb8=img.pixelData()
@@ -2794,18 +2776,18 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }else{
                 rgb = -Int(rgb8![i*4+1])*256 - Int(rgb8![i*4+2])
             }
-            if newVersion==true{
-                //                print("newVersion")
-                if i%2==0{
-                    gyroHFiltered.append(CGFloat(rgb)/100.0)
-                }else{
-                    gyroVFiltered.append(CGFloat(rgb)/100.0)
-                }
-            }else{
-                //                print("oldversion")
+            //            if newVersion==true{
+            //                print("newVersion")
+            if i%2==0{
                 gyroHFiltered.append(CGFloat(rgb)/100.0)
+            }else{
                 gyroVFiltered.append(CGFloat(rgb)/100.0)
             }
+            //            }else{
+            //                //                print("oldversion")
+            //                gyroHFiltered.append(CGFloat(rgb)/100.0)
+            //                gyroVFiltered.append(CGFloat(rgb)/100.0)
+            //            }
         }
         //        print(gyroVFiltered.count)
     }
@@ -2847,7 +2829,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var moveThumY:CGFloat=0
     var startRect:CGRect = CGRect(x:0,y:0,width:0,height:0)//tapしたrectのtapした時のrect
     @IBAction func panGesture(_ sender: UIPanGestureRecognizer) {
-        if calcFlag == true{
+        if calcFlag == true {
             return
         }
         let move:CGPoint = sender.translation(in: self.view)
@@ -2909,10 +2891,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }else if gyroRatio<10{
                         gyroRatio=10
                     }
-                    if videoGyroZure>100{
-                        videoGyroZure = 100
-                    }else if videoGyroZure<1{
-                        videoGyroZure = 1
+                    if videoGyroZure>15{
+                        videoGyroZure = 15
+                    }else if videoGyroZure < -5{
+                        videoGyroZure = -5
                     }
                     if eyeRatio>4000{
                         eyeRatio=4000
@@ -2947,13 +2929,15 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
     @IBAction func tapGesture(_ sender: UITapGestureRecognizer) {
         
-        if videoDate.count==0{
+        if videoDate.count==0 {
             return
         }
         let loc=sender.location(in: view)
         let eyeFrame=eyeWaku_image.frame
         //checkDispMode() 1-vHIT 2-VOG 0-non
         let vHIT_dispmode=checkDispMode()
+        //if vHITBoxView?.isHidden==false
+        
         if vHIT_dispmode==1 {//vhit
             if loc.y<vHITBoxView!.frame.minY || (loc.y>vHITBoxView!.frame.maxY && loc.y<waveBoxView!.frame.minY) ||
                 (loc.y>waveBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){//not in box
@@ -2986,7 +2970,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 drawVHITwaves(clearFlag: false)
             }
-        }else if vHIT_dispmode==2{//vog
+//        }else if vHIT_dispmode==2{//vog
             //            if loc.y<vogBoxView!.frame.minY || (loc.y>vogBoxView!.frame.maxY && loc.y<waveSlider.frame.minY-20){
             //                if timerCalc?.isValid == false {//計算中でなく、表示枠以外を押した時
             //                    onWaveButton(0)
@@ -3002,7 +2986,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 showWakuImages()
                 setUserDefaults()
             }
-            //                print("tap")
+                            print("tap")
         }
     }
     func setCurrVHIT(pos:Int){
