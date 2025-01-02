@@ -149,6 +149,7 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         while gettingThumbFlag==true{
             sleep(UInt32(0.1))
         }
+        print("getthumb:",img?.size)
         return img!
     }
     func createWhiteImage(with size: CGSize) -> UIImage? {

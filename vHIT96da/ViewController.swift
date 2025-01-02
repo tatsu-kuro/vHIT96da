@@ -1566,9 +1566,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //                print("mp4:",mp4.creationDate!)
 //            }
 //            print("video,png:",videoPHAsset.count,pngPHAsset.count)
-//            if(writeGyro){//録画の時はpng画像はまだ作られていないので
-//                saveGyroValue()//png画像を作り、それをpngPHAssetに追加
-//            }
+            if(recordedFlag){//録画の時はpng画像はまだ作られていないので
+                saveGyroValue()//png画像を作り、それをpngPHAssetに追加
+            }
         }
         //        getAlbumAssetsEndFlag=true
     }
@@ -2500,7 +2500,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroV.append(-dV)
                 }
 //                videoCurrent=videoPHAsset.count//まだ増えていないので -1 はしていない。
-                saveGyroValue(videoFps: Controller.fps!,videoSize: Controller.videoSize!)//この中でgetAlbumAssetsしている。
+                getAlbumAssets(true)
+//                saveGyroValue(videoFps: Controller.fps!,videoSize: Controller.videoSize!)//この中でgetAlbumAssetsしている。
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
                     getAlbumAssets(false)
@@ -2515,7 +2516,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
  
-    func saveGyroValue(videoFps:Float,videoSize:CGSize){
+    func saveGyroValue(){//},videoSize:CGSize){
         KalmanInit()
         gyroHFiltered.removeAll()
         gyroVFiltered.removeAll()
@@ -2523,9 +2524,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setVideoButtons(mode: false)
         //        removeFile(delFile: "temp.png")
         //        print("rewind***1")
-        var fps=videoFps
+//        var fps=videoFps
         showVideoIroiro(num:0)
-//        var fps=getFPS(videoCurrent)
+        var fps=getFPS(videoPHAsset.count-1)// videoCurrent)
          if fps < 200.0{
             fps *= 2.0
         }
@@ -2554,27 +2555,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
         //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
  //       print("videoCurrent/saveGyroValue:",videoCurrent)
-        let size=CGSize(width:240,height:240)
+//        let size=CGSize(width:1080,height:1920)
             
-        let whiteImage = iroiro.createWhiteImage(with: size)
+//        let whiteImage = iroiro.createWhiteImage(with: size)
 //        if let whiteImage = iroiro.createWhiteImage(with: videoSize) {
 //            // ここで whiteImage を使用
 //            print("真っ白なUIImageが作成されました")
 //        } else {
 //            print("画像の作成に失敗しました")
 //        }
-     //   let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
-     //   let eyeImage = iroiro.getThumb(avasset: avasset!)
-    //    let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
-        let gyroImage=openCV.pixel2image(whiteImage, csv: gyroCSV as String)
+        let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
+    
+        let eyeImage = iroiro.getThumb(avasset: avasset!)
+        let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
+//        let gyroImage=openCV.pixel2image(whiteImage, csv: gyroCSV as String)
         
 //        print("rewind***4")
         //   saveImageToExistingAlbum1(image: gyroImage!, albumName:albumName)
         
         saveImageToExistingAlbum1(image: gyroImage!, albumName: albumName) { [self] savedAsset in
             if let asset = savedAsset {
-//                self.pngPHAsset.append(asset)
-                getAlbumAssets(true)
+                self.pngPHAsset.append(asset)
+//                getAlbumAssets(true)
                 print("保存された PHAsset を取得しました: \(asset)")
                 //    print("Asset Local Identifier: \(asset.localIdentifier)")
             } else {
