@@ -25,6 +25,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var vHIT96daAlbum: PHAssetCollection? // アルバムをオブジェクト化
     var fpsMax:Int?
     var fps_non_120_240:Int=2
+    var fps:Float?
     var maxFps:Double=240
  //   @IBOutlet weak var speakerSwitch: UISwitch!
  //   @IBOutlet weak var speakerLabel: UILabel!
@@ -636,6 +637,19 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // 録画が正常に終了した場合、ビデオをアルバムに保存
         recordedFlag=true
         saveToCustomAlbum(url: outputFileURL)
+        // 動画のFPSとDurationを取得
+          let asset = AVAsset(url: outputFileURL)
+          let duration = asset.duration
+//          let durationSeconds = CMTimeGetSeconds(duration)
+          
+//          var fps: Float = 0
+          if let videoTrack = asset.tracks(withMediaType: .video).first {
+              fps = videoTrack.nominalFrameRate
+              print("動画のFPS: \(fps)")
+          }
+
+          // FPSとDurationを出力
+           print("動画の再生時間: \(duration)秒")
        }
      
      // カスタムアルバムに保存

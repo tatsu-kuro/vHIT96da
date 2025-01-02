@@ -1187,7 +1187,6 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }else{
             getAlbumAssets(false)
-
         }
     }
     
@@ -1505,6 +1504,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 //}
                 //    }
             }
+        
              // 非同期でスローモーションビデオを表示
             DispatchQueue.main.async {
                 self.getAlbumVideos(gazoPHAsset,writeGyro)
@@ -1523,7 +1523,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
         if gazo.isEmpty {
-            print("スローモーションビデオはありません。")
+            print("ビデオも静止画もありません。")
         } else {
             for videoPng in gazo {
                 if videoPng.duration>0{//動画
@@ -1533,13 +1533,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     let duration = String(format:"%.1fs",videoPng.duration)
                     videoDate.append(date)// + "(" + duration + ")")
                     videoDura.append(duration)
-                    //          print(videoPHAsset.last)
-                //    print(videoDate.count,videoDate.last)
-               //     print(videoDura.last)
                 }else{//静止画
                     pngPHAsset.append(videoPng)
                 }
             }
+            print("png,video:",pngPHAsset.count,videoPHAsset.count)
             if writeGyro {//recordからunwindで戻ってきた時は、録画した最後のvideoとする
                 videoCurrent=videoDate.count-1
             }else{
@@ -1560,10 +1558,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 startTimerVideo()
             }
             waveSlider.isHidden=true
-            print("video,png:",videoPHAsset.count,pngPHAsset.count)
-            if(writeGyro){//録画の時はpng画像はまだ作られていないので
-                saveGyroValue()//png画像を作り、それをpngPHAssetに追加
-            }
+//            print("video,png:",videoPHAsset.count,pngPHAsset.count)
+//            if(writeGyro){//録画の時はpng画像はまだ作られていないので
+//                saveGyroValue()//png画像を作り、それをpngPHAssetに追加
+//            }
         }
         //        getAlbumAssetsEndFlag=true
     }
@@ -1597,6 +1595,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         wakuF.size.width = 5//wakuLength
         wakuF.size.height = 5//wakuLength
+        videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
+
     }
     //default値をセットするんじゃなく、defaultというものに値を設定するという意味
     func setUserDefaults(){
@@ -2492,30 +2492,23 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroH.append(-dH)
                     gyroV.append(-dV)
                 }
-                getAlbumAssets(true)//writeGyro==true gyroTime, gyroH, gyroVをpngに書き込む
-
+                videoCurrent=videoPHAsset.count//まだ増えていないので -1 はしていない。
+                saveGyroValue(videoFps: Controller.fps!)//この中でgetAlbumAssetsしている。
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
-                    
                     getAlbumAssets(false)
-#if DEBUG
                     print("アルバムを消されていたので、録画を保存しなかった。")
-#endif
                 }else{
-#if DEBUG
                     print("Exitで抜けた。")
-#endif
                 }
             }
             UIApplication.shared.isIdleTimerDisabled = false//スリープする
         }else{
-#if DEBUG
             print("tatsuaki-unwind from list")
-#endif
         }
     }
-    
-    func saveGyroValue(){
+ 
+    func saveGyroValue(videoFps:Float){
         KalmanInit()
         gyroHFiltered.removeAll()
         gyroVFiltered.removeAll()
@@ -2523,14 +2516,16 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         setVideoButtons(mode: false)
         //        removeFile(delFile: "temp.png")
         //        print("rewind***1")
-        
+        var fps=videoFps
         showVideoIroiro(num:0)
-        var fps=getFPS(videoCurrent)
-        if fps < 200.0{
+//        var fps=getFPS(videoCurrent)
+         if fps < 200.0{
             fps *= 2.0
         }
-        print("rewind***2")
+//        print("rewind***2")
         let framecount=Int(Float(gyroH.count)*(fps)/100.0)
+        print("fps, gyroH.count, framecount:",fps,gyroH.count,framecount)
+
         var lastJ:Int=0
         //                let t1=CFAbsoluteTimeGetCurrent()
         for i in 0...framecount+500{//100を尻に付けないとgyrodataが変な値になる
@@ -2546,7 +2541,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gyroHFiltered.append(Kalman(value:CGFloat(gyroH[getj]),num:2))
             gyroVFiltered.append(Kalman(value:CGFloat(gyroV[getj]),num: 3))
         }
-        print("rewind***3")
+//        print("rewind***3")
         
         let gyroCSV=getGyroCSV()//csv文字列
         //int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
@@ -2555,22 +2550,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let eyeImage = iroiro.getThumb(avasset: avasset!)
         let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
         
-        print("rewind***4")
+//        print("rewind***4")
         //   saveImageToExistingAlbum1(image: gyroImage!, albumName:albumName)
         
-        saveImageToExistingAlbum1(image: gyroImage!, albumName: albumName) { savedAsset in
+        saveImageToExistingAlbum1(image: gyroImage!, albumName: albumName) { [self] savedAsset in
             if let asset = savedAsset {
-                self.pngPHAsset.append(asset)
-                //    print("保存された PHAsset を取得しました: \(asset)")
+//                self.pngPHAsset.append(asset)
+                getAlbumAssets(true)
+                print("保存された PHAsset を取得しました: \(asset)")
                 //    print("Asset Local Identifier: \(asset.localIdentifier)")
             } else {
                 print("保存された PHAsset を取得できませんでした")
             }
             print("video,png:",self.videoPHAsset.count,self.pngPHAsset.count)
+//            print(self.videoPHAsset[videoCurrent-1].creationDate,self.pngPHAsset[videoCurrent-1].creationDate)
         }
         
         startFrame=0
-        print("rewind***6")
+//        print("rewind***6")
         //
     }
     
