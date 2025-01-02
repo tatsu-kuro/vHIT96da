@@ -26,6 +26,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var fpsMax:Int?
     var fps_non_120_240:Int=2
     var fps:Float?
+    var videoSize: CGSize?
     var maxFps:Double=240
  //   @IBOutlet weak var speakerSwitch: UISwitch!
  //   @IBOutlet weak var speakerLabel: UILabel!
@@ -627,6 +628,28 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
         return assetCollections.object(at:0)
     }
+    
+
+    func setVideoProperties(from avAsset: AVAsset) {
+        // ビデオトラックを取得
+        guard let videoTrack = avAsset.tracks(withMediaType: .video).first else {
+            print("ビデオトラックが見つかりません")
+            return
+        }
+        
+        // サイズを取得
+        let naturalSize = videoTrack.naturalSize
+        let transformedSize = naturalSize.applying(videoTrack.preferredTransform)
+        let width = abs(transformedSize.width)
+        let height = abs(transformedSize.height)
+        videoSize = CGSize(width: width, height: height)
+        print("ビデオサイズが設定されました: \(videoSize!)")
+        
+        // FPS（フレームレート）を取得
+        fps = videoTrack.nominalFrameRate
+        print("ビデオのFPSが設定されました: \(fps!)")
+    }
+
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
             print("録画エラー: \(error.localizedDescription)")
@@ -638,20 +661,21 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         recordedFlag=true
         saveToCustomAlbum(url: outputFileURL)
         // 動画のFPSとDurationを取得
-          let asset = AVAsset(url: outputFileURL)
-          let duration = asset.duration
-//          let durationSeconds = CMTimeGetSeconds(duration)
-          
-//          var fps: Float = 0
-          if let videoTrack = asset.tracks(withMediaType: .video).first {
-              fps = videoTrack.nominalFrameRate
-              print("動画のFPS: \(fps)")
-          }
-
-          // FPSとDurationを出力
-           print("動画の再生時間: \(duration)秒")
-       }
-     
+        let asset = AVAsset(url: outputFileURL)
+        setVideoProperties(from: asset)
+//        let duration = asset.duration
+        //          let durationSeconds = CMTimeGetSeconds(duration)
+        
+        //          var fps: Float = 0
+        //          if let videoTrack = asset.tracks(withMediaType: .video).first {
+        //              fps = videoTrack.nominalFrameRate
+        //              print("動画のFPS: \(fps)")
+        //          }
+        //
+        //          // FPSとDurationを出力
+        //           print("動画の再生時間: \(duration)秒")
+    }
+    
      // カスタムアルバムに保存
      func saveToCustomAlbum(url: URL) {
          // アルバム名

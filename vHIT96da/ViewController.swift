@@ -1478,7 +1478,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
  
 
-    func getAlbumAssets(_ writeGyro:Bool){//
+    func getAlbumAssets(_ recordedFlag:Bool){//
 //        getAlbumAssetsEndFlag=false
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
@@ -1507,14 +1507,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
              // 非同期でスローモーションビデオを表示
             DispatchQueue.main.async {
-                self.getAlbumVideos(gazoPHAsset,writeGyro)
+                self.getAlbumVideos(gazoPHAsset,recordedFlag)
             }
         } else {
             print("指定したアルバムが見つかりませんでした。")
         }
     }
 
-    func getAlbumVideos(_ gazo: [PHAsset],_ writeGyro:Bool) {
+    func getAlbumVideos(_ gazo: [PHAsset],_ recordedFlag:Bool) {
         pngPHAsset.removeAll()
         videoPHAsset.removeAll()
         videoDura.removeAll()
@@ -1538,7 +1538,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
             }
             print("png,video:",pngPHAsset.count,videoPHAsset.count)
-            if writeGyro {//recordからunwindで戻ってきた時は、録画した最後のvideoとする
+            if recordedFlag {//recordからunwindで戻ってきた時は、録画した最後のvideoとする
                 videoCurrent=videoDate.count-1
             }else{
                 videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
@@ -1558,6 +1558,13 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 startTimerVideo()
             }
             waveSlider.isHidden=true
+            for i in 0...pngPHAsset.count-1{
+                print("png,mp4:",i,pngPHAsset[i].creationDate!,videoPHAsset[i].creationDate)
+            }
+            print("videoCurrent:",videoCurrent)
+//            for mp4 in videoPHAsset{
+//                print("mp4:",mp4.creationDate!)
+//            }
 //            print("video,png:",videoPHAsset.count,pngPHAsset.count)
 //            if(writeGyro){//録画の時はpng画像はまだ作られていないので
 //                saveGyroValue()//png画像を作り、それをpngPHAssetに追加
@@ -2492,8 +2499,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroH.append(-dH)
                     gyroV.append(-dV)
                 }
-                videoCurrent=videoPHAsset.count//まだ増えていないので -1 はしていない。
-                saveGyroValue(videoFps: Controller.fps!)//この中でgetAlbumAssetsしている。
+//                videoCurrent=videoPHAsset.count//まだ増えていないので -1 はしていない。
+                saveGyroValue(videoFps: Controller.fps!,videoSize: Controller.videoSize!)//この中でgetAlbumAssetsしている。
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
                     getAlbumAssets(false)
@@ -2508,7 +2515,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
  
-    func saveGyroValue(videoFps:Float){
+    func saveGyroValue(videoFps:Float,videoSize:CGSize){
         KalmanInit()
         gyroHFiltered.removeAll()
         gyroVFiltered.removeAll()
@@ -2546,9 +2553,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let gyroCSV=getGyroCSV()//csv文字列
         //int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
         //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
-        let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
-        let eyeImage = iroiro.getThumb(avasset: avasset!)
-        let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
+ //       print("videoCurrent/saveGyroValue:",videoCurrent)
+        let size=CGSize(width:240,height:240)
+            
+        let whiteImage = iroiro.createWhiteImage(with: size)
+//        if let whiteImage = iroiro.createWhiteImage(with: videoSize) {
+//            // ここで whiteImage を使用
+//            print("真っ白なUIImageが作成されました")
+//        } else {
+//            print("画像の作成に失敗しました")
+//        }
+     //   let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
+     //   let eyeImage = iroiro.getThumb(avasset: avasset!)
+    //    let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
+        let gyroImage=openCV.pixel2image(whiteImage, csv: gyroCSV as String)
         
 //        print("rewind***4")
         //   saveImageToExistingAlbum1(image: gyroImage!, albumName:albumName)

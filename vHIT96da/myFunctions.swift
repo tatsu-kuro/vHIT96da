@@ -151,6 +151,24 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
         }
         return img!
     }
+    func createWhiteImage(with size: CGSize) -> UIImage? {
+        // 白い背景のビットマップコンテキストを作成
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        
+        // 背景を白に塗りつぶす
+        UIColor.white.setFill()
+        let rect = CGRect(origin: .zero, size: size)
+        UIRectFill(rect)
+        
+        // 画像を取得
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // コンテキストを終了
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+  
     func getThumb_sub(avasset:AVAsset) -> UIImage? {
         do {
 //            let asset = AVURLAsset(url: url as URL , options: nil)
