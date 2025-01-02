@@ -1,4 +1,4 @@
-//
+
 //  ViewController.swift
 //  vHIT96da
 //
@@ -48,89 +48,90 @@ extension UIImage {
         context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         return pixelData
     }
+  
     func resize(size _size: CGSize) -> UIImage? {
         let widthRatio = _size.width / size.width
         let heightRatio = _size.height / size.height
-        let ratio = widthRatio < heightRatio ? widthRatio : heightRatio
+        let ratio = min(widthRatio, heightRatio)
         
         let resizedSize = CGSize(width: size.width * ratio, height: size.height * ratio)
         
-        UIGraphicsBeginImageContextWithOptions(resizedSize, false, 0.0) // 変更
-        draw(in: CGRect(origin: .zero, size: resizedSize))
-        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return resizedImage
-    }
-    
-    
-    func createGrayImage(r:[CGFloat], g: [CGFloat], b:[CGFloat], a:[CGFloat]) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        let wid:Int = Int(size.width)
-        let hei:Int = Int(size.height)
+        // UIGraphicsImageRenderer を使用
+        let renderer = UIGraphicsImageRenderer(size: resizedSize)
         
-        for w in 0..<wid {
-            for h in 0..<hei {
-                let index = (w * wid) + h
-                let color = 0.2126 * r[index] + 0.7152 * g[index] + 0.0722 * b[index]
-                UIColor(red: color, green: color, blue: color, alpha: a[index]).setFill()
-                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
-                UIRectFill(drawRect)
-                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
-            }
+        return renderer.image { _ in
+            draw(in: CGRect(origin: .zero, size: resizedSize))
         }
-        let grayImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return grayImage
     }
-    
-    func tint(color: [UIColor]) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        var colorCnt:Int = 0
-        let colorTotalCnt=color.count
-        for w in 0..<Int(size.width) {
-            for h in 0..<Int(size.height) {
-                let index = (w * Int(size.width)) + h
-                if colorCnt==colorTotalCnt{
-                    color[index-1].setFill()
+    func createGrayImage(r: [CGFloat], g: [CGFloat], b: [CGFloat], a: [CGFloat]) -> UIImage {
+        let wid = Int(size.width)
+        let hei = Int(size.height)
+        let renderer = UIGraphicsImageRenderer(size: size)
+
+        return renderer.image { context in
+            for w in 0..<wid {
+                for h in 0..<hei {
+                    let index = (w * wid) + h
+                    let grayValue = 0.2126 * r[index] + 0.7152 * g[index] + 0.0722 * b[index]
+                    UIColor(red: grayValue, green: grayValue, blue: grayValue, alpha: a[index]).setFill()
                     let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
-                    UIRectFill(drawRect)
-                    draw(in: drawRect, blendMode: .destinationIn, alpha: 0)
-                    break
-                }else{
-                    color[index].setFill()
-                    let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
-                    UIRectFill(drawRect)
-                    draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+                    context.fill(drawRect)
                 }
-                colorCnt += 1
-            }
-            if colorCnt==colorTotalCnt{
-                break
             }
         }
-        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return tintedImage
     }
-    func createImage(r:[CGFloat], g: [CGFloat], b:[CGFloat], a:[CGFloat]) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        let wid:Int = Int(size.width)
-        let hei:Int = Int(size.height)
-        
-        for w in 0..<wid {
-            for h in 0..<hei {
-                let index = (w * wid) + h
-                UIColor(red: r[index], green: g[index], blue: b[index], alpha: a[index]).setFill()
-                let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
-                UIRectFill(drawRect)
-                draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+
+  
+    func tint(color: [UIColor]) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { context in
+            var colorCnt: Int = 0
+            let colorTotalCnt = color.count
+            
+            for w in 0..<Int(size.width) {
+                for h in 0..<Int(size.height) {
+                    let index = (w * Int(size.width)) + h
+                    if colorCnt == colorTotalCnt {
+                        color[index - 1].setFill()
+                        let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                        context.cgContext.fill(drawRect)
+                        self.draw(in: drawRect, blendMode: .destinationIn, alpha: 0)
+                        break
+                    } else {
+                        color[index].setFill()
+                        let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                        context.cgContext.fill(drawRect)
+                        self.draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+                    }
+                    colorCnt += 1
+                }
+                if colorCnt == colorTotalCnt {
+                    break
+                }
             }
-            print("createImage/h:",w)
         }
-        let tintedImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return tintedImage
     }
+ 
+
+    func createImage(r: [CGFloat], g: [CGFloat], b: [CGFloat], a: [CGFloat]) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { context in
+            let wid = Int(size.width)
+            let hei = Int(size.height)
+            
+            for w in 0..<wid {
+                for h in 0..<hei {
+                    let index = (w * wid) + h
+                    UIColor(red: r[index], green: g[index], blue: b[index], alpha: a[index]).setFill()
+                    let drawRect = CGRect(x: w, y: h, width: 1, height: 1)
+                    context.cgContext.fill(drawRect)
+                    self.draw(in: drawRect, blendMode: .destinationIn, alpha: 1)
+                }
+                print("createImage/h:", w)
+            }
+        }
+    }
+   
 }
 
 @available(iOS 13.0, *)
@@ -655,6 +656,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //        print("onNextVideo*****")
         showVideoIroiro(num: 1)
     }
+    
     
     func setVideoButtons(mode:Bool){
         videoSlider.isHidden = !mode
@@ -1412,6 +1414,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if startcnt < 0 {
             startcnt = 0
         }
+       
+        
         if arrayDataCount < Int(ww){//横幅以内なら０からそこまで表示
             startcnt = 0
         }else if startcnt > arrayDataCount - Int(ww){
@@ -1444,6 +1448,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     func average4(filtered:[CGFloat],i:Int)->CGFloat{
         return (filtered[i]+filtered[i+1]+filtered[i+2]+filtered[i+3])/4
     }
+    
     func averagingData(){
         let filterCnt=UserDefaults.standard.integer(forKey:"lowPassFilterCnt")
         if filterCnt==0{
@@ -1754,99 +1759,98 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
     }
     //vHIT_eye_head
-    func drawLineClear(num:Int,width w:CGFloat,height h:CGFloat) -> UIImage{
-        
-        let size = CGSize(width:w, height:h)
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
-    func drawLine(num:Int, width w:CGFloat,height h:CGFloat) -> UIImage {
-        let size = CGSize(width:w, height:h)
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-#if DEBUG
-        print("drawLine:",num,w,h)
-#endif
-        // 折れ線にする点の配列
-        var pointList0 = Array<CGPoint>()
-        var pointList2 = Array<CGPoint>()
-        let pointCount = Int(w) // 点の個数
-        // xの間隔
-        let dx:CGFloat = 1//Int(w)/pointCount
-        let gyroMovedCnt=gyroMoved.count
-        let y1=view.bounds.width*9/32
-        var py0:CGFloat=0
-        var step:Int = 1
-        if fpsIs120==true{
-            step=2
-        }
-        for n in stride(from: 1, to: pointCount, by: step){
-            if num + n < arrayDataCount && num + n < gyroMovedCnt {
-                let px = dx * CGFloat(n)
-                if calcMode==0{
-                    py0 = eyeVeloXFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y1
-                }else{
-                    py0 = eyeVeloYFiltered4update[num + n] * CGFloat(eyeRatio)/450.0 + y1
-                }
-                
-                let py2 = -gyroMoved[num + n] * CGFloat(gyroRatio)/150.0 + y1
-                let point0 = CGPoint(x: px, y: py0)
-                
-                let point2 = CGPoint(x: px, y: py2)
-                pointList0.append(point0)
-                pointList2.append(point2)
-            }
-        }
-        
-        // イメージ処理の開始
-        //        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        // パスの初期化
-        let drawPath0 = UIBezierPath()
-        let drawPath1 = UIBezierPath()
-        let drawPath2 = UIBezierPath()
-        // 始点に移動する
-        drawPath0.move(to: pointList0[0])
-        // 配列から始点の値を取り除く
-        pointList0.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList0 {
-            drawPath0.addLine(to: pt)
-        }
-        
-        drawPath2.move(to: pointList2[0])
-        // 配列から始点の値を取り除く
-        pointList2.removeFirst()
-        // 配列から点を取り出して連結していく
-        for pt in pointList2 {
-            drawPath2.addLine(to: pt)
-        }
-        // 線の色
-        UIColor.black.setStroke()
-        // 線幅
-        drawPath0.lineWidth = 0.3
-        drawPath1.lineWidth = 0.3
-        drawPath2.lineWidth = 0.3
-        // 線を描く
-        UIColor.red.setStroke()
-        drawPath0.stroke()
-        
-        UIColor.black.setStroke()
-        drawPath2.stroke()
-        let timetxt:String = String(format: "%05df (%.1fs/%@) : %ds",arrayDataCount,CGFloat(arrayDataCount)/240.0,videoDura[videoCurrent],timercnt+1)
-        //print(timetxt)
-        timetxt.draw(at: CGPoint(x: 3, y: 3), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 13, weight: UIFont.Weight.regular)])
-        
-        //イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
-    }
     
+ 
+    
+    func drawLineClear(num: Int, width w: CGFloat, height h: CGFloat) -> UIImage {
+        let size = CGSize(width: w, height: h)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        let image = renderer.image { context in
+            // 必要であればここで描画処理を行う
+        }
+        return image
+    }
+
+    func drawLine(num: Int, width w: CGFloat, height h: CGFloat) -> UIImage {
+        let size = CGSize(width: w, height: h)
+        let renderer = UIGraphicsImageRenderer(size: size)
+
+        let image = renderer.image { context in
+            let ctx = context.cgContext
+
+            #if DEBUG
+            print("drawLine:", num, w, h)
+            #endif
+
+            // 折れ線にする点の配列
+            var pointList0 = [CGPoint]()
+            var pointList2 = [CGPoint]()
+            let pointCount = Int(w)
+            let dx: CGFloat = 1
+            let gyroMovedCnt = gyroMoved.count
+            let y1 = view.bounds.width * 9 / 32
+            var py0: CGFloat = 0
+            var step = 1
+
+            if fpsIs120 {
+                step = 2
+            }
+
+            for n in stride(from: 1, to: pointCount, by: step) {
+                if num + n < arrayDataCount, num + n < gyroMovedCnt {
+                    let px = dx * CGFloat(n)
+                    if calcMode == 0 {
+                        py0 = eyeVeloXFiltered4update[num + n] * CGFloat(eyeRatio) / 450.0 + y1
+                    } else {
+                        py0 = eyeVeloYFiltered4update[num + n] * CGFloat(eyeRatio) / 450.0 + y1
+                    }
+
+                    let py2 = -gyroMoved[num + n] * CGFloat(gyroRatio) / 150.0 + y1
+                    let point0 = CGPoint(x: px, y: py0)
+                    let point2 = CGPoint(x: px, y: py2)
+
+                    pointList0.append(point0)
+                    pointList2.append(point2)
+                }
+            }
+
+            // パスの初期化
+            let drawPath0 = UIBezierPath()
+            let drawPath2 = UIBezierPath()
+
+            // 始点に移動
+            drawPath0.move(to: pointList0[0])
+            pointList0.removeFirst()
+            for pt in pointList0 {
+                drawPath0.addLine(to: pt)
+            }
+
+            drawPath2.move(to: pointList2[0])
+            pointList2.removeFirst()
+            for pt in pointList2 {
+                drawPath2.addLine(to: pt)
+            }
+
+            // 線の色と幅を設定
+            UIColor.red.setStroke()
+            drawPath0.lineWidth = 0.5//0.3
+            drawPath0.stroke()
+
+            UIColor.black.setStroke()
+            drawPath2.lineWidth = 0.5//0.3
+            drawPath2.stroke()
+
+            // 時間テキストを描画
+            let timetxt = String(format: "%05df (%.1fs/%@) : %ds", arrayDataCount, CGFloat(arrayDataCount) / 240.0, videoDura[videoCurrent], timercnt + 1)
+            timetxt.draw(at: CGPoint(x: 3, y: 3), withAttributes: [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
+            ])
+        }
+
+        return image
+    }
+
     var redGainStr:String=""
     var blueGainStr:String=""
     func getAve(array:Array<Double>)->Double{
@@ -2080,87 +2084,108 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         let trimImage = UIImage(cgImage: imgRef!, scale: image.scale, orientation: image.imageOrientation)
         return trimImage
     }
-    func drawvhitWavesClear(width w:CGFloat,height h:CGFloat) ->UIImage{
-        let size = CGSize(width:w, height:h)
-        // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        // パス
-        let drawPath = UIBezierPath()
-        // イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
+ 
+    func drawvhitWavesClear(width w: CGFloat, height h: CGFloat) -> UIImage {
+        let size = CGSize(width: w, height: h)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        
+        let image = renderer.image { context in
+            // パス
+            let drawPath = UIBezierPath()
+            // 必要な描画をここで行う (今回は何も描画しない場合)
+        }
+        
+        return image
     }
-    
-    func drawvhitWaves(width w:CGFloat,height h:CGFloat) -> UIImage {
-        let size = CGSize(width:w, height:h)
-        var r:CGFloat=1//r:倍率magnification
-        if w==500*4{//mail
-            r=4
+    func drawvhitWaves(width w: CGFloat, height h: CGFloat) -> UIImage {
+        let size = CGSize(width: w, height: h)
+        var r: CGFloat = 1 // 倍率 magnification
+        if w == 500 * 4 { // mail
+            r = 4
         }
-        // イメージ処理の開始
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        // パスの初期化
-        let drawPath = UIBezierPath()
         
-        let str1 = calcDate.components(separatedBy: ":")
-        let str2 = "ID:" + idString + "  "// + str1[0] + ":" + str1[1]
-        let str3 = str1[0] + ":" + str1[1]// + "   vHIT96da"
-        let str4 = "vHIT96da"
-        str2.draw(at: CGPoint(x: 5*r, y: 180*r), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
-        str3.draw(at: CGPoint(x: 258*r, y: 180*r), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
-        str4.draw(at: CGPoint(x: 425*r, y: 180*r), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 15*r, weight: UIFont.Weight.regular)])
+        // UIGraphicsImageRenderer を使用
+        let renderer = UIGraphicsImageRenderer(size: size)
         
-        UIColor.black.setStroke()
-        var pList = Array<CGPoint>()
-        pList.append(CGPoint(x:0,y:0))
-        pList.append(CGPoint(x:0,y:180*r))
-        pList.append(CGPoint(x:240*r,y:180*r))
-        pList.append(CGPoint(x:240*r,y:0))
-        pList.append(CGPoint(x:260*r,y:0))
-        pList.append(CGPoint(x:260*r,y:180*r))
-        pList.append(CGPoint(x:500*r,y:180*r))
-        pList.append(CGPoint(x:500*r,y:0))
-        drawPath.lineWidth = 0.1*r
-        drawPath.move(to:pList[0])
-        drawPath.addLine(to:pList[1])
-        drawPath.addLine(to:pList[2])
-        drawPath.addLine(to:pList[3])
-        drawPath.addLine(to:pList[0])
-        drawPath.move(to:pList[4])
-        drawPath.addLine(to:pList[5])
-        drawPath.addLine(to:pList[6])
-        drawPath.addLine(to:pList[7])
-        drawPath.addLine(to:pList[4])
-        for i in 0...4 {
-            drawPath.move(to: CGPoint(x:30*r + CGFloat(i)*48*r,y:0))
-            drawPath.addLine(to: CGPoint(x:30*r + CGFloat(i)*48*r,y:180*r))
-            drawPath.move(to: CGPoint(x:290*r + CGFloat(i)*48*r,y:0))
-            drawPath.addLine(to: CGPoint(x:290*r + CGFloat(i)*48*r,y:180*r))
+        let image = renderer.image { context in
+            // コンテキスト
+            let cgContext = context.cgContext
+            
+            // パスの初期化
+            let drawPath = UIBezierPath()
+            
+            // テキスト描画
+            let str1 = calcDate.components(separatedBy: ":")
+            let str2 = "ID:" + idString + "  "
+            let str3 = str1[0] + ":" + str1[1]
+            let str4 = "vHIT96da"
+            
+            str2.draw(at: CGPoint(x: 5 * r, y: 180 * r), withAttributes: [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.monospacedDigitSystemFont(ofSize: 15 * r, weight: .regular)
+            ])
+            
+            str3.draw(at: CGPoint(x: 258 * r, y: 180 * r), withAttributes: [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.monospacedDigitSystemFont(ofSize: 15 * r, weight: .regular)
+            ])
+            
+            str4.draw(at: CGPoint(x: 425 * r, y: 180 * r), withAttributes: [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.monospacedDigitSystemFont(ofSize: 15 * r, weight: .regular)
+            ])
+            
+            // 線の描画
+            UIColor.black.setStroke()
+            var pList = [
+                CGPoint(x: 0, y: 0),
+                CGPoint(x: 0, y: 180 * r),
+                CGPoint(x: 240 * r, y: 180 * r),
+                CGPoint(x: 240 * r, y: 0),
+                CGPoint(x: 260 * r, y: 0),
+                CGPoint(x: 260 * r, y: 180 * r),
+                CGPoint(x: 500 * r, y: 180 * r),
+                CGPoint(x: 500 * r, y: 0)
+            ]
+            
+            drawPath.lineWidth = 0.1 * r
+            drawPath.move(to: pList[0])
+            drawPath.addLine(to: pList[1])
+            drawPath.addLine(to: pList[2])
+            drawPath.addLine(to: pList[3])
+            drawPath.addLine(to: pList[0])
+            drawPath.move(to: pList[4])
+            drawPath.addLine(to: pList[5])
+            drawPath.addLine(to: pList[6])
+            drawPath.addLine(to: pList[7])
+            drawPath.addLine(to: pList[4])
+            
+            for i in 0...4 {
+                drawPath.move(to: CGPoint(x: 30 * r + CGFloat(i) * 48 * r, y: 0))
+                drawPath.addLine(to: CGPoint(x: 30 * r + CGFloat(i) * 48 * r, y: 180 * r))
+                drawPath.move(to: CGPoint(x: 290 * r + CGFloat(i) * 48 * r, y: 0))
+                drawPath.addLine(to: CGPoint(x: 290 * r + CGFloat(i) * 48 * r, y: 180 * r))
+            }
+            
+            drawPath.stroke()
+            drawPath.removeAllPoints()
+            
+            // カスタム描画（関数呼び出し）
+            draw1wave(r: r) // just vHIT
+            
+            // ゲインの値を描画
+            blueGainStr.draw(at: CGPoint(x: 263 * r, y: 167 * r - 167 * r), withAttributes: [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.monospacedDigitSystemFont(ofSize: 12 * r, weight: .regular)
+            ])
+            
+            redGainStr.draw(at: CGPoint(x: 3 * r, y: 167 * r - 167 * r), withAttributes: [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.monospacedDigitSystemFont(ofSize: 12 * r, weight: .regular)
+            ])
         }
-        drawPath.stroke()
-        drawPath.removeAllPoints()
-        draw1wave(r: r)//just vHIT
         
-        blueGainStr.draw(at: CGPoint(x: 263*r, y: 167*r-167*r), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 12*r, weight: UIFont.Weight.regular)])
-        redGainStr.draw(at: CGPoint(x: 3*r, y: 167*r-167*r), withAttributes: [
-            NSAttributedString.Key.foregroundColor : UIColor.black,
-            NSAttributedString.Key.font : UIFont.monospacedDigitSystemFont(ofSize: 12*r, weight: UIFont.Weight.regular)])
-        
-        // イメージコンテキストからUIImageを作る
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        // イメージ処理の終了
-        UIGraphicsEndImageContext()
-        return image!
+        return image
     }
     
     @objc func viewWillEnterForeground(_ notification: Notification?) {
