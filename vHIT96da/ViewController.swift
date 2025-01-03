@@ -1562,10 +1562,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 startTimerVideo()
             }
             waveSlider.isHidden=true
-            for i in 0...pngPHAsset.count-1{
-                print("png,mp4:",i,pngPHAsset[i].creationDate!,videoPHAsset[i].creationDate)
-            }
-            print("videoCurrent:",videoCurrent)
+    //        for i in 0...pngPHAsset.count-1{
+    //            print("png,mp4:",i,pngPHAsset[i].creationDate!,videoPHAsset[i].creationDate!)
+    //        }
+    //        print("videoCurrent:",videoCurrent)
 //            for mp4 in videoPHAsset{
 //                print("mp4:",mp4.creationDate!)
 //            }
@@ -2391,6 +2391,214 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
              }
          }
      }
+   
+/*
+    func saveImageToAlbumWithCreationDate(
+        image: UIImage,
+        from asset: PHAsset,
+        albumName: String,
+        completion: @escaping (PHAsset?, Error?) -> Void
+    ) {
+        // 保存する画像を PNG データに変換
+        guard let imageData = image.pngData() else {
+            print("画像データの変換に失敗しました")
+            completion(nil, nil)
+            return
+        }
+
+        // 一時ファイルの URL を生成
+        let temporaryDirectory = FileManager.default.temporaryDirectory
+        let fileURL = temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("png")
+
+        do {
+            // 一時ファイルに画像を保存
+            try imageData.write(to: fileURL)
+            print("一時ファイルに画像を保存しました: \(fileURL)")
+
+            // asset の creationDate を取得
+            guard let creationDate = asset.creationDate else {
+                print("PHAsset の creationDate が取得できませんでした")
+                completion(nil, nil)
+                return
+            }
+
+            // "kuroda" アルバムを取得または作成
+            func getOrCreateAlbum(completion: @escaping (PHAssetCollection?) -> Void) {
+                let fetchOptions = PHFetchOptions()
+                fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+                let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+                
+                if let existingAlbum = collections.firstObject {
+                    completion(existingAlbum)
+                } else {
+                    // アルバムを作成
+                    PHPhotoLibrary.shared().performChanges({
+                        PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
+                    }) { success, error in
+                        if success {
+                            let newCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+                            completion(newCollections.firstObject)
+                        } else {
+                            print("アルバムの作成に失敗しました: \(String(describing: error))")
+                            completion(nil)
+                        }
+                    }
+                }
+            }
+
+            // アルバム取得後に画像を保存
+            getOrCreateAlbum { album in
+                guard let album = album else {
+                    print("アルバムが見つかりませんでした")
+                    completion(nil, nil)
+                    return
+                }
+
+                PHPhotoLibrary.shared().performChanges({
+                    // 画像をアセットとして作成
+                    let creationRequest = PHAssetCreationRequest.forAsset()
+                    creationRequest.addResource(with: .photo, fileURL: fileURL, options: nil)
+                    creationRequest.creationDate = creationDate
+
+                    // 保存したアセットのプレースホルダーを取得
+                    var placeholder: PHObjectPlaceholder?
+                    if let assetPlaceholder = creationRequest.placeholderForCreatedAsset {
+                        placeholder = assetPlaceholder
+                    }
+
+                    // アルバムにアセットを追加
+                    if let albumChangeRequest = PHAssetCollectionChangeRequest(for: album),
+                       let placeholder = placeholder {
+                        albumChangeRequest.addAssets([placeholder] as NSFastEnumeration)
+                    }
+                }) { success, error in
+                    // 一時ファイルの削除
+                    do {
+                        try FileManager.default.removeItem(at: fileURL)
+                        print("一時ファイルを削除しました: \(fileURL)")
+                    } catch {
+                        print("一時ファイルの削除に失敗しました: \(error)")
+                    }
+
+                    if success {
+                        // 保存されたアセットを取得
+                        if let placeholder = PHAssetCreationRequest.forAsset().placeholderForCreatedAsset {
+                            let savedAssets = PHAsset.fetchAssets(withLocalIdentifiers: [placeholder.localIdentifier], options: nil)
+                            let savedAsset = savedAssets.firstObject
+                            completion(savedAsset, nil)
+                            return
+                        }
+                    } else {
+                        print("画像の保存に失敗しました: \(String(describing: error))")
+                        completion(nil, error)
+                    }
+                }
+            }
+        } catch {
+            print("一時ファイルの作成に失敗しました: \(error)")
+            completion(nil, error)
+        }
+    }
+
+*/
+ 
+   
+
+    func saveImageToAlbumWithCreationDate(
+        image: UIImage,
+        from asset: PHAsset,
+        albumName: String,
+        completion: @escaping (Bool, Error?) -> Void
+    ) {
+        // 保存する画像を PNG データに変換
+        guard let imageData = image.pngData() else {
+            print("画像データの変換に失敗しました")
+            completion(false, nil)
+            return
+        }
+
+        // 一時ファイルの URL を生成
+        let temporaryDirectory = FileManager.default.temporaryDirectory
+        let fileURL = temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("png")
+
+        do {
+            // 一時ファイルに画像を保存
+            try imageData.write(to: fileURL)
+            print("一時ファイルに画像を保存しました: \(fileURL)")
+
+            // asset の creationDate を取得
+            guard let creationDate = asset.creationDate else {
+                print("PHAsset の creationDate が取得できませんでした")
+                completion(false, nil)
+                return
+            }
+
+            // "kuroda" アルバムを取得または作成
+            func getOrCreateAlbum(completion: @escaping (PHAssetCollection?) -> Void) {
+                let fetchOptions = PHFetchOptions()
+                fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+                let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+                
+                if let existingAlbum = collections.firstObject {
+                    completion(existingAlbum)
+                } else {
+                    // アルバムを作成
+                    PHPhotoLibrary.shared().performChanges({
+                        PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
+                    }) { success, error in
+                        if success {
+                            let newCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+                            completion(newCollections.firstObject)
+                        } else {
+                            print("アルバムの作成に失敗しました: \(String(describing: error))")
+                            completion(nil)
+                        }
+                    }
+                }
+            }
+
+            // アルバム取得後に画像を保存
+            getOrCreateAlbum { album in
+                guard let album = album else {
+                    print("アルバムが見つかりませんでした")
+                    completion(false, nil)
+                    return
+                }
+
+                PHPhotoLibrary.shared().performChanges({
+                    // 画像をアセットとして作成
+                    let creationRequest = PHAssetCreationRequest.forAsset()
+                    creationRequest.addResource(with: .photo, fileURL: fileURL, options: nil)
+                    creationRequest.creationDate = creationDate
+
+                    // アルバムにアセットを追加
+                    if let albumChangeRequest = PHAssetCollectionChangeRequest(for: album),
+                       let placeholder = creationRequest.placeholderForCreatedAsset {
+                        albumChangeRequest.addAssets([placeholder] as NSFastEnumeration)
+                    }
+                }) { success, error in
+                    // 一時ファイルの削除
+                    do {
+                        try FileManager.default.removeItem(at: fileURL)
+                        print("一時ファイルを削除しました: \(fileURL)")
+                    } catch {
+                        print("一時ファイルの削除に失敗しました: \(error)")
+                    }
+
+                    if success {
+                        print("画像を \(albumName) アルバムに保存し、creationDate を設定しました: \(creationDate)")
+                        completion(true, nil)
+                    } else {
+                        print("画像の保存に失敗しました: \(String(describing: error))")
+                        completion(false, error)
+                    }
+                }
+            }
+        } catch {
+            print("一時ファイルの作成に失敗しました: \(error)")
+            completion(false, error)
+        }
+    }
 
     //結果画像はJpegで保存。Pngだと背景色黒で保存されてしまう。
     func saveJpegImage2path(image:UIImage,path:String) {//imageを保存
@@ -2504,7 +2712,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     gyroV.append(-dV)
                 }
 //                videoCurrent=videoPHAsset.count//まだ増えていないので -1 はしていない。
-                getAlbumAssets(true)
+                getAlbumAssets(true)//この中でsaveGyroValue
+//                saveGyroValue()
 //                saveGyroValue(videoFps: Controller.fps!,videoSize: Controller.videoSize!)//この中でgetAlbumAssetsしている。
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
@@ -2519,16 +2728,61 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             print("tatsuaki-unwind from list")
         }
     }
- 
+    func setCreationDate(from videoAsset: PHAsset, to imageAsset: PHAsset, completion: @escaping (Bool) -> Void) {
+        // ビデオの creationDate を取得
+        guard let creationDate = videoAsset.creationDate else {
+            print("ビデオの creationDate が取得できませんでした")
+            completion(false)
+            return
+        }
+
+        // 画像の contentEditingInput を取得
+        let options = PHContentEditingInputRequestOptions()
+        imageAsset.requestContentEditingInput(with: options) { input, _ in
+            guard let input = input, let url = input.fullSizeImageURL else {
+                print("静止画のコンテンツを取得できませんでした")
+                completion(false)
+                return
+            }
+
+            // 一時的なファイルパスを作成
+            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension(url.pathExtension)
+            do {
+                try FileManager.default.copyItem(at: url, to: outputURL)
+                
+                // 写真ライブラリに新しいアセットを作成
+                PHPhotoLibrary.shared().performChanges({
+                    let creationRequest = PHAssetCreationRequest.forAsset()
+                    creationRequest.addResource(with: .photo, fileURL: outputURL, options: nil)
+                    creationRequest.creationDate = creationDate
+                }) { success, error in
+                    // 成功・失敗にかかわらず、一時ファイルを削除
+                    do {
+                        try FileManager.default.removeItem(at: outputURL)
+                        print("一時ファイルを削除しました: \(outputURL)")
+                    } catch {
+                        print("一時ファイルの削除に失敗しました: \(error)")
+                    }
+
+                    if success {
+                        print("静止画の creationDate を設定しました: \(creationDate)")
+                    } else {
+                        print("静止画の creationDate の設定に失敗しました: \(String(describing: error))")
+                    }
+                    completion(success)
+                }
+            } catch {
+                print("一時ファイルの作成に失敗しました: \(error)")
+                completion(false)
+            }
+        }
+    }
     func saveGyroValue(){//},videoSize:CGSize){
         KalmanInit()
         gyroHFiltered.removeAll()
         gyroVFiltered.removeAll()
         showBoxies(f: false)
         setVideoButtons(mode: false)
-        //        removeFile(delFile: "temp.png")
-        //        print("rewind***1")
-//        var fps=videoFps
         showVideoIroiro(num:0)
   //      var fps=videoPHAsset.last!.tracks.first!.nominalFrameRate
         var fps=getFPS(videoPHAsset.last!)//録画されたvideoはすでに最後に追加されている
@@ -2559,27 +2813,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
  //       print("videoCurrent/saveGyroValue:",videoCurrent)
 //        let size=CGSize(width:1080,height:1920)
 //        let whiteImage = iroiro.createWhiteImage(with: size)
-        let avasset = iroiro.requestAVAsset(asset: videoPHAsset.last!)
-    
+        let avasset = iroiro.requestAVAsset(asset: videoPHAsset.last!)//直前に録画されたもの
         let eyeImage = iroiro.getThumb(avasset: avasset!)
         let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
-        
-        saveImageToExistingAlbum1(image: gyroImage!, albumName: albumName) { [self] savedAsset in
-            if let asset = savedAsset {
-                self.pngPHAsset.append(asset)
-//                getAlbumAssets(true)
-                print("保存された PHAsset を取得しました: \(asset)")
-                //    print("Asset Local Identifier: \(asset.localIdentifier)")
-            } else {
-                print("保存された PHAsset を取得できませんでした")
+ 
+        saveImageToAlbumWithCreationDate(image: gyroImage!, from: videoPHAsset.last!, albumName: albumName) { success, error in
+                if success {
+                    self.getAlbumAssets(false)
+                    print("画像が正常に保存されました")
+                } else {
+                    print("画像の保存に失敗しました: \(String(describing: error))")
+                }
             }
-            print("video,png:",self.videoPHAsset.count,self.pngPHAsset.count)
-//            print(self.videoPHAsset[videoCurrent-1].creationDate,self.pngPHAsset[videoCurrent-1].creationDate)
-        }
-        
+ 
         startFrame=0
-//        print("rewind***6")
-        //
+       
     }
     
     func readGyroFromPng(img:UIImage){

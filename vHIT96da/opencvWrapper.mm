@@ -76,6 +76,8 @@
     cv::Mat inputMat;
     cv::Mat grayMat;
     UIImageToMat(inputImg, inputMat);
+    putText(inputMat,"GyroDataOnTop",cvPoint(10,cols*3/5),cv::FONT_HERSHEY_SIMPLEX,3,cvScalar(0,0,0),15,CV_AA);
+
     //int step = inputMat.step;
     for (int row = 0; row < rows; row++) {//rows
         for (int col = 0; col <cols; col++) {//cols
@@ -102,7 +104,11 @@
             break;
         }
     }
-    putText(inputMat,"GyroDataOnTop",cvPoint(10,cols*3/5),cv::FONT_HERSHEY_SIMPLEX,3,cvScalar(0,0,0),15,CV_AA);
+
+//    rectangle(inputMat, cvPoint(10,cols*3/5),cvPoint(10,cols*3/5+30), (255,255,255), -1)
+
+    
+//    putText(inputMat,"GyroDataOnTop",cvPoint(10,cols*3/5),cv::FONT_HERSHEY_SIMPLEX,3,cvScalar(0,0,0),15,CV_AA);
     inputImg = MatToUIImage(inputMat);
     return inputImg;
 }
