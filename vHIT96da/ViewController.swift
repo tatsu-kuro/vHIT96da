@@ -156,6 +156,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var videoDate = Array<String>()
     var videoDura = Array<String>()
     var videoPHAsset = Array<PHAsset>()
+    var pngPHAsset = Array<PHAsset>()
     var videoCurrent:Int=0
     
     //album関連、ここまで
@@ -354,7 +355,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         //アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", albumTitle)
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: assetFetchOptions)
         //ここはunwindから呼ばれる。アルバムはprepareで作っているはず？
         //        if (assetCollections.count > 0) {
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
@@ -371,7 +372,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT96da)
         
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: assetFetchOptions)
         //        print("asset:",assetCollections.count)
         //アルバムが存在しない事もある？
         var dialogStatus:Int=0
@@ -455,7 +456,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", vHIT96da)
         
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: assetFetchOptions)
         //アルバムが存在しない事もある？
         if (assetCollections.count > 0) {
             //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
@@ -1125,6 +1126,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         if videoDura.count<1 {
             return
         }
+//        print("videoCurrent:",videoCurrent)
         
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
         
@@ -1621,7 +1623,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: assetFetchOptions)
         if (assetCollections.count > 0) {//アルバムが存在しない時
             //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
             let assetCollection = assetCollections.object(at:0)
@@ -1652,9 +1654,117 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             gettingAlbumF = false
         }
     }
+/*
+ func getAlbumAssets(_ recordedFlag:Bool){//
+//        getAlbumAssetsEndFlag=false
+  let fetchOptions = PHFetchOptions()
+  fetchOptions.predicate = NSPredicate(format: "title == %@", albumName)
+  let collectionResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+  if let album = collectionResult.firstObject {
+      let assetFetchOptions = PHFetchOptions()
+      assetFetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
 
+      //   assetFetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+      let assets = PHAsset.fetchAssets(in: album, options: assetFetchOptions)
+      var gazoPHAsset: [PHAsset] = [] // 画像(video&png)のリストを作成
+      assets.enumerateObjects { (asset, _, _) in
+          // スローモーション動画かどうかの確認
+          //    if asset.mediaSubtypes.contains(PHAssetMediaSubtype.videoHighFrameRate) {
+          // iCloudからダウンロードされていないかどうかを確認
+          //    self.checkIfVideoIsLocallyAvailable(asset: asset) { isAvailable in
+          //      if isAvailable {
+          gazoPHAsset.append(asset)
+          /*
+           self.mediaAssets.append(asset)
+           */
+          //  }
+          //}
+          //    }
+      }
+  
+       // 非同期でスローモーションビデオを表示
+      DispatchQueue.main.async {
+          self.getAlbumVideos(gazoPHAsset,recordedFlag)
+      }
+  } else {
+      print("指定したアルバムが見つかりませんでした。")
+  }
+}*/
+func getAlbumVideos(_ gazo: [PHAsset]) {
+  pngPHAsset.removeAll()
+  videoPHAsset.removeAll()
+  videoDura.removeAll()
+  videoDate.removeAll()
+  let formatter = DateFormatter()
+  formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    print("videoPHAsset:",videoPHAsset.count)
+
+  if gazo.isEmpty {
+      print("ビデオも静止画もありません。")
+  } else {
+
+      for videoPng in gazo {
+          if videoPng.duration>0{//動画
+              videoPHAsset.append(videoPng)
+              let date_sub = videoPng.creationDate
+              let date = formatter.string(from: date_sub!)
+              let duration = String(format:"%.1fs",videoPng.duration)
+              videoDate.append(date)// + "(" + duration + ")")
+              videoDura.append(duration)
+          }else{//静止画
+              pngPHAsset.append(videoPng)
+          }
+      }
+      for i in (0..<videoDate.count).reversed(){//cloudのは見ない・削除する
+          let avasset = iroiro.requestAVAsset(asset: videoPHAsset[i])
+          if avasset == nil{
+              videoPHAsset.remove(at: i)
+              videoDate.remove(at: i)
+              videoDura.remove(at: i)
+          }
+      }
+      print("videoPHAsset:",videoPHAsset.count)
+//      gettingAlbumF = false
+
+//      print("png,video:",pngPHAsset.count,videoPHAsset.count)
+//      if recordedFlag {//recordからunwindで戻ってきた時は、録画した最後のvideoとする
+//          videoCurrent=videoDate.count-1
+//      }else{
+//          videoCurrent = getUserDefault(str: "videoCurrent", ret: 0)
+//      }
+//      if videoCurrent>videoDate.count-1{//念のため
+//          videoCurrent=videoDate.count-1
+//      }
+      
+//      self.setNeedsStatusBarAppearanceUpdate()
+//      //#if DEBUG
+//      //            print("didloadcount:",videoDate.count)
+//      //#endif
+//      showVideoIroiro(num:0)
+//      if videoDate.count==0{
+//          setVideoButtons(mode: false)
+//      }else{
+//          startTimerVideo()
+//      }
+//      waveSlider.isHidden=true
+//        for i in 0...pngPHAsset.count-1{
+//            print("png,mp4:",i,pngPHAsset[i].creationDate!,videoPHAsset[i].creationDate!)
+//        }
+//        print("videoCurrent:",videoCurrent)
+//            for mp4 in videoPHAsset{
+//                print("mp4:",mp4.creationDate!)
+//            }
+//            print("video,png:",videoPHAsset.count,pngPHAsset.count)
+//      if(recordedFlag){//録画の時はpng画像はまだ作られていないので
+//          saveGyroValue()//png画像を作り、それをpngPHAssetに追加
+//      }
+  }
+  //        getAlbumAssetsEndFlag=true
+}
+ 
     func getAlbumAssets(){
         gettingAlbumF = true
+//        getAlbumAssets_sub_newIOS()
         getAlbumAssets_sub()
         while gettingAlbumF == true{
             sleep(UInt32(0.1))
@@ -1669,7 +1779,45 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             }
         }
     }
-    
+    func getAlbumAssets_sub_newIOS(){//
+   //        getAlbumAssetsEndFlag=false
+     let fetchOptions = PHFetchOptions()
+     fetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
+     let collectionResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+     if let album = collectionResult.firstObject {
+         let assetFetchOptions = PHFetchOptions()
+         assetFetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+
+         //   assetFetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+         let assets = PHAsset.fetchAssets(in: album, options: assetFetchOptions)
+         var gazoPHAsset: [PHAsset] = [] // 画像(video&png)のリストを作成
+         assets.enumerateObjects { (asset, _, _) in
+             // スローモーション動画かどうかの確認
+             //    if asset.mediaSubtypes.contains(PHAssetMediaSubtype.videoHighFrameRate) {
+             // iCloudからダウンロードされていないかどうかを確認
+             //    self.checkIfVideoIsLocallyAvailable(asset: asset) { isAvailable in
+             //      if isAvailable {
+             gazoPHAsset.append(asset)
+             print(asset.creationDate)
+             /*
+              self.mediaAssets.append(asset)
+              */
+             //  }
+             //}
+             //    }
+         }
+     
+          // 非同期でスローモーションビデオを表示
+//         DispatchQueue.main.async {
+             print("gazoPHAsset")
+             self.getAlbumVideos(gazoPHAsset)
+             self.gettingAlbumF = false
+
+//         }
+     } else {
+         print("指定したアルバムが見つかりませんでした。")
+     }
+   }
     func getAlbumAssets_sub(){
         let requestOptions = PHImageRequestOptions()
         videoPHAsset.removeAll()
@@ -1681,7 +1829,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         // アルバムをフェッチ
         let assetFetchOptions = PHFetchOptions()
         assetFetchOptions.predicate = NSPredicate(format: "title == %@", "vHIT96da")
-        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .smartAlbumVideos, options: assetFetchOptions)
+        let assetCollections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: assetFetchOptions)
         if (assetCollections.count > 0) {//アルバムが存在する時
             print("assetCollections.count>0")
             //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
@@ -2077,7 +2225,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
             while existFile(aFile: "temp.jpeg") == false{
                 sleep(UInt32(0.1))
             }
-            savePath2album(name:Wave96da,path: "temp.jpeg")
+            savePath2album(albumName:Wave96da,path: "temp.jpeg")
             calcDrawVHIT(tuple: false)//idnumber表示のため,waveTupleは変更しない
             // イメージビューに設定する
             //            UIImageWriteToSavedPhotosAlbum(drawImage, nil, nil, nil)
@@ -2424,9 +2572,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         vHITBoxView?.isHidden = true
     }
     var path2albumDoneFlag:Bool=false//不必要かもしれないが念の為
-    func savePath2album(name:String,path:String){
+    func savePath2album(albumName:String,path:String){
         path2albumDoneFlag=false
-        savePath2album_sub(name:name,path: path)
+        savePath2album_sub(name:albumName,path: path)
         while path2albumDoneFlag==false{
             sleep(UInt32(0.2))
         }
@@ -2445,8 +2593,8 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     self.path2albumDoneFlag=true
                     // 保存成功
                 } else {
-                    self.path2albumDoneFlag=true
-                    // 保存失敗
+                    self.path2albumDoneFlag=true//
+                    // 保存失敗しても抜けたらtrue
                 }
             }
         }
@@ -2633,7 +2781,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                 }
                 print("rewind***5")
                 
-                savePath2album(name:vHIT96da,path: "temp.png")
+                savePath2album(albumName:vHIT96da,path: "temp.png")
                 startFrame=0
                 //                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
@@ -2796,10 +2944,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }else if gyroRatio<10{
                         gyroRatio=10
                     }
-                    if videoGyroZure>100{
-                        videoGyroZure = 100
-                    }else if videoGyroZure<1{
-                        videoGyroZure = 1
+                    if videoGyroZure>25{
+                        videoGyroZure = 25
+                    }else if videoGyroZure < -10{
+                        videoGyroZure = -10
                     }
                     if eyeRatio>4000{
                         eyeRatio=4000
