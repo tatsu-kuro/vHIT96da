@@ -626,7 +626,7 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
         return assetCollections.object(at:0)
     }
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+/*    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         
         if albumExists(albumName: vHIT96da)==true{
             recordedFlag=true
@@ -656,7 +656,74 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             //削除してもどこかにあるようで、参照URLは生きていて、再生できる。
         }
         performSegue(withIdentifier: "fromRecordToMain", sender: self)
+    }*/
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        if let error = error {
+            print("録画エラー: \(error.localizedDescription)")
+            startButton.isHidden=true
+            stopButton.isHidden=true
+            performSegue(withIdentifier: "fromRecordToMain", sender: self)
+        }
+        // 録画が正常に終了した場合、ビデオをアルバムに保存
+        recordedFlag=true
+        saveToCustomAlbum(url: outputFileURL)
+        // 動画のFPSとDurationを取得
+//        let asset = AVAsset(url: outputFileURL)
+//        setVideoProperties(from: asset)
+//        let duration = asset.duration
+        //          let durationSeconds = CMTimeGetSeconds(duration)
+        
+        //          var fps: Float = 0
+        //          if let videoTrack = asset.tracks(withMediaType: .video).first {
+        //              fps = videoTrack.nominalFrameRate
+        //              print("動画のFPS: \(fps)")
+        //          }
+        //
+        //          // FPSとDurationを出力
+        //           print("動画の再生時間: \(duration)秒")
     }
+    
+     // カスタムアルバムに保存
+     func saveToCustomAlbum(url: URL) {
+         // アルバム名
+         let albumName = vHIT96da
+         
+         // 写真ライブラリに保存
+         PHPhotoLibrary.shared().performChanges({
+             // アルバムがすでにあるか確認
+             let fetchOptions = PHFetchOptions()
+             fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+             let fetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+             
+             var assetCollection: PHAssetCollection?
+             if fetchResult.count == 0 {
+                 // 新しいアルバムを作成
+                 PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
+                 assetCollection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions).firstObject
+             } else {
+                 assetCollection = fetchResult.firstObject
+             }
+             
+             // 写真ライブラリに動画を保存
+             let creationRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+             
+             guard let album = assetCollection else { return }
+             let assetCollectionChangeRequest = PHAssetCollectionChangeRequest(for: album)
+             assetCollectionChangeRequest?.addAssets([creationRequest!.placeholderForCreatedAsset!] as NSArray)
+             
+         }) { success, error in
+             if success {
+                 self.saved2album=true
+                 print("動画をアルバムに保存しました。")
+             } else {
+                 self.saved2album=false
+                 print("アルバム保存に失敗しました: \(String(describing: error))")
+             }
+             DispatchQueue.main.async {
+                 self.performSegue(withIdentifier: "fromRecordToMain", sender: self)
+             }
+         }
+     }
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection]) {
         recStart=CFAbsoluteTimeGetCurrent()
         setMotion()//ここにしても安定したような
