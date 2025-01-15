@@ -20,36 +20,33 @@
     // input_imageをcv::Mat型へ変換
     UIImageToMat(wide_img, wide_mat);
     UIImageToMat(narrow_img, narrow_mat);
-    // 変換用Matの宣言
-//    cv::Mat gray_wide_mat;
-//    cv::Mat gray_narrow_mat;
-//    cv::cvtColor(wide_mat,gray_wide_mat,CV_BGR2GRAY);
-//    cv::cvtColor(narrow_mat,gray_narrow_mat,CV_BGR2GRAY);
-//    image = MatToUIImage(gray_mat);
     try
     {
-//        cv::matchTemplate(gray_wide_mat, gray_narrow_mat, return_mat, CV_TM_CCOEFF_NORMED);
-        cv::matchTemplate(wide_mat, narrow_mat, return_mat, CV_TM_CCOEFF_NORMED);
-           // "TM_SQDIFF",
-//            "TM_SQDIFF_NORMED",
-//            "TM_CCORR",
-//            "TM_CCORR_NORMED",
-//            "TM_CCOEFF",
-//            "TM_CCOEFF_NORMED",...
+//        cv::matchTemplate(wide_mat, narrow_mat, return_mat,CV_TM_SQDIFF_NORMED);//背景が均一の場合
+        cv::matchTemplate(wide_mat, narrow_mat, return_mat,CV_TM_CCORR_NORMED);//高コントラスト、明暗の検出
+//        cv::matchTemplate(wide_mat, narrow_mat, return_mat,CV_TM_CCOEFF_NORMED);//
     }
     catch( cv::Exception& e )
     {
           //  const char* err_msg = e.what();
         return -2.0;
     }
-    // 最大のスコアの場所を探す
+    // 最大のスコアの場所を探すCV_TM_CCOEFF_NORMED, TM_CCORR_NORMED
     cv::Point max_pt;
     double maxVal;
     cv::minMaxLoc(return_mat, NULL, &maxVal, NULL, &max_pt);
     *x_ret = max_pt.x;
     *y_ret = max_pt.y;
     return maxVal;//恐らく見つかった時は　0.7　より大の模様
-}
+    // 最小のスコアの場所を探すCV_TM_SQDIFF_NORMED
+//    cv::Point min_pt;
+//    double minVal;
+//    cv::minMaxLoc(return_mat, &minVal, NULL, &min_pt, NULL);
+//    *x_ret = min_pt.x;
+//    *y_ret = min_pt.y;
+//    return 1-minVal;
+ }
+
 -(UIImage *)GrayScale:(UIImage *)image{
     // 変換用Matの宣言
     cv::Mat image_mat;
@@ -178,7 +175,10 @@
 //    }
       return maxVal;
 }
+
 /*
+ 
+ 
 cv::Mat oldmat;//うまくいかない。何か方法があるかもしれないが・・・下のコードではだめ
 -(void) matching0:(UIImage *)newimg
 {
