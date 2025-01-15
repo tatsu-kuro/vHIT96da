@@ -737,6 +737,20 @@
                                     <action selector="setDefault:" destination="jFt-gZ-HXu" eventType="touchUpInside" id="N6N-8N-2iN"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gWK-dR-yei">
+                                <rect key="frame" x="27" y="636" width="131" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                </segments>
+                                <connections>
+                                    <action selector="onLowPassFilterSwitch:" destination="jFt-gZ-HXu" eventType="valueChanged" id="hjo-wz-BPj"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="w0o-6n-dxQ"/>
                         <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
@@ -756,6 +770,8 @@
                         <outlet property="eyeBorderInput" destination="wHd-Gu-5nW" id="Jjd-FR-sCv"/>
                         <outlet property="eyeBorderLabel" destination="NMH-1D-eWf" id="3bC-Vb-aGc"/>
                         <outlet property="keyDown" destination="pMb-F1-KQb" id="9ax-j5-bsU"/>
+                        <outlet property="lowPassFilterSwitch" destination="gWK-dR-yei" id="Noq-ib-Zff"/>
+                        <outlet property="lowPassText" destination="Atu-MZ-zqA" id="3Mb-hd-gX9"/>
                         <outlet property="oppositeButton" destination="p30-4I-jic" id="atM-HJ-i7U"/>
                         <outlet property="oppositeLabel" destination="i3U-lw-sar" id="hTw-07-F5J"/>
                         <outlet property="parallelButton" destination="tNT-h2-pQW" id="pmi-Yl-T8w"/>

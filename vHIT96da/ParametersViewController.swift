@@ -54,8 +54,15 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var oppositeButton: UIButton!
     
     @IBOutlet weak var parallelLabel: UILabel!
+    @IBOutlet weak var lowPassText: UILabel!
     
+    @IBOutlet weak var lowPassFilterSwitch: UISegmentedControl!
     @IBOutlet weak var oppositeLabel: UILabel!
+    @IBAction func onLowPassFilterSwitch(_ sender: Any) {
+        let index=lowPassFilterSwitch.selectedSegmentIndex
+        UserDefaults.standard.set(index, forKey: "lowPassFilterCnt")
+        print("selectedSegmentIndex",index)
+    }
     func displayMode(){
         if vHITDisplayMode == 0{
             parallelLabel.isHidden=true
@@ -271,7 +278,10 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH,width:butw,height:3)
         oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:bh)
         oppositeButton.layer.cornerRadius=3
-        
+        lowPassFilterSwitch.frame = CGRect(x:2*sp,y: parallelButton.frame.maxY+sp ,width: bw*3, height: bh)
+        lowPassText.frame=CGRect(x:lowPassFilterSwitch.frame.maxX+sp,y: parallelButton.frame.maxY+sp,width: bw*3, height: lowPassFilterSwitch.frame.height)
+        lowPassFilterSwitch.selectedSegmentIndex=getUserDefault(str: "lowPassFilterCnt", ret: 4)
+
         displayMode()
         
         defaultButton.frame=CGRect(x:2*sp,y:buty1,width:butw1,height: buth1)
@@ -298,6 +308,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         keyDown.layer.cornerRadius = 5
         
         keyDown.isHidden = true
+        lowPassFilterSwitch.selectedSegmentIndex=getUserDefault(str: "lowPassFilterCnt", ret: 4)
+
         setMaxMin()//念の為パラメータを正常範囲にしておく。
     }
     
