@@ -278,8 +278,8 @@ class ParametersViewController: UIViewController, UITextFieldDelegate {
         oppositeLabel.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH,width:butw,height:3)
         oppositeButton.frame = CGRect(x:butw+3*sp,y:topY+bh1*7+vhitpngH+5,width:butw,height:bh)
         oppositeButton.layer.cornerRadius=3
-        lowPassFilterSwitch.frame = CGRect(x:2*sp,y: parallelButton.frame.maxY+sp ,width: bw*3, height: bh)
-        lowPassText.frame=CGRect(x:lowPassFilterSwitch.frame.maxX+sp,y: parallelButton.frame.maxY+sp,width: bw*3, height: lowPassFilterSwitch.frame.height)
+        lowPassText.frame=CGRect(x:2*sp,y: parallelButton.frame.maxY+3*sp,width: ww, height: lowPassFilterSwitch.frame.height)
+        lowPassFilterSwitch.frame = CGRect(x:2*sp,y: lowPassText.frame.maxY ,width: bw*3, height: bh)
         lowPassFilterSwitch.selectedSegmentIndex=getUserDefault(str: "lowPassFilterCnt", ret: 4)
 
         displayMode()
