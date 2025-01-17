@@ -2137,9 +2137,9 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
             if waveTuple[i].3==1 && waveTuple[i].2==1 {//rl,framenum,disp onoff,current disp onoff
                 drawPathEye.lineWidth = 2
                 drawPathFace.lineWidth = 2
-            }else if waveTuple[i].3==1 && waveTuple[i].2==0 {
-                drawPathEye.lineWidth = 1.2//0.6
-                drawPathFace.lineWidth = 1.2//0.6
+            }else if waveTuple[i].3==1 && waveTuple[i].2==0 {//非表示
+                drawPathEye.lineWidth = 3.5//1.2
+                drawPathFace.lineWidth = 3.5//1.2
             }else if waveTuple[i].3==0 && waveTuple[i].2==1 {//表示
                 drawPathEye.lineWidth = 0.3
                 drawPathFace.lineWidth = 0.3
@@ -2147,10 +2147,10 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
                 drawPathEye.lineWidth = 0
                 drawPathFace.lineWidth = 0
             }
-            if r==4 && waveTuple[i].2==1{
+            if r==4 && waveTuple[i].2==1{//mail
                 drawPathEye.lineWidth = 1.2
                 drawPathFace.lineWidth = 1.2
-            }else if r==4 {
+            }else if r==4 {//mail
                 drawPathEye.lineWidth = 0
                 drawPathFace.lineWidth = 0
             }
@@ -2160,6 +2160,14 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
             }else{
                 UIColor.blue.setStroke()
             }
+//            if drawPathEye.lineWidth == 5{
+//                drawPathEye.lineWidth = 1.2
+//                UIColor.purple.setStroke()
+//            }
+//            if drawPathFace.lineWidth == 5{
+//                drawPathFace.lineWidth = 1.2
+//                UIColor.purple.setStroke()
+//            }
             drawPathEye.stroke()
             UIColor.black.setStroke()
             drawPathFace.stroke()
