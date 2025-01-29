@@ -12,6 +12,7 @@
 		69401B0829D4211000AADC94 /* StatementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69401B0729D4211000AADC94 /* StatementViewController.swift */; };
 		695959AD29C58CB10044BF40 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 695959AF29C58CB10044BF40 /* InfoPlist.strings */; };
 		69ACED3429B6019C004C55CB /* topImg.png in Resources */ = {isa = PBXBuildFile; fileRef = 69ACED3329B6019C004C55CB /* topImg.png */; };
+		69E85C222D49D4CB001F325A /* iCloudFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69E85C212D49D4CB001F325A /* iCloudFileManager.swift */; };
 		8E08E1C12046906400FFB255 /* ImagePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */; };
 		8E495CC6202FE7880030748C /* ParametersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E495CC5202FE7880030748C /* ParametersViewController.swift */; };
 		8EA90BE32038208200D042D0 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EA90BE22038208200D042D0 /* opencv2.framework */; };
@@ -31,6 +32,8 @@
 		69401B0729D4211000AADC94 /* StatementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementViewController.swift; sourceTree = "<group>"; };
 		695959AE29C58CB10044BF40 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		69ACED3329B6019C004C55CB /* topImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topImg.png; sourceTree = "<group>"; };
+		69E85C212D49D4CB001F325A /* iCloudFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloudFileManager.swift; sourceTree = "<group>"; };
+		69E85C232D49D570001F325A /* vHIT96daRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vHIT96daRelease.entitlements; sourceTree = "<group>"; };
 		8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewController.swift; sourceTree = "<group>"; };
 		8E495CC5202FE7880030748C /* ParametersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParametersViewController.swift; sourceTree = "<group>"; };
 		8EA90BE22038208200D042D0 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -79,8 +82,10 @@
 		8EE2C01B202F32440064ED6F /* vHIT96da */ = {
 			isa = PBXGroup;
 			children = (
+				69E85C232D49D570001F325A /* vHIT96daRelease.entitlements */,
 				8EE2C01C202F32440064ED6F /* AppDelegate.swift */,
 				8EBC227F2182D6A100EF040C /* HelpjViewController.swift */,
+				69E85C212D49D4CB001F325A /* iCloudFileManager.swift */,
 				69ACED3329B6019C004C55CB /* topImg.png */,
 				8E08E1C02046906400FFB255 /* ImagePickerViewController.swift */,
 				8EE2C020202F32440064ED6F /* Main.storyboard */,
@@ -185,6 +190,7 @@
 				8EBC22802182D6A100EF040C /* HelpjViewController.swift in Sources */,
 				8ECE3964203802750054AC0C /* opencvWrapper.mm in Sources */,
 				8EE2C01D202F32440064ED6F /* AppDelegate.swift in Sources */,
+				69E85C222D49D4CB001F325A /* iCloudFileManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +380,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = vHIT96da/vHIT96daRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0.4;

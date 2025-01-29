@@ -170,7 +170,54 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var changeModeButton2: UIButton!
     @IBOutlet weak var backwardButton: UIButton!
     
-    
+ //iCloudFileMagangeここから
+    let iCloudManager = iCloudFileManager()
+    func iCloudSaveTextFile(fileName:String,textContent:String){//使い方
+   //     let fileName = "test.txt"
+    //    let textContent = "iCloudに保存するテキスト"
+      
+        // 保存
+        iCloudManager.saveTextFile(fileName: fileName, content: textContent) { success, error in
+            DispatchQueue.main.async{
+                if success {
+                    print("✅ ファイル保存成功: \(fileName)")
+                } else {
+                    print("❌ 保存失敗: \(error?.localizedDescription ?? "不明なエラー")")
+                }
+            }
+        }
+    }
+    func iCloudLoadTextFile(fileName:String){
+        // 読み込み
+        iCloudManager.loadTextFile(fileName: fileName) { content, error in
+            if let content = content {
+                print("📄 読み込んだ内容: \(content)")
+            } else {
+                print("❌ 読み込み失敗: \(error?.localizedDescription ?? "不明なエラー")")
+            }
+        }
+    }
+    func iCloudListFiles(){
+        // ファイル一覧
+        iCloudManager.listFiles { files, error in
+            if let files = files {
+                print("📂 iCloudのファイル一覧: \(files)")
+            } else {
+                print("❌ ファイル一覧取得失敗: \(error?.localizedDescription ?? "不明なエラー")")
+            }
+        }
+    }
+    func iCloudDeleteFile(fileName:String){
+        // 削除
+        iCloudManager.deleteFile(fileName: fileName) { success, error in
+            if success {
+                print("🗑️ ファイル削除成功: \(fileName)")
+            } else {
+                print("❌ 削除失敗: \(error?.localizedDescription ?? "不明なエラー")")
+            }
+        }
+    }
+//iCloudFileManagerここまで
     
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
