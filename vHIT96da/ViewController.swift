@@ -171,59 +171,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     @IBOutlet weak var backwardButton: UIButton!
     
  //iCloudFileMagangeここから
-    let iCloudManager = iCloudFileManager()
-    func iCloudSaveTextFile(fileName:String,textContent:String){//使い方
-   //     let fileName = "test.txt"
-    //    let textContent = "iCloudに保存するテキスト"
-      
-        // 保存
-        iCloudManager.saveTextFile(fileName: fileName, content: textContent) { success, error in
-            DispatchQueue.main.async{
-                if success {
-                    print("✅ ファイル保存成功: \(fileName)")
-                } else {
-                    print("❌ 保存失敗: \(error?.localizedDescription ?? "不明なエラー")")
-                }
-            }
-        }
-    }
-    func iCloudLoadTextFile(fileName:String){
-        // 読み込み
-        iCloudManager.loadTextFile(fileName: fileName) { content, error in
-            if let content = content {
-                print("📄 読み込んだ内容: \(content)")
-            } else {
-                print("❌ 読み込み失敗: \(error?.localizedDescription ?? "不明なエラー")")
-            }
-        }
-    }
-    func iCloudListFiles(){
-        // ファイル一覧
-        iCloudManager.listFiles { files, error in
-            if let files = files {
-                print("📂 iCloudのファイル一覧: \(files)")
-            } else {
-                print("❌ ファイル一覧取得失敗: \(error?.localizedDescription ?? "不明なエラー")")
-            }
-        }
-    }
-    func iCloudDeleteFile(fileName:String){
-        // 削除
-        iCloudManager.deleteFile(fileName: fileName) { success, error in
-            if success {
-                print("🗑️ ファイル削除成功: \(fileName)")
-            } else {
-                print("❌ 削除失敗: \(error?.localizedDescription ?? "不明なエラー")")
-            }
-        }
-    }
+    private let fileManager = iCloudFileManager()
+    private let fileName = "example.txt"
+
+    func saveText() {
+         let text = "textView.text else { return }"
+         fileManager.saveText(text, to: fileName)
+     }
+     
+     func loadText() {
+         if let loadedText = fileManager.loadText(from: fileName) {
+             print("icloudDate:",loadedText)
+         }
+     }
 //iCloudFileManagerここまで
     
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
         
         setVideoButtons(mode: true)
-        
         showBoxies(f: false)
         videoPlayMode=0
         
@@ -235,22 +201,22 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     
-    func forwardBackwardButton(mode:Int){
-        if checkDispMode() != 0{
-            return
-        }
-        startTimerVideo()
-        if videoDate.count == 0{
-            return
-        }
-        if videoPlayMode==mode{
-            videoPlayMode=0
-            return
-        }
-        showBoxies(f: false)
-        videoPlayer.pause()
-        videoPlayMode=mode
-    }
+//    func forwardBackwardButton(mode:Int){
+//        if checkDispMode() != 0{
+//            return
+//        }
+//        startTimerVideo()
+//        if videoDate.count == 0{
+//            return
+//        }
+//        if videoPlayMode==mode{
+//            videoPlayMode=0
+//            return
+//        }
+//        showBoxies(f: false)
+//        videoPlayer.pause()
+//        videoPlayMode=mode
+//    }
     @IBAction func onBackwardButton(_ sender: Any) {
         videoPlayer.pause()
         videoPlayMode=0
