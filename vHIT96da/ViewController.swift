@@ -172,23 +172,24 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     
  //iCloudFileMagangeここから
     private let fileManager = iCloudFileManager()
-    private let fileName = "example.txt"
-
-    func saveText() {
-         let text = "textView.text else { return }"
-         fileManager.saveText(text, to: fileName)
-     }
-     
-     func loadText() {
-         if let loadedText = fileManager.loadText(from: fileName) {
-             print("icloudDate:",loadedText)
-         }
-     }
+    private let fileName = "vHIT96da_GyroData.txt"
+    
+    func saveText2iCloud(text:String) {
+        fileManager.saveText(text, to: fileName)
+    }
+    
+    func loadText2iCloud()->String {
+        if let loadedText = fileManager.loadText(from: fileName) {
+            return loadedText
+        }
+        return ""
+    }
 //iCloudFileManagerここまで
     
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
-        
+//       saveText2iCloud(text: "watasinonamaehakurodesuyo黒田")
+//        print(loadText2iCloud())
         setVideoButtons(mode: true)
         showBoxies(f: false)
         videoPlayMode=0

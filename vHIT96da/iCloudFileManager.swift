@@ -39,6 +39,8 @@ class iCloudFileManager {
         let fileURL = iCloudURL.appendingPathComponent(fileName)
         do {
             let text = try String(contentsOf: fileURL, encoding: .utf8)
+            print("File loaded: \(fileURL)")
+
             return text
         } catch {
             print("Failed to load file: \(error)")
