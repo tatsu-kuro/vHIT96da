@@ -666,13 +666,15 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         // 録画が正常に終了した場合、ビデオをアルバムに保存
         recordedFlag=true
+        let appendData = "Some additional data to append koredewa?2"
+        appendTextData(to:outputFileURL, textData: appendData)
         saveToCustomAlbum(url: outputFileURL)
         // 動画のFPSとDurationを取得
 //        let asset = AVAsset(url: outputFileURL)
 //        setVideoProperties(from: asset)
 //        let duration = asset.duration
         //          let durationSeconds = CMTimeGetSeconds(duration)
-        
+   
         //          var fps: Float = 0
         //          if let videoTrack = asset.tracks(withMediaType: .video).first {
         //              fps = videoTrack.nominalFrameRate
@@ -682,7 +684,34 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //          // FPSとDurationを出力
         //           print("動画の再生時間: \(duration)秒")
     }
-    
+    // MP4 ファイルにデータを追記
+     
+    func appendTextData(to fileURL: URL, textData: String) -> Bool {
+        let header = "<vhit96da_data>"
+        let dataToAppend = header + textData
+        
+        // Data型に変換
+        guard let data = dataToAppend.data(using: .utf8) else {
+            print("テキストデータをエンコードできません")
+            return false
+        }
+        
+        // 末尾にデータを追加
+        return appendData(to: fileURL, data: data)
+    }
+
+    func appendData(to fileURL: URL, data: Data) -> Bool {
+        do {
+            let fileHandle = try FileHandle(forWritingTo: fileURL)
+            fileHandle.seekToEndOfFile()
+            fileHandle.write(data)
+            fileHandle.closeFile()
+            return true
+        } catch {
+            print("エラー: \(error.localizedDescription)")
+            return false
+        }
+    }
      // カスタムアルバムに保存
      func saveToCustomAlbum(url: URL) {
          // アルバム名

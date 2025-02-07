@@ -184,7 +184,85 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
         return ""
     }
-//iCloudFileManagerここまで
+ //icloudFileManageここまで
+//末尾にデータをくっつける方法・ここから
+    func appendTextData(to fileURL: URL, textData: String) -> Bool {
+        let header = "<vhit96da_data>"
+        let dataToAppend = header + textData
+        
+        // Data型に変換
+        guard let data = dataToAppend.data(using: .utf8) else {
+            print("テキストデータをエンコードできません")
+            return false
+        }
+        
+        // 末尾にデータを追加
+        return appendData(to: fileURL, data: data)
+    }
+
+    func appendData(to fileURL: URL, data: Data) -> Bool {
+        do {
+            let fileHandle = try FileHandle(forWritingTo: fileURL)
+            fileHandle.seekToEndOfFile()
+            fileHandle.write(data)
+            fileHandle.closeFile()
+            return true
+        } catch {
+            print("エラー: \(error.localizedDescription)")
+            return false
+        }
+    }
+    func readTail(){
+        let fileURL = URL(fileURLWithPath: "input.mp4")  // 任意のMP4ファイル
+        let maxDataLength = 10240  // 最大10KB（10 * 1024バイト）
+        
+        // 末尾からデータを読み取る
+        if let extractedText = readAppendedTextData(from: fileURL, maxDataLength: maxDataLength) {
+            print("読み取ったデータ: \(extractedText)")
+        } else {
+            print("データの読み取りに失敗しました")
+        }
+    }
+    func readAppendedTextData(from fileURL: URL, maxDataLength: Int = 10240) -> String? {
+        do {
+            let fileHandle = try FileHandle(forReadingFrom: fileURL)
+            
+            // ファイルの末尾に近い位置から最大maxDataLengthバイトを読み込む
+            let fileLength = fileHandle.seekToEndOfFile()  // ファイルの長さを取得
+            let readLength = min(fileLength, UInt64(maxDataLength))  // 最大10KBまで読み取る
+            
+            fileHandle.seek(toFileOffset: fileLength - readLength)  // 末尾から指定した長さ分読み込む
+            let fileData = fileHandle.readData(ofLength: Int(readLength))
+            fileHandle.closeFile()
+            
+            // 読み込んだデータから文字列に変換
+            if let fileString = String(data: fileData, encoding: .utf8) {
+                // ヘッダーを検索してその後のデータを取得
+                if let range = fileString.range(of: "<vhit96da_data>") {
+                    let dataAfterHeader = fileString[range.upperBound...]  // ヘッダー以降のデータを取得
+                    return String(dataAfterHeader)
+                } else {
+                    print("ヘッダーが見つかりません")
+                    return nil
+                }
+            } else {
+                print("ファイルの読み取りに失敗しました")
+                return nil
+            }
+        } catch {
+            print("エラー: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    func getFileURL(from asset: AVAsset) -> URL? {
+        if let urlAsset = asset as? AVURLAsset {
+            return urlAsset.url  // AVURLAsset から元のファイル URL を取得
+        } else {
+            print("AVAsset は AVURLAsset ではありません")
+            return nil
+        }
+    }
+//末尾にデータをくっ付ける方法・ここまで
     
     var videoPlayMode:Int = 0//0:playerに任せる 1:backward 2:forward
     @IBAction func onPlayButton(_ sender: Any) {
@@ -308,8 +386,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var initialFlag:Bool=true//:Int = 0
     func playCurrentVideo(){//nextVideo
         //        print("videoCurrent:",videoCurrent, videoPHAsset.count,videoDate.count)
+//        let asset1 = iroiro.requestAVAsset(asset: videoPHAsset[56])
+//        let fileURL = getFileURL(from: asset1!)!
+//        
+//        func appendTextData(to:fileURL, textData: "kurodatatasuaki")
+//        let urlAsset = asset1 as? AVURLAsset
+//        let fileURL = urlAsset!.url
+//            print("url:",fileURL)
+//        print("temptext++++++:",readAppendedTextData(from: fileURL, maxDataLength: 1024))
+//        appendTextData(to: fileURL, textData: "kurodatatasuaki")
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
-        //        print("avasset:",avasset)
+//               print("avasset:",avasset)
+        let fileURL = getFileURL(from:avasset!)!
+        
+        if let extractedText = readAppendedTextData(from: fileURL, maxDataLength: 1000) {
+            print("読み取ったデータ: \(extractedText)")
+        } else {
+            print("データの読み取りに失敗しました")
+        }
+    
+    
+        
+//        print(readAppendedTextData(from: fileURL,maxDataLength: 124) as Any)
         let videoDuration=Float(CMTimeGetSeconds(avasset!.duration))
         let playerItem: AVPlayerItem = AVPlayerItem(asset: avasset!)
         currentVideoFPS=avasset!.tracks.first!.nominalFrameRate
