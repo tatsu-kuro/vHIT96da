@@ -13,7 +13,8 @@ import Photos
 import CoreMotion
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
     let iroiro = myFunctions(albumName:"vHIT96da")
-    let TempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
+    let tempFilePath: String = "\(NSTemporaryDirectory())temp.mp4"
+    let TEMPFilePath: String = "\(NSTemporaryDirectory())TEMP.mp4"
     let vHIT96da:String="vHIT96da"
     var recordedFlag:Bool = false
     let motionManager = CMMotionManager()
@@ -580,7 +581,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
                  }
     //         }
     }
-    
+    func getFileURL(from filePath: String) -> URL {
+        return URL(fileURLWithPath: filePath)
+    }
     @IBAction func onClickStartButton(_ sender: Any) {
 
         sound()
@@ -590,9 +593,37 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         sleep(3)
         UIApplication.shared.isIdleTimerDisabled = true//スリープしない
         sound()
-        try? FileManager.default.removeItem(atPath: TempFilePath)
         
-        let fileURL = NSURL(fileURLWithPath: TempFilePath)
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: tempFilePath) {
+            do {
+                // 🗑 ファイルを削除
+                try fileManager.removeItem(at: getFileURL(from: tempFilePath))
+                print("✅ 削除成功: \(tempFilePath)")
+            } catch {
+                print("❌ 削除失敗: \(error.localizedDescription)")
+            }
+        } else {
+            print("⚠️ 指定したファイルは存在しません: \(tempFilePath)")
+        }
+        if fileManager.fileExists(atPath: TEMPFilePath) {
+            do {
+                // 🗑 ファイルを削除
+                try fileManager.removeItem(at: getFileURL(from: TEMPFilePath))
+                print("✅ 削除成功: \(TEMPFilePath)")
+            } catch {
+                print("❌ 削除失敗: \(error.localizedDescription)")
+            }
+        } else {
+            print("⚠️ 指定したファイルは存在しません: \(TEMPFilePath)")
+        }
+        
+        
+        
+        
+//        try? FileManager.default.removeItem(atPath: TempFilePath)
+        
+        let fileURL = NSURL(fileURLWithPath: tempFilePath)
         //下３行の様にしたら、ビデオとジャイロのズレが安定した。zure:10
         sleep(UInt32(1.0))
         fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
@@ -664,11 +695,18 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             stopButton.isHidden=true
             performSegue(withIdentifier: "fromRecordToMain", sender: self)
         }
+        print("outputFileURL: \(outputFileURL)")
+        let fileURL=getFileURL(from: TEMPFilePath)
+        let appendData = "Some additional data to append koredewa-kurd"
+
+        appendFixedSizeGyroDataToMP4(originalURL:outputFileURL, newFileURL:fileURL, gyroData:appendData)
+
+//        print("tempFileURL: \(getFileURL(from: tempFilePath))")
+//        print("TEMPFileURL: \(getFileURL(from: TEMPFilePath))")
         // 録画が正常に終了した場合、ビデオをアルバムに保存
         recordedFlag=true
-        let appendData = "Some additional data to append koredewa?2"
-        appendTextData(to:outputFileURL, textData: appendData)
-        saveToCustomAlbum(url: outputFileURL)
+///appendTextData(to:outputFileURL, textData: appendData)
+        saveToCustomAlbum(url: fileURL)
         // 動画のFPSとDurationを取得
 //        let asset = AVAsset(url: outputFileURL)
 //        setVideoProperties(from: asset)
@@ -686,32 +724,68 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     }
     // MP4 ファイルにデータを追記
      
-    func appendTextData(to fileURL: URL, textData: String) -> Bool {
-        let header = "<vhit96da_data>"
-        let dataToAppend = header + textData
+
+    // 🎬 4KB 固定サイズの `<gyro-data>` を MP4 の末尾に書き込む
+    func appendFixedSizeGyroDataToMP4(originalURL:URL , newFileURL: URL, gyroData: String) {
+//        let fileManager = FileManager.defaul
+//        
+//        // 📂 アプリの Documents ディレクトリ取得
+//        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+//            print("❌ Documents ディレクトリが見つかりません")
+//            return
+//        }
+//        
+//        let originalURL = documentsDirectory.appendingPathComponent(originalFileName)
+//        let newFileURL = documentsDirectory.appendingPathComponent(newFileName)
         
-        // Data型に変換
-        guard let data = dataToAppend.data(using: .utf8) else {
-            print("テキストデータをエンコードできません")
-            return false
+        do {
+            // 🔍 元の MP4 ファイルのデータを読み込む
+            let videoData = try Data(contentsOf: originalURL)
+            
+            // 📝 `<gyro-data>` ヘッダー付きのデータを作成
+            let formattedGyroData = "<gyro-data>\n\(gyroData)\n</gyro-data>"
+            
+            // 🔄 `UTF-8` でエンコードし、4KB に調整
+            var textData = formattedGyroData.data(using: .utf8) ?? Data()
+            
+            if textData.count > 4096 {
+                print("⚠️ Gyro データが 4KB を超えています。切り詰めます。")
+                textData = textData.prefix(4096)
+            } else if textData.count < 4096 {
+                let padding = Data(repeating: 0, count: 4096 - textData.count)
+                textData.append(padding)
+            }
+            
+            // 🔗 MP4 データ + 4KB の Gyro データを結合
+            var combinedData = videoData
+            combinedData.append(textData)
+            
+            // 💾 新しい MP4 ファイルとして保存
+            try combinedData.write(to: newFileURL)
+            
+            print("✅ \(newFileURL) を作成しました")
+
+        } catch {
+            print("❌ エラー: \(error.localizedDescription)")
         }
-        
-        // 末尾にデータを追加
-        return appendData(to: fileURL, data: data)
     }
 
-    func appendData(to fileURL: URL, data: Data) -> Bool {
-        do {
-            let fileHandle = try FileHandle(forWritingTo: fileURL)
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(data)
-            fileHandle.closeFile()
-            return true
-        } catch {
-            print("エラー: \(error.localizedDescription)")
-            return false
-        }
-    }
+    // 🛠 テスト実行
+//    func testAppendFixedSizeGyroDataToMP4() {
+//        let originalFileName = "temp.mp4"
+//        let newFileName = "temp2.mp4"
+//
+//        // 🔄 追加するジャイロデータ（例）
+//        let gyroData = """
+//        Time: 2025-02-08T12:34:56Z
+//        X: 0.123
+//        Y: -0.456
+//        Z: 0.789
+//        """
+//
+//        appendFixedSizeGyroDataToMP4(originalFileName: originalFileName, newFileName: newFileName, gyroData: gyroData)
+//    }
+
      // カスタムアルバムに保存
      func saveToCustomAlbum(url: URL) {
          // アルバム名

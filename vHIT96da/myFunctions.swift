@@ -299,8 +299,11 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
             }
         }
     }
-
-    func recordStart(){
+    func getFileURL(from filePath: String) -> URL {
+        return URL(fileURLWithPath: filePath)
+    }
+    func recordStart1(){
+        print("recordStart!!!!!!!")
         if !UserDefaults.standard.bool(forKey: "cameraON"){
             return
         }
@@ -313,9 +316,21 @@ class myFunctions: NSObject, AVCaptureFileOutputRecordingDelegate{
             AudioServicesPlaySystemSound(soundIdx)
             }
         }
-        
-        
-        try? FileManager.default.removeItem(atPath: tempFilePath)
+        let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: tempFilePath) {
+               do {
+                   // 🗑 ファイルを削除
+                   try fileManager.removeItem(at: getFileURL(from: tempFilePath))
+                   print("✅ 削除成功: \(tempFilePath)")
+               } catch {
+                   print("❌ 削除失敗: \(error.localizedDescription)")
+               }
+           } else {
+               print("⚠️ 指定したファイルは存在しません: \(tempFilePath)")
+           }
+//
+//        
+//        try? FileManager.default.removeItem(atPath: tempFilePath)
         let fileURL = NSURL(fileURLWithPath: tempFilePath)
         fileOutput.startRecording(to: fileURL as URL, recordingDelegate: self)
     }

@@ -186,74 +186,65 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     }
  //icloudFileManageここまで
 //末尾にデータをくっつける方法・ここから
-    func appendTextData(to fileURL: URL, textData: String) -> Bool {
-        let header = "<vhit96da_data>"
-        let dataToAppend = header + textData
-        
-        // Data型に変換
-        guard let data = dataToAppend.data(using: .utf8) else {
-            print("テキストデータをエンコードできません")
-            return false
-        }
-        
-        // 末尾にデータを追加
-        return appendData(to: fileURL, data: data)
-    }
+   
 
-    func appendData(to fileURL: URL, data: Data) -> Bool {
-        do {
-            let fileHandle = try FileHandle(forWritingTo: fileURL)
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(data)
-            fileHandle.closeFile()
-            return true
-        } catch {
-            print("エラー: \(error.localizedDescription)")
-            return false
-        }
-    }
-    func readTail(){
-        let fileURL = URL(fileURLWithPath: "input.mp4")  // 任意のMP4ファイル
-        let maxDataLength = 10240  // 最大10KB（10 * 1024バイト）
+    // 🎬 MP4 ファイルの末尾 4KB から `<gyro-data>` を抽出
+    func readGyroData(from fileURL: URL) -> String? {
+        let fileManager = FileManager.default
         
-        // 末尾からデータを読み取る
-        if let extractedText = readAppendedTextData(from: fileURL, maxDataLength: maxDataLength) {
-            print("読み取ったデータ: \(extractedText)")
-        } else {
-            print("データの読み取りに失敗しました")
-        }
-    }
-    func readAppendedTextData(from fileURL: URL, maxDataLength: Int = 10240) -> String? {
         do {
+            // 🔍 ファイルサイズを取得
+            let fileSize = try fileManager.attributesOfItem(atPath: fileURL.path)[.size] as? Int ?? 0
+            if fileSize < 4096 {
+                print("❌ ファイルサイズが 4KB 未満のため、Gyro データが含まれていません")
+                return nil
+            }
+
+            // 🔄 末尾 4KB のデータを読み込む
             let fileHandle = try FileHandle(forReadingFrom: fileURL)
-            
-            // ファイルの末尾に近い位置から最大maxDataLengthバイトを読み込む
-            let fileLength = fileHandle.seekToEndOfFile()  // ファイルの長さを取得
-            let readLength = min(fileLength, UInt64(maxDataLength))  // 最大10KBまで読み取る
-            
-            fileHandle.seek(toFileOffset: fileLength - readLength)  // 末尾から指定した長さ分読み込む
-            let fileData = fileHandle.readData(ofLength: Int(readLength))
+            try fileHandle.seek(toOffset: UInt64(fileSize - 4096))
+            let gyroDataChunk = fileHandle.readData(ofLength: 4096)
             fileHandle.closeFile()
-            
-            // 読み込んだデータから文字列に変換
-            if let fileString = String(data: fileData, encoding: .utf8) {
-                // ヘッダーを検索してその後のデータを取得
-                if let range = fileString.range(of: "<vhit96da_data>") {
-                    let dataAfterHeader = fileString[range.upperBound...]  // ヘッダー以降のデータを取得
-                    return String(dataAfterHeader)
+
+            // 🔄 Data を UTF-8 文字列に変換（`0` パディングを削除）
+            if var gyroDataString = String(data: gyroDataChunk, encoding: .utf8) {
+                gyroDataString = gyroDataString.trimmingCharacters(in: .controlCharacters)
+
+                // 🔍 `<gyro-data>` 部分を抽出
+                if let rangeStart = gyroDataString.range(of: "<gyro-data>"),
+                   let rangeEnd = gyroDataString.range(of: "</gyro-data>") {
+                    
+                    let extractedData = gyroDataString[rangeStart.lowerBound..<rangeEnd.upperBound]
+                    return String(extractedData)
                 } else {
-                    print("ヘッダーが見つかりません")
+                    print("⚠️ `<gyro-data>` タグが見つかりません")
                     return nil
                 }
             } else {
-                print("ファイルの読み取りに失敗しました")
+                print("❌ ファイルデータのデコードに失敗しました")
                 return nil
             }
         } catch {
-            print("エラー: \(error.localizedDescription)")
+            print("❌ エラー: \(error.localizedDescription)")
             return nil
         }
     }
+
+
+    // 🛠 テスト実行
+//    func testReadFixedSizeGyroData() {
+//        let fileName = "temp2.mp4"
+//
+//        if let gyroData = readFixedSizeGyroData(from: fileName) {
+//            print("✅ 抽出した Gyro データ:\n\(gyroData)")
+//        } else {
+//            print("❌ Gyro データの抽出に失敗しました")
+//        }
+//    }
+
+    // 🚀 実行
+//    testReadFixedSizeGyroData()
+
     func getFileURL(from asset: AVAsset) -> URL? {
         if let urlAsset = asset as? AVURLAsset {
             return urlAsset.url  // AVURLAsset から元のファイル URL を取得
@@ -399,7 +390,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //               print("avasset:",avasset)
         let fileURL = getFileURL(from:avasset!)!
         
-        if let extractedText = readAppendedTextData(from: fileURL, maxDataLength: 1000) {
+        if let extractedText = readGyroData(from: fileURL){//(from: fileURL, maxDataLength: 1000) {
             print("読み取ったデータ: \(extractedText)")
         } else {
             print("データの読み取りに失敗しました")
