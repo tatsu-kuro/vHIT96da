@@ -657,37 +657,67 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //同じ名前のアルバムは一つしかないはずなので最初のオブジェクトを使用
         return assetCollections.object(at:0)
     }
-/*    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        
-        if albumExists(albumName: vHIT96da)==true{
-            recordedFlag=true
-            PHPhotoLibrary.shared().performChanges({ [self] in
-                //let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: avAsset)
-                let assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: outputFileURL)!
-                let albumChangeRequest = PHAssetCollectionChangeRequest(for: getPHAssetcollection(albumName: vHIT96da))
-                let placeHolder = assetRequest.placeholderForCreatedAsset
-                albumChangeRequest?.addAssets([placeHolder!] as NSArray)
-                //imageID = assetRequest.placeholderForCreatedAsset?.localIdentifier
-                print("file add to album")
-            }) { [self] (isSuccess, error) in
-                if isSuccess {
-                    // 保存した画像にアクセスする為のimageIDを返却
-                    print("success")
-                    self.saved2album=true
-                } else {
-                    print("fail")
-                    self.saved2album=true
-                }
-            }
-        }else{
-            startButton.isHidden=true
-            stopButton.isHidden=true
-            //上二つをunwindでチェック
-            //アプリ起動中にアルバムを消したら、保存せずに戻る。
-            //削除してもどこかにあるようで、参照URLは生きていて、再生できる。
+    func requestAVAsset(asset: PHAsset)-> AVAsset? {
+        guard asset.mediaType == .video else { return nil }
+        let phVideoOptions = PHVideoRequestOptions()
+        phVideoOptions.version = .original
+        let group = DispatchGroup()
+        let imageManager = PHImageManager.default()
+        var avAsset: AVAsset?
+        group.enter()
+        imageManager.requestAVAsset(forVideo: asset, options: phVideoOptions) { (asset, _, _) in
+            avAsset = asset
+            group.leave()
         }
-        performSegue(withIdentifier: "fromRecordToMain", sender: self)
-    }*/
+        group.wait()
+        return avAsset
+    }
+     func getFPS(from fileURL: URL) -> Float? {
+        let asset = AVURLAsset(url: fileURL)
+        
+        // 🎥 動画トラックを取得
+        if let track = asset.tracks(withMediaType: .video).first {
+            return track.nominalFrameRate // FPS（フレームレート）を取得
+        }
+        
+        return nil
+    }
+    var kalVs:[[CGFloat]]=[[0.0001 ,0.001 ,0,0,0],[0.0001 ,0.001 ,0,0,0],
+                           [0.0001 ,0.001 ,0,0,0],[0.0001 ,0.001 ,0,0,0],
+                           [0.0001 ,0.001 ,0,0,0],[0.0001 ,0.001 ,0,0,0],
+                           [0.0001 ,0.001 ,0,0,0],[0.0001 ,0.001 ,0,0,0]]
+    func KalmanS(Q:CGFloat,R:CGFloat,num:Int){
+        kalVs[num][4] = (kalVs[num][3] + Q) / (kalVs[num][3] + Q + R);
+        kalVs[num][3] = R * (kalVs[num][3] + Q) / (R + kalVs[num][3] + Q);
+    }
+    func Kalman(value:CGFloat,num:Int)->CGFloat{
+        KalmanS(Q:kalVs[num][0],R:kalVs[num][1],num:num);
+        let result = kalVs[num][2] + (value - kalVs[num][2]) * kalVs[num][4];
+        kalVs[num][2] = result;
+        return result;
+    }
+    func KalmanInit(){
+        for i in 0...6{
+            kalVs[i][2]=0
+            kalVs[i][3]=0
+            kalVs[i][4]=0
+        }
+    }
+    var gyroHFiltered = Array<CGFloat>()//.removeAll()
+    var gyroVFiltered = Array<CGFloat>()//.removeAll()
+
+    func getGyroCSV()->String{//gyroDataをCSVに変換
+        var text:String=""
+        for i in 0..<gyroHFiltered.count{
+            text += String(Int(gyroHFiltered[i]*100)) + ","
+            text += String(Int(gyroVFiltered[i]*100)) + ","
+            //            print(text,str,gyroFiltered[i])
+        }
+        //        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
+//        let txt:NSString = text as NSString
+        //        print("elapsed time:",CFAbsoluteTimeGetCurrent()-Start,gyroFiltered.count)
+        return text
+    }
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
             print("録画エラー: \(error.localizedDescription)")
@@ -697,16 +727,70 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
         print("outputFileURL: \(outputFileURL)")
         let fileURL=getFileURL(from: TEMPFilePath)
-        let appendData = "Some additional data to append koredewa-kurd"
+        
+        
+        var dH:Double=0//lateral
+        var dV:Double=0//vertical
+        var gyroH = Array<Double>()//Holizontal
+        var gyroV = Array<Double>()//vertical
+        var gyroTime = Array<Double>()
+        KalmanInit()
+        gyroHFiltered.removeAll()
+        gyroVFiltered.removeAll()
+          
+          for i in 0...gyro.count/3-3{//-2でエラーなので、-3としてみた
+            gyroTime.append(gyro[i*3])
+            dH=Double(Kalman(value:CGFloat(gyro[i*3+1]*10),num:0))
+            dV=Double(Kalman(value:CGFloat(gyro[i*3+2]*10),num:1))
+            gyroH.append(-dH)
+            gyroV.append(-dV)
+        }
+        //gyroは10msごとに拾ってある.合わせる
+        //これをvideoのフレーム数に合わせる
+     
+//         let videoCount=Controller.videoCount
+//         ビデオが出来るまで待つ
+//         while videoDura.count==videoCount{
+//             sleep(UInt32(0.5))
+//         }
+        
+//         videoCurrent=videoDura.count-1
+//         showVideoIroiro(num:0)
+        var fps=getFPS(from: outputFileURL)
+        if fps! < 200.0{
+            fps! *= 2.0
+        }
+        let framecount=Int(Float(gyroH.count)*(fps!)/100.0)
+        var lastJ:Int=0
+        //                let t1=CFAbsoluteTimeGetCurrent()
+        for i in 0...framecount+500{//100を尻に付けないとgyrodataが変な値になる
+            let gn=Double(i)/Double(fps!)//iフレーム目の秒数
+            var getj:Int=0
+            for j in lastJ...gyroH.count-1{
+                if gyroTime[j] >= gn{//secondの値が入っている。
+                    getj=j//越えるところを見つける
+                    lastJ=j
+                    break
+                }
+            }
+            gyroHFiltered.append(Kalman(value:CGFloat(gyroH[getj]),num:2))
+            gyroVFiltered.append(Kalman(value:CGFloat(gyroV[getj]),num: 3))
+        }
+        let appendCSVData=getGyroCSV()//csv文字列
+        //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
+        //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
+//        let appendData = "Some additional data append 可変長"
 
-        appendFixedSizeGyroDataToMP4(originalURL:outputFileURL, newFileURL:fileURL, gyroData:appendData)
-
-//        print("tempFileURL: \(getFileURL(from: tempFilePath))")
-//        print("TEMPFileURL: \(getFileURL(from: TEMPFilePath))")
+        appendVariableSizeGyroDataToMP4(originalURL:outputFileURL, newFileURL:fileURL, gyroData:appendCSVData)
+//        print("fileFPS:",getFPS(from: outputFileURL) as Any)
+//        print("fileFPSnew:",getFPS(from: fileURL) as Any)
         // 録画が正常に終了した場合、ビデオをアルバムに保存
         recordedFlag=true
-///appendTextData(to:outputFileURL, textData: appendData)
         saveToCustomAlbum(url: fileURL)
+        
+        
+  
+        
         // 動画のFPSとDurationを取得
 //        let asset = AVAsset(url: outputFileURL)
 //        setVideoProperties(from: asset)
@@ -722,22 +806,34 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         //          // FPSとDurationを出力
         //           print("動画の再生時間: \(duration)秒")
     }
+  
     // MP4 ファイルにデータを追記
-     
-
+    func appendVariableSizeGyroDataToMP4(originalURL: URL, newFileURL: URL, gyroData: String) {
+        do {
+            // 🔍 元の MP4 ファイルのデータを読み込む
+            let videoData = try Data(contentsOf: originalURL)
+            
+            // 📝 `<gyro-data>` ヘッダー付きのデータを作成
+            let formattedGyroData = "<gyro-data>\n\(gyroData)\n</gyro-data>"
+            
+            // 🔄 `UTF-8` でエンコード
+            let textData = formattedGyroData.data(using: .utf8) ?? Data()
+            
+            // 🔗 MP4 データ + 可変長の Gyro データを結合
+            var combinedData = videoData
+            combinedData.append(textData)
+            
+            // 💾 新しい MP4 ファイルとして保存
+            try combinedData.write(to: newFileURL)
+            
+            print("✅ \(newFileURL) を作成しました")
+            
+        } catch {
+            print("❌ エラー: \(error.localizedDescription)")
+        }
+    }
     // 🎬 4KB 固定サイズの `<gyro-data>` を MP4 の末尾に書き込む
     func appendFixedSizeGyroDataToMP4(originalURL:URL , newFileURL: URL, gyroData: String) {
-//        let fileManager = FileManager.defaul
-//        
-//        // 📂 アプリの Documents ディレクトリ取得
-//        guard let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-//            print("❌ Documents ディレクトリが見つかりません")
-//            return
-//        }
-//        
-//        let originalURL = documentsDirectory.appendingPathComponent(originalFileName)
-//        let newFileURL = documentsDirectory.appendingPathComponent(newFileName)
-        
         do {
             // 🔍 元の MP4 ファイルのデータを読み込む
             let videoData = try Data(contentsOf: originalURL)
@@ -769,22 +865,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             print("❌ エラー: \(error.localizedDescription)")
         }
     }
-
-    // 🛠 テスト実行
-//    func testAppendFixedSizeGyroDataToMP4() {
-//        let originalFileName = "temp.mp4"
-//        let newFileName = "temp2.mp4"
-//
-//        // 🔄 追加するジャイロデータ（例）
-//        let gyroData = """
-//        Time: 2025-02-08T12:34:56Z
-//        X: 0.123
-//        Y: -0.456
-//        Z: 0.789
-//        """
-//
-//        appendFixedSizeGyroDataToMP4(originalFileName: originalFileName, newFileName: newFileName, gyroData: gyroData)
-//    }
 
      // カスタムアルバムに保存
      func saveToCustomAlbum(url: URL) {

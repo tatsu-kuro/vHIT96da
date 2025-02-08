@@ -189,46 +189,46 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
    
 
     // 🎬 MP4 ファイルの末尾 4KB から `<gyro-data>` を抽出
-    func readGyroData(from fileURL: URL) -> String? {
-        let fileManager = FileManager.default
-        
-        do {
-            // 🔍 ファイルサイズを取得
-            let fileSize = try fileManager.attributesOfItem(atPath: fileURL.path)[.size] as? Int ?? 0
-            if fileSize < 4096 {
-                print("❌ ファイルサイズが 4KB 未満のため、Gyro データが含まれていません")
-                return nil
-            }
-
-            // 🔄 末尾 4KB のデータを読み込む
-            let fileHandle = try FileHandle(forReadingFrom: fileURL)
-            try fileHandle.seek(toOffset: UInt64(fileSize - 4096))
-            let gyroDataChunk = fileHandle.readData(ofLength: 4096)
-            fileHandle.closeFile()
-
-            // 🔄 Data を UTF-8 文字列に変換（`0` パディングを削除）
-            if var gyroDataString = String(data: gyroDataChunk, encoding: .utf8) {
-                gyroDataString = gyroDataString.trimmingCharacters(in: .controlCharacters)
-
-                // 🔍 `<gyro-data>` 部分を抽出
-                if let rangeStart = gyroDataString.range(of: "<gyro-data>"),
-                   let rangeEnd = gyroDataString.range(of: "</gyro-data>") {
-                    
-                    let extractedData = gyroDataString[rangeStart.lowerBound..<rangeEnd.upperBound]
-                    return String(extractedData)
-                } else {
-                    print("⚠️ `<gyro-data>` タグが見つかりません")
-                    return nil
-                }
-            } else {
-                print("❌ ファイルデータのデコードに失敗しました")
-                return nil
-            }
-        } catch {
-            print("❌ エラー: \(error.localizedDescription)")
-            return nil
-        }
-    }
+//    func readGyroData(from fileURL: URL) -> String? {
+//        let fileManager = FileManager.default
+//        
+//        do {
+//            // 🔍 ファイルサイズを取得
+//            let fileSize = try fileManager.attributesOfItem(atPath: fileURL.path)[.size] as? Int ?? 0
+//            if fileSize < 4096 {
+//                print("❌ ファイルサイズが 4KB 未満のため、Gyro データが含まれていません")
+//                return nil
+//            }
+//
+//            // 🔄 末尾 4KB のデータを読み込む
+//            let fileHandle = try FileHandle(forReadingFrom: fileURL)
+//            try fileHandle.seek(toOffset: UInt64(fileSize - 4096))
+//            let gyroDataChunk = fileHandle.readData(ofLength: 4096)
+//            fileHandle.closeFile()
+//
+//            // 🔄 Data を UTF-8 文字列に変換（`0` パディングを削除）
+//            if var gyroDataString = String(data: gyroDataChunk, encoding: .utf8) {
+//                gyroDataString = gyroDataString.trimmingCharacters(in: .controlCharacters)
+//
+//                // 🔍 `<gyro-data>` 部分を抽出
+//                if let rangeStart = gyroDataString.range(of: "<gyro-data>"),
+//                   let rangeEnd = gyroDataString.range(of: "</gyro-data>") {
+//                    
+//                    let extractedData = gyroDataString[rangeStart.lowerBound..<rangeEnd.upperBound]
+//                    return String(extractedData)
+//                } else {
+//                    print("⚠️ `<gyro-data>` タグが見つかりません")
+//                    return nil
+//                }
+//            } else {
+//                print("❌ ファイルデータのデコードに失敗しました")
+//                return nil
+//            }
+//        } catch {
+//            print("❌ エラー: \(error.localizedDescription)")
+//            return nil
+//        }
+//    }
 
 
     // 🛠 テスト実行
@@ -375,6 +375,40 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
     var eyeWs = [[CGFloat]](repeating:[CGFloat](repeating:0,count:125),count:80)
     var gyroWs = [[CGFloat]](repeating:[CGFloat](repeating:0,count:125),count:80)
     var initialFlag:Bool=true//:Int = 0
+    
+    
+    func readGyroDataFromMP4(fileURL: URL) -> String? {
+        do {
+            // 🔍 MP4 ファイルのデータを読み込む
+            let fileData = try Data(contentsOf: fileURL)
+            
+            // 📝 `<gyro-data>` タグを探す
+            if let gyroDataStartRange = fileData.range(of: "<gyro-data>\n".data(using: .utf8)!) {
+                let gyroDataStartIndex = gyroDataStartRange.upperBound
+                
+                if let gyroDataEndRange = fileData.range(of: "\n</gyro-data>".data(using: .utf8)!) {
+                    let gyroDataEndIndex = gyroDataEndRange.lowerBound
+                    
+                    // 📝 Gyro データ部分を切り出し
+                    let gyroData = fileData[gyroDataStartIndex..<gyroDataEndIndex]
+                    
+                    // 🔄 UTF-8 でデコード
+                    if let gyroDataString = String(data: gyroData, encoding: .utf8) {
+                        return gyroDataString
+                    }
+                }
+            }
+            
+            print("⚠️ Gyro データが見つかりませんでした。")
+            return nil
+        } catch {
+            print("❌ エラー: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    
+    
     func playCurrentVideo(){//nextVideo
         //        print("videoCurrent:",videoCurrent, videoPHAsset.count,videoDate.count)
 //        let asset1 = iroiro.requestAVAsset(asset: videoPHAsset[56])
@@ -388,14 +422,14 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
 //        appendTextData(to: fileURL, textData: "kurodatatasuaki")
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
 //               print("avasset:",avasset)
-        let fileURL = getFileURL(from:avasset!)!
+//        let fileURL = getFileURL(from:avasset!)!
         
-        if let extractedText = readGyroData(from: fileURL){//(from: fileURL, maxDataLength: 1000) {
-            print("読み取ったデータ: \(extractedText)")
-        } else {
-            print("データの読み取りに失敗しました")
-        }
-    
+//        if let extractedText = readGyroDataFromMP4(fileURL: fileURL){//(from: fileURL, maxDataLength: 1000) {
+//            print("読み取ったデータ: \(extractedText)")
+//        } else {
+//            print("データの読み取りに失敗しました")
+//        }
+//        readGyroFromCSV(videoN:videoCurrent)
     
         
 //        print(readAppendedTextData(from: fileURL,maxDataLength: 124) as Any)
@@ -551,7 +585,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func readGyroFromPngOfVideo(videoDate:String){
-        let requestOptions = PHImageRequestOptions()
+     /*   let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
@@ -591,7 +625,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                 }
             }
-        }
+        }*/
     }
     //calcMode 0:hori.  1:vert. 2:vog
     
@@ -1036,7 +1070,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoSlider.isHidden=true
         
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
-        readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+//        readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+//        readGyroData(from: videoCurrent)
+        readGyroFromMP4(videoN: videoCurrent)
         moveGyroData()//gyroDeltastartframe分をズラして
         
         timercnt = 0
@@ -2973,6 +3009,50 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
             }
         }
         //        print(gyroVFiltered.count)
+    }
+    func splitCSVIntoEvenOdd(from csvString: String) -> (even: [String], odd: [String]) {
+        let elements = csvString
+            .split(separator: ",")
+            .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+
+        let evenIndexed = elements.enumerated().compactMap { $0.offset % 2 == 0 ? $0.element : nil }
+        let oddIndexed = elements.enumerated().compactMap { $0.offset % 2 != 0 ? $0.element : nil }
+
+        return (evenIndexed, oddIndexed)
+    }
+    func splitCSVIntoEvenOddFloats(from csvString: String) -> (even: [CGFloat], odd: [CGFloat]) {
+        let elements = csvString
+            .split(separator: ",")
+            .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+        
+        let evenIndexed = elements.enumerated().compactMap { index, element in
+            index % 2 == 0 ? CGFloat(Double(element) ?? 0) / 100.0 : nil
+        }
+        
+        let oddIndexed = elements.enumerated().compactMap { index, element in
+            index % 2 != 0 ? CGFloat(Double(element) ?? 0) / 100.0 : nil
+        }
+
+        return (evenIndexed, oddIndexed)
+    }
+    func readGyroFromMP4(videoN:Int){
+        let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoN])
+        //               print("avasset:",avasset)
+        let fileURL = getFileURL(from:avasset!)!
+        
+        if let csvData = readGyroDataFromMP4(fileURL: fileURL){//(from: fileURL, maxDataLength: 1000) {
+            gyroHFiltered.removeAll()
+            gyroVFiltered.removeAll()
+            print("読み取ったデータ: \(csvData)")
+//            let (evenArray, oddArray) = splitCSVIntoEvenOddFloats(from: csvData)
+            (gyroHFiltered,gyroVFiltered) = splitCSVIntoEvenOddFloats(from: csvData)
+            
+
+            print("偶数番: \(gyroHFiltered)") // ["A", "C", "E", "1", "3", "5"]
+            print("奇数番: \(gyroVFiltered)") // ["B", "D", "F", "2", "4", "6"]
+        } else {
+            print("データの読み取りに失敗しました")
+        }
     }
     func readGyroFromNul(){
         for _ in 0..<100*60*5{
