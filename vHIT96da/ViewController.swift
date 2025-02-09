@@ -585,7 +585,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         }
     }
     func readGyroFromPngOfVideo(videoDate:String){
-     /*   let requestOptions = PHImageRequestOptions()
+        let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         requestOptions.isNetworkAccessAllowed = false
         requestOptions.deliveryMode = .highQualityFormat //これでもicloud上のvideoを取ってしまう
@@ -625,7 +625,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
                     }
                 }
             }
-        }*/
+        }
     }
     //calcMode 0:hori.  1:vert. 2:vog
     
@@ -1070,11 +1070,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoSlider.isHidden=true
         
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
-//        if !readGyroFromMP4(videoN: videoCurrent){
+        if !readGyroFromMP4(videoN: videoCurrent){
             readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
-//        }
+        }
         moveGyroData()//gyroDeltastartframe分をズラして
-        
+ 
         timercnt = 0
         UIApplication.shared.isIdleTimerDisabled = true//not sleep
         let eyeborder:CGFloat = CGFloat(eyeBorder)
@@ -2866,6 +2866,8 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
                 print("session is not moving")
             }
             if Controller.recordedFlag==true{
+                showBoxies(f: false)
+                setVideoButtons(mode: false)
                 //                getVideosAlbumList()
                 //            }else{//
           /*      print("recorded well")
@@ -2877,8 +2879,7 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
                 KalmanInit()
                 gyroHFiltered.removeAll()
                 gyroVFiltered.removeAll()
-                showBoxies(f: false)
-                setVideoButtons(mode: false)
+              
                 
                 print("rewind***1")
                 for i in 0...Controller.gyro.count/3-3{//-2でエラーなので、-3としてみた
