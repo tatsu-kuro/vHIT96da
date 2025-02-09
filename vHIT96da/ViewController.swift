@@ -2868,37 +2868,7 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
             if Controller.recordedFlag==true{
                 showBoxies(f: false)
                 setVideoButtons(mode: false)
-                //                getVideosAlbumList()
-                //            }else{//
-          /*      print("recorded well")
-                var dH:Double=0//lateral
-                var dV:Double=0//vertical
-                var gyroH = Array<Double>()//Holizontal
-                var gyroV = Array<Double>()//vertical
-                var gyroTime = Array<Double>()
-                KalmanInit()
-                gyroHFiltered.removeAll()
-                gyroVFiltered.removeAll()
-              
                 
-                print("rewind***1")
-                for i in 0...Controller.gyro.count/3-3{//-2でエラーなので、-3としてみた
-                    gyroTime.append(Controller.gyro[i*3])
-                    dH=Double(Kalman(value:CGFloat(Controller.gyro[i*3+1]*10),num:0))
-                    dV=Double(Kalman(value:CGFloat(Controller.gyro[i*3+2]*10),num:1))
-                    gyroH.append(-dH)
-                    gyroV.append(-dV)
-                }
-                //gyroは10msごとに拾ってある.合わせる
-                //これをvideoのフレーム数に合わせる
-                while Controller.saved2album == false{//fileができるまで待つ
-                    sleep(UInt32(0.1))
-                }
-                print("rewind***2")
-                
-                removeFile(delFile: "temp.png")
-                //                getVideosAlbumList(name: vHIT_)
-           */
                 if videoDate.count<3{
                     getAlbumAssets()
                 }else{
@@ -2913,48 +2883,8 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
                 
                 videoCurrent=videoDura.count-1
                 showVideoIroiro(num:0)
-         /*
-                var fps=getFPS(videoCurrent)
-                if fps < 200.0{
-                    fps *= 2.0
-                }
-                let framecount=Int(Float(gyroH.count)*(fps)/100.0)
-                var lastJ:Int=0
-                //                let t1=CFAbsoluteTimeGetCurrent()
-                for i in 0...framecount+500{//100を尻に付けないとgyrodataが変な値になる
-                    let gn=Double(i)/Double(fps)//iフレーム目の秒数
-                    var getj:Int=0
-                    for j in lastJ...gyroH.count-1{
-                        if gyroTime[j] >= gn{//secondの値が入っている。
-                            getj=j//越えるところを見つける
-                            lastJ=j
-                            break
-                        }
-                    }
-                    gyroHFiltered.append(Kalman(value:CGFloat(gyroH[getj]),num:2))
-                    gyroVFiltered.append(Kalman(value:CGFloat(gyroV[getj]),num: 3))
-                }
                 
-                print("rewind***4")
-                
-                let gyroCSV=getGyroCSV()//csv文字列
-                //                int rgb[240*60*5*2 + 240*5*2];//5minの水平、垂直と５秒の余裕
-                //pixel2imageで240*60*5*2 + 240*5*2の配列を作るので,増やすときは注意
-                let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoCurrent])
-                let eyeImage = iroiro.getThumb(avasset: avasset!)
-                let gyroImage=openCV.pixel2image(eyeImage, csv: gyroCSV as String)
-                //まずtemp.pngに保存して、それをvHIT_アルバムにコピーする
-                savePngImage2path(image: gyroImage!, path: "temp.png")
-                while existFile(aFile: "temp.png")==false{
-                    sleep(UInt32(0.1))
-                }
-                print("rewind***5")
-                
-                savePath2album(albumName:vHIT96da,path: "temp.png")
-                */
                 startFrame=0
-                //                getPngsAlbumList()
-                //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
             }else{
                 if Controller.startButton.isHidden==true && Controller.stopButton.isHidden==true{
                     
