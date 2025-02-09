@@ -1070,9 +1070,9 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate{
         videoSlider.isHidden=true
         
         //videoの次のpngからgyroデータを得る。なければ５分間の０のgyroデータを戻す。
-//        readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
-//        readGyroData(from: videoCurrent)
-        readGyroFromMP4(videoN: videoCurrent)
+//        if !readGyroFromMP4(videoN: videoCurrent){
+            readGyroFromPngOfVideo(videoDate: videoDate[videoCurrent])
+//        }
         moveGyroData()//gyroDeltastartframe分をズラして
         
         timercnt = 0
@@ -2868,7 +2868,7 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
             if Controller.recordedFlag==true{
                 //                getVideosAlbumList()
                 //            }else{//
-                print("recorded well")
+          /*      print("recorded well")
                 var dH:Double=0//lateral
                 var dV:Double=0//vertical
                 var gyroH = Array<Double>()//Holizontal
@@ -2897,6 +2897,7 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
                 
                 removeFile(delFile: "temp.png")
                 //                getVideosAlbumList(name: vHIT_)
+           */
                 if videoDate.count<3{
                     getAlbumAssets()
                 }else{
@@ -2911,6 +2912,7 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
                 
                 videoCurrent=videoDura.count-1
                 showVideoIroiro(num:0)
+         /*
                 var fps=getFPS(videoCurrent)
                 if fps < 200.0{
                     fps *= 2.0
@@ -2948,6 +2950,7 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
                 print("rewind***5")
                 
                 savePath2album(albumName:vHIT96da,path: "temp.png")
+                */
                 startFrame=0
                 //                getPngsAlbumList()
                 //VOGの時もgyrodataを保存する。（不必要だが、考えるべきことが減りそうなので）
@@ -3035,7 +3038,7 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
 
         return (evenIndexed, oddIndexed)
     }
-    func readGyroFromMP4(videoN:Int){
+    func readGyroFromMP4(videoN:Int)->Bool{
         let avasset = iroiro.requestAVAsset(asset: videoPHAsset[videoN])
         //               print("avasset:",avasset)
         let fileURL = getFileURL(from:avasset!)!
@@ -3050,8 +3053,10 @@ func getAlbumVideos(_ gazo: [PHAsset]) {
 
             print("偶数番: \(gyroHFiltered)") // ["A", "C", "E", "1", "3", "5"]
             print("奇数番: \(gyroVFiltered)") // ["B", "D", "F", "2", "4", "6"]
+            return true
         } else {
             print("データの読み取りに失敗しました")
+            return false
         }
     }
     func readGyroFromNul(){
